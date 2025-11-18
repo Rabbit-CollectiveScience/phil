@@ -1,0 +1,47 @@
+name: saikum
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 3.0.4+5
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.5+1
+  image_picker: ^1.2.0
+  image_gallery_saver_plus: ^4.0.0
+  image: ^4.1.7
+  url_launcher: ^6.3.0
+  google_mobile_ads: ^5.1.0
+  in_app_purchase:
+  shared_preferences:
+  http: ^1.2.0
+  cached_network_image: ^3.3.1
+  google_fonts: ^6.1.0
+  device_info_plus: ^10.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
+# ---------- Flutter config ----------
+flutter:
+  uses-material-design: true
+
+  # TODO: Add your assets here
+  # assets:
+  #   - assets/images/
+  #   - assets/icons/
+
+# ---------- App icons (both iOS & Android) ----------
+# TODO: Configure your app icons
+# flutter_launcher_icons:
+#   android: true
+#   ios: true
+#   image_path: "assets/icon/app_icon.png"

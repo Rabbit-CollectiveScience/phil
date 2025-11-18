@@ -1,0 +1,61 @@
+{
+  "name": "saikum-monorepo",
+  "version": "1.0.0",
+  "description": "Saikum social image platform - monorepo containing mobile app and backend API",
+  "private": true,
+  "workspaces": [
+    "apps/backend"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/backend",
+    "dev:backend": "npm run dev --workspace=apps/backend",
+    "dev:mobile": "cd apps/mobile && flutter run",
+    "build": "npm run build:backend && npm run build:mobile",
+    "build:backend": "npm run build --workspace=apps/backend",
+    "build:mobile": "cd apps/mobile && flutter build apk",
+    "build:mobile:web": "cd apps/mobile && flutter build web",
+    "build:mobile:ios": "cd apps/mobile && flutter build ios",
+    "test": "npm run test:backend && npm run test:mobile",
+    "test:backend": "npm run test --workspace=apps/backend",
+    "test:mobile": "cd apps/mobile && flutter test",
+    "lint": "npm run lint:backend && npm run lint:mobile",
+    "lint:backend": "npm run lint --workspace=apps/backend",
+    "lint:mobile": "cd apps/mobile && dart analyze",
+    "clean": "npm run clean:backend && npm run clean:mobile",
+    "clean:backend": "cd apps/backend && rm -rf .next node_modules",
+    "clean:mobile": "cd apps/mobile && flutter clean",
+    "install:backend": "npm install --workspace=apps/backend",
+    "install:mobile": "cd apps/mobile && flutter pub get",
+    "setup": "npm run install:backend && npm run install:mobile",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f backend",
+    "docker:reset": "docker-compose down -v && docker-compose up -d",
+    "dev:docker": "docker-compose up",
+    "docs:serve": "cd docs && python -m http.server 8080",
+    "release:backend": "cd apps/backend && npm run build",
+    "release:mobile:android": "cd apps/mobile && flutter build apk --release",
+    "release:mobile:ios": "cd apps/mobile && flutter build ios --release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rabbit-CollectiveScience/saikum.git"
+  },
+  "keywords": [
+    "flutter",
+    "nextjs",
+    "social",
+    "image-platform",
+    "mobile-app",
+    "api"
+  ],
+  "author": "Rabbit-CollectiveScience",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
