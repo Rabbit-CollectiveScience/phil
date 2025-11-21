@@ -37,7 +37,11 @@ class MainNavigator extends StatefulWidget {
 class _MainNavigatorState extends State<MainNavigator> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [const RecordPage(), const DashboardPage(), const SettingsPage()];
+  final List<Widget> _pages = [
+    const RecordPage(),
+    const DashboardPage(),
+    const SettingsPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {

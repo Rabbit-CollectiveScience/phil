@@ -7,41 +7,93 @@ class RecordPage extends StatefulWidget {
   State<RecordPage> createState() => _RecordPageState();
 }
 
-class _RecordPageState extends State<RecordPage> {
+class _RecordPageState extends State<RecordPage>
+    with SingleTickerProviderStateMixin {
   bool _isRecording = false;
+  bool _isProcessing = false;
+  bool _isAiSpeaking = false;
   final List<ChatMessage> _messages = [];
   final TextEditingController _textController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
 
-  void _handleUserInput(String text) {
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat(reverse: true);
+    _pulseAnimation = Tween<double>(begin: 0.85, end: 1.15).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+  }
+
+  void _handleUserInput(String text) async {
     if (text.trim().isEmpty) return;
 
     setState(() {
       // Add user message
-      _messages.add(ChatMessage(
-        text: text,
-        isUser: true,
-        timestamp: DateTime.now(),
-      ));
-
-      // Mock AI response (TODO: Replace with actual AI call)
-      _messages.add(ChatMessage(
-        text: "Got it - Bench Press 3×10 @ 185 lbs. Correct?",
-        isUser: false,
-        timestamp: DateTime.now(),
-      ));
+      _messages.add(
+        ChatMessage(text: text, isUser: true, timestamp: DateTime.now()),
+      );
+      _isProcessing = true;
     });
 
     _textController.clear();
+    _scrollToBottom();
+
+    // Simulate processing delay
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    setState(() {
+      _isProcessing = false;
+      _isAiSpeaking = true;
+    });
+
+    // Mock AI response
+    String aiResponse = "Got it - Bench Press 3×10 @ 185 lbs. Correct?";
+
+    setState(() {
+      _messages.add(
+        ChatMessage(text: aiResponse, isUser: false, timestamp: DateTime.now()),
+      );
+    });
+
+    _scrollToBottom();
+
+    // Simulate AI speaking duration (based on text length)
+    int speakingDuration = (aiResponse.length * 50).clamp(1000, 5000);
+    await Future.delayed(Duration(milliseconds: speakingDuration));
+
+    setState(() {
+      _isAiSpeaking = false;
+    });
   }
 
-  void _handleVoiceInput() {
+  void _handleVoiceInput() async {
+    if (_isAiSpeaking || _isProcessing) return;
+
     setState(() {
       _isRecording = !_isRecording;
+    });
 
-      if (!_isRecording) {
-        // Mock: When stopping recording, simulate transcription
-        String mockTranscription = "Bench press 3 sets of 10 at 185";
-        _handleUserInput(mockTranscription);
+    if (!_isRecording) {
+      // Mock: When stopping recording, simulate transcription
+      String mockTranscription = "Bench press 3 sets of 10 at 185";
+      _handleUserInput(mockTranscription);
+    }
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
       }
     });
   }
@@ -89,7 +141,11 @@ class _RecordPageState extends State<RecordPage> {
                     ),
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                    controller: _scrollController,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 20,
+                    ),
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
                       return _buildMessageBubble(_messages[index]);
@@ -102,25 +158,33 @@ class _RecordPageState extends State<RecordPage> {
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: GestureDetector(
               onTap: _handleVoiceInput,
-              child: Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _isRecording ? Colors.green : Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: (_isRecording ? Colors.green : Colors.white).withOpacity(0.3),
-                      blurRadius: 30,
-                      spreadRadius: 10,
+              child: AnimatedBuilder(
+                animation: _pulseAnimation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _isAiSpeaking ? _pulseAnimation.value : 1.0,
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _getButtonColor(),
+                        boxShadow: [
+                          BoxShadow(
+                            color: _getButtonColor().withOpacity(0.3),
+                            blurRadius: 30,
+                            spreadRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        _getButtonIcon(),
+                        size: 40,
+                        color: Colors.black,
+                      ),
                     ),
-                  ],
-                ),
-                child: Icon(
-                  _isRecording ? Icons.stop : Icons.mic,
-                  size: 40,
-                  color: Colors.black,
-                ),
+                  );
+                },
               ),
             ),
           ),
@@ -164,8 +228,9 @@ class _RecordPageState extends State<RecordPage> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment:
-            message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: message.isUser
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!message.isUser) ...[
@@ -188,10 +253,7 @@ class _RecordPageState extends State<RecordPage> {
                 children: [
                   Text(
                     message.text,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                    ),
+                    style: const TextStyle(color: Colors.white, fontSize: 15),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -218,13 +280,29 @@ class _RecordPageState extends State<RecordPage> {
     );
   }
 
+  Color _getButtonColor() {
+    if (_isRecording) return Colors.green;
+    if (_isProcessing) return Colors.grey;
+    if (_isAiSpeaking) return Colors.blue;
+    return Colors.white;
+  }
+
+  IconData _getButtonIcon() {
+    if (_isRecording) return Icons.stop;
+    if (_isProcessing) return Icons.more_horiz;
+    if (_isAiSpeaking) return Icons.smart_toy;
+    return Icons.mic;
+  }
+
   String _formatTime(DateTime time) {
     return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
 
   @override
   void dispose() {
+    _pulseController.dispose();
     _textController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 }
@@ -240,4 +318,3 @@ class ChatMessage {
     required this.timestamp,
   });
 }
-

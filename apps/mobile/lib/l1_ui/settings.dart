@@ -23,7 +23,7 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: [
           const SizedBox(height: 20),
-          
+
           // Account Section
           _buildSectionHeader('Account'),
           _buildSettingsTile(
@@ -38,9 +38,9 @@ class SettingsPage extends StatelessWidget {
             subtitle: 'Currently using guest mode',
             onTap: () {},
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // Preferences Section
           _buildSectionHeader('Preferences'),
           _buildSettingsTile(
@@ -61,9 +61,9 @@ class SettingsPage extends StatelessWidget {
             subtitle: 'Manage notification preferences',
             onTap: () {},
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // Data Section
           _buildSectionHeader('Data'),
           _buildSettingsTile(
@@ -77,11 +77,15 @@ class SettingsPage extends StatelessWidget {
             title: 'Clear Data',
             subtitle: 'Delete all workout logs',
             onTap: () {},
-            trailing: const Icon(Icons.warning_amber, color: Colors.orange, size: 20),
+            trailing: const Icon(
+              Icons.warning_amber,
+              color: Colors.orange,
+              size: 20,
+            ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // About Section
           _buildSectionHeader('About'),
           _buildSettingsTile(
@@ -102,7 +106,7 @@ class SettingsPage extends StatelessWidget {
             subtitle: 'View terms and conditions',
             onTap: () {},
           ),
-          
+
           const SizedBox(height: 40),
         ],
       ),
@@ -149,12 +153,10 @@ class SettingsPage extends StatelessWidget {
         ),
         subtitle: Text(
           subtitle,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 13,
-          ),
+          style: TextStyle(color: Colors.grey[600], fontSize: 13),
         ),
-        trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.white38),
+        trailing:
+            trailing ?? const Icon(Icons.chevron_right, color: Colors.white38),
         onTap: onTap,
       ),
     );
