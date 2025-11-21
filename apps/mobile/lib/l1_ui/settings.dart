@@ -7,108 +7,97 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        elevation: 0,
-        title: const Text(
-          'Settings',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: ListView(
-        children: [
-          const SizedBox(height: 20),
+      body: SafeArea(
+        child: ListView(
+          children: [
+            const SizedBox(height: 20),
 
-          // Account Section
-          _buildSectionHeader('Account'),
-          _buildSettingsTile(
-            icon: Icons.person_outline,
-            title: 'Profile',
-            subtitle: 'Manage your profile information',
-            onTap: () {},
-          ),
-          _buildSettingsTile(
-            icon: Icons.devices,
-            title: 'Device ID',
-            subtitle: 'Currently using guest mode',
-            onTap: () {},
-          ),
-
-          const SizedBox(height: 20),
-
-          // Preferences Section
-          _buildSectionHeader('Preferences'),
-          _buildSettingsTile(
-            icon: Icons.language,
-            title: 'Language',
-            subtitle: 'English',
-            onTap: () {},
-          ),
-          _buildSettingsTile(
-            icon: Icons.color_lens_outlined,
-            title: 'Theme',
-            subtitle: 'Dark',
-            onTap: () {},
-          ),
-          _buildSettingsTile(
-            icon: Icons.notifications_outlined,
-            title: 'Notifications',
-            subtitle: 'Manage notification preferences',
-            onTap: () {},
-          ),
-
-          const SizedBox(height: 20),
-
-          // Data Section
-          _buildSectionHeader('Data'),
-          _buildSettingsTile(
-            icon: Icons.download_outlined,
-            title: 'Export Data',
-            subtitle: 'Download your workout history',
-            onTap: () {},
-          ),
-          _buildSettingsTile(
-            icon: Icons.delete_outline,
-            title: 'Clear Data',
-            subtitle: 'Delete all workout logs',
-            onTap: () {},
-            trailing: const Icon(
-              Icons.warning_amber,
-              color: Colors.orange,
-              size: 20,
+            // Account Section
+            _buildSectionHeader('Account'),
+            _buildSettingsTile(
+              icon: Icons.person_outline,
+              title: 'Profile',
+              subtitle: 'Manage your profile information',
+              onTap: () {},
             ),
-          ),
+            _buildSettingsTile(
+              icon: Icons.devices,
+              title: 'Device ID',
+              subtitle: 'Currently using guest mode',
+              onTap: () {},
+            ),
 
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          // About Section
-          _buildSectionHeader('About'),
-          _buildSettingsTile(
-            icon: Icons.info_outline,
-            title: 'About Phil',
-            subtitle: 'Version 3.0.4',
-            onTap: () {},
-          ),
-          _buildSettingsTile(
-            icon: Icons.privacy_tip_outlined,
-            title: 'Privacy Policy',
-            subtitle: 'Read our privacy policy',
-            onTap: () {},
-          ),
-          _buildSettingsTile(
-            icon: Icons.description_outlined,
-            title: 'Terms of Service',
-            subtitle: 'View terms and conditions',
-            onTap: () {},
-          ),
+            // Preferences Section
+            _buildSectionHeader('Preferences'),
+            _buildSettingsTile(
+              icon: Icons.language,
+              title: 'Language',
+              subtitle: 'English',
+              onTap: () {},
+            ),
+            _buildSettingsTile(
+              icon: Icons.color_lens_outlined,
+              title: 'Theme',
+              subtitle: 'Dark',
+              onTap: () {},
+            ),
+            _buildSettingsTile(
+              icon: Icons.notifications_outlined,
+              title: 'Notifications',
+              subtitle: 'Manage notification preferences',
+              onTap: () {},
+            ),
 
-          const SizedBox(height: 40),
-        ],
+            const SizedBox(height: 20),
+
+            // Data Section
+            _buildSectionHeader('Data'),
+            _buildSettingsTile(
+              icon: Icons.download_outlined,
+              title: 'Export Data',
+              subtitle: 'Download your workout history',
+              onTap: () {},
+            ),
+            _buildSettingsTile(
+              icon: Icons.delete_outline,
+              title: 'Clear Data',
+              subtitle: 'Delete all workout logs',
+              onTap: () {},
+              trailing: const Icon(
+                Icons.warning_amber,
+                color: Colors.orange,
+                size: 20,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // About Section
+            _buildSectionHeader('About'),
+            _buildSettingsTile(
+              icon: Icons.info_outline,
+              title: 'About Phil',
+              subtitle: 'Version 3.0.4',
+              onTap: () {},
+            ),
+            _buildSettingsTile(
+              icon: Icons.privacy_tip_outlined,
+              title: 'Privacy Policy',
+              subtitle: 'Read our privacy policy',
+              onTap: () {},
+            ),
+            _buildSettingsTile(
+              icon: Icons.description_outlined,
+              title: 'Terms of Service',
+              subtitle: 'View terms and conditions',
+              onTap: () {},
+            ),
+
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }

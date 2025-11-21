@@ -102,21 +102,9 @@ class _RecordPageState extends State<RecordPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        elevation: 0,
-        title: const Text(
-          'Record',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
+      body: SafeArea(
+        child: Column(
+          children: [
           // Conversation Log
           Expanded(
             child: _messages.isEmpty
@@ -220,6 +208,7 @@ class _RecordPageState extends State<RecordPage>
             ),
           ),
         ],
+      ),
       ),
     );
   }
