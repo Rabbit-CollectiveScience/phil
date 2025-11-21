@@ -12,6 +12,7 @@ class _RecordPageState extends State<RecordPage>
   bool _isRecording = false;
   bool _isProcessing = false;
   bool _isAiSpeaking = false;
+  bool _showTextInput = false;
   final List<ChatMessage> _messages = [];
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -105,110 +106,141 @@ class _RecordPageState extends State<RecordPage>
       body: SafeArea(
         child: Column(
           children: [
-          // Conversation Log
-          Expanded(
-            child: _messages.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.chat_bubble_outline,
-                          size: 80,
-                          color: Colors.grey[800],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Start logging your workout',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 16,
+            // Conversation Log
+            Expanded(
+              child: _messages.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.chat_bubble_outline,
+                            size: 80,
+                            color: Colors.grey[800],
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 20,
-                    ),
-                    itemCount: _messages.length,
-                    itemBuilder: (context, index) {
-                      return _buildMessageBubble(_messages[index]);
-                    },
-                  ),
-          ),
-
-          // Voice Button
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: GestureDetector(
-              onTap: _handleVoiceInput,
-              child: AnimatedBuilder(
-                animation: _pulseAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _isAiSpeaking ? _pulseAnimation.value : 1.0,
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _getButtonColor(),
-                        boxShadow: [
-                          BoxShadow(
-                            color: _getButtonColor().withOpacity(0.3),
-                            blurRadius: 30,
-                            spreadRadius: 10,
+                          const SizedBox(height: 16),
+                          Text(
+                            'Start logging your workout',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 16,
+                            ),
                           ),
                         ],
                       ),
-                      child: Icon(
-                        _getButtonIcon(),
-                        size: 40,
-                        color: Colors.black,
+                    )
+                  : ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20,
+                      ),
+                      itemCount: _messages.length,
+                      itemBuilder: (context, index) {
+                        return _buildMessageBubble(_messages[index]);
+                      },
+                    ),
+            ),
+
+            // Voice Button
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: GestureDetector(
+                onTap: _handleVoiceInput,
+                child: AnimatedBuilder(
+                  animation: _pulseAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _isAiSpeaking ? _pulseAnimation.value : 1.0,
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _getButtonColor(),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _getButtonColor().withOpacity(0.3),
+                              blurRadius: 30,
+                              spreadRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          _getButtonIcon(),
+                          size: 40,
+                          color: Colors.black,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            // Toggle Text Input Button
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _showTextInput = !_showTextInput;
+                });
+              },
+              child: Text(
+                _showTextInput ? 'Use voice instead' : 'or tap to type',
+                style: const TextStyle(
+                  color: Colors.white54,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+
+            // Text Input (Conditional)
+            if (_showTextInput)
+              Container(
+                color: Colors.black,
+                padding: const EdgeInsets.all(16),
+                child: SafeArea(
+                  top: false,
+                  child: TextField(
+                    controller: _textController,
+                    autofocus: true,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Type your workout...',
+                      hintStyle: const TextStyle(color: Colors.white38),
+                      filled: true,
+                      fillColor: Colors.grey[900],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 16,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.send, color: Colors.white54),
+                        onPressed: () {
+                          _handleUserInput(_textController.text);
+                          setState(() {
+                            _showTextInput = false;
+                          });
+                        },
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
-          ),
-
-          // Text Input
-          Container(
-            color: Colors.black,
-            padding: const EdgeInsets.all(16),
-            child: SafeArea(
-              child: TextField(
-                controller: _textController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: 'Type your workout...',
-                  hintStyle: const TextStyle(color: Colors.white38),
-                  filled: true,
-                  fillColor: Colors.grey[900],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
-                  ),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.send, color: Colors.white54),
-                    onPressed: () => _handleUserInput(_textController.text),
+                    onSubmitted: (value) {
+                      _handleUserInput(value);
+                      setState(() {
+                        _showTextInput = false;
+                      });
+                    },
                   ),
                 ),
-                onSubmitted: _handleUserInput,
-              ),
-            ),
-          ),
-        ],
-      ),
+              )
+            else
+              const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }
