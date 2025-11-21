@@ -40,8 +40,9 @@ flutter:
   #   - assets/icons/
 
 # ---------- App icons (both iOS & Android) ----------
-# TODO: Configure your app icons
-# flutter_launcher_icons:
-#   android: true
-#   ios: true
-#   image_path: "assets/icon/app_icon.png"
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "../../shared/assets/branding/logo/app_icon.png"
+  remove_alpha_ios: true
+  background_color: "#000000"
