@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'browse_exercises_screen.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -103,6 +104,28 @@ class _RecordPageState extends State<RecordPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        title: const Text(
+          'Record',
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BrowseExercisesScreen(),
+                ),
+              );
+            },
+            tooltip: 'Browse exercises',
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
