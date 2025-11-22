@@ -1,5 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import '../config.dart';
 import '../l2_domain/models/workout.dart';
+import '../l2_domain/models/workout_exercise.dart';
 import '../l4_infrastructure/database/boxes.dart';
 
 /// Service for managing workout data persistence with Hive
@@ -66,5 +68,53 @@ class WorkoutService {
       workouts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
       return workouts;
     });
+  }
+
+  /// Add exercise with auto-grouping based on time window
+  ///
+  /// Groups exercise into existing workout if last exercise was added within
+  /// the configured session timeout (default 60 minutes). Otherwise creates
+  /// a new workout.
+  Future<void> addExerciseWithAutoGrouping(WorkoutExercise exercise) async {
+    final workouts = await getAllWorkouts();
+    final now = DateTime.now();
+
+    // Check if we have any existing workouts
+    if (workouts.isNotEmpty) {
+      final recentWorkout = workouts.first; // Already sorted by date
+
+      // Calculate time since last activity (last exercise added)
+      final minutesSinceLastActivity = now
+          .difference(recentWorkout.lastActivity)
+          .inMinutes;
+
+      // If within session timeout, add to existing workout
+      if (minutesSinceLastActivity <= Config.workoutSessionTimeoutMinutes) {
+        final updatedExercises = [...recentWorkout.exercises, exercise];
+
+        // Calculate new duration from workout start to now
+        final newDuration = now.difference(recentWorkout.dateTime).inMinutes;
+
+        final updatedWorkout = Workout(
+          id: recentWorkout.id,
+          dateTime: recentWorkout.dateTime, // Keep original start time
+          exercises: updatedExercises,
+          durationMinutes: newDuration,
+        );
+
+        await updateWorkout(updatedWorkout);
+        return;
+      }
+    }
+
+    // Create new workout (no recent workout or timeout exceeded)
+    final newWorkout = Workout(
+      id: now.millisecondsSinceEpoch.toString(),
+      dateTime: now,
+      exercises: [exercise],
+      durationMinutes: 0, // Will update as more exercises added
+    );
+
+    await saveWorkout(newWorkout);
   }
 }

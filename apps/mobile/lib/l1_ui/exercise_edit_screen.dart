@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../l2_domain/models/workout.dart';
 import '../l2_domain/models/workout_exercise.dart';
 
 class ExerciseEditScreen extends StatefulWidget {

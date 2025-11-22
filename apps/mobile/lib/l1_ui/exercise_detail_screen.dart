@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../l2_domain/models/workout.dart';
 import '../l2_domain/models/workout_exercise.dart';
 import '../l3_service/workout_service.dart';
 import 'exercise_form_screen.dart';
@@ -28,29 +27,36 @@ class ExerciseDetailScreen extends StatelessWidget {
       category: category,
       muscleGroup: muscleGroup,
       onSave: (exerciseData) async {
-        // Create a new workout with this exercise
+        // Create exercise with timestamps
         final exercise = WorkoutExercise(
           exerciseId: exerciseData['exerciseId'],
           name: exerciseData['name'],
           category: exerciseData['category'],
           muscleGroup: exerciseData['muscleGroup'],
           parameters: exerciseData['parameters'],
+          // createdAt and updatedAt default to DateTime.now() in constructor
         );
 
-        final workout = Workout(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          dateTime: DateTime.now(),
-          exercises: [exercise],
-          durationMinutes: 0, // Will be updated when workout completes
-        );
-
-        await workoutService.saveWorkout(workout);
+        // Use auto-grouping to add to existing workout or create new one
+        await workoutService.addExerciseWithAutoGrouping(exercise);
 
         if (context.mounted) {
+          // Get updated workouts to check if grouped
+          final workouts = await workoutService.getAllWorkouts();
+          final addedToExisting =
+              workouts.isNotEmpty &&
+              workouts.first.exercises.length > 1 &&
+              workouts.first.exercises.last.exerciseId == exercise.exerciseId;
+
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Exercise added successfully!'),
+            SnackBar(
+              content: Text(
+                addedToExisting
+                    ? '✅ Added to current workout'
+                    : '🆕 Started new workout',
+              ),
               backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
             ),
           );
 

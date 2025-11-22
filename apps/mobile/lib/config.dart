@@ -35,6 +35,15 @@ class Config {
   static const bool enableAnalytics = false;
 
   // ============================================================================
+  // Workout Configuration
+  // ============================================================================
+
+  /// Time window (in minutes) for auto-grouping exercises into same workout.
+  /// Exercises added within this time from the last exercise will be grouped together.
+  /// Rolling window based on last exercise's createdAt timestamp.
+  static const int workoutSessionTimeoutMinutes = 60;
+
+  // ============================================================================
   // TODO: Add your configuration values here
   // ============================================================================
 }

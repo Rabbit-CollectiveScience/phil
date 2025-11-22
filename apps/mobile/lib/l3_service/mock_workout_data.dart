@@ -21,6 +21,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 120,
           },
+          createdAt: DateTime(2025, 11, 20, 14, 30),
+          updatedAt: DateTime(2025, 11, 20, 14, 30),
         ),
         WorkoutExercise(
           exerciseId: 'incline-dumbbell-bench-press',
@@ -34,6 +36,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 90,
           },
+          createdAt: DateTime(2025, 11, 20, 14, 40),
+          updatedAt: DateTime(2025, 11, 20, 14, 40),
         ),
         WorkoutExercise(
           exerciseId: 'dumbbell-shoulder-press',
@@ -47,6 +51,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 90,
           },
+          createdAt: DateTime(2025, 11, 20, 14, 50),
+          updatedAt: DateTime(2025, 11, 20, 14, 50),
         ),
         WorkoutExercise(
           exerciseId: 'lateral-raise',
@@ -60,6 +66,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 60,
           },
+          createdAt: DateTime(2025, 11, 20, 15, 0),
+          updatedAt: DateTime(2025, 11, 20, 15, 0),
         ),
         WorkoutExercise(
           exerciseId: 'tricep-pushdown',
@@ -73,6 +81,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 60,
           },
+          createdAt: DateTime(2025, 11, 20, 15, 10),
+          updatedAt: DateTime(2025, 11, 20, 15, 10),
         ),
       ],
     ),
@@ -95,6 +105,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 180,
           },
+          createdAt: DateTime(2025, 11, 18, 10, 15),
+          updatedAt: DateTime(2025, 11, 18, 10, 15),
         ),
         WorkoutExercise(
           exerciseId: 'pull-up',
@@ -107,6 +119,8 @@ class MockWorkoutData {
             'bodyweight': true,
             'restBetweenSets': 120,
           },
+          createdAt: DateTime(2025, 11, 18, 10, 27),
+          updatedAt: DateTime(2025, 11, 18, 10, 27),
         ),
         WorkoutExercise(
           exerciseId: 'barbell-row',
@@ -120,6 +134,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 90,
           },
+          createdAt: DateTime(2025, 11, 18, 10, 35),
+          updatedAt: DateTime(2025, 11, 18, 10, 35),
         ),
         WorkoutExercise(
           exerciseId: 'barbell-curl',
@@ -133,6 +149,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 60,
           },
+          createdAt: DateTime(2025, 11, 18, 10, 45),
+          updatedAt: DateTime(2025, 11, 18, 10, 45),
         ),
         WorkoutExercise(
           exerciseId: 'hammer-curl',
@@ -146,6 +164,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 60,
           },
+          createdAt: DateTime(2025, 11, 18, 10, 53),
+          updatedAt: DateTime(2025, 11, 18, 10, 53),
         ),
       ],
     ),
@@ -168,6 +188,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 150,
           },
+          createdAt: DateTime(2025, 11, 16, 9, 0),
+          updatedAt: DateTime(2025, 11, 16, 9, 0),
         ),
         WorkoutExercise(
           exerciseId: 'romanian-deadlift',
@@ -181,6 +203,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 120,
           },
+          createdAt: DateTime(2025, 11, 16, 9, 12),
+          updatedAt: DateTime(2025, 11, 16, 9, 12),
         ),
         WorkoutExercise(
           exerciseId: 'leg-press',
@@ -194,6 +218,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 90,
           },
+          createdAt: DateTime(2025, 11, 16, 9, 23),
+          updatedAt: DateTime(2025, 11, 16, 9, 23),
         ),
         WorkoutExercise(
           exerciseId: 'leg-curl',
@@ -207,6 +233,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 60,
           },
+          createdAt: DateTime(2025, 11, 16, 9, 33),
+          updatedAt: DateTime(2025, 11, 16, 9, 33),
         ),
         WorkoutExercise(
           exerciseId: 'standing-calf-raise',
@@ -220,6 +248,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 60,
           },
+          createdAt: DateTime(2025, 11, 16, 9, 43),
+          updatedAt: DateTime(2025, 11, 16, 9, 43),
         ),
       ],
     ),
@@ -241,6 +271,8 @@ class MockWorkoutData {
             'distanceUnit': 'miles',
             'pace': '8:00',
           },
+          createdAt: DateTime(2025, 11, 14, 17, 45),
+          updatedAt: DateTime(2025, 11, 14, 17, 45),
         ),
         WorkoutExercise(
           exerciseId: 'plank',
@@ -248,6 +280,8 @@ class MockWorkoutData {
           category: 'strength',
           muscleGroup: 'core',
           parameters: {'sets': 3, 'holdDuration': 60, 'restBetweenSets': 60},
+          createdAt: DateTime(2025, 11, 14, 18, 5),
+          updatedAt: DateTime(2025, 11, 14, 18, 5),
         ),
         WorkoutExercise(
           exerciseId: 'hanging-leg-raise',
@@ -260,6 +294,8 @@ class MockWorkoutData {
             'bodyweight': true,
             'restBetweenSets': 60,
           },
+          createdAt: DateTime(2025, 11, 14, 18, 10),
+          updatedAt: DateTime(2025, 11, 14, 18, 10),
         ),
         WorkoutExercise(
           exerciseId: 'russian-twist',
@@ -273,6 +309,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 45,
           },
+          createdAt: DateTime(2025, 11, 14, 18, 15),
+          updatedAt: DateTime(2025, 11, 14, 18, 15),
         ),
       ],
     ),
@@ -294,6 +332,8 @@ class MockWorkoutData {
             'bodyweight': true,
             'restBetweenSets': 60,
           },
+          createdAt: DateTime(2025, 11, 12, 13, 20),
+          updatedAt: DateTime(2025, 11, 12, 13, 20),
         ),
         WorkoutExercise(
           exerciseId: 'goblet-squat',
@@ -307,6 +347,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 90,
           },
+          createdAt: DateTime(2025, 11, 12, 13, 28),
+          updatedAt: DateTime(2025, 11, 12, 13, 28),
         ),
         WorkoutExercise(
           exerciseId: 'dumbbell-row',
@@ -320,6 +362,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 90,
           },
+          createdAt: DateTime(2025, 11, 12, 13, 38),
+          updatedAt: DateTime(2025, 11, 12, 13, 38),
         ),
         WorkoutExercise(
           exerciseId: 'dumbbell-shoulder-press',
@@ -333,6 +377,8 @@ class MockWorkoutData {
             'weightUnit': 'lbs',
             'restBetweenSets': 90,
           },
+          createdAt: DateTime(2025, 11, 12, 13, 48),
+          updatedAt: DateTime(2025, 11, 12, 13, 48),
         ),
         WorkoutExercise(
           exerciseId: 'plank',
@@ -340,6 +386,8 @@ class MockWorkoutData {
           category: 'strength',
           muscleGroup: 'core',
           parameters: {'sets': 3, 'holdDuration': 45, 'restBetweenSets': 60},
+          createdAt: DateTime(2025, 11, 12, 13, 58),
+          updatedAt: DateTime(2025, 11, 12, 13, 58),
         ),
       ],
     ),

@@ -61,6 +61,10 @@ class Workout {
     return '${exercises[0].name}, ${exercises[1].name}, +${exercises.length - 2} more';
   }
 
+  /// Get the time of last activity (last exercise added or workout start)
+  DateTime get lastActivity =>
+      exercises.isEmpty ? dateTime : exercises.last.createdAt;
+
   /// Convert to JSON (for MongoDB migration)
   Map<String, dynamic> toJson() => {
     'id': id,
