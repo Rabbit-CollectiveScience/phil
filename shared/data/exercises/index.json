@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-11-22",
-  "totalExercises": 210,
+  "lastUpdated": "2025-11-23",
+  "totalExercises": 211,
   "exercises": [
     {
       "id": "barbell-bench-press",
@@ -330,6 +330,12 @@
     {
       "id": "good-morning",
       "name": "Good Morning",
+      "category": "strength",
+      "muscleGroup": "back"
+    },
+    {
+      "id": "active-dead-hang",
+      "name": "Active Dead Hang",
       "category": "strength",
       "muscleGroup": "back"
     },

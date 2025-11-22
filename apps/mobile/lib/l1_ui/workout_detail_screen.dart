@@ -29,7 +29,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
       muscleGroup: exerciseData['muscleGroup'],
       parameters: exerciseData['parameters'],
     );
-    
+
     setState(() {
       _exercises[index] = updatedExercise;
     });

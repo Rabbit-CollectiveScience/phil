@@ -70,7 +70,8 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
           if (param['type'] == 'boolean') {
             _booleanValues[key] = widget.initialParameters?[key] ?? false;
           } else {
-            final initialValue = widget.initialParameters?[key]?.toString() ?? '';
+            final initialValue =
+                widget.initialParameters?[key]?.toString() ?? '';
             _controllers[key] = TextEditingController(text: initialValue);
             _controllers[key]!.addListener(() {
               if (widget.isEditMode && !_hasChanges) {
@@ -87,9 +88,9 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading exercise: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading exercise: $e')));
       }
     }
   }
@@ -131,13 +132,13 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
     };
 
     final parameters = <String, dynamic>{};
-    
+
     // Collect all parameter values
     final schemaParams = _schema?['parameters'] as List?;
     if (schemaParams != null) {
       for (var param in schemaParams) {
         final key = param['key'] as String;
-        
+
         if (param['type'] == 'boolean') {
           parameters[key] = _booleanValues[key] ?? false;
         } else {
@@ -159,7 +160,7 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
             }
           }
         }
-        
+
         // Add unit if present
         if (param['unit'] != null) {
           parameters['${key}Unit'] = param['unit'];
@@ -196,10 +197,7 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
               Navigator.pop(context); // Close form screen
               widget.onDelete?.call();
             },
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: Colors.red),
-            ),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -235,10 +233,7 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                 Navigator.pop(context); // Close dialog
                 Navigator.pop(context); // Close form screen
               },
-              child: const Text(
-                'Discard',
-                style: TextStyle(color: Colors.red),
-              ),
+              child: const Text('Discard', style: TextStyle(color: Colors.red)),
             ),
           ],
         ),
@@ -282,11 +277,15 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                 tooltip: 'Delete exercise',
               ),
             TextButton(
-              onPressed: (!widget.isEditMode || _hasChanges) ? _saveExercise : null,
+              onPressed: (!widget.isEditMode || _hasChanges)
+                  ? _saveExercise
+                  : null,
               child: Text(
                 widget.isEditMode ? 'Save' : 'Add',
                 style: TextStyle(
-                  color: (!widget.isEditMode || _hasChanges) ? Colors.blue : Colors.grey,
+                  color: (!widget.isEditMode || _hasChanges)
+                      ? Colors.blue
+                      : Colors.grey,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -313,7 +312,9 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                                 width: 40,
                                 height: 40,
                                 decoration: BoxDecoration(
-                                  color: _getMuscleGroupColor(widget.muscleGroup),
+                                  color: _getMuscleGroupColor(
+                                    widget.muscleGroup,
+                                  ),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Center(
@@ -391,10 +392,7 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
           ),
           child: Text(
             'No parameters for this exercise',
-            style: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.grey[500], fontSize: 14),
           ),
         ),
       ];
@@ -418,10 +416,7 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),
                 Switch(
                   value: _booleanValues[key] ?? false,
@@ -459,25 +454,19 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                     if (required)
                       const Text(
                         ' *',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.red, fontSize: 14),
                       ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _controllers[key],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
                   keyboardType: type == 'number'
                       ? const TextInputType.numberWithOptions(decimal: true)
                       : type == 'duration'
-                          ? TextInputType.number
-                          : TextInputType.text,
+                      ? TextInputType.number
+                      : TextInputType.text,
                   decoration: InputDecoration(
                     suffixText: unit,
                     suffixStyle: TextStyle(
@@ -496,7 +485,10 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.blue, width: 2),
+                      borderSide: const BorderSide(
+                        color: Colors.blue,
+                        width: 2,
+                      ),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,

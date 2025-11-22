@@ -1,0 +1,29 @@
+{
+  "id": "active-dead-hang",
+  "name": "Active Dead Hang",
+  "category": "strength",
+  "muscleGroups": ["back", "shoulders"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "duration",
+      "label": "Duration",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    },
+    {
+      "key": "restBetweenSets",
+      "label": "Rest Between Sets",
+      "type": "number",
+      "required": false,
+      "unit": "seconds"
+    }
+  ]
+}

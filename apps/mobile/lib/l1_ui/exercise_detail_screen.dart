@@ -25,7 +25,7 @@ class ExerciseDetailScreen extends StatelessWidget {
       onSave: (exerciseData) {
         // TODO: Save to workout session
         debugPrint('Exercise data: $exerciseData');
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Exercise added successfully!'),
