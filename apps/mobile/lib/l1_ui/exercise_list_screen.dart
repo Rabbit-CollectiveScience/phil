@@ -191,7 +191,8 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
               builder: (context) => ExerciseDetailScreen(
                 exerciseId: exercise['id'],
                 exerciseName: exercise['name'],
-                category: widget.category,
+                category: exercise['category'],
+                muscleGroup: exercise['muscleGroup'],
               ),
             ),
           );

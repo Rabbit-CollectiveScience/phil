@@ -1,8 +1,29 @@
 import 'package:flutter/material.dart';
-import 'browse_exercises_screen.dart';
+import '../l2_domain/models/workout.dart';
+import '../l3_service/mock_workout_data.dart';
+import 'workout_detail_screen.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  List<Workout> _workouts = MockWorkoutData.mockWorkouts;
+
+  void _deleteWorkout(String workoutId) {
+    setState(() {
+      _workouts = _workouts.where((w) => w.id != workoutId).toList();
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Workout deleted'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,73 +136,188 @@ class DashboardPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // Empty State
-                Center(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 40),
-                      Icon(
-                        Icons.fitness_center_outlined,
-                        size: 80,
-                        color: Colors.grey[800],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No workouts yet',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Start logging to see your progress',
-                        style: TextStyle(color: Colors.grey[700], fontSize: 14),
-                      ),
-                      const SizedBox(height: 24),
-                      // Browse Exercises Link
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const BrowseExercisesScreen(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.search,
-                                size: 16,
-                                color: Colors.blue[400],
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                'or browse exercises',
-                                style: TextStyle(
-                                  color: Colors.blue[400],
-                                  fontSize: 14,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ],
+                // Workout Cards
+                if (_workouts.isEmpty)
+                  Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 40),
+                        Icon(
+                          Icons.fitness_center_outlined,
+                          size: 80,
+                          color: Colors.grey[800],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No workouts yet',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 16,
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 8),
+                        Text(
+                          'Start logging to see your progress',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  ..._workouts.map(
+                    (workout) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _buildWorkoutCard(context, workout),
+                    ),
                   ),
-                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildWorkoutCard(BuildContext context, Workout workout) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WorkoutDetailScreen(
+              workout: workout,
+              onDelete: () => _deleteWorkout(workout.id),
+            ),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[900],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[800]!, width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Date and Duration Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.calendar_today,
+                      color: Colors.grey[500],
+                      size: 14,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      workout.formattedDate,
+                      style: TextStyle(color: Colors.grey[400], fontSize: 13),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.timer_outlined,
+                      color: Colors.grey[500],
+                      size: 14,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${workout.durationMinutes} min',
+                      style: TextStyle(color: Colors.grey[400], fontSize: 13),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Exercise Count
+            Text(
+              '${workout.totalExercises} exercises',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 6),
+            // Exercise Preview
+            Text(
+              workout.exercisePreview,
+              style: TextStyle(color: Colors.grey[400], fontSize: 14),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 12),
+            // Muscle Groups Tags
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: workout.muscleGroups.map((muscleGroup) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: _getMuscleGroupColor(muscleGroup).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: _getMuscleGroupColor(muscleGroup).withOpacity(0.4),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    _capitalizeFirstLetter(muscleGroup),
+                    style: TextStyle(
+                      color: _getMuscleGroupColor(muscleGroup),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getMuscleGroupColor(String muscleGroup) {
+    switch (muscleGroup.toLowerCase()) {
+      case 'chest':
+        return Colors.blue;
+      case 'back':
+        return Colors.green;
+      case 'shoulders':
+        return Colors.orange;
+      case 'arms':
+        return Colors.red;
+      case 'legs':
+        return Colors.purple;
+      case 'core':
+        return Colors.yellow.shade700;
+      case 'cardio':
+        return Colors.pink;
+      case 'flexibility':
+        return Colors.teal;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String _capitalizeFirstLetter(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
   }
 
   Widget _buildStat(String value, String label) {

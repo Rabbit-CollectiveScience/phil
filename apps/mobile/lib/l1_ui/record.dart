@@ -107,10 +107,7 @@ class _RecordPageState extends State<RecordPage>
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        title: const Text(
-          'Record',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Record', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline, color: Colors.white),
