@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'l1_ui/record.dart';
 import 'l1_ui/dashboard.dart';
 import 'l1_ui/settings.dart';
+import 'l4_infrastructure/database/hive_config.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Hive database
+  await HiveConfig.initialize();
+
   runApp(const MyApp());
 }
 

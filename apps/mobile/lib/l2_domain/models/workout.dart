@@ -1,7 +1,20 @@
+import 'package:hive/hive.dart';
+import 'workout_exercise.dart';
+
+part 'workout.g.dart';
+
+@HiveType(typeId: 0)
 class Workout {
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final DateTime dateTime;
+
+  @HiveField(2)
   final List<WorkoutExercise> exercises;
+
+  @HiveField(3)
   final int durationMinutes;
 
   Workout({
@@ -47,53 +60,22 @@ class Workout {
     }
     return '${exercises[0].name}, ${exercises[1].name}, +${exercises.length - 2} more';
   }
-}
 
-class WorkoutExercise {
-  final String exerciseId;
-  final String name;
-  final String category;
-  final String muscleGroup;
-  final Map<String, dynamic> parameters;
+  /// Convert to JSON (for MongoDB migration)
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'dateTime': dateTime.toIso8601String(),
+    'exercises': exercises.map((e) => e.toJson()).toList(),
+    'durationMinutes': durationMinutes,
+  };
 
-  WorkoutExercise({
-    required this.exerciseId,
-    required this.name,
-    required this.category,
-    required this.muscleGroup,
-    required this.parameters,
-  });
-
-  String get formattedParameters {
-    final parts = <String>[];
-
-    if (parameters.containsKey('sets') && parameters.containsKey('reps')) {
-      parts.add('${parameters['sets']} × ${parameters['reps']}');
-    }
-
-    if (parameters.containsKey('weight')) {
-      final unit = parameters['weightUnit'] ?? 'lbs';
-      parts.add('${parameters['weight']} $unit');
-    }
-
-    if (parameters.containsKey('duration')) {
-      final duration = parameters['duration'];
-      if (duration is int) {
-        parts.add('${duration} min');
-      } else {
-        parts.add(duration.toString());
-      }
-    }
-
-    if (parameters.containsKey('distance')) {
-      final unit = parameters['distanceUnit'] ?? 'miles';
-      parts.add('${parameters['distance']} $unit');
-    }
-
-    if (parameters.containsKey('holdDuration')) {
-      parts.add('${parameters['holdDuration']} sec hold');
-    }
-
-    return parts.join(' • ');
-  }
+  /// Create from JSON (for MongoDB migration)
+  factory Workout.fromJson(Map<String, dynamic> json) => Workout(
+    id: json['id'] as String,
+    dateTime: DateTime.parse(json['dateTime'] as String),
+    exercises: (json['exercises'] as List)
+        .map((e) => WorkoutExercise.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    durationMinutes: json['durationMinutes'] as int,
+  );
 }

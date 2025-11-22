@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../l2_domain/models/workout.dart';
-import '../l3_service/mock_workout_data.dart';
+import '../l3_service/workout_service.dart';
 import 'workout_detail_screen.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -11,22 +11,47 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  List<Workout> _workouts = MockWorkoutData.mockWorkouts;
+  final WorkoutService _workoutService = WorkoutService();
+  List<Workout> _workouts = [];
+  bool _isLoading = true;
 
-  void _deleteWorkout(String workoutId) {
+  @override
+  void initState() {
+    super.initState();
+    _loadWorkouts();
+  }
+
+  Future<void> _loadWorkouts() async {
+    setState(() => _isLoading = true);
+    final workouts = await _workoutService.getAllWorkouts();
     setState(() {
-      _workouts = _workouts.where((w) => w.id != workoutId).toList();
+      _workouts = workouts;
+      _isLoading = false;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Workout deleted'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+  }
+
+  Future<void> _deleteWorkout(String workoutId) async {
+    await _workoutService.deleteWorkout(workoutId);
+    await _loadWorkouts();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Workout deleted'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator(color: Colors.white)),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(

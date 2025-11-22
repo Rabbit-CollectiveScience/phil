@@ -1,4 +1,5 @@
 import '../l2_domain/models/workout.dart';
+import '../l2_domain/models/workout_exercise.dart';
 
 class MockWorkoutData {
   static final List<Workout> mockWorkouts = [

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l2_domain/models/workout.dart';
+import '../l2_domain/models/workout_exercise.dart';
+import '../l3_service/workout_service.dart';
 import 'exercise_form_screen.dart';
 
 class WorkoutDetailScreen extends StatefulWidget {
@@ -13,6 +15,7 @@ class WorkoutDetailScreen extends StatefulWidget {
 }
 
 class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
+  final WorkoutService _workoutService = WorkoutService();
   late List<WorkoutExercise> _exercises;
 
   @override
@@ -21,7 +24,10 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
     _exercises = List.from(widget.workout.exercises);
   }
 
-  void _updateExercise(int index, Map<String, dynamic> exerciseData) {
+  Future<void> _updateExercise(
+    int index,
+    Map<String, dynamic> exerciseData,
+  ) async {
     final updatedExercise = WorkoutExercise(
       exerciseId: exerciseData['exerciseId'],
       name: exerciseData['name'],
@@ -33,24 +39,48 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
     setState(() {
       _exercises[index] = updatedExercise;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Exercise updated'),
-        duration: Duration(seconds: 2),
-      ),
+
+    // Save updated workout to database
+    final updatedWorkout = Workout(
+      id: widget.workout.id,
+      dateTime: widget.workout.dateTime,
+      exercises: _exercises,
+      durationMinutes: widget.workout.durationMinutes,
     );
+    await _workoutService.updateWorkout(updatedWorkout);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Exercise updated'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
-  void _deleteExercise(int index) {
+  Future<void> _deleteExercise(int index) async {
     setState(() {
       _exercises.removeAt(index);
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Exercise removed from workout'),
-        duration: Duration(seconds: 2),
-      ),
+
+    // Save updated workout to database
+    final updatedWorkout = Workout(
+      id: widget.workout.id,
+      dateTime: widget.workout.dateTime,
+      exercises: _exercises,
+      durationMinutes: widget.workout.durationMinutes,
     );
+    await _workoutService.updateWorkout(updatedWorkout);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Exercise removed from workout'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   void _confirmDelete() {
