@@ -1,0 +1,22 @@
+{
+  "id": "bicycle-crunch",
+  "name": "Bicycle Crunch",
+  "category": "strength",
+  "muscleGroups": ["core", "obliques"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "reps",
+      "label": "Reps",
+      "type": "number",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

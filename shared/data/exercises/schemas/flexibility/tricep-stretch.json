@@ -1,0 +1,22 @@
+{
+  "id": "tricep-stretch",
+  "name": "Tricep Stretch",
+  "category": "flexibility",
+  "muscleGroups": ["triceps"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration (per arm)",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    },
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

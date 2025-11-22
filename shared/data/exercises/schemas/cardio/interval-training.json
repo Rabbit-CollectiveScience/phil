@@ -1,0 +1,36 @@
+{
+  "id": "interval-training",
+  "name": "Interval Training",
+  "category": "cardio",
+  "muscleGroups": ["cardio"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Total Duration",
+      "type": "number",
+      "required": false,
+      "unit": "minutes"
+    },
+    {
+      "key": "intervals",
+      "label": "Number of Intervals",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "workTime",
+      "label": "Work Time",
+      "type": "number",
+      "required": false,
+      "unit": "seconds"
+    },
+    {
+      "key": "restTime",
+      "label": "Rest Time",
+      "type": "number",
+      "required": false,
+      "unit": "seconds"
+    }
+  ]
+}

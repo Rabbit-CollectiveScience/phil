@@ -1,0 +1,29 @@
+{
+  "id": "prowler-push",
+  "name": "Prowler Push",
+  "category": "cardio",
+  "muscleGroups": ["cardio"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "distance",
+      "label": "Distance",
+      "type": "number",
+      "required": false,
+      "unit": "meters"
+    },
+    {
+      "key": "weight",
+      "label": "Weight",
+      "type": "number",
+      "required": false,
+      "unit": "kg"
+    }
+  ]
+}

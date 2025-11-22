@@ -1,0 +1,29 @@
+{
+  "id": "sprints",
+  "name": "Sprints",
+  "category": "cardio",
+  "muscleGroups": ["cardio"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "distance",
+      "label": "Distance per Sprint",
+      "type": "number",
+      "required": false,
+      "unit": "meters"
+    },
+    {
+      "key": "restTime",
+      "label": "Rest Between Sprints",
+      "type": "number",
+      "required": false,
+      "unit": "seconds"
+    }
+  ]
+}

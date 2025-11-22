@@ -1,0 +1,29 @@
+{
+  "id": "elliptical",
+  "name": "Elliptical",
+  "category": "cardio",
+  "muscleGroups": ["cardio"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration",
+      "type": "number",
+      "required": false,
+      "unit": "minutes"
+    },
+    {
+      "key": "resistance",
+      "label": "Resistance Level",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "calories",
+      "label": "Calories",
+      "type": "number",
+      "required": false,
+      "unit": "kcal"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "spinal-twist",
+  "name": "Spinal Twist",
+  "category": "flexibility",
+  "muscleGroups": ["spine", "obliques"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration (per side)",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    },
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

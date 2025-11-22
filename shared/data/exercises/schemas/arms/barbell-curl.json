@@ -1,0 +1,29 @@
+{
+  "id": "barbell-curl",
+  "name": "Barbell Curl",
+  "category": "strength",
+  "muscleGroups": ["biceps"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "reps",
+      "label": "Reps",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "weight",
+      "label": "Weight",
+      "type": "number",
+      "required": false,
+      "unit": "kg"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "assault-bike",
+  "name": "Assault Bike",
+  "category": "cardio",
+  "muscleGroups": ["cardio"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration",
+      "type": "number",
+      "required": false,
+      "unit": "minutes"
+    },
+    {
+      "key": "calories",
+      "label": "Calories",
+      "type": "number",
+      "required": false,
+      "unit": "kcal"
+    },
+    {
+      "key": "distance",
+      "label": "Distance",
+      "type": "number",
+      "required": false,
+      "unit": "km"
+    }
+  ]
+}

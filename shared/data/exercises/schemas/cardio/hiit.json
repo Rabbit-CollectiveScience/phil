@@ -1,0 +1,36 @@
+{
+  "id": "hiit",
+  "name": "HIIT",
+  "category": "cardio",
+  "muscleGroups": ["cardio"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Total Duration",
+      "type": "number",
+      "required": false,
+      "unit": "minutes"
+    },
+    {
+      "key": "rounds",
+      "label": "Rounds",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "workTime",
+      "label": "Work Time",
+      "type": "number",
+      "required": false,
+      "unit": "seconds"
+    },
+    {
+      "key": "restTime",
+      "label": "Rest Time",
+      "type": "number",
+      "required": false,
+      "unit": "seconds"
+    }
+  ]
+}

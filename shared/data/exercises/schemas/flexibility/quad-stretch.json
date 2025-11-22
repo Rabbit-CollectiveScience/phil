@@ -1,0 +1,22 @@
+{
+  "id": "quad-stretch",
+  "name": "Quad Stretch",
+  "category": "flexibility",
+  "muscleGroups": ["quads"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration (per leg)",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    },
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

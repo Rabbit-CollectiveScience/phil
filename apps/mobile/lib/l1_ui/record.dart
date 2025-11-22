@@ -187,10 +187,7 @@ class _RecordPageState extends State<RecordPage>
               },
               child: Text(
                 _showTextInput ? 'Use voice instead' : 'or tap to type',
-                style: const TextStyle(
-                  color: Colors.white54,
-                  fontSize: 14,
-                ),
+                style: const TextStyle(color: Colors.white54, fontSize: 14),
               ),
             ),
 

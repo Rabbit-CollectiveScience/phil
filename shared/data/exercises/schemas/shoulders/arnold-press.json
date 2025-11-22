@@ -1,0 +1,29 @@
+{
+  "id": "arnold-press",
+  "name": "Arnold Press",
+  "category": "strength",
+  "muscleGroups": ["shoulders", "triceps"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "reps",
+      "label": "Reps",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "weight",
+      "label": "Weight (per dumbbell)",
+      "type": "number",
+      "required": false,
+      "unit": "kg"
+    }
+  ]
+}

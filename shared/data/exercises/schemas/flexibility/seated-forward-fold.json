@@ -1,0 +1,22 @@
+{
+  "id": "seated-forward-fold",
+  "name": "Seated Forward Fold",
+  "category": "flexibility",
+  "muscleGroups": ["hamstrings", "back"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    },
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

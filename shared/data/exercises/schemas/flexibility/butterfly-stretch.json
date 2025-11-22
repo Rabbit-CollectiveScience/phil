@@ -1,0 +1,22 @@
+{
+  "id": "butterfly-stretch",
+  "name": "Butterfly Stretch",
+  "category": "flexibility",
+  "muscleGroups": ["adductors", "hips"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    },
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

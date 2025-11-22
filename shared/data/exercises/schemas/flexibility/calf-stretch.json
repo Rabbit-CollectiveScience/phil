@@ -1,0 +1,22 @@
+{
+  "id": "calf-stretch",
+  "name": "Calf Stretch",
+  "category": "flexibility",
+  "muscleGroups": ["calves"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration (per leg)",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    },
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "push-up",
+  "name": "Push-up",
+  "category": "strength",
+  "muscleGroups": ["chest", "triceps", "shoulders", "core"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "reps",
+      "label": "Reps",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "toFailure",
+      "label": "To Failure",
+      "type": "boolean",
+      "required": false,
+      "unit": null
+    }
+  ]
+}
