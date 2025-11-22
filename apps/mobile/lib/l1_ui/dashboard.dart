@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'browse_exercises_screen.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -133,6 +134,44 @@ class DashboardPage extends StatelessWidget {
                       Text(
                         'Start logging to see your progress',
                         style: TextStyle(color: Colors.grey[700], fontSize: 14),
+                      ),
+                      const SizedBox(height: 24),
+                      // Browse Exercises Link
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const BrowseExercisesScreen(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.search,
+                                size: 16,
+                                color: Colors.blue[400],
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                'or browse exercises',
+                                style: TextStyle(
+                                  color: Colors.blue[400],
+                                  fontSize: 14,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),

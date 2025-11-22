@@ -1,0 +1,29 @@
+{
+  "id": "straight-arm-pulldown",
+  "name": "Straight Arm Pulldown",
+  "category": "strength",
+  "muscleGroups": ["back"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "reps",
+      "label": "Reps",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "weight",
+      "label": "Weight",
+      "type": "number",
+      "required": false,
+      "unit": "kg"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "inverted-row",
+  "name": "Inverted Row",
+  "category": "strength",
+  "muscleGroups": ["back", "biceps"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "reps",
+      "label": "Reps",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "toFailure",
+      "label": "To Failure",
+      "type": "boolean",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

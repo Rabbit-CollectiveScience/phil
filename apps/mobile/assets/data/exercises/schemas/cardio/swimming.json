@@ -1,0 +1,29 @@
+{
+  "id": "swimming",
+  "name": "Swimming",
+  "category": "cardio",
+  "muscleGroups": ["cardio"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration",
+      "type": "number",
+      "required": false,
+      "unit": "minutes"
+    },
+    {
+      "key": "distance",
+      "label": "Distance",
+      "type": "number",
+      "required": false,
+      "unit": "meters"
+    },
+    {
+      "key": "stroke",
+      "label": "Stroke Type",
+      "type": "text",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

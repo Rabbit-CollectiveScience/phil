@@ -34,10 +34,17 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # TODO: Add your assets here
-  # assets:
-  #   - assets/images/
-  #   - assets/icons/
+  # Exercise database assets
+  assets:
+    - assets/data/exercises/index.json
+    - assets/data/exercises/schemas/chest/
+    - assets/data/exercises/schemas/back/
+    - assets/data/exercises/schemas/shoulders/
+    - assets/data/exercises/schemas/arms/
+    - assets/data/exercises/schemas/legs/
+    - assets/data/exercises/schemas/core/
+    - assets/data/exercises/schemas/cardio/
+    - assets/data/exercises/schemas/flexibility/
 
 # ---------- App icons (both iOS & Android) ----------
 flutter_launcher_icons:

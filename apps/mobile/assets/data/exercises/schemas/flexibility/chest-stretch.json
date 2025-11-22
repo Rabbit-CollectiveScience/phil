@@ -1,0 +1,22 @@
+{
+  "id": "chest-stretch",
+  "name": "Chest Stretch",
+  "category": "flexibility",
+  "muscleGroups": ["chest"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    },
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

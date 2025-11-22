@@ -1,0 +1,43 @@
+{
+  "id": "incline-barbell-bench-press",
+  "name": "Incline Barbell Bench Press",
+  "category": "strength",
+  "muscleGroups": ["chest", "triceps", "shoulders"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "reps",
+      "label": "Reps",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "weight",
+      "label": "Weight",
+      "type": "number",
+      "required": false,
+      "unit": "kg"
+    },
+    {
+      "key": "angle",
+      "label": "Incline Angle",
+      "type": "text",
+      "required": false,
+      "unit": "degrees"
+    },
+    {
+      "key": "toFailure",
+      "label": "To Failure",
+      "type": "boolean",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

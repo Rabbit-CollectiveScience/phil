@@ -1,0 +1,22 @@
+{
+  "id": "shoulder-stretch",
+  "name": "Shoulder Stretch",
+  "category": "flexibility",
+  "muscleGroups": ["shoulders"],
+  "parameters": [
+    {
+      "key": "duration",
+      "label": "Duration (per side)",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    },
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": false,
+      "unit": null
+    }
+  ]
+}

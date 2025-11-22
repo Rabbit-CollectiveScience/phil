@@ -1,0 +1,29 @@
+{
+  "id": "plate-pinch",
+  "name": "Plate Pinch",
+  "category": "strength",
+  "muscleGroups": ["forearms"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "duration",
+      "label": "Duration",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    },
+    {
+      "key": "weight",
+      "label": "Weight (total)",
+      "type": "number",
+      "required": false,
+      "unit": "kg"
+    }
+  ]
+}

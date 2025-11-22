@@ -1,0 +1,29 @@
+{
+  "id": "cable-kickback",
+  "name": "Cable Kickback",
+  "category": "strength",
+  "muscleGroups": ["glutes"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets (per leg)",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "reps",
+      "label": "Reps",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "weight",
+      "label": "Weight",
+      "type": "number",
+      "required": false,
+      "unit": "kg"
+    }
+  ]
+}

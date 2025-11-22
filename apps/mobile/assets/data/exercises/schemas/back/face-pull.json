@@ -1,0 +1,29 @@
+{
+  "id": "face-pull",
+  "name": "Face Pull",
+  "category": "strength",
+  "muscleGroups": ["back", "shoulders"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "reps",
+      "label": "Reps",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "weight",
+      "label": "Weight",
+      "type": "number",
+      "required": false,
+      "unit": "kg"
+    }
+  ]
+}

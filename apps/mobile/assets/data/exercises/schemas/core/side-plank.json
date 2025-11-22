@@ -1,0 +1,22 @@
+{
+  "id": "side-plank",
+  "name": "Side Plank",
+  "category": "strength",
+  "muscleGroups": ["core", "obliques"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets (per side)",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "duration",
+      "label": "Duration",
+      "type": "number",
+      "required": true,
+      "unit": "seconds"
+    }
+  ]
+}

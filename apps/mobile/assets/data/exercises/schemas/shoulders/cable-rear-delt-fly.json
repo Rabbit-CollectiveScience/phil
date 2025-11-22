@@ -1,0 +1,29 @@
+{
+  "id": "cable-rear-delt-fly",
+  "name": "Cable Rear Delt Fly",
+  "category": "strength",
+  "muscleGroups": ["shoulders", "back"],
+  "parameters": [
+    {
+      "key": "sets",
+      "label": "Sets",
+      "type": "number",
+      "required": true,
+      "unit": null
+    },
+    {
+      "key": "reps",
+      "label": "Reps",
+      "type": "number",
+      "required": false,
+      "unit": null
+    },
+    {
+      "key": "weight",
+      "label": "Weight (per side)",
+      "type": "number",
+      "required": false,
+      "unit": "kg"
+    }
+  ]
+}
