@@ -55,6 +55,20 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  String _getFlag(String localeId) {
+    // Extract country code from locale ID (e.g., en-US → US)
+    final parts = localeId.split('-');
+    if (parts.length >= 2) {
+      final countryCode = parts[1].toUpperCase();
+      // Convert country code to flag emoji
+      // Each flag emoji is made of regional indicator symbols
+      return countryCode.codeUnits
+          .map((code) => String.fromCharCode(0x1F1E6 + (code - 0x41)))
+          .join();
+    }
+    return '🌐'; // Fallback globe emoji
+  }
+
   Future<void> _addMockData() async {
     setState(() {
       _isLoadingMockData = true;
@@ -428,7 +442,8 @@ class _SettingsPageState extends State<SettingsPage> {
           (l) => l.localeId == _systemLocaleId,
           orElse: () => stt.LocaleName(_systemLocaleId!, _systemLocaleId!),
         );
-        return 'Device default (${systemLocale.name})';
+        final flag = _getFlag(_systemLocaleId!);
+        return 'Device default ($flag ${systemLocale.name})';
       }
       return 'Device default';
     }
@@ -436,20 +451,22 @@ class _SettingsPageState extends State<SettingsPage> {
       (l) => l.localeId == _speechLanguage,
       orElse: () => stt.LocaleName(_speechLanguage!, _speechLanguage!),
     );
-    return locale.name;
+    final flag = _getFlag(_speechLanguage!);
+    return '$flag ${locale.name}';
   }
 
   Future<void> _showSpeechLanguageDialog() async {
     String? selectedLanguage = _speechLanguage;
 
-    // Get actual system locale name
+    // Get actual system locale name with flag
     String deviceDefaultLabel = 'Device default';
     if (_systemLocaleId != null) {
       final systemLocale = _availableLocales.firstWhere(
         (l) => l.localeId == _systemLocaleId,
         orElse: () => stt.LocaleName(_systemLocaleId!, _systemLocaleId!),
       );
-      deviceDefaultLabel = 'Device default (${systemLocale.name})';
+      final flag = _getFlag(_systemLocaleId!);
+      deviceDefaultLabel = 'Device default ($flag ${systemLocale.name})';
     }
 
     final result = await showDialog<bool>(
@@ -483,22 +500,25 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const Divider(color: Colors.white24),
                 ..._availableLocales.map(
-                  (locale) => RadioListTile<String?>(
-                    title: Text(
-                      locale.name,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    value: locale.localeId,
-                    groupValue: selectedLanguage,
-                    activeColor: Colors.white,
-                    onChanged: (value) {
-                      setDialogState(() {
-                        selectedLanguage = value;
-                      });
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                  ),
+                  (locale) {
+                    final flag = _getFlag(locale.localeId);
+                    return RadioListTile<String?>(
+                      title: Text(
+                        '$flag ${locale.name}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      value: locale.localeId,
+                      groupValue: selectedLanguage,
+                      activeColor: Colors.white,
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedLanguage = value;
+                        });
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                    );
+                  },
                 ),
               ],
             ),
