@@ -1,7 +1,56 @@
 import 'package:flutter/material.dart';
+import '../l3_service/seed_data_service.dart';
+import '../l3_service/workout_service.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  bool _isLoadingMockData = false;
+
+  Future<void> _addMockData() async {
+    setState(() {
+      _isLoadingMockData = true;
+    });
+
+    try {
+      final workoutService = WorkoutService();
+      final seedService = SeedDataService(workoutService);
+      final result = await seedService.loadMockData();
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '✅ Added ${result.added} workouts, skipped ${result.skipped} duplicates',
+          ),
+          backgroundColor: Colors.green[700],
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('❌ Failed to load mock data: $e'),
+          backgroundColor: Colors.red[700],
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingMockData = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +65,8 @@ class SettingsPage extends StatelessWidget {
             _buildSectionHeader('Account'),
             _buildSettingsTile(
               icon: Icons.person_outline,
-              title: 'Profile',
-              subtitle: 'Manage your profile information',
-              onTap: () {},
-            ),
-            _buildSettingsTile(
-              icon: Icons.devices,
-              title: 'Device ID',
-              subtitle: 'Currently using guest mode',
+              title: 'User Profile',
+              subtitle: 'Guest mode • Device ID: ...',
               onTap: () {},
             ),
 
@@ -32,21 +75,9 @@ class SettingsPage extends StatelessWidget {
             // Preferences Section
             _buildSectionHeader('Preferences'),
             _buildSettingsTile(
-              icon: Icons.language,
-              title: 'Language',
-              subtitle: 'English',
-              onTap: () {},
-            ),
-            _buildSettingsTile(
-              icon: Icons.color_lens_outlined,
-              title: 'Theme',
-              subtitle: 'Dark',
-              onTap: () {},
-            ),
-            _buildSettingsTile(
-              icon: Icons.notifications_outlined,
-              title: 'Notifications',
-              subtitle: 'Manage notification preferences',
+              icon: Icons.straighten,
+              title: 'Metric Preference',
+              subtitle: 'Weight: lbs • Distance: miles',
               onTap: () {},
             ),
 
@@ -59,6 +90,22 @@ class SettingsPage extends StatelessWidget {
               title: 'Export Data',
               subtitle: 'Download your workout history',
               onTap: () {},
+            ),
+            _buildSettingsTile(
+              icon: Icons.science_outlined,
+              title: 'Add Mock Data',
+              subtitle: 'Load sample workouts for testing',
+              onTap: _isLoadingMockData ? () {} : () => _addMockData(),
+              trailing: _isLoadingMockData
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+                      ),
+                    )
+                  : null,
             ),
             _buildSettingsTile(
               icon: Icons.delete_outline,
