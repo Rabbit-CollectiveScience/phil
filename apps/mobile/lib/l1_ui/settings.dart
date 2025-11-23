@@ -3,6 +3,7 @@ import '../l3_service/seed_data_service.dart';
 import '../l3_service/workout_service.dart';
 import '../l3_service/settings_service.dart';
 import '../l3_service/speech_service.dart';
+import '../l3_service/locale_helper.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'user_profile_screen.dart';
 
@@ -53,20 +54,6 @@ class _SettingsPageState extends State<SettingsPage> {
     } catch (e) {
       print('Error loading locales: $e');
     }
-  }
-
-  String _getFlag(String localeId) {
-    // Extract country code from locale ID (e.g., en-US → US)
-    final parts = localeId.split('-');
-    if (parts.length >= 2) {
-      final countryCode = parts[1].toUpperCase();
-      // Convert country code to flag emoji
-      // Each flag emoji is made of regional indicator symbols
-      return countryCode.codeUnits
-          .map((code) => String.fromCharCode(0x1F1E6 + (code - 0x41)))
-          .join();
-    }
-    return '🌐'; // Fallback globe emoji
   }
 
   Future<void> _addMockData() async {
@@ -442,7 +429,7 @@ class _SettingsPageState extends State<SettingsPage> {
           (l) => l.localeId == _systemLocaleId,
           orElse: () => stt.LocaleName(_systemLocaleId!, _systemLocaleId!),
         );
-        final flag = _getFlag(_systemLocaleId!);
+        final flag = LocaleHelper.getFlag(_systemLocaleId!);
         return 'Device default ($flag ${systemLocale.name})';
       }
       return 'Device default';
@@ -451,7 +438,7 @@ class _SettingsPageState extends State<SettingsPage> {
       (l) => l.localeId == _speechLanguage,
       orElse: () => stt.LocaleName(_speechLanguage!, _speechLanguage!),
     );
-    final flag = _getFlag(_speechLanguage!);
+    final flag = LocaleHelper.getFlag(_speechLanguage!);
     return '$flag ${locale.name}';
   }
 
@@ -465,7 +452,7 @@ class _SettingsPageState extends State<SettingsPage> {
         (l) => l.localeId == _systemLocaleId,
         orElse: () => stt.LocaleName(_systemLocaleId!, _systemLocaleId!),
       );
-      final flag = _getFlag(_systemLocaleId!);
+      final flag = LocaleHelper.getFlag(_systemLocaleId!);
       deviceDefaultLabel = 'Device default ($flag ${systemLocale.name})';
     }
 
@@ -499,27 +486,25 @@ class _SettingsPageState extends State<SettingsPage> {
                   dense: true,
                 ),
                 const Divider(color: Colors.white24),
-                ..._availableLocales.map(
-                  (locale) {
-                    final flag = _getFlag(locale.localeId);
-                    return RadioListTile<String?>(
-                      title: Text(
-                        '$flag ${locale.name}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      value: locale.localeId,
-                      groupValue: selectedLanguage,
-                      activeColor: Colors.white,
-                      onChanged: (value) {
-                        setDialogState(() {
-                          selectedLanguage = value;
-                        });
-                      },
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                    );
-                  },
-                ),
+                ..._availableLocales.map((locale) {
+                  final flag = LocaleHelper.getFlag(locale.localeId);
+                  return RadioListTile<String?>(
+                    title: Text(
+                      '$flag ${locale.name}',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    value: locale.localeId,
+                    groupValue: selectedLanguage,
+                    activeColor: Colors.white,
+                    onChanged: (value) {
+                      setDialogState(() {
+                        selectedLanguage = value;
+                      });
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  );
+                }),
               ],
             ),
           ),

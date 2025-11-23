@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config.dart';
 
@@ -5,6 +6,8 @@ import '../config.dart';
 class SettingsService {
   static SettingsService? _instance;
   static SharedPreferences? _prefs;
+  static final ValueNotifier<String?> speechLanguageNotifier =
+      ValueNotifier<String?>(null);
 
   SettingsService._();
 
@@ -13,6 +16,10 @@ class SettingsService {
     if (_instance == null) {
       _instance = SettingsService._();
       _prefs = await SharedPreferences.getInstance();
+      // Initialize notifier with current value
+      speechLanguageNotifier.value = _prefs?.getString(
+        Config.speechLanguageKey,
+      );
     }
     return _instance!;
   }
@@ -58,6 +65,8 @@ class SettingsService {
     } else {
       await _prefs?.setString(Config.speechLanguageKey, localeId);
     }
+    // Notify listeners of change
+    speechLanguageNotifier.value = localeId;
   }
 
   // ============================================================================
