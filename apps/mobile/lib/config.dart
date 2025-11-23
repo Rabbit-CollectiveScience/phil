@@ -44,6 +44,22 @@ class Config {
   static const int workoutSessionTimeoutMinutes = 60;
 
   // ============================================================================
+  // Unit Preferences
+  // ============================================================================
+
+  /// Default weight unit (lbs or kg)
+  static const String defaultWeightUnit = 'kg';
+
+  /// Default distance unit (miles or km)
+  static const String defaultDistanceUnit = 'km';
+
+  /// SharedPreferences key for weight unit
+  static const String weightUnitKey = 'weight_unit';
+
+  /// SharedPreferences key for distance unit
+  static const String distanceUnitKey = 'distance_unit';
+
+  // ============================================================================
   // TODO: Add your configuration values here
   // ============================================================================
 }

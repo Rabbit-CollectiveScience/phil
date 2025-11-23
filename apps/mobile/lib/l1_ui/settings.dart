@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l3_service/seed_data_service.dart';
 import '../l3_service/workout_service.dart';
+import '../l3_service/settings_service.dart';
 
 class SettingsPage extends StatefulWidget {
   final VoidCallback onNavigateToDashboard;
@@ -14,6 +15,22 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _isLoadingMockData = false;
   bool _isClearingData = false;
+  String _weightUnit = 'kg';
+  String _distanceUnit = 'km';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final settings = await SettingsService.getInstance();
+    setState(() {
+      _weightUnit = settings.weightUnit;
+      _distanceUnit = settings.distanceUnit;
+    });
+  }
 
   Future<void> _addMockData() async {
     setState(() {
@@ -224,6 +241,162 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> _showUnitsDialog() async {
+    String selectedWeightUnit = _weightUnit;
+    String selectedDistanceUnit = _distanceUnit;
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: Colors.grey[900],
+          title: const Text(
+            'Unit Preferences',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Weight Section
+              const Text(
+                'Weight',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: const Text(
+                        'kg',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      value: 'kg',
+                      groupValue: selectedWeightUnit,
+                      activeColor: Colors.white,
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedWeightUnit = value!;
+                        });
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: const Text(
+                        'lbs',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      value: 'lbs',
+                      groupValue: selectedWeightUnit,
+                      activeColor: Colors.white,
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedWeightUnit = value!;
+                        });
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              // Distance Section
+              const Text(
+                'Distance',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: const Text(
+                        'km',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      value: 'km',
+                      groupValue: selectedDistanceUnit,
+                      activeColor: Colors.white,
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedDistanceUnit = value!;
+                        });
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: const Text(
+                        'miles',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      value: 'miles',
+                      groupValue: selectedDistanceUnit,
+                      activeColor: Colors.white,
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedDistanceUnit = value!;
+                        });
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('Cancel', style: TextStyle(color: Colors.grey[400])),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Save', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (result == true) {
+      final settings = await SettingsService.getInstance();
+      await settings.setWeightUnit(selectedWeightUnit);
+      await settings.setDistanceUnit(selectedDistanceUnit);
+
+      setState(() {
+        _weightUnit = selectedWeightUnit;
+        _distanceUnit = selectedDistanceUnit;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('✅ Unit preferences updated'),
+            backgroundColor: Colors.green[700],
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -248,9 +421,9 @@ class _SettingsPageState extends State<SettingsPage> {
             _buildSectionHeader('Preferences'),
             _buildSettingsTile(
               icon: Icons.straighten,
-              title: 'Metric Preference',
-              subtitle: 'Weight: lbs • Distance: miles',
-              onTap: () {},
+              title: 'Units',
+              subtitle: 'Weight: $_weightUnit • Distance: $_distanceUnit',
+              onTap: () => _showUnitsDialog(),
             ),
 
             const SizedBox(height: 20),

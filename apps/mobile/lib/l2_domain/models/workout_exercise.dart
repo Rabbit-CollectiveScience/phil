@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import '../../l3_service/unit_converter.dart';
 
 part 'workout_exercise.g.dart';
 
@@ -37,7 +38,11 @@ class WorkoutExercise {
        updatedAt = updatedAt ?? DateTime.now();
 
   /// Format parameters for display (e.g., "4 × 8 • 185 lbs")
-  String get formattedParameters {
+  /// Converts from base units (kg/km) to user's preferred units
+  String formattedParametersWithPreferences(
+    String weightUnit,
+    String distanceUnit,
+  ) {
     final parts = <String>[];
 
     if (parameters.containsKey('sets') && parameters.containsKey('reps')) {
@@ -45,8 +50,8 @@ class WorkoutExercise {
     }
 
     if (parameters.containsKey('weight')) {
-      final unit = parameters['weightUnit'] ?? 'lbs';
-      parts.add('${parameters['weight']} $unit');
+      final weightKg = (parameters['weight'] as num).toDouble();
+      parts.add(UnitConverter.formatWeight(weightKg, weightUnit));
     }
 
     if (parameters.containsKey('duration')) {
@@ -59,8 +64,8 @@ class WorkoutExercise {
     }
 
     if (parameters.containsKey('distance')) {
-      final unit = parameters['distanceUnit'] ?? 'miles';
-      parts.add('${parameters['distance']} $unit');
+      final distanceKm = (parameters['distance'] as num).toDouble();
+      parts.add(UnitConverter.formatDistance(distanceKm, distanceUnit));
     }
 
     if (parameters.containsKey('holdDuration')) {
@@ -68,6 +73,12 @@ class WorkoutExercise {
     }
 
     return parts.join(' • ');
+  }
+
+  /// Format parameters for display (deprecated - use formattedParametersWithPreferences)
+  /// Kept for backward compatibility during migration
+  String get formattedParameters {
+    return formattedParametersWithPreferences('lbs', 'miles');
   }
 
   /// Convert to JSON (for MongoDB migration)

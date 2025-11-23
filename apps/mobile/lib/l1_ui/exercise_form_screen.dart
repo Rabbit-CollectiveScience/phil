@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../l3_service/settings_service.dart';
+import '../l3_service/unit_converter.dart';
 
 class ExerciseFormScreen extends StatefulWidget {
   final String exerciseId;
@@ -36,11 +38,22 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
   final Map<String, TextEditingController> _controllers = {};
   final Map<String, bool> _booleanValues = {};
   bool _hasChanges = false;
+  String _weightUnit = 'lbs';
+  String _distanceUnit = 'miles';
 
   @override
   void initState() {
     super.initState();
+    _loadPreferences();
     _loadSchema();
+  }
+
+  Future<void> _loadPreferences() async {
+    final settings = await SettingsService.getInstance();
+    setState(() {
+      _weightUnit = settings.weightUnit;
+      _distanceUnit = settings.distanceUnit;
+    });
   }
 
   @override
@@ -70,8 +83,28 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
           if (param['type'] == 'boolean') {
             _booleanValues[key] = widget.initialParameters?[key] ?? false;
           } else {
-            final initialValue =
-                widget.initialParameters?[key]?.toString() ?? '';
+            // For edit mode, convert stored base units to display units
+            String initialValue = '';
+            if (widget.initialParameters?[key] != null) {
+              final storedValue = widget.initialParameters![key];
+              if (key == 'weight' && storedValue is num) {
+                final displayValue = UnitConverter.weightFromBase(
+                  storedValue.toDouble(),
+                  _weightUnit,
+                );
+                initialValue = displayValue.round().toString();
+              } else if (key == 'distance' && storedValue is num) {
+                final displayValue = UnitConverter.distanceFromBase(
+                  storedValue.toDouble(),
+                  _distanceUnit,
+                );
+                initialValue = displayValue >= 1
+                    ? displayValue.round().toString()
+                    : displayValue.toStringAsFixed(2);
+              } else {
+                initialValue = storedValue.toString();
+              }
+            }
             _controllers[key] = TextEditingController(text: initialValue);
             _controllers[key]!.addListener(() {
               if (widget.isEditMode && !_hasChanges) {
@@ -146,24 +179,29 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
           if (text.isNotEmpty) {
             // Parse value based on type
             if (param['type'] == 'number') {
-              final intValue = int.tryParse(text);
-              if (intValue != null) {
-                parameters[key] = intValue;
-              } else {
-                final doubleValue = double.tryParse(text);
-                if (doubleValue != null) {
-                  parameters[key] = doubleValue;
+              final doubleValue = double.tryParse(text);
+              if (doubleValue != null) {
+                // Convert to base units (kg for weight, km for distance)
+                if (key == 'weight') {
+                  parameters[key] = UnitConverter.weightToBase(
+                    doubleValue,
+                    _weightUnit,
+                  );
+                } else if (key == 'distance') {
+                  parameters[key] = UnitConverter.distanceToBase(
+                    doubleValue,
+                    _distanceUnit,
+                  );
+                } else {
+                  // For other numeric values (sets, reps, etc.), store as-is
+                  final intValue = int.tryParse(text);
+                  parameters[key] = intValue ?? doubleValue;
                 }
               }
             } else {
               parameters[key] = text;
             }
           }
-        }
-
-        // Add unit if present
-        if (param['unit'] != null) {
-          parameters['${key}Unit'] = param['unit'];
         }
       }
     }
@@ -405,7 +443,16 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
       final label = param['label'] as String;
       final type = param['type'] as String;
       final required = param['required'] == true;
-      final unit = param['unit'] as String?;
+
+      // Determine display unit based on user preference
+      String? displayUnit;
+      if (key == 'weight') {
+        displayUnit = _weightUnit;
+      } else if (key == 'distance') {
+        displayUnit = _distanceUnit;
+      } else {
+        displayUnit = param['unit'] as String?;
+      }
 
       if (type == 'boolean') {
         fields.add(
@@ -468,7 +515,7 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                       ? TextInputType.number
                       : TextInputType.text,
                   decoration: InputDecoration(
-                    suffixText: unit,
+                    suffixText: displayUnit,
                     suffixStyle: TextStyle(
                       color: Colors.grey[500],
                       fontSize: 14,

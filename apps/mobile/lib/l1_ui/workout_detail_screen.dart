@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l2_domain/models/workout.dart';
 import '../l2_domain/models/workout_exercise.dart';
 import '../l3_service/workout_service.dart';
+import '../l3_service/settings_service.dart';
 import 'exercise_form_screen.dart';
 
 class WorkoutDetailScreen extends StatefulWidget {
@@ -17,11 +18,22 @@ class WorkoutDetailScreen extends StatefulWidget {
 class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
   final WorkoutService _workoutService = WorkoutService();
   late List<WorkoutExercise> _exercises;
+  String _weightUnit = 'lbs';
+  String _distanceUnit = 'miles';
 
   @override
   void initState() {
     super.initState();
     _exercises = List.from(widget.workout.exercises);
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final settings = await SettingsService.getInstance();
+    setState(() {
+      _weightUnit = settings.weightUnit;
+      _distanceUnit = settings.distanceUnit;
+    });
   }
 
   Future<void> _updateExercise(
@@ -323,7 +335,10 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    exercise.formattedParameters,
+                    exercise.formattedParametersWithPreferences(
+                      _weightUnit,
+                      _distanceUnit,
+                    ),
                     style: TextStyle(color: Colors.grey[400], fontSize: 13),
                   ),
                 ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l2_domain/models/workout_exercise.dart';
+import '../l3_service/settings_service.dart';
+import '../l3_service/unit_converter.dart';
 
 class ExerciseEditScreen extends StatefulWidget {
   final WorkoutExercise exercise;
@@ -22,22 +24,52 @@ class ExerciseEditScreen extends StatefulWidget {
 class _ExerciseEditScreenState extends State<ExerciseEditScreen> {
   late Map<String, TextEditingController> _controllers;
   bool _hasChanges = false;
+  String _weightUnit = 'lbs';
+  String _distanceUnit = 'miles';
 
   @override
   void initState() {
     super.initState();
+    _loadPreferences();
     _controllers = {};
 
     // Initialize controllers for all parameters
     widget.exercise.parameters.forEach((key, value) {
-      if (!key.endsWith('Unit') && key != 'bodyweight') {
-        _controllers[key] = TextEditingController(text: value.toString());
+      if (key != 'bodyweight') {
+        // Convert from base units to display units
+        String displayValue;
+        if (key == 'weight' && value is num) {
+          final converted = UnitConverter.weightFromBase(
+            value.toDouble(),
+            _weightUnit,
+          );
+          displayValue = converted.round().toString();
+        } else if (key == 'distance' && value is num) {
+          final converted = UnitConverter.distanceFromBase(
+            value.toDouble(),
+            _distanceUnit,
+          );
+          displayValue = converted >= 1
+              ? converted.round().toString()
+              : converted.toStringAsFixed(2);
+        } else {
+          displayValue = value.toString();
+        }
+        _controllers[key] = TextEditingController(text: displayValue);
         _controllers[key]!.addListener(() {
           setState(() {
             _hasChanges = true;
           });
         });
       }
+    });
+  }
+
+  Future<void> _loadPreferences() async {
+    final settings = await SettingsService.getInstance();
+    setState(() {
+      _weightUnit = settings.weightUnit;
+      _distanceUnit = settings.distanceUnit;
     });
   }
 
@@ -55,17 +87,26 @@ class _ExerciseEditScreenState extends State<ExerciseEditScreen> {
     _controllers.forEach((key, controller) {
       final text = controller.text.trim();
       if (text.isNotEmpty) {
-        // Try to parse as int first, then double, otherwise keep as string
-        final intValue = int.tryParse(text);
-        if (intValue != null) {
-          updatedParameters[key] = intValue;
-        } else {
-          final doubleValue = double.tryParse(text);
-          if (doubleValue != null) {
-            updatedParameters[key] = doubleValue;
+        final doubleValue = double.tryParse(text);
+        if (doubleValue != null) {
+          // Convert display units back to base units (kg/km)
+          if (key == 'weight') {
+            updatedParameters[key] = UnitConverter.weightToBase(
+              doubleValue,
+              _weightUnit,
+            );
+          } else if (key == 'distance') {
+            updatedParameters[key] = UnitConverter.distanceToBase(
+              doubleValue,
+              _distanceUnit,
+            );
           } else {
-            updatedParameters[key] = text;
+            // For other numeric values (sets, reps, etc.)
+            final intValue = int.tryParse(text);
+            updatedParameters[key] = intValue ?? doubleValue;
           }
+        } else {
+          updatedParameters[key] = text;
         }
       }
     });
@@ -361,11 +402,13 @@ class _ExerciseEditScreenState extends State<ExerciseEditScreen> {
   }
 
   String? _getParameterUnit(String key) {
-    final unitKey = '${key}Unit';
-    if (widget.exercise.parameters.containsKey(unitKey)) {
-      return widget.exercise.parameters[unitKey].toString();
+    // Use user's preferred units for weight and distance
+    if (key == 'weight') {
+      return _weightUnit;
     }
-
+    if (key == 'distance') {
+      return _distanceUnit;
+    }
     if (key == 'holdDuration' || key == 'restBetweenSets') {
       return 'sec';
     }

@@ -1,6 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../l2_domain/models/workout.dart';
 import '../../l2_domain/models/workout_exercise.dart';
+import '../../l3_service/settings_service.dart';
 import 'boxes.dart';
 
 /// Hive database configuration and initialization
@@ -10,6 +11,9 @@ class HiveConfig {
   /// Initialize Hive and register all adapters
   static Future<void> initialize() async {
     if (_initialized) return;
+
+    // Initialize SharedPreferences for settings
+    await SettingsService.getInstance();
 
     // Initialize Hive with Flutter
     await Hive.initFlutter();
