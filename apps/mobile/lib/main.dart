@@ -60,33 +60,51 @@ class _MainNavigatorState extends State<MainNavigator> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFFEDE8D5),
-        selectedItemColor: const Color(0xFF2E2E2E),
-        unselectedItemColor: const Color(0xFF888888),
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.mic_none),
-            activeIcon: Icon(Icons.mic),
-            label: 'Record',
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFFEDE8D5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 8,
+              offset: Offset(0, -2),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          child: SizedBox(
+            height: 70,
+            child: BottomNavigationBar(
+              backgroundColor: Colors.transparent,
+              selectedItemColor: const Color(0xFF2E2E2E),
+              unselectedItemColor: const Color(0xFF888888),
+              elevation: 0,
+              currentIndex: _currentIndex,
+              onTap: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.mic_none),
+                  activeIcon: Icon(Icons.mic),
+                  label: 'Record',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.dashboard_outlined),
+                  activeIcon: Icon(Icons.dashboard),
+                  label: 'Dashboard',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings_outlined),
+                  activeIcon: Icon(Icons.settings),
+                  label: 'Settings',
+                ),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined),
-            activeIcon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            activeIcon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
+        ),
       ),
     );
   }
