@@ -456,6 +456,26 @@ class _SettingsPageState extends State<SettingsPage> {
       deviceDefaultLabel = 'Device default ($flag ${systemLocale.name})';
     }
 
+    // Get user's preferred languages and separate them from others
+    final preferredLanguages = _speechService.getPreferredLanguages();
+    
+    final preferredLocales = <stt.LocaleName>[];
+    final otherLocales = <stt.LocaleName>[];
+    
+    for (final locale in _availableLocales) {
+      final langCode = locale.localeId.split(RegExp(r'[-_]'))[0].toLowerCase();
+      final isPreferred = preferredLanguages.any((pref) => pref.toLowerCase() == langCode);
+      
+      if (isPreferred && langCode != 'en') {
+        preferredLocales.add(locale);
+      } else {
+        otherLocales.add(locale);
+      }
+    }
+    
+    preferredLocales.sort((a, b) => a.name.compareTo(b.name));
+    otherLocales.sort((a, b) => a.name.compareTo(b.name));
+
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -486,7 +506,31 @@ class _SettingsPageState extends State<SettingsPage> {
                   dense: true,
                 ),
                 const Divider(color: Colors.white24),
-                ..._availableLocales.map((locale) {
+                // Preferred languages section
+                if (preferredLocales.isNotEmpty) ...[
+                  ...preferredLocales.map((locale) {
+                    final flag = LocaleHelper.getFlag(locale.localeId);
+                    return RadioListTile<String?>(
+                      title: Text(
+                        '$flag ${locale.name}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      value: locale.localeId,
+                      groupValue: selectedLanguage,
+                      activeColor: Colors.white,
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedLanguage = value;
+                        });
+                      },
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                    );
+                  }),
+                  const Divider(color: Colors.white24),
+                ],
+                // All other languages
+                ...otherLocales.map((locale) {
                   final flag = LocaleHelper.getFlag(locale.localeId);
                   return RadioListTile<String?>(
                     title: Text(
@@ -540,6 +584,45 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       );
     }
+  }
+
+  /// Sort locales by user's preferred languages (from iPhone settings)
+  List<stt.LocaleName> _sortLocalesByPreference(
+    List<stt.LocaleName> locales,
+    List<String> preferredLanguages,
+  ) {
+    final sortedLocales = List<stt.LocaleName>.from(locales);
+
+    sortedLocales.sort((a, b) {
+      final aIndex = _getPreferenceIndex(a.localeId, preferredLanguages);
+      final bIndex = _getPreferenceIndex(b.localeId, preferredLanguages);
+
+      if (aIndex != -1 && bIndex != -1) {
+        return aIndex.compareTo(bIndex);
+      }
+
+      if (aIndex != -1) return -1;
+      if (bIndex != -1) return 1;
+
+      return a.name.compareTo(b.name);
+    });
+
+    return sortedLocales;
+  }
+
+  /// Get the index of this locale in user's preferred languages
+  int _getPreferenceIndex(String localeId, List<String> preferredLanguages) {
+    // Extract language code from locale (e.g., "th" from "th-TH")
+    final langCode = localeId.split(RegExp(r'[-_]'))[0].toLowerCase();
+    
+    // Find this language in the preferred languages list
+    for (int i = 0; i < preferredLanguages.length; i++) {
+      if (langCode == preferredLanguages[i].toLowerCase()) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 
   @override

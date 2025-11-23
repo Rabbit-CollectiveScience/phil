@@ -238,6 +238,32 @@ class _RecordPageState extends State<RecordPage>
       deviceDefaultLabel = 'Device default ($flag ${systemLocale.name})';
     }
 
+    // Get user's preferred languages and separate them from others
+    final preferredLanguages = _speechService.getPreferredLanguages();
+    
+    // Split locales into preferred and others
+    final preferredLocales = <stt.LocaleName>[];
+    final otherLocales = <stt.LocaleName>[];
+    
+    for (final locale in _availableLocales) {
+      final langCode = locale.localeId.split(RegExp(r'[-_]'))[0].toLowerCase();
+      final isPreferred = preferredLanguages.any((pref) => pref.toLowerCase() == langCode);
+      
+      if (isPreferred && langCode != 'en') {
+        // Skip English from preferred section (it's already the device default)
+        preferredLocales.add(locale);
+      } else {
+        otherLocales.add(locale);
+      }
+    }
+    
+    // Sort each group
+    preferredLocales.sort((a, b) => a.name.compareTo(b.name));
+    otherLocales.sort((a, b) => a.name.compareTo(b.name));
+    
+    print('🔍 Preferred: ${preferredLocales.map((l) => l.localeId).join(", ")}');
+    print('🔍 First 10 others: ${otherLocales.take(10).map((l) => l.localeId).join(", ")}');
+
     final result = await showModalBottomSheet<bool>(
       context: context,
       backgroundColor: Colors.grey[900],
@@ -292,7 +318,29 @@ class _RecordPageState extends State<RecordPage>
                         },
                       ),
                       const Divider(color: Colors.white24, height: 1),
-                      ..._availableLocales.map((locale) {
+                      // Preferred languages section
+                      if (preferredLocales.isNotEmpty) ...[
+                        ...preferredLocales.map((locale) {
+                          final flag = LocaleHelper.getFlag(locale.localeId);
+                          return RadioListTile<String?>(
+                            title: Text(
+                              '$flag ${locale.name}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            value: locale.localeId,
+                            groupValue: selectedLanguage,
+                            activeColor: Colors.white,
+                            onChanged: (value) {
+                              setBottomSheetState(() {
+                                selectedLanguage = value;
+                              });
+                            },
+                          );
+                        }),
+                        const Divider(color: Colors.white24, height: 1),
+                      ],
+                      // All other languages
+                      ...otherLocales.map((locale) {
                         final flag = LocaleHelper.getFlag(locale.localeId);
                         return RadioListTile<String?>(
                           title: Text(
@@ -643,6 +691,52 @@ class _RecordPageState extends State<RecordPage>
     if (_isProcessing) return Icons.more_horiz;
     if (_isAiSpeaking) return Icons.smart_toy;
     return Icons.mic;
+  }
+
+  /// Sort locales by user's preferred languages (from iPhone settings)
+  List<stt.LocaleName> _sortLocalesByPreference(
+    List<stt.LocaleName> locales,
+    List<String> preferredLanguages,
+  ) {
+    // Create a copy to avoid modifying the original list
+    final sortedLocales = List<stt.LocaleName>.from(locales);
+
+    sortedLocales.sort((a, b) {
+      // Find the preference index for each locale
+      // Lower index = higher priority (earlier in preferred languages list)
+      final aIndex = _getPreferenceIndex(a.localeId, preferredLanguages);
+      final bIndex = _getPreferenceIndex(b.localeId, preferredLanguages);
+
+      // If both are preferred, sort by their preference order
+      if (aIndex != -1 && bIndex != -1) {
+        return aIndex.compareTo(bIndex);
+      }
+
+      // If only one is preferred, it comes first
+      if (aIndex != -1) return -1;
+      if (bIndex != -1) return 1;
+
+      // If neither is preferred, keep original alphabetical order
+      return a.name.compareTo(b.name);
+    });
+
+    return sortedLocales;
+  }
+
+  /// Get the index of this locale in user's preferred languages
+  /// Returns -1 if not in preferred languages
+  int _getPreferenceIndex(String localeId, List<String> preferredLanguages) {
+    // Extract language code from locale (e.g., "th" from "th-TH")
+    final langCode = localeId.split(RegExp(r'[-_]'))[0].toLowerCase();
+    
+    // Find this language in the preferred languages list
+    for (int i = 0; i < preferredLanguages.length; i++) {
+      if (langCode == preferredLanguages[i].toLowerCase()) {
+        return i;
+      }
+    }
+
+    return -1; // Not in preferred languages
   }
 
   String _formatTime(DateTime time) {

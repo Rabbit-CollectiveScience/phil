@@ -160,6 +160,23 @@ class SpeechService {
     return _speech.locales();
   }
 
+  /// Get user's preferred languages from device settings (ordered by preference)
+  List<String> getPreferredLanguages() {
+    // Get all preferred locales from device settings
+    final preferredLocales = ui.PlatformDispatcher.instance.locales;
+    
+    print('🔍 Raw preferred locales: ${preferredLocales.map((l) => "${l.languageCode}_${l.countryCode}").join(", ")}');
+    
+    // Extract just the language codes (e.g., "en", "th", "zh")
+    // We'll match by language code only, not specific country variants
+    final preferredLanguageCodes = preferredLocales
+        .map((locale) => locale.languageCode)
+        .toList();
+    
+    print('🔍 User preferred languages: ${preferredLanguageCodes.join(", ")}');
+    return preferredLanguageCodes;
+  }
+
   /// Check if microphone permission is granted
   Future<bool> hasPermission() async {
     return _speech.hasPermission;
