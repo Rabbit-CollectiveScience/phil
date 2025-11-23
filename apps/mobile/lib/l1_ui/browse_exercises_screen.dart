@@ -7,9 +7,9 @@ class BrowseExercisesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF3A3A3A),
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF3A3A3A),
         title: const Text(
           'Browse Exercises',
           style: TextStyle(color: Colors.white),

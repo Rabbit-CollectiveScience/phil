@@ -200,9 +200,9 @@ class _ExerciseEditScreenState extends State<ExerciseEditScreen> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF3A3A3A),
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: const Color(0xFF3A3A3A),
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.close, color: Colors.white),

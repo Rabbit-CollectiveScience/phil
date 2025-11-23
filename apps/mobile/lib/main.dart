@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.white,
           brightness: Brightness.dark,
         ),
+        scaffoldBackgroundColor: const Color(0xFF3A3A3A),
         useMaterial3: true,
       ),
       home: const MainNavigator(),
@@ -60,9 +61,9 @@ class _MainNavigatorState extends State<MainNavigator> {
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey[900],
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey[600],
+        backgroundColor: const Color(0xFFEDE8D5),
+        selectedItemColor: const Color(0xFF2E2E2E),
+        unselectedItemColor: const Color(0xFF888888),
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {

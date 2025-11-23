@@ -428,9 +428,9 @@ class _RecordPageState extends State<RecordPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF3A3A3A),
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF3A3A3A),
         elevation: 0,
         title: const Text('Record', style: TextStyle(color: Colors.white)),
         actions: [
@@ -466,177 +466,179 @@ class _RecordPageState extends State<RecordPage>
               // Conversation Log
               Expanded(
                 child: _messages.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            size: 80,
-                            color: Colors.grey[800],
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Start logging your workout',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 16,
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.chat_bubble_outline,
+                              size: 80,
+                              color: Colors.grey[800],
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
-                      ),
-                      itemCount: _messages.length,
-                      itemBuilder: (context, index) {
-                        return _buildMessageBubble(_messages[index]);
-                      },
-                    ),
-            ),
-
-            // Voice Button
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                children: [
-                  // Show partial transcription while recording
-                  if (_isRecording && _partialTranscription.isNotEmpty)
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[900],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        _partialTranscription,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  // Microphone and language badge side by side
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Spacer to keep mic centered
-                      const SizedBox(width: 60),
-                      // Microphone button (centered)
-                      GestureDetector(
-                        onTap: _handleVoiceInput,
-                        child: AnimatedBuilder(
-                          animation: _pulseAnimation,
-                          builder: (context, child) {
-                            return Transform.scale(
-                              scale: _isAiSpeaking
-                                  ? _pulseAnimation.value
-                                  : 1.0,
-                              child: Container(
-                                width: 80,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: _getButtonColor(),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: _getButtonColor().withOpacity(0.3),
-                                      blurRadius: 30,
-                                      spreadRadius: 10,
-                                    ),
-                                  ],
-                                ),
-                                child: Icon(
-                                  _getButtonIcon(),
-                                  size: 40,
-                                  color: Colors.black,
-                                ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Start logging your workout',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 16,
                               ),
-                            );
-                          },
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 20,
+                        ),
+                        itemCount: _messages.length,
+                        itemBuilder: (context, index) {
+                          return _buildMessageBubble(_messages[index]);
+                        },
+                      ),
+              ),
+
+              // Voice Button
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(
+                  children: [
+                    // Show partial transcription while recording
+                    if (_isRecording && _partialTranscription.isNotEmpty)
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[900],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          _partialTranscription,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      // Language badge on the right
-                      _buildLanguageBadge(),
-                    ],
-                  ),
-                ],
+                    // Microphone and language badge side by side
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Spacer to keep mic centered
+                        const SizedBox(width: 60),
+                        // Microphone button (centered)
+                        GestureDetector(
+                          onTap: _handleVoiceInput,
+                          child: AnimatedBuilder(
+                            animation: _pulseAnimation,
+                            builder: (context, child) {
+                              return Transform.scale(
+                                scale: _isAiSpeaking
+                                    ? _pulseAnimation.value
+                                    : 1.0,
+                                child: Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _getButtonColor(),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: _getButtonColor().withOpacity(
+                                          0.3,
+                                        ),
+                                        blurRadius: 30,
+                                        spreadRadius: 10,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Icon(
+                                    _getButtonIcon(),
+                                    size: 40,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        // Language badge on the right
+                        _buildLanguageBadge(),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            // Toggle Text Input Button
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _showTextInput = !_showTextInput;
-                });
-              },
-              child: Text(
-                _showTextInput ? 'Use voice instead' : 'or tap to type',
-                style: const TextStyle(color: Colors.white54, fontSize: 14),
-              ),
-            ),
-
-            // Text Input (Conditional)
-            if (_showTextInput)
-              GestureDetector(
-                onTap: () {
-                  // Prevent tap from propagating to parent GestureDetector
+              // Toggle Text Input Button
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _showTextInput = !_showTextInput;
+                  });
                 },
-                child: Container(
-                  color: Colors.black,
-                  padding: const EdgeInsets.all(16),
-                  child: SafeArea(
-                    top: false,
-                    child: TextField(
-                      controller: _textController,
-                      autofocus: true,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: 'Type your workout...',
-                        hintStyle: const TextStyle(color: Colors.white38),
-                        filled: true,
-                        fillColor: Colors.grey[900],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
+                child: Text(
+                  _showTextInput ? 'Use voice instead' : 'or tap to type',
+                  style: const TextStyle(color: Colors.white54, fontSize: 14),
+                ),
+              ),
+
+              // Text Input (Conditional)
+              if (_showTextInput)
+                GestureDetector(
+                  onTap: () {
+                    // Prevent tap from propagating to parent GestureDetector
+                  },
+                  child: Container(
+                    color: Colors.black,
+                    padding: const EdgeInsets.all(16),
+                    child: SafeArea(
+                      top: false,
+                      child: TextField(
+                        controller: _textController,
+                        autofocus: true,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: 'Type your workout...',
+                          hintStyle: const TextStyle(color: Colors.white38),
+                          filled: true,
+                          fillColor: Colors.grey[900],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.send, color: Colors.white54),
+                            onPressed: () {
+                              _handleUserInput(_textController.text);
+                              setState(() {
+                                _showTextInput = false;
+                              });
+                            },
+                          ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.send, color: Colors.white54),
-                          onPressed: () {
-                            _handleUserInput(_textController.text);
-                            setState(() {
-                              _showTextInput = false;
-                            });
-                          },
-                        ),
+                        onSubmitted: (value) {
+                          _handleUserInput(value);
+                          setState(() {
+                            _showTextInput = false;
+                          });
+                        },
                       ),
-                      onSubmitted: (value) {
-                        _handleUserInput(value);
-                        setState(() {
-                          _showTextInput = false;
-                        });
-                      },
                     ),
                   ),
-                ),
-              )
-            else
-              const SizedBox(height: 16),
+                )
+              else
+                const SizedBox(height: 16),
             ],
           ),
         ),
@@ -657,7 +659,14 @@ class _RecordPageState extends State<RecordPage>
             CircleAvatar(
               backgroundColor: Colors.white,
               radius: 16,
-              child: const Icon(Icons.smart_toy, color: Colors.black, size: 18),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/bot_avatar.png',
+                  width: 32,
+                  height: 32,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             const SizedBox(width: 8),
           ],

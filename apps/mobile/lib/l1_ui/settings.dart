@@ -630,7 +630,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF3A3A3A),
       body: SafeArea(
         child: ListView(
           children: [

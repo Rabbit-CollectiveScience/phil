@@ -74,9 +74,9 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
         widget.category[0].toUpperCase() + widget.category.substring(1);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF3A3A3A),
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF3A3A3A),
         title: Text(categoryTitle, style: const TextStyle(color: Colors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
