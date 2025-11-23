@@ -8,7 +8,7 @@ class SeedDataService {
   SeedDataService(this._workoutService);
 
   /// Load mock workouts into database
-  /// 
+  ///
   /// Skips workouts that already exist (by ID) to prevent duplicates.
   /// Returns result with counts of added and skipped workouts.
   Future<SeedResult> loadMockData() async {

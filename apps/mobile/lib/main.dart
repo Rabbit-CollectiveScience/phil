@@ -43,10 +43,16 @@ class MainNavigator extends StatefulWidget {
 class _MainNavigatorState extends State<MainNavigator> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
+  void _navigateToDashboard() {
+    setState(() {
+      _currentIndex = 1;
+    });
+  }
+
+  List<Widget> get _pages => [
     const RecordPage(),
     const DashboardPage(),
-    const SettingsPage(),
+    SettingsPage(onNavigateToDashboard: _navigateToDashboard),
   ];
 
   @override

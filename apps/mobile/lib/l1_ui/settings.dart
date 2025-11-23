@@ -3,7 +3,9 @@ import '../l3_service/seed_data_service.dart';
 import '../l3_service/workout_service.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final VoidCallback onNavigateToDashboard;
+
+  const SettingsPage({super.key, required this.onNavigateToDashboard});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -11,6 +13,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _isLoadingMockData = false;
+  bool _isClearingData = false;
 
   Future<void> _addMockData() async {
     setState(() {
@@ -30,9 +33,15 @@ class _SettingsPageState extends State<SettingsPage> {
             '✅ Added ${result.added} workouts, skipped ${result.skipped} duplicates',
           ),
           backgroundColor: Colors.green[700],
-          duration: const Duration(seconds: 3),
+          duration: const Duration(seconds: 2),
         ),
       );
+
+      // Navigate to dashboard after success
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (mounted) {
+        widget.onNavigateToDashboard();
+      }
     } catch (e) {
       if (!mounted) return;
 
@@ -47,6 +56,169 @@ class _SettingsPageState extends State<SettingsPage> {
       if (mounted) {
         setState(() {
           _isLoadingMockData = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _clearAllData() async {
+    final workoutService = WorkoutService();
+    final workoutCount = workoutService.workoutCount;
+
+    // Check if there's any data to clear
+    if (workoutCount == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('ℹ️ No workout data to clear'),
+          backgroundColor: Colors.blue[700],
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    // First confirmation dialog
+    final firstConfirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.grey[900],
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber, color: Colors.orange, size: 28),
+            SizedBox(width: 12),
+            Text('Delete All Workouts?', style: TextStyle(color: Colors.white)),
+          ],
+        ),
+        content: Text(
+          'You have $workoutCount workout${workoutCount == 1 ? '' : 's'}. This action cannot be undone.',
+          style: TextStyle(color: Colors.grey[300]),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Cancel', style: TextStyle(color: Colors.grey[400])),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(
+              'Continue',
+              style: TextStyle(color: Colors.orange),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (firstConfirm != true || !mounted) return;
+
+    // Second confirmation dialog with text input
+    final textController = TextEditingController();
+    final secondConfirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.grey[900],
+        title: const Row(
+          children: [
+            Icon(Icons.error_outline, color: Colors.red, size: 28),
+            SizedBox(width: 12),
+            Text('Final Warning', style: TextStyle(color: Colors.white)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Type DELETE to confirm deletion of $workoutCount workout${workoutCount == 1 ? '' : 's'}:',
+              style: TextStyle(color: Colors.grey[300]),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: textController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: 'DELETE',
+                hintStyle: TextStyle(color: Colors.grey[600]),
+                filled: true,
+                fillColor: Colors.grey[850],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              textCapitalization: TextCapitalization.characters,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Cancel', style: TextStyle(color: Colors.grey[400])),
+          ),
+          TextButton(
+            onPressed: () {
+              if (textController.text.trim() == 'DELETE') {
+                Navigator.pop(context, true);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Please type DELETE to confirm'),
+                    backgroundColor: Colors.red[700],
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+            child: const Text(
+              'Delete All',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (secondConfirm != true || !mounted) return;
+
+    // Perform the clear operation
+    setState(() {
+      _isClearingData = true;
+    });
+
+    try {
+      await workoutService.clearAll();
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '✅ Deleted $workoutCount workout${workoutCount == 1 ? '' : 's'}',
+          ),
+          backgroundColor: Colors.green[700],
+          duration: const Duration(seconds: 2),
+        ),
+      );
+
+      // Navigate to dashboard after success
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (mounted) {
+        widget.onNavigateToDashboard();
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('❌ Failed to clear data: $e'),
+          backgroundColor: Colors.red[700],
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isClearingData = false;
         });
       }
     }
@@ -102,7 +274,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.white70,
+                        ),
                       ),
                     )
                   : null,
@@ -111,12 +285,21 @@ class _SettingsPageState extends State<SettingsPage> {
               icon: Icons.delete_outline,
               title: 'Clear Data',
               subtitle: 'Delete all workout logs',
-              onTap: () {},
-              trailing: const Icon(
-                Icons.warning_amber,
-                color: Colors.orange,
-                size: 20,
-              ),
+              onTap: _isClearingData ? () {} : () => _clearAllData(),
+              trailing: _isClearingData
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                      ),
+                    )
+                  : const Icon(
+                      Icons.warning_amber,
+                      color: Colors.orange,
+                      size: 20,
+                    ),
             ),
 
             const SizedBox(height: 20),
