@@ -41,6 +41,10 @@
 	<string>Allow saving images to your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to your photo library to select images.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need microphone access to log your workouts by voice.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>We need speech recognition to convert your voice to text.</string>
 
 	<!-- Minimal SKAdNetworkItems example; add more as needed based on networks you use -->
 	<key>SKAdNetworkItems</key>

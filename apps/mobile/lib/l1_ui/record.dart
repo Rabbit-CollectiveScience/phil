@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'browse_exercises_screen.dart';
+import '../l3_service/speech_service.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -10,10 +11,12 @@ class RecordPage extends StatefulWidget {
 
 class _RecordPageState extends State<RecordPage>
     with SingleTickerProviderStateMixin {
+  final SpeechService _speechService = SpeechService();
   bool _isRecording = false;
   bool _isProcessing = false;
   bool _isAiSpeaking = false;
   bool _showTextInput = false;
+  String _partialTranscription = '';
   final List<ChatMessage> _messages = [];
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -30,6 +33,19 @@ class _RecordPageState extends State<RecordPage>
     _pulseAnimation = Tween<double>(begin: 0.85, end: 1.15).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
+    _initializeSpeech();
+  }
+
+  Future<void> _initializeSpeech() async {
+    final initialized = await _speechService.initialize();
+    if (!initialized && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Speech recognition not available'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   void _handleUserInput(String text) async {
@@ -77,14 +93,58 @@ class _RecordPageState extends State<RecordPage>
   void _handleVoiceInput() async {
     if (_isAiSpeaking || _isProcessing) return;
 
-    setState(() {
-      _isRecording = !_isRecording;
-    });
+    if (_isRecording) {
+      // Stop recording
+      setState(() {
+        _isRecording = false;
+        _isProcessing = true;
+      });
 
-    if (!_isRecording) {
-      // Mock: When stopping recording, simulate transcription
-      String mockTranscription = "Bench press 3 sets of 10 at 185";
-      _handleUserInput(mockTranscription);
+      await _speechService.stopListening();
+
+      // Wait a bit for final result
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      setState(() {
+        _isProcessing = false;
+      });
+    } else {
+      // Start recording
+      setState(() {
+        _isRecording = true;
+        _partialTranscription = '';
+      });
+
+      await _speechService.startListening(
+        onResult: (finalText) {
+          // Final transcription received
+          if (finalText.isNotEmpty) {
+            _handleUserInput(finalText);
+          }
+          setState(() {
+            _isRecording = false;
+            _partialTranscription = '';
+          });
+        },
+        onPartialResult: (partialText) {
+          // Update partial transcription in real-time
+          setState(() {
+            _partialTranscription = partialText;
+          });
+        },
+        onError: (error) {
+          setState(() {
+            _isRecording = false;
+            _partialTranscription = '';
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: $error'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        },
+      );
     }
   }
 
@@ -165,36 +225,61 @@ class _RecordPageState extends State<RecordPage>
             // Voice Button
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: GestureDetector(
-                onTap: _handleVoiceInput,
-                child: AnimatedBuilder(
-                  animation: _pulseAnimation,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: _isAiSpeaking ? _pulseAnimation.value : 1.0,
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _getButtonColor(),
-                          boxShadow: [
-                            BoxShadow(
-                              color: _getButtonColor().withOpacity(0.3),
-                              blurRadius: 30,
-                              spreadRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          _getButtonIcon(),
-                          size: 40,
-                          color: Colors.black,
-                        ),
+              child: Column(
+                children: [
+                  // Show partial transcription while recording
+                  if (_isRecording && _partialTranscription.isNotEmpty)
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
                       ),
-                    );
-                  },
-                ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        _partialTranscription,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  GestureDetector(
+                    onTap: _handleVoiceInput,
+                    child: AnimatedBuilder(
+                      animation: _pulseAnimation,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: _isAiSpeaking ? _pulseAnimation.value : 1.0,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _getButtonColor(),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: _getButtonColor().withOpacity(0.3),
+                                  blurRadius: 30,
+                                  spreadRadius: 10,
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              _getButtonIcon(),
+                              size: 40,
+                              color: Colors.black,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
 
@@ -338,6 +423,7 @@ class _RecordPageState extends State<RecordPage>
 
   @override
   void dispose() {
+    _speechService.dispose();
     _pulseController.dispose();
     _textController.dispose();
     _scrollController.dispose();

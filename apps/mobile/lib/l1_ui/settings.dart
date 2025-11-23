@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l3_service/seed_data_service.dart';
 import '../l3_service/workout_service.dart';
 import '../l3_service/settings_service.dart';
+import 'user_profile_screen.dart';
 
 class SettingsPage extends StatefulWidget {
   final VoidCallback onNavigateToDashboard;
@@ -412,7 +413,14 @@ class _SettingsPageState extends State<SettingsPage> {
               icon: Icons.person_outline,
               title: 'User Profile',
               subtitle: 'Guest mode • Device ID: ...',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UserProfileScreen(),
+                  ),
+                );
+              },
             ),
 
             const SizedBox(height: 20),
