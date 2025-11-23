@@ -458,21 +458,23 @@ class _SettingsPageState extends State<SettingsPage> {
 
     // Get user's preferred languages and separate them from others
     final preferredLanguages = _speechService.getPreferredLanguages();
-    
+
     final preferredLocales = <stt.LocaleName>[];
     final otherLocales = <stt.LocaleName>[];
-    
+
     for (final locale in _availableLocales) {
       final langCode = locale.localeId.split(RegExp(r'[-_]'))[0].toLowerCase();
-      final isPreferred = preferredLanguages.any((pref) => pref.toLowerCase() == langCode);
-      
+      final isPreferred = preferredLanguages.any(
+        (pref) => pref.toLowerCase() == langCode,
+      );
+
       if (isPreferred && langCode != 'en') {
         preferredLocales.add(locale);
       } else {
         otherLocales.add(locale);
       }
     }
-    
+
     preferredLocales.sort((a, b) => a.name.compareTo(b.name));
     otherLocales.sort((a, b) => a.name.compareTo(b.name));
 
@@ -614,7 +616,7 @@ class _SettingsPageState extends State<SettingsPage> {
   int _getPreferenceIndex(String localeId, List<String> preferredLanguages) {
     // Extract language code from locale (e.g., "th" from "th-TH")
     final langCode = localeId.split(RegExp(r'[-_]'))[0].toLowerCase();
-    
+
     // Find this language in the preferred languages list
     for (int i = 0; i < preferredLanguages.length; i++) {
       if (langCode == preferredLanguages[i].toLowerCase()) {

@@ -195,7 +195,7 @@ class _RecordPageState extends State<RecordPage>
   Widget _buildLanguageBadge() {
     final localeId = _currentLanguage ?? _systemLocaleId;
     final flag = localeId != null ? LocaleHelper.getFlag(localeId) : '🌐';
-    
+
     return GestureDetector(
       onTap: _showQuickLanguagePicker,
       child: Container(
@@ -206,12 +206,7 @@ class _RecordPageState extends State<RecordPage>
           color: Colors.grey[850],
           border: Border.all(color: Colors.white24, width: 2),
         ),
-        child: Center(
-          child: Text(
-            flag,
-            style: const TextStyle(fontSize: 22),
-          ),
-        ),
+        child: Center(child: Text(flag, style: const TextStyle(fontSize: 22))),
       ),
     );
   }
@@ -240,15 +235,17 @@ class _RecordPageState extends State<RecordPage>
 
     // Get user's preferred languages and separate them from others
     final preferredLanguages = _speechService.getPreferredLanguages();
-    
+
     // Split locales into preferred and others
     final preferredLocales = <stt.LocaleName>[];
     final otherLocales = <stt.LocaleName>[];
-    
+
     for (final locale in _availableLocales) {
       final langCode = locale.localeId.split(RegExp(r'[-_]'))[0].toLowerCase();
-      final isPreferred = preferredLanguages.any((pref) => pref.toLowerCase() == langCode);
-      
+      final isPreferred = preferredLanguages.any(
+        (pref) => pref.toLowerCase() == langCode,
+      );
+
       if (isPreferred && langCode != 'en') {
         // Skip English from preferred section (it's already the device default)
         preferredLocales.add(locale);
@@ -256,13 +253,17 @@ class _RecordPageState extends State<RecordPage>
         otherLocales.add(locale);
       }
     }
-    
+
     // Sort each group
     preferredLocales.sort((a, b) => a.name.compareTo(b.name));
     otherLocales.sort((a, b) => a.name.compareTo(b.name));
-    
-    print('🔍 Preferred: ${preferredLocales.map((l) => l.localeId).join(", ")}');
-    print('🔍 First 10 others: ${otherLocales.take(10).map((l) => l.localeId).join(", ")}');
+
+    print(
+      '🔍 Preferred: ${preferredLocales.map((l) => l.localeId).join(", ")}',
+    );
+    print(
+      '🔍 First 10 others: ${otherLocales.take(10).map((l) => l.localeId).join(", ")}',
+    );
 
     final result = await showModalBottomSheet<bool>(
       context: context,
@@ -447,12 +448,24 @@ class _RecordPageState extends State<RecordPage>
           ),
         ],
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Conversation Log
-            Expanded(
-              child: _messages.isEmpty
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          // Hide text input when tapping outside
+          if (_showTextInput) {
+            setState(() {
+              _showTextInput = false;
+            });
+            // Also unfocus to dismiss keyboard
+            FocusScope.of(context).unfocus();
+          }
+        },
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Conversation Log
+              Expanded(
+                child: _messages.isEmpty
                   ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -525,7 +538,9 @@ class _RecordPageState extends State<RecordPage>
                           animation: _pulseAnimation,
                           builder: (context, child) {
                             return Transform.scale(
-                              scale: _isAiSpeaking ? _pulseAnimation.value : 1.0,
+                              scale: _isAiSpeaking
+                                  ? _pulseAnimation.value
+                                  : 1.0,
                               child: Container(
                                 width: 80,
                                 height: 80,
@@ -574,50 +589,56 @@ class _RecordPageState extends State<RecordPage>
 
             // Text Input (Conditional)
             if (_showTextInput)
-              Container(
-                color: Colors.black,
-                padding: const EdgeInsets.all(16),
-                child: SafeArea(
-                  top: false,
-                  child: TextField(
-                    controller: _textController,
-                    autofocus: true,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: 'Type your workout...',
-                      hintStyle: const TextStyle(color: Colors.white38),
-                      filled: true,
-                      fillColor: Colors.grey[900],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
+              GestureDetector(
+                onTap: () {
+                  // Prevent tap from propagating to parent GestureDetector
+                },
+                child: Container(
+                  color: Colors.black,
+                  padding: const EdgeInsets.all(16),
+                  child: SafeArea(
+                    top: false,
+                    child: TextField(
+                      controller: _textController,
+                      autofocus: true,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        hintText: 'Type your workout...',
+                        hintStyle: const TextStyle(color: Colors.white38),
+                        filled: true,
+                        fillColor: Colors.grey[900],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.send, color: Colors.white54),
+                          onPressed: () {
+                            _handleUserInput(_textController.text);
+                            setState(() {
+                              _showTextInput = false;
+                            });
+                          },
+                        ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 16,
-                      ),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.send, color: Colors.white54),
-                        onPressed: () {
-                          _handleUserInput(_textController.text);
-                          setState(() {
-                            _showTextInput = false;
-                          });
-                        },
-                      ),
+                      onSubmitted: (value) {
+                        _handleUserInput(value);
+                        setState(() {
+                          _showTextInput = false;
+                        });
+                      },
                     ),
-                    onSubmitted: (value) {
-                      _handleUserInput(value);
-                      setState(() {
-                        _showTextInput = false;
-                      });
-                    },
                   ),
                 ),
               )
             else
               const SizedBox(height: 16),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -728,7 +749,7 @@ class _RecordPageState extends State<RecordPage>
   int _getPreferenceIndex(String localeId, List<String> preferredLanguages) {
     // Extract language code from locale (e.g., "th" from "th-TH")
     final langCode = localeId.split(RegExp(r'[-_]'))[0].toLowerCase();
-    
+
     // Find this language in the preferred languages list
     for (int i = 0; i < preferredLanguages.length; i++) {
       if (langCode == preferredLanguages[i].toLowerCase()) {
