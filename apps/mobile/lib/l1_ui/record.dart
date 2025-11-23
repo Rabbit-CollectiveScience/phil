@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'browse_exercises_screen.dart';
 import '../l3_service/speech_service.dart';
+import '../l3_service/settings_service.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -109,6 +110,10 @@ class _RecordPageState extends State<RecordPage>
         _isProcessing = false;
       });
     } else {
+      // Get user's preferred speech language
+      final settings = await SettingsService.getInstance();
+      final localeId = settings.speechLanguage;
+
       // Start recording
       setState(() {
         _isRecording = true;
@@ -116,6 +121,7 @@ class _RecordPageState extends State<RecordPage>
       });
 
       await _speechService.startListening(
+        localeId: localeId,
         onResult: (finalText) {
           // Final transcription received
           if (finalText.isNotEmpty) {

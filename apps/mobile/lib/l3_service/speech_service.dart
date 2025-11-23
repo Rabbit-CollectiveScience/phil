@@ -1,4 +1,5 @@
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'dart:ui' as ui;
 
 /// Service for handling speech-to-text functionality
 class SpeechService {
@@ -30,12 +31,66 @@ class SpeechService {
     }
   }
 
+  /// Get the device's current system locale
+  Future<String?> getSystemLocale() async {
+    if (!_isInitialized) {
+      await initialize();
+    }
+
+    // Get device's actual locale from Flutter
+    final deviceLocale = ui.PlatformDispatcher.instance.locale;
+    print(
+      '🔍 Device locale: ${deviceLocale.languageCode}_${deviceLocale.countryCode}',
+    );
+
+    // Convert to both formats (underscore and dash) for matching
+    final deviceLocaleIdUnderscore =
+        '${deviceLocale.languageCode}_${deviceLocale.countryCode}';
+    final deviceLocaleIdDash =
+        '${deviceLocale.languageCode}-${deviceLocale.countryCode}';
+
+    // Check if this locale is available in speech recognition
+    final locales = await getLocales();
+    print(
+      '🔍 Available locales: ${locales.map((l) => l.localeId).take(5).join(", ")}...',
+    );
+
+    // Try exact match first (both formats), then language-only match
+    final matchingLocale = locales.firstWhere(
+      (l) =>
+          l.localeId == deviceLocaleIdUnderscore ||
+          l.localeId == deviceLocaleIdDash ||
+          l.localeId.toLowerCase() == deviceLocaleIdUnderscore.toLowerCase() ||
+          l.localeId.toLowerCase() == deviceLocaleIdDash.toLowerCase(),
+      orElse: () {
+        // Fallback: find any locale with matching language code
+        return locales.firstWhere(
+          (l) =>
+              l.localeId.toLowerCase().startsWith(
+                '${deviceLocale.languageCode.toLowerCase()}-',
+              ) ||
+              l.localeId.toLowerCase().startsWith(
+                '${deviceLocale.languageCode.toLowerCase()}_',
+              ),
+          orElse: () => locales.isNotEmpty
+              ? locales.first
+              : stt.LocaleName('en-US', 'English'),
+        );
+      },
+    );
+
+    print('🔍 Matched locale: ${matchingLocale.localeId}');
+    return matchingLocale.localeId;
+  }
+
   /// Start listening for speech input
   /// Returns a stream of transcribed text via the onResult callback
+  /// [localeId] - Optional locale ID (e.g., 'en_US', 'th_TH'). If null, uses device default.
   Future<void> startListening({
     required Function(String) onResult,
     Function(String)? onPartialResult,
     Function(String)? onError,
+    String? localeId,
   }) async {
     if (!_isInitialized) {
       final initialized = await initialize();
@@ -60,6 +115,7 @@ class SpeechService {
             onPartialResult?.call(result.recognizedWords);
           }
         },
+        localeId: localeId,
         listenFor: const Duration(seconds: 30),
         pauseFor: const Duration(seconds: 3),
         partialResults: true,

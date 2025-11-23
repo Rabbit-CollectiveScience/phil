@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../l3_service/seed_data_service.dart';
 import '../l3_service/workout_service.dart';
 import '../l3_service/settings_service.dart';
+import '../l3_service/speech_service.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'user_profile_screen.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -18,11 +20,16 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _isClearingData = false;
   String _weightUnit = 'kg';
   String _distanceUnit = 'km';
+  String? _speechLanguage;
+  List<stt.LocaleName> _availableLocales = [];
+  String? _systemLocaleId;
+  final SpeechService _speechService = SpeechService();
 
   @override
   void initState() {
     super.initState();
     _loadPreferences();
+    _loadAvailableLocales();
   }
 
   Future<void> _loadPreferences() async {
@@ -30,7 +37,22 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _weightUnit = settings.weightUnit;
       _distanceUnit = settings.distanceUnit;
+      _speechLanguage = settings.speechLanguage;
     });
+  }
+
+  Future<void> _loadAvailableLocales() async {
+    try {
+      await _speechService.initialize();
+      final locales = await _speechService.getLocales();
+      final systemLocale = await _speechService.getSystemLocale();
+      setState(() {
+        _availableLocales = locales;
+        _systemLocaleId = systemLocale;
+      });
+    } catch (e) {
+      print('Error loading locales: $e');
+    }
   }
 
   Future<void> _addMockData() async {
@@ -398,6 +420,123 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  String _getSpeechLanguageDisplay() {
+    if (_speechLanguage == null) {
+      // Show device default with the actual system language name
+      if (_systemLocaleId != null) {
+        final systemLocale = _availableLocales.firstWhere(
+          (l) => l.localeId == _systemLocaleId,
+          orElse: () => stt.LocaleName(_systemLocaleId!, _systemLocaleId!),
+        );
+        return 'Device default (${systemLocale.name})';
+      }
+      return 'Device default';
+    }
+    final locale = _availableLocales.firstWhere(
+      (l) => l.localeId == _speechLanguage,
+      orElse: () => stt.LocaleName(_speechLanguage!, _speechLanguage!),
+    );
+    return locale.name;
+  }
+
+  Future<void> _showSpeechLanguageDialog() async {
+    String? selectedLanguage = _speechLanguage;
+
+    // Get actual system locale name
+    String deviceDefaultLabel = 'Device default';
+    if (_systemLocaleId != null) {
+      final systemLocale = _availableLocales.firstWhere(
+        (l) => l.localeId == _systemLocaleId,
+        orElse: () => stt.LocaleName(_systemLocaleId!, _systemLocaleId!),
+      );
+      deviceDefaultLabel = 'Device default (${systemLocale.name})';
+    }
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: Colors.grey[900],
+          title: const Text(
+            'Speech Language',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RadioListTile<String?>(
+                  title: Text(
+                    deviceDefaultLabel,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  value: null,
+                  groupValue: selectedLanguage,
+                  activeColor: Colors.white,
+                  onChanged: (value) {
+                    setDialogState(() {
+                      selectedLanguage = value;
+                    });
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                ),
+                const Divider(color: Colors.white24),
+                ..._availableLocales.map(
+                  (locale) => RadioListTile<String?>(
+                    title: Text(
+                      locale.name,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    value: locale.localeId,
+                    groupValue: selectedLanguage,
+                    activeColor: Colors.white,
+                    onChanged: (value) {
+                      setDialogState(() {
+                        selectedLanguage = value;
+                      });
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('Cancel', style: TextStyle(color: Colors.grey[400])),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Save', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (result != true || !mounted) return;
+
+    final settings = await SettingsService.getInstance();
+    await settings.setSpeechLanguage(selectedLanguage);
+
+    setState(() {
+      _speechLanguage = selectedLanguage;
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('✅ Speech language updated'),
+          backgroundColor: Colors.green[700],
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -432,6 +571,12 @@ class _SettingsPageState extends State<SettingsPage> {
               title: 'Units',
               subtitle: 'Weight: $_weightUnit • Distance: $_distanceUnit',
               onTap: () => _showUnitsDialog(),
+            ),
+            _buildSettingsTile(
+              icon: Icons.mic_outlined,
+              title: 'Speech Language',
+              subtitle: _getSpeechLanguageDisplay(),
+              onTap: () => _showSpeechLanguageDialog(),
             ),
 
             const SizedBox(height: 20),

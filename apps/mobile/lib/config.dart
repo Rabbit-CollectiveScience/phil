@@ -53,11 +53,17 @@ class Config {
   /// Default distance unit (miles or km)
   static const String defaultDistanceUnit = 'km';
 
+  /// Default speech language (null = use device default)
+  static const String? defaultSpeechLanguage = null;
+
   /// SharedPreferences key for weight unit
   static const String weightUnitKey = 'weight_unit';
 
   /// SharedPreferences key for distance unit
   static const String distanceUnitKey = 'distance_unit';
+
+  /// SharedPreferences key for speech language
+  static const String speechLanguageKey = 'speech_language';
 
   // ============================================================================
   // TODO: Add your configuration values here
