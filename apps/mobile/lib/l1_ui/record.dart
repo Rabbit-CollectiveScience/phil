@@ -19,6 +19,7 @@ class _RecordPageState extends State<RecordPage>
   final SpeechService _speechService = SpeechService();
   bool _isRecording = false;
   bool _isProcessing = false;
+  bool _isAiThinking = false;
   bool _isAiSpeaking = false;
   bool _showTextInput = false;
   String _partialTranscription = '';
@@ -93,7 +94,7 @@ class _RecordPageState extends State<RecordPage>
 
     setState(() {
       _isProcessing = false;
-      _isAiSpeaking = true;
+      _isAiThinking = true;
     });
 
     // Get AI response from Gemini
@@ -102,12 +103,12 @@ class _RecordPageState extends State<RecordPage>
       // Prepare message with explicit language instruction
       final languageCode = _currentLanguage?.split('_')[0];
       String messageToSend = text;
-      
+
       // Add language instruction if not English
       if (languageCode != null && languageCode != 'en') {
         messageToSend = '[Respond in language code: $languageCode] $text';
       }
-      
+
       aiResponse = await GeminiService.getInstance().sendMessage(messageToSend);
     } catch (e) {
       aiResponse =
@@ -115,23 +116,29 @@ class _RecordPageState extends State<RecordPage>
     }
 
     setState(() {
-      _messages.add(
-        ChatMessage(text: aiResponse, isUser: false, timestamp: DateTime.now()),
-      );
+      _isAiThinking = false;
     });
 
-    _scrollToBottom();
+    // Speak the AI response using Google Cloud TTS (before showing text)
+    // Keep thinking indicator visible during TTS processing
+    setState(() {
+      _isAiThinking = true; // Show "Phil is thinking..." during TTS processing
+      _isAiSpeaking = true;
+    });
 
-    // Speak the AI response using Google Cloud TTS
     try {
       // Use current speech recognition language if available, otherwise auto-detect from response
-      final languageRegion = _currentLanguage; // e.g., 'ja-JP', 'th-TH', 'en-US'
+      final languageRegion =
+          _currentLanguage; // e.g., 'ja-JP', 'th-TH', 'en-US'
       print('🎤 Current language setting: $_currentLanguage');
       print('💬 AI response to speak: $aiResponse');
 
       // Use detected language from speech recognition for TTS
       if (languageRegion != null && languageRegion.contains('-')) {
-        await TTSService.getInstance().speak(aiResponse, languageCode: languageRegion);
+        await TTSService.getInstance().speak(
+          aiResponse,
+          languageCode: languageRegion,
+        );
       } else {
         // Auto-detect from text content as fallback
         await TTSService.getInstance().speak(aiResponse);
@@ -139,6 +146,16 @@ class _RecordPageState extends State<RecordPage>
     } catch (e) {
       print('TTS Error: $e');
     }
+
+    // Show text after audio starts playing
+    setState(() {
+      _isAiThinking = false; // Remove thinking indicator when text appears
+      _messages.add(
+        ChatMessage(text: aiResponse, isUser: false, timestamp: DateTime.now()),
+      );
+    });
+
+    _scrollToBottom();
 
     setState(() {
       _isAiSpeaking = false;
@@ -520,9 +537,14 @@ class _RecordPageState extends State<RecordPage>
                           horizontal: 16,
                           vertical: 20,
                         ),
-                        itemCount: _messages.length,
+                        itemCount: _messages.length + (_isAiThinking ? 1 : 0),
                         itemBuilder: (context, index) {
-                          return _buildMessageBubble(_messages[index]);
+                          if (index < _messages.length) {
+                            return _buildMessageBubble(_messages[index]);
+                          } else {
+                            // Show thinking indicator
+                            return _buildThinkingIndicator();
+                          }
                         },
                       ),
               ),
@@ -674,7 +696,64 @@ class _RecordPageState extends State<RecordPage>
     );
   }
 
+  Widget _buildThinkingIndicator() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 16,
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/bot_avatar.png',
+                width: 32,
+                height: 32,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 12,
+                  height: 12,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Phil is thinking...',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 14,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildMessageBubble(ChatMessage message) {
+    final isLastMessage = _messages.isNotEmpty && _messages.last == message;
+    final showSpeakingIndicator = !message.isUser && isLastMessage && _isAiSpeaking;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -708,9 +787,23 @@ class _RecordPageState extends State<RecordPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    message.text,
-                    style: const TextStyle(color: Colors.white, fontSize: 15),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          message.text,
+                          style: const TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      ),
+                      if (showSpeakingIndicator) ...[
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.volume_up,
+                          color: Colors.blue,
+                          size: 16,
+                        ),
+                      ],
+                    ],
                   ),
                   const SizedBox(height: 4),
                   Text(
