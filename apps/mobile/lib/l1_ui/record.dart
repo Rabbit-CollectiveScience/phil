@@ -4,6 +4,7 @@ import '../l3_service/speech_service.dart';
 import '../l3_service/settings_service.dart';
 import '../l3_service/locale_helper.dart';
 import '../l3_service/gemini_service.dart';
+import '../l3_service/tts_service.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class RecordPage extends StatefulWidget {
@@ -98,7 +99,16 @@ class _RecordPageState extends State<RecordPage>
     // Get AI response from Gemini
     String aiResponse;
     try {
-      aiResponse = await GeminiService.getInstance().sendMessage(text);
+      // Prepare message with explicit language instruction
+      final languageCode = _currentLanguage?.split('_')[0];
+      String messageToSend = text;
+      
+      // Add language instruction if not English
+      if (languageCode != null && languageCode != 'en') {
+        messageToSend = '[Respond in language code: $languageCode] $text';
+      }
+      
+      aiResponse = await GeminiService.getInstance().sendMessage(messageToSend);
     } catch (e) {
       aiResponse =
           "Sorry, I'm having trouble connecting right now. Please try again.";
@@ -112,9 +122,23 @@ class _RecordPageState extends State<RecordPage>
 
     _scrollToBottom();
 
-    // Simulate AI speaking duration (based on text length)
-    int speakingDuration = (aiResponse.length * 50).clamp(1000, 5000);
-    await Future.delayed(Duration(milliseconds: speakingDuration));
+    // Speak the AI response using Google Cloud TTS
+    try {
+      // Use current speech recognition language if available, otherwise auto-detect from response
+      final languageRegion = _currentLanguage; // e.g., 'ja-JP', 'th-TH', 'en-US'
+      print('🎤 Current language setting: $_currentLanguage');
+      print('💬 AI response to speak: $aiResponse');
+
+      // Use detected language from speech recognition for TTS
+      if (languageRegion != null && languageRegion.contains('-')) {
+        await TTSService.getInstance().speak(aiResponse, languageCode: languageRegion);
+      } else {
+        // Auto-detect from text content as fallback
+        await TTSService.getInstance().speak(aiResponse);
+      }
+    } catch (e) {
+      print('TTS Error: $e');
+    }
 
     setState(() {
       _isAiSpeaking = false;

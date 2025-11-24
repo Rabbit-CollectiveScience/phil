@@ -19,6 +19,19 @@ class Config {
   static const String geminiModel = 'gemini-1.5-flash';
   static const int geminiMaxTokens = 150;
 
+  /// Google Cloud Text-to-Speech API configuration
+  static const String ttsApiKey =
+      'AIzaSyB0AYlGzVo-LgRg8bvfW0KjmostzuhVTew'; // Same key works for both
+
+  /// TTS Quality Preference
+  /// 'chirp3' = Chirp3-HD voices (highest quality, ~$200/1M chars)
+  /// 'neural2' = Neural2 voices (high quality, $16/1M chars)
+  /// 'standard' = Standard voices (basic quality, $4/1M chars)
+  static const String ttsQualityPreference = 'chirp3';
+
+  /// Voice gender preference
+  static const String ttsGenderPreference = 'MALE'; // 'MALE' or 'FEMALE'
+
   // ============================================================================
   // App Configuration
   // ============================================================================
