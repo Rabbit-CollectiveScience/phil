@@ -69,18 +69,19 @@ class TTSService {
       _isSpeaking = true;
       await _audioPlayer.play(DeviceFileSource(tempFile.path));
 
-      // Listen for completion and clean up
-      _audioPlayer.onPlayerComplete.first.then((_) async {
-        _isSpeaking = false;
-        // Delete temp file after playing
-        try {
-          if (await tempFile.exists()) {
-            await tempFile.delete();
-          }
-        } catch (e) {
-          print('Failed to delete temp file: $e');
+      // Wait for playback to complete or be stopped
+      await _audioPlayer.onPlayerComplete.first;
+
+      _isSpeaking = false;
+
+      // Delete temp file after playing
+      try {
+        if (await tempFile.exists()) {
+          await tempFile.delete();
         }
-      });
+      } catch (e) {
+        print('Failed to delete temp file: $e');
+      }
     } catch (e) {
       print('❌ TTS Error: $e');
       _isSpeaking = false;
@@ -89,8 +90,13 @@ class TTSService {
 
   /// Stop speaking
   Future<void> stop() async {
-    await _audioPlayer.stop();
     _isSpeaking = false;
+    try {
+      // Don't await - just fire and forget to avoid timeout
+      _audioPlayer.stop();
+    } catch (e) {
+      print('Error stopping TTS: $e');
+    }
   }
 
   /// Detect if text is Thai or English

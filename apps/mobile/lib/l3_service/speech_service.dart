@@ -117,7 +117,6 @@ class SpeechService {
         },
         localeId: localeId,
         listenFor: const Duration(seconds: 30),
-        pauseFor: const Duration(seconds: 3),
         partialResults: true,
         cancelOnError: true,
         listenMode: stt.ListenMode.confirmation,

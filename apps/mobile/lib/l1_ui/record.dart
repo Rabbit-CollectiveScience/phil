@@ -79,155 +79,163 @@ class _RecordPageState extends State<RecordPage>
     }
   }
 
+  /// Handle user message input and get AI response
+  /// State flow: PROCESSING -> AI_SPEAKING (or IDLE if TTS disabled)
   void _handleUserInput(String text) async {
     if (text.trim().isEmpty) return;
 
+    // Add user message bubble immediately
     setState(() {
-      // Add user message
       _messages.add(
         ChatMessage(text: text, isUser: true, timestamp: DateTime.now()),
       );
-      _isProcessing = true;
     });
-
     _textController.clear();
     _scrollToBottom();
 
+    // Enter PROCESSING state
     setState(() {
-      _isProcessing = false;
+      _isProcessing = true;
       _isAiThinking = true;
     });
 
     // Get AI response from Gemini
     String aiResponse;
+    
     try {
-      // Prepare message with explicit language instruction
       final languageCode = _currentLanguage?.split('_')[0];
       String messageToSend = text;
 
-      // Add language instruction if not English
       if (languageCode != null && languageCode != 'en') {
         messageToSend = '[Respond in language code: $languageCode] $text';
       }
 
       aiResponse = await GeminiService.getInstance().sendMessage(messageToSend);
-    } catch (e) {
-      aiResponse =
-          "Sorry, I'm having trouble connecting right now. Please try again.";
-    }
-
-    setState(() {
-      _isAiThinking = false;
-    });
-
-    // Speak the AI response using Google Cloud TTS (before showing text)
-    // Only if TTS is enabled
-    if (_isTtsEnabled) {
-      // Keep thinking indicator visible during TTS processing
-      setState(() {
-        _isAiThinking =
-            true; // Show "Phil is thinking..." during TTS processing
-        _isAiSpeaking = true;
-      });
-
-      try {
-        // Use current speech recognition language if available, otherwise auto-detect from response
-        final languageRegion =
-            _currentLanguage; // e.g., 'ja-JP', 'th-TH', 'en-US'
-        print('🎤 Current language setting: $_currentLanguage');
-        print('💬 AI response to speak: $aiResponse');
-
-        // Use detected language from speech recognition for TTS
-        if (languageRegion != null && languageRegion.contains('-')) {
-          await TTSService.getInstance().speak(
-            aiResponse,
-            languageCode: languageRegion,
-          );
-        } else {
-          // Auto-detect from text content as fallback
-          await TTSService.getInstance().speak(aiResponse);
-        }
-      } catch (e) {
-        print('TTS Error: $e');
+      
+      // Check if processing was cancelled while waiting for response
+      if (!_isProcessing) {
+        print('🚫 Processing was cancelled, ignoring response');
+        return;
       }
+    } catch (e) {
+      // Check if cancelled during error handling
+      if (!_isProcessing) {
+        return;
+      }
+      aiResponse = "Sorry, I'm having trouble connecting right now. Please try again.";
     }
 
-    // Show text after audio starts playing
+    // If we got here, processing wasn't cancelled
+    // Add AI text bubble BEFORE starting TTS
     setState(() {
-      _isAiThinking = false; // Remove thinking indicator when text appears
+      _isProcessing = false;
+      _isAiThinking = false;
       _messages.add(
         ChatMessage(text: aiResponse, isUser: false, timestamp: DateTime.now()),
       );
     });
-
     _scrollToBottom();
 
+    // Start TTS if enabled (non-blocking)
+    if (_isTtsEnabled) {
+      _startTTS(aiResponse);
+    }
+  }
+
+  /// Start TTS playback in AI_SPEAKING state (non-blocking)
+  void _startTTS(String text) async {
+    setState(() {
+      _isAiSpeaking = true;
+    });
+
+    try {
+      final languageRegion = _currentLanguage;
+      if (languageRegion != null && languageRegion.contains('-')) {
+        await TTSService.getInstance().speak(text, languageCode: languageRegion);
+      } else {
+        await TTSService.getInstance().speak(text);
+      }
+    } catch (e) {
+      print('❌ TTS Error: $e');
+    }
+
+    // Return to IDLE
     setState(() {
       _isAiSpeaking = false;
     });
   }
 
+  /// Handle mic button tap - Clean state machine
   void _handleVoiceInput() async {
-    if (_isAiSpeaking || _isProcessing) return;
-
-    if (_isRecording) {
-      // Stop recording
-      setState(() {
-        _isRecording = false;
-        _isProcessing = true;
-      });
-
-      await _speechService.stopListening();
-
-      // Wait a bit for final result
-      await Future.delayed(const Duration(milliseconds: 500));
-
+    // STATE: PROCESSING - Cancel and return to IDLE
+    if (_isProcessing) {
+      print('🚫 Cancelling processing');
       setState(() {
         _isProcessing = false;
+        _isAiThinking = false;
       });
-    } else {
-      // Get user's preferred speech language
-      final settings = await SettingsService.getInstance();
-      final localeId = settings.speechLanguage;
-
-      // Start recording
-      setState(() {
-        _isRecording = true;
-        _partialTranscription = '';
-      });
-
-      await _speechService.startListening(
-        localeId: localeId,
-        onResult: (finalText) {
-          // Final transcription received
-          if (finalText.isNotEmpty) {
-            _handleUserInput(finalText);
-          }
-          setState(() {
-            _isRecording = false;
-            _partialTranscription = '';
-          });
-        },
-        onPartialResult: (partialText) {
-          // Update partial transcription in real-time
-          setState(() {
-            _partialTranscription = partialText;
-          });
-        },
-        onError: (error) {
-          setState(() {
-            _isRecording = false;
-            _partialTranscription = '';
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: $error'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        },
-      );
+      // The _handleUserInput method will check this flag and ignore response
+      return;
     }
+
+    // STATE: AI_SPEAKING - Stop TTS and return to IDLE
+    if (_isAiSpeaking) {
+      print('🛑 Stopping AI speech');
+      await TTSService.getInstance().stop();
+      setState(() {
+        _isAiSpeaking = false;
+      });
+      // Return to IDLE (don't start recording)
+      return;
+    }
+
+    // STATE: RECORDING - Stop and process
+    if (_isRecording) {
+      print('⏹️ Stopping recording');
+      setState(() {
+        _isRecording = false;
+      });
+      await _speechService.stopListening();
+      // onResult callback will fire and call _handleUserInput
+      return;
+    }
+
+    // STATE: IDLE - Start recording
+    print('🎤 Starting recording');
+    final settings = await SettingsService.getInstance();
+    final localeId = settings.speechLanguage;
+
+    setState(() {
+      _isRecording = true;
+      _partialTranscription = '';
+    });
+
+    await _speechService.startListening(
+      localeId: localeId,
+      onResult: (finalText) {
+        setState(() {
+          _isRecording = false;
+          _partialTranscription = '';
+        });
+        if (finalText.isNotEmpty) {
+          _handleUserInput(finalText);
+        }
+      },
+      onPartialResult: (partialText) {
+        setState(() {
+          _partialTranscription = partialText;
+        });
+      },
+      onError: (error) {
+        setState(() {
+          _isRecording = false;
+          _partialTranscription = '';
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $error'), backgroundColor: Colors.red),
+        );
+      },
+    );
   }
 
   void _scrollToBottom() {
