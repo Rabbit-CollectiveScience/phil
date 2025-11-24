@@ -22,6 +22,7 @@ class _RecordPageState extends State<RecordPage>
   bool _isAiThinking = false;
   bool _isAiSpeaking = false;
   bool _showTextInput = false;
+  bool _isTtsEnabled = true;
   String _partialTranscription = '';
   final List<ChatMessage> _messages = [];
   final TextEditingController _textController = TextEditingController();
@@ -120,31 +121,35 @@ class _RecordPageState extends State<RecordPage>
     });
 
     // Speak the AI response using Google Cloud TTS (before showing text)
-    // Keep thinking indicator visible during TTS processing
-    setState(() {
-      _isAiThinking = true; // Show "Phil is thinking..." during TTS processing
-      _isAiSpeaking = true;
-    });
+    // Only if TTS is enabled
+    if (_isTtsEnabled) {
+      // Keep thinking indicator visible during TTS processing
+      setState(() {
+        _isAiThinking =
+            true; // Show "Phil is thinking..." during TTS processing
+        _isAiSpeaking = true;
+      });
 
-    try {
-      // Use current speech recognition language if available, otherwise auto-detect from response
-      final languageRegion =
-          _currentLanguage; // e.g., 'ja-JP', 'th-TH', 'en-US'
-      print('🎤 Current language setting: $_currentLanguage');
-      print('💬 AI response to speak: $aiResponse');
+      try {
+        // Use current speech recognition language if available, otherwise auto-detect from response
+        final languageRegion =
+            _currentLanguage; // e.g., 'ja-JP', 'th-TH', 'en-US'
+        print('🎤 Current language setting: $_currentLanguage');
+        print('💬 AI response to speak: $aiResponse');
 
-      // Use detected language from speech recognition for TTS
-      if (languageRegion != null && languageRegion.contains('-')) {
-        await TTSService.getInstance().speak(
-          aiResponse,
-          languageCode: languageRegion,
-        );
-      } else {
-        // Auto-detect from text content as fallback
-        await TTSService.getInstance().speak(aiResponse);
+        // Use detected language from speech recognition for TTS
+        if (languageRegion != null && languageRegion.contains('-')) {
+          await TTSService.getInstance().speak(
+            aiResponse,
+            languageCode: languageRegion,
+          );
+        } else {
+          // Auto-detect from text content as fallback
+          await TTSService.getInstance().speak(aiResponse);
+        }
+      } catch (e) {
+        print('TTS Error: $e');
       }
-    } catch (e) {
-      print('TTS Error: $e');
     }
 
     // Show text after audio starts playing
@@ -252,6 +257,44 @@ class _RecordPageState extends State<RecordPage>
           border: Border.all(color: Colors.white24, width: 2),
         ),
         child: Center(child: Text(flag, style: const TextStyle(fontSize: 22))),
+      ),
+    );
+  }
+
+  Widget _buildTtsBadge() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isTtsEnabled = !_isTtsEnabled;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _isTtsEnabled ? 'Voice enabled 🔊' : 'Voice disabled (text only)',
+            ),
+            backgroundColor: _isTtsEnabled
+                ? Colors.green[700]
+                : Colors.orange[700],
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      },
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: _isTtsEnabled ? Colors.blue[700] : Colors.grey[850],
+          border: Border.all(
+            color: _isTtsEnabled ? Colors.blue : Colors.white24,
+            width: 2,
+          ),
+        ),
+        child: Icon(
+          _isTtsEnabled ? Icons.volume_up : Icons.volume_off,
+          color: _isTtsEnabled ? Colors.white : Colors.white54,
+          size: 22,
+        ),
       ),
     );
   }
@@ -575,12 +618,13 @@ class _RecordPageState extends State<RecordPage>
                           textAlign: TextAlign.center,
                         ),
                       ),
-                    // Microphone and language badge side by side
+                    // Microphone and control badges
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Spacer to keep mic centered
-                        const SizedBox(width: 60),
+                        // TTS toggle on the left
+                        _buildTtsBadge(),
+                        const SizedBox(width: 16),
                         // Microphone button (centered)
                         GestureDetector(
                           onTap: _handleVoiceInput,
@@ -752,7 +796,8 @@ class _RecordPageState extends State<RecordPage>
 
   Widget _buildMessageBubble(ChatMessage message) {
     final isLastMessage = _messages.isNotEmpty && _messages.last == message;
-    final showSpeakingIndicator = !message.isUser && isLastMessage && _isAiSpeaking;
+    final showSpeakingIndicator =
+        !message.isUser && isLastMessage && _isAiSpeaking;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -792,7 +837,10 @@ class _RecordPageState extends State<RecordPage>
                       Expanded(
                         child: Text(
                           message.text,
-                          style: const TextStyle(color: Colors.white, fontSize: 15),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                       if (showSpeakingIndicator) ...[
@@ -842,52 +890,6 @@ class _RecordPageState extends State<RecordPage>
     if (_isProcessing) return Icons.more_horiz;
     if (_isAiSpeaking) return Icons.smart_toy;
     return Icons.mic;
-  }
-
-  /// Sort locales by user's preferred languages (from iPhone settings)
-  List<stt.LocaleName> _sortLocalesByPreference(
-    List<stt.LocaleName> locales,
-    List<String> preferredLanguages,
-  ) {
-    // Create a copy to avoid modifying the original list
-    final sortedLocales = List<stt.LocaleName>.from(locales);
-
-    sortedLocales.sort((a, b) {
-      // Find the preference index for each locale
-      // Lower index = higher priority (earlier in preferred languages list)
-      final aIndex = _getPreferenceIndex(a.localeId, preferredLanguages);
-      final bIndex = _getPreferenceIndex(b.localeId, preferredLanguages);
-
-      // If both are preferred, sort by their preference order
-      if (aIndex != -1 && bIndex != -1) {
-        return aIndex.compareTo(bIndex);
-      }
-
-      // If only one is preferred, it comes first
-      if (aIndex != -1) return -1;
-      if (bIndex != -1) return 1;
-
-      // If neither is preferred, keep original alphabetical order
-      return a.name.compareTo(b.name);
-    });
-
-    return sortedLocales;
-  }
-
-  /// Get the index of this locale in user's preferred languages
-  /// Returns -1 if not in preferred languages
-  int _getPreferenceIndex(String localeId, List<String> preferredLanguages) {
-    // Extract language code from locale (e.g., "th" from "th-TH")
-    final langCode = localeId.split(RegExp(r'[-_]'))[0].toLowerCase();
-
-    // Find this language in the preferred languages list
-    for (int i = 0; i < preferredLanguages.length; i++) {
-      if (langCode == preferredLanguages[i].toLowerCase()) {
-        return i;
-      }
-    }
-
-    return -1; // Not in preferred languages
   }
 
   String _formatTime(DateTime time) {
