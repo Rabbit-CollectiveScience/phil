@@ -14,6 +14,11 @@ class Config {
   /// Production: your production URL
   static const String apiBaseUrl = 'http://localhost:3000';
 
+  /// Gemini API configuration
+  static const String geminiApiKey = 'AIzaSyB0AYlGzVo-LgRg8bvfW0KjmostzuhVTew';
+  static const String geminiModel = 'gemini-1.5-flash';
+  static const int geminiMaxTokens = 150;
+
   // ============================================================================
   // App Configuration
   // ============================================================================

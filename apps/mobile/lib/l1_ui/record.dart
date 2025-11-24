@@ -3,6 +3,7 @@ import 'browse_exercises_screen.dart';
 import '../l3_service/speech_service.dart';
 import '../l3_service/settings_service.dart';
 import '../l3_service/locale_helper.dart';
+import '../l3_service/gemini_service.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class RecordPage extends StatefulWidget {
@@ -89,16 +90,19 @@ class _RecordPageState extends State<RecordPage>
     _textController.clear();
     _scrollToBottom();
 
-    // Simulate processing delay
-    await Future.delayed(const Duration(milliseconds: 800));
-
     setState(() {
       _isProcessing = false;
       _isAiSpeaking = true;
     });
 
-    // Mock AI response
-    String aiResponse = "Got it - Bench Press 3×10 @ 185 lbs. Correct?";
+    // Get AI response from Gemini
+    String aiResponse;
+    try {
+      aiResponse = await GeminiService.getInstance().sendMessage(text);
+    } catch (e) {
+      aiResponse =
+          "Sorry, I'm having trouble connecting right now. Please try again.";
+    }
 
     setState(() {
       _messages.add(
