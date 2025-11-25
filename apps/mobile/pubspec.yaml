@@ -56,7 +56,7 @@ flutter:
     - assets/data/exercises/schemas/core/
     - assets/data/exercises/schemas/cardio/
     - assets/data/exercises/schemas/flexibility/
-    - assets/images/bot_avatar.png
+    - assets/images/
     - assets/phil-479202-d4e78adb0eea.json
 
 # ---------- App icons (both iOS & Android) ----------

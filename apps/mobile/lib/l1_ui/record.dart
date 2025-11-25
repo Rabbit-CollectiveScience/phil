@@ -36,7 +36,7 @@ class _RecordPageState extends State<RecordPage>
   int _recordingSessionId = 0;
   int _ttsSessionId = 0;
   int _geminiSessionId = 0;
-  
+
   // Recording duration tracking
   DateTime? _recordingStartTime;
   static const _minRecordingDurationMs = 1000; // 1 second minimum
@@ -105,14 +105,14 @@ class _RecordPageState extends State<RecordPage>
         print('🚫 Gemini session cancelled (stale session $currentSessionId)');
         return;
       }
-      
+
       if (_chatState != ChatState.aiThinking) {
         print('🚫 Processing was cancelled, ignoring response');
         return;
       }
     } catch (e) {
       // Check if cancelled during error handling
-      if (_geminiSessionId != currentSessionId || 
+      if (_geminiSessionId != currentSessionId ||
           _chatState != ChatState.aiThinking) {
         return;
       }
@@ -151,13 +151,15 @@ class _RecordPageState extends State<RecordPage>
 
     // Only return to idle if this is still the active TTS session
     // and we're still in speaking state
-    if (_ttsSessionId == currentSessionId && 
+    if (_ttsSessionId == currentSessionId &&
         _chatState == ChatState.aiSpeaking) {
       setState(() {
         _chatState = ChatState.idle;
       });
     } else {
-      print('⚠️ TTS completed but state changed (session: $currentSessionId vs ${_ttsSessionId})');
+      print(
+        '⚠️ TTS completed but state changed (session: $currentSessionId vs ${_ttsSessionId})',
+      );
     }
   }
 
@@ -200,12 +202,12 @@ class _RecordPageState extends State<RecordPage>
     // STATE: RECORDING - Stop and process
     if (_chatState == ChatState.recording) {
       print('⏹️ Stopping recording');
-      
+
       // Check recording duration
       final recordingDuration = _recordingStartTime != null
           ? DateTime.now().difference(_recordingStartTime!).inMilliseconds
           : 0;
-      
+
       if (recordingDuration < _minRecordingDurationMs) {
         print('⚠️ Recording too short (${recordingDuration}ms), discarding');
         // Silently cancel - no transcription, no API call
@@ -220,12 +222,12 @@ class _RecordPageState extends State<RecordPage>
         });
         return;
       }
-      
+
       // Duration is valid, proceed with transcription
       setState(() {
         _chatState = ChatState.transcribing; // Show "transcribing..." indicator
       });
-      
+
       // Force immediate scroll after state change (before async stopListening)
       WidgetsBinding.instance.addPostFrameCallback((_) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -278,20 +280,20 @@ class _RecordPageState extends State<RecordPage>
         onFinalResult: (text) {
           // Final transcription → send to Gemini
           print('✅ Final: $text (session $currentSessionId)');
-          
+
           // Validate session and state before processing
           if (_recordingSessionId != currentSessionId) {
             print('⚠️ Ignoring stale transcription from old session');
             return;
           }
-          
+
           // Only process if we're still in transcribing or recording state
-          if (_chatState != ChatState.transcribing && 
+          if (_chatState != ChatState.transcribing &&
               _chatState != ChatState.recording) {
             print('⚠️ Ignoring transcription - user cancelled');
             return;
           }
-          
+
           setState(() {
             _chatState = ChatState.idle;
           });
@@ -410,9 +412,10 @@ class _RecordPageState extends State<RecordPage>
             children: [
               // Conversation Log
               Expanded(
-                child: _messages.isEmpty && 
-                       _chatState != ChatState.transcribing && 
-                       _chatState != ChatState.aiThinking
+                child:
+                    _messages.isEmpty &&
+                        _chatState != ChatState.transcribing &&
+                        _chatState != ChatState.aiThinking
                     ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -518,11 +521,20 @@ class _RecordPageState extends State<RecordPage>
                                       ),
                                     ],
                                   ),
-                                  child: Icon(
-                                    _getButtonIcon(),
-                                    size: 40,
-                                    color: Colors.black,
-                                  ),
+                                  child: _chatState == ChatState.aiSpeaking
+                                      ? ClipOval(
+                                          child: Image.asset(
+                                            'assets/images/bot_avatar_big.png',
+                                            width: 80,
+                                            height: 80,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : Icon(
+                                          _getButtonIcon()!,
+                                          size: 40,
+                                          color: Colors.black,
+                                        ),
                                 ),
                               );
                             },
@@ -642,10 +654,7 @@ class _RecordPageState extends State<RecordPage>
       builder: (context, value, child) {
         return Text(
           '.' * ((value % 4) + 1),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 15),
         );
       },
       onEnd: () {
@@ -809,7 +818,7 @@ class _RecordPageState extends State<RecordPage>
     }
   }
 
-  IconData _getButtonIcon() {
+  IconData? _getButtonIcon() {
     switch (_chatState) {
       case ChatState.recording:
         return Icons.stop;
@@ -817,7 +826,7 @@ class _RecordPageState extends State<RecordPage>
       case ChatState.aiThinking:
         return Icons.more_horiz;
       case ChatState.aiSpeaking:
-        return Icons.smart_toy;
+        return null; // Will show bot avatar instead
       case ChatState.idle:
         return Icons.mic;
     }
