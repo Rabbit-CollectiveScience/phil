@@ -36,6 +36,10 @@ class _RecordPageState extends State<RecordPage>
   int _recordingSessionId = 0;
   int _ttsSessionId = 0;
   int _geminiSessionId = 0;
+  
+  // Recording duration tracking
+  DateTime? _recordingStartTime;
+  static const _minRecordingDurationMs = 1000; // 1 second minimum
 
   // Speech service
   final SpeechService _speechService = SpeechService();
@@ -196,6 +200,28 @@ class _RecordPageState extends State<RecordPage>
     // STATE: RECORDING - Stop and process
     if (_chatState == ChatState.recording) {
       print('⏹️ Stopping recording');
+      
+      // Check recording duration
+      final recordingDuration = _recordingStartTime != null
+          ? DateTime.now().difference(_recordingStartTime!).inMilliseconds
+          : 0;
+      
+      if (recordingDuration < _minRecordingDurationMs) {
+        print('⚠️ Recording too short (${recordingDuration}ms), discarding');
+        // Silently cancel - no transcription, no API call
+        try {
+          await _speechService.stopListening();
+        } catch (e) {
+          print('❌ Error stopping speech: $e');
+        }
+        setState(() {
+          _chatState = ChatState.idle;
+          _partialTranscription = '';
+        });
+        return;
+      }
+      
+      // Duration is valid, proceed with transcription
       setState(() {
         _chatState = ChatState.transcribing; // Show "transcribing..." indicator
       });
@@ -227,6 +253,7 @@ class _RecordPageState extends State<RecordPage>
     setState(() {
       _chatState = ChatState.recording;
       _partialTranscription = '';
+      _recordingStartTime = DateTime.now();
     });
 
     // Start Google Cloud Speech-to-Text
