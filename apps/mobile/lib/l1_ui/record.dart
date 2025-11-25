@@ -32,6 +32,11 @@ class _RecordPageState extends State<RecordPage>
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
 
+  // Session tracking for async operations
+  int _recordingSessionId = 0;
+  int _ttsSessionId = 0;
+  int _geminiSessionId = 0;
+
   // Speech service
   final SpeechService _speechService = SpeechService();
   bool _isSpeechInitialized = false;
@@ -80,6 +85,7 @@ class _RecordPageState extends State<RecordPage>
     _scrollToBottom();
 
     // Enter AI_THINKING state
+    final currentSessionId = ++_geminiSessionId;
     setState(() {
       _chatState = ChatState.aiThinking;
     });
@@ -91,13 +97,19 @@ class _RecordPageState extends State<RecordPage>
       aiResponse = await GeminiService.getInstance().sendMessage(text);
 
       // Check if processing was cancelled while waiting for response
+      if (_geminiSessionId != currentSessionId) {
+        print('🚫 Gemini session cancelled (stale session $currentSessionId)');
+        return;
+      }
+      
       if (_chatState != ChatState.aiThinking) {
         print('🚫 Processing was cancelled, ignoring response');
         return;
       }
     } catch (e) {
       // Check if cancelled during error handling
-      if (_chatState != ChatState.aiThinking) {
+      if (_geminiSessionId != currentSessionId || 
+          _chatState != ChatState.aiThinking) {
         return;
       }
       aiResponse =
@@ -122,6 +134,7 @@ class _RecordPageState extends State<RecordPage>
 
   /// Start TTS playback in AI_SPEAKING state (non-blocking)
   void _startTTS(String text) async {
+    final currentSessionId = ++_ttsSessionId;
     setState(() {
       _chatState = ChatState.aiSpeaking;
     });
@@ -132,10 +145,16 @@ class _RecordPageState extends State<RecordPage>
       print('❌ TTS Error: $e');
     }
 
-    // Return to IDLE
-    setState(() {
-      _chatState = ChatState.idle;
-    });
+    // Only return to idle if this is still the active TTS session
+    // and we're still in speaking state
+    if (_ttsSessionId == currentSessionId && 
+        _chatState == ChatState.aiSpeaking) {
+      setState(() {
+        _chatState = ChatState.idle;
+      });
+    } else {
+      print('⚠️ TTS completed but state changed (session: $currentSessionId vs ${_ttsSessionId})');
+    }
   }
 
   /// Handle mic button tap - Clean state machine
@@ -143,6 +162,7 @@ class _RecordPageState extends State<RecordPage>
     // STATE: TRANSCRIBING - Cancel transcription and return to IDLE
     if (_chatState == ChatState.transcribing) {
       print('🚫 Cancelling transcription');
+      _recordingSessionId++; // Invalidate current recording session
       // Note: stopListening() was already called, just cancel waiting for result
       setState(() {
         _chatState = ChatState.idle;
@@ -153,16 +173,18 @@ class _RecordPageState extends State<RecordPage>
     // STATE: AI_THINKING - Cancel and return to IDLE
     if (_chatState == ChatState.aiThinking) {
       print('🚫 Cancelling AI request');
+      _geminiSessionId++; // Invalidate current Gemini session
       setState(() {
         _chatState = ChatState.idle;
       });
-      // The _handleUserInput method will check this flag and ignore response
+      // The _handleUserInput method will check session ID and ignore response
       return;
     }
 
     // STATE: AI_SPEAKING - Stop TTS and return to IDLE
     if (_chatState == ChatState.aiSpeaking) {
       print('🛑 Stopping AI speech');
+      _ttsSessionId++; // Invalidate current TTS session
       await TTSService.getInstance().stop();
       setState(() {
         _chatState = ChatState.idle;
@@ -208,21 +230,37 @@ class _RecordPageState extends State<RecordPage>
     });
 
     // Start Google Cloud Speech-to-Text
+    final currentSessionId = ++_recordingSessionId;
     try {
       await _speechService.startListening(
         onPartialResult: (text) {
           // Real-time transcription preview
-          setState(() {
-            _partialTranscription = text;
-          });
-          print('📝 Partial: $text');
+          if (_recordingSessionId == currentSessionId) {
+            setState(() {
+              _partialTranscription = text;
+            });
+            print('📝 Partial: $text');
+          }
         },
         onFinalResult: (text) {
           // Final transcription → send to Gemini
-          print('✅ Final: $text');
+          print('✅ Final: $text (session $currentSessionId)');
+          
+          // Validate session and state before processing
+          if (_recordingSessionId != currentSessionId) {
+            print('⚠️ Ignoring stale transcription from old session');
+            return;
+          }
+          
+          // Only process if we're still in transcribing or recording state
+          if (_chatState != ChatState.transcribing && 
+              _chatState != ChatState.recording) {
+            print('⚠️ Ignoring transcription - user cancelled');
+            return;
+          }
+          
           setState(() {
-            _chatState =
-                ChatState.idle; // Clear transcribing indicator and recording
+            _chatState = ChatState.idle;
           });
           if (text.isNotEmpty) {
             _handleUserInput(text);
@@ -230,10 +268,12 @@ class _RecordPageState extends State<RecordPage>
         },
         onError: (error) {
           print('❌ Speech error: $error');
-          setState(() {
-            _chatState = ChatState.idle;
-            _partialTranscription = '';
-          });
+          if (_recordingSessionId == currentSessionId) {
+            setState(() {
+              _chatState = ChatState.idle;
+              _partialTranscription = '';
+            });
+          }
         },
       );
     } catch (e) {
