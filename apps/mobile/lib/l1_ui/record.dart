@@ -375,6 +375,7 @@ class _RecordPageState extends State<RecordPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF3A3A3A),
       appBar: AppBar(
         backgroundColor: const Color(0xFF3A3A3A),
