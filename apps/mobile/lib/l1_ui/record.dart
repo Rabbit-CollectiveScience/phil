@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'browse_exercises_screen.dart';
-import '../l3_service/speech_service.dart';
-import '../l3_service/settings_service.dart';
-import '../l3_service/locale_helper.dart';
 import '../l3_service/gemini_service.dart';
 import '../l3_service/tts_service.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -16,7 +12,6 @@ class RecordPage extends StatefulWidget {
 
 class _RecordPageState extends State<RecordPage>
     with SingleTickerProviderStateMixin {
-  final SpeechService _speechService = SpeechService();
   bool _isRecording = false;
   bool _isProcessing = false;
   bool _isAiThinking = false;
@@ -29,9 +24,6 @@ class _RecordPageState extends State<RecordPage>
   final ScrollController _scrollController = ScrollController();
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
-  String? _currentLanguage;
-  List<stt.LocaleName> _availableLocales = [];
-  String? _systemLocaleId;
 
   @override
   void initState() {
@@ -43,40 +35,6 @@ class _RecordPageState extends State<RecordPage>
     _pulseAnimation = Tween<double>(begin: 0.85, end: 1.15).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
-    _initializeSpeech();
-    _loadLanguageSettings();
-    // Listen for language changes from settings page
-    SettingsService.speechLanguageNotifier.addListener(_onLanguageChanged);
-  }
-
-  void _onLanguageChanged() {
-    setState(() {
-      _currentLanguage = SettingsService.speechLanguageNotifier.value;
-    });
-  }
-
-  Future<void> _loadLanguageSettings() async {
-    final settings = await SettingsService.getInstance();
-    await _speechService.initialize();
-    final locales = await _speechService.getLocales();
-    final systemLocale = await _speechService.getSystemLocale();
-    setState(() {
-      _currentLanguage = settings.speechLanguage;
-      _availableLocales = locales;
-      _systemLocaleId = systemLocale;
-    });
-  }
-
-  Future<void> _initializeSpeech() async {
-    final initialized = await _speechService.initialize();
-    if (!initialized && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Speech recognition not available'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 
   /// Handle user message input and get AI response
@@ -101,17 +59,10 @@ class _RecordPageState extends State<RecordPage>
 
     // Get AI response from Gemini
     String aiResponse;
-    
+
     try {
-      final languageCode = _currentLanguage?.split('_')[0];
-      String messageToSend = text;
+      aiResponse = await GeminiService.getInstance().sendMessage(text);
 
-      if (languageCode != null && languageCode != 'en') {
-        messageToSend = '[Respond in language code: $languageCode] $text';
-      }
-
-      aiResponse = await GeminiService.getInstance().sendMessage(messageToSend);
-      
       // Check if processing was cancelled while waiting for response
       if (!_isProcessing) {
         print('🚫 Processing was cancelled, ignoring response');
@@ -122,7 +73,8 @@ class _RecordPageState extends State<RecordPage>
       if (!_isProcessing) {
         return;
       }
-      aiResponse = "Sorry, I'm having trouble connecting right now. Please try again.";
+      aiResponse =
+          "Sorry, I'm having trouble connecting right now. Please try again.";
     }
 
     // If we got here, processing wasn't cancelled
@@ -149,12 +101,7 @@ class _RecordPageState extends State<RecordPage>
     });
 
     try {
-      final languageRegion = _currentLanguage;
-      if (languageRegion != null && languageRegion.contains('-')) {
-        await TTSService.getInstance().speak(text, languageCode: languageRegion);
-      } else {
-        await TTSService.getInstance().speak(text);
-      }
+      await TTSService.getInstance().speak(text);
     } catch (e) {
       print('❌ TTS Error: $e');
     }
@@ -195,47 +142,18 @@ class _RecordPageState extends State<RecordPage>
       setState(() {
         _isRecording = false;
       });
-      await _speechService.stopListening();
-      // onResult callback will fire and call _handleUserInput
+      // TODO: Implement Google Cloud Speech-to-Text stopListening
       return;
     }
 
     // STATE: IDLE - Start recording
     print('🎤 Starting recording');
-    final settings = await SettingsService.getInstance();
-    final localeId = settings.speechLanguage;
-
     setState(() {
       _isRecording = true;
       _partialTranscription = '';
     });
 
-    await _speechService.startListening(
-      localeId: localeId,
-      onResult: (finalText) {
-        setState(() {
-          _isRecording = false;
-          _partialTranscription = '';
-        });
-        if (finalText.isNotEmpty) {
-          _handleUserInput(finalText);
-        }
-      },
-      onPartialResult: (partialText) {
-        setState(() {
-          _partialTranscription = partialText;
-        });
-      },
-      onError: (error) {
-        setState(() {
-          _isRecording = false;
-          _partialTranscription = '';
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $error'), backgroundColor: Colors.red),
-        );
-      },
-    );
+    // TODO: Implement Google Cloud Speech-to-Text startListening
   }
 
   void _scrollToBottom() {
@@ -248,25 +166,6 @@ class _RecordPageState extends State<RecordPage>
         );
       }
     });
-  }
-
-  Widget _buildLanguageBadge() {
-    final localeId = _currentLanguage ?? _systemLocaleId;
-    final flag = localeId != null ? LocaleHelper.getFlag(localeId) : '🌐';
-
-    return GestureDetector(
-      onTap: _showQuickLanguagePicker,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey[850],
-          border: Border.all(color: Colors.white24, width: 2),
-        ),
-        child: Center(child: Text(flag, style: const TextStyle(fontSize: 22))),
-      ),
-    );
   }
 
   Widget _buildTtsBadge() {
@@ -305,220 +204,6 @@ class _RecordPageState extends State<RecordPage>
         ),
       ),
     );
-  }
-
-  String _getLanguageDisplay() {
-    final localeId = _currentLanguage ?? _systemLocaleId;
-    if (localeId == null) return '🌐 --';
-    return LocaleHelper.getShortDisplay(localeId);
-  }
-
-  Future<void> _showQuickLanguagePicker() async {
-    if (_availableLocales.isEmpty) return;
-
-    String? selectedLanguage = _currentLanguage;
-
-    // Get device default label
-    String deviceDefaultLabel = 'Device default';
-    if (_systemLocaleId != null) {
-      final systemLocale = _availableLocales.firstWhere(
-        (l) => l.localeId == _systemLocaleId,
-        orElse: () => stt.LocaleName(_systemLocaleId!, _systemLocaleId!),
-      );
-      final flag = LocaleHelper.getFlag(_systemLocaleId!);
-      deviceDefaultLabel = 'Device default ($flag ${systemLocale.name})';
-    }
-
-    // Get user's preferred languages and separate them from others
-    final preferredLanguages = _speechService.getPreferredLanguages();
-
-    // Split locales into preferred and others
-    final preferredLocales = <stt.LocaleName>[];
-    final otherLocales = <stt.LocaleName>[];
-
-    for (final locale in _availableLocales) {
-      final langCode = locale.localeId.split(RegExp(r'[-_]'))[0].toLowerCase();
-      final isPreferred = preferredLanguages.any(
-        (pref) => pref.toLowerCase() == langCode,
-      );
-
-      if (isPreferred && langCode != 'en') {
-        // Skip English from preferred section (it's already the device default)
-        preferredLocales.add(locale);
-      } else {
-        otherLocales.add(locale);
-      }
-    }
-
-    // Sort each group
-    preferredLocales.sort((a, b) => a.name.compareTo(b.name));
-    otherLocales.sort((a, b) => a.name.compareTo(b.name));
-
-    print(
-      '🔍 Preferred: ${preferredLocales.map((l) => l.localeId).join(", ")}',
-    );
-    print(
-      '🔍 First 10 others: ${otherLocales.take(10).map((l) => l.localeId).join(", ")}',
-    );
-
-    final result = await showModalBottomSheet<bool>(
-      context: context,
-      backgroundColor: Colors.grey[900],
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => StatefulBuilder(
-        builder: (context, setBottomSheetState) => Container(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[700],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Speech Language',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Language list
-              Flexible(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      RadioListTile<String?>(
-                        title: Text(
-                          deviceDefaultLabel,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        value: null,
-                        groupValue: selectedLanguage,
-                        activeColor: Colors.white,
-                        onChanged: (value) {
-                          setBottomSheetState(() {
-                            selectedLanguage = value;
-                          });
-                        },
-                      ),
-                      const Divider(color: Colors.white24, height: 1),
-                      // Preferred languages section
-                      if (preferredLocales.isNotEmpty) ...[
-                        ...preferredLocales.map((locale) {
-                          final flag = LocaleHelper.getFlag(locale.localeId);
-                          return RadioListTile<String?>(
-                            title: Text(
-                              '$flag ${locale.name}',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            value: locale.localeId,
-                            groupValue: selectedLanguage,
-                            activeColor: Colors.white,
-                            onChanged: (value) {
-                              setBottomSheetState(() {
-                                selectedLanguage = value;
-                              });
-                            },
-                          );
-                        }),
-                        const Divider(color: Colors.white24, height: 1),
-                      ],
-                      // All other languages
-                      ...otherLocales.map((locale) {
-                        final flag = LocaleHelper.getFlag(locale.localeId);
-                        return RadioListTile<String?>(
-                          title: Text(
-                            '$flag ${locale.name}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          value: locale.localeId,
-                          groupValue: selectedLanguage,
-                          activeColor: Colors.white,
-                          onChanged: (value) {
-                            setBottomSheetState(() {
-                              selectedLanguage = value;
-                            });
-                          },
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-              ),
-              // Action buttons
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 16,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(color: Colors.grey[400]),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                        ),
-                        child: const Text('Save'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    if (result != true || !mounted) return;
-
-    // Save the selection
-    final settings = await SettingsService.getInstance();
-    await settings.setSpeechLanguage(selectedLanguage);
-
-    setState(() {
-      _currentLanguage = selectedLanguage;
-    });
-
-    // Show confirmation
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            selectedLanguage == null
-                ? 'Language set to device default'
-                : 'Language changed to ${_getLanguageDisplay()}',
-          ),
-          backgroundColor: Colors.green[700],
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
   }
 
   @override
@@ -671,7 +356,7 @@ class _RecordPageState extends State<RecordPage>
                         ),
                         const SizedBox(width: 16),
                         // Language badge on the right
-                        _buildLanguageBadge(),
+                        _buildTtsBadge(),
                       ],
                     ),
                   ],
@@ -906,8 +591,6 @@ class _RecordPageState extends State<RecordPage>
 
   @override
   void dispose() {
-    SettingsService.speechLanguageNotifier.removeListener(_onLanguageChanged);
-    _speechService.dispose();
     _pulseController.dispose();
     _textController.dispose();
     _scrollController.dispose();
