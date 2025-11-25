@@ -609,21 +609,26 @@ class _RecordPageState extends State<RecordPage>
 
   Widget _buildTranscribingIndicator() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16, right: 40),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.blue[900],
-              borderRadius: BorderRadius.circular(16),
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.blue[700],
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: _buildAnimatedDots(),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [_buildAnimatedDots()],
-            ),
+          ),
+          const SizedBox(width: 8),
+          CircleAvatar(
+            backgroundColor: Colors.blue[700],
+            radius: 16,
+            child: const Icon(Icons.person, color: Colors.white, size: 18),
           ),
         ],
       ),
@@ -638,10 +643,8 @@ class _RecordPageState extends State<RecordPage>
         return Text(
           '.' * ((value % 4) + 1),
           style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2,
+            color: Colors.white,
+            fontSize: 15,
           ),
         );
       },
