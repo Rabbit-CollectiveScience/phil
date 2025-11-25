@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'browse_exercises_screen.dart';
 import '../l3_service/gemini_service.dart';
 import '../l3_service/tts_service.dart';
+import '../l3_service/speech_service.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -25,6 +26,10 @@ class _RecordPageState extends State<RecordPage>
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
 
+  // Speech service
+  final SpeechService _speechService = SpeechService();
+  bool _isSpeechInitialized = false;
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +40,23 @@ class _RecordPageState extends State<RecordPage>
     _pulseAnimation = Tween<double>(begin: 0.85, end: 1.15).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
+
+    // Initialize speech service
+    _initializeSpeech();
+  }
+
+  /// Initialize Google Cloud Speech-to-Text service
+  Future<void> _initializeSpeech() async {
+    try {
+      await _speechService.initialize();
+      setState(() {
+        _isSpeechInitialized = true;
+      });
+      print('✅ Speech service ready');
+    } catch (e) {
+      print('❌ Speech initialization failed: $e');
+      // Service remains uninitialized, microphone will show error when tapped
+    }
   }
 
   /// Handle user message input and get AI response
@@ -142,18 +164,66 @@ class _RecordPageState extends State<RecordPage>
       setState(() {
         _isRecording = false;
       });
-      // TODO: Implement Google Cloud Speech-to-Text stopListening
+
+      // Stop Google Cloud Speech-to-Text
+      try {
+        await _speechService.stopListening();
+      } catch (e) {
+        print('❌ Error stopping speech: $e');
+      }
+
       return;
     }
 
     // STATE: IDLE - Start recording
     print('🎤 Starting recording');
+
+    // Check if speech service is initialized
+    if (!_isSpeechInitialized) {
+      print('❌ Speech service not initialized');
+      // Could show a SnackBar here if desired
+      return;
+    }
+
     setState(() {
       _isRecording = true;
       _partialTranscription = '';
     });
 
-    // TODO: Implement Google Cloud Speech-to-Text startListening
+    // Start Google Cloud Speech-to-Text
+    try {
+      await _speechService.startListening(
+        onPartialResult: (text) {
+          // Real-time transcription preview
+          setState(() {
+            _partialTranscription = text;
+          });
+          print('📝 Partial: $text');
+        },
+        onFinalResult: (text) {
+          // Final transcription → send to Gemini
+          print('✅ Final: $text');
+          if (text.isNotEmpty) {
+            setState(() {
+              _isRecording = false;
+            });
+            _handleUserInput(text);
+          }
+        },
+        onError: (error) {
+          print('❌ Speech error: $error');
+          setState(() {
+            _isRecording = false;
+            _partialTranscription = '';
+          });
+        },
+      );
+    } catch (e) {
+      print('❌ Error starting speech: $e');
+      setState(() {
+        _isRecording = false;
+      });
+    }
   }
 
   void _scrollToBottom() {
@@ -594,6 +664,7 @@ class _RecordPageState extends State<RecordPage>
     _pulseController.dispose();
     _textController.dispose();
     _scrollController.dispose();
+    _speechService.dispose();
     super.dispose();
   }
 }
