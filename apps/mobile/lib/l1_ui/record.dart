@@ -225,7 +225,13 @@ class _RecordPageState extends State<RecordPage>
       setState(() {
         _chatState = ChatState.transcribing; // Show "transcribing..." indicator
       });
-      _scrollToBottom(); // Scroll to show transcribing indicator
+      
+      // Force immediate scroll after state change (before async stopListening)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToBottom();
+        });
+      });
 
       // Stop Google Cloud Speech-to-Text
       try {
@@ -312,14 +318,17 @@ class _RecordPageState extends State<RecordPage>
   }
 
   void _scrollToBottom() {
+    // Double post-frame callback to ensure ListView has rebuilt with new items
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
     });
   }
 
@@ -401,7 +410,9 @@ class _RecordPageState extends State<RecordPage>
             children: [
               // Conversation Log
               Expanded(
-                child: _messages.isEmpty
+                child: _messages.isEmpty && 
+                       _chatState != ChatState.transcribing && 
+                       _chatState != ChatState.aiThinking
                     ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
