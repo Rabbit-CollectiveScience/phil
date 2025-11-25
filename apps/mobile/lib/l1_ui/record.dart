@@ -541,24 +541,34 @@ class _RecordPageState extends State<RecordPage>
                           ),
                         ),
                         const SizedBox(width: 16),
-                        // Language badge on the right
-                        _buildTtsBadge(),
+                        // Text input toggle on the right
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _showTextInput = !_showTextInput;
+                            });
+                          },
+                          child: Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _showTextInput ? Colors.blue[700] : Colors.grey[850],
+                              border: Border.all(
+                                color: _showTextInput ? Colors.blue : Colors.white24,
+                                width: 2,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.text_fields,
+                              color: _showTextInput ? Colors.white : Colors.white54,
+                              size: 22,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ],
-                ),
-              ),
-
-              // Toggle Text Input Button
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _showTextInput = !_showTextInput;
-                  });
-                },
-                child: Text(
-                  _showTextInput ? 'Use voice instead' : 'or tap to type',
-                  style: const TextStyle(color: Colors.white54, fontSize: 14),
                 ),
               ),
 
