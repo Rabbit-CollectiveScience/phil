@@ -39,10 +39,9 @@ class SpeechService {
       );
 
       // Create authenticated client
-      _authClient = await clientViaServiceAccount(
-        credentials,
-        ['https://www.googleapis.com/auth/cloud-platform'],
-      );
+      _authClient = await clientViaServiceAccount(credentials, [
+        'https://www.googleapis.com/auth/cloud-platform',
+      ]);
 
       print('✅ Speech service initialized (V2 API + Chirp 3)');
     } catch (e) {
@@ -97,8 +96,18 @@ class SpeechService {
       _recorder = RecorderStream();
       _audioBuffer.clear();
 
-      // Start recording
-      await _recorder!.start();
+      // Start recording (this will trigger iOS permission dialog if needed)
+      try {
+        await _recorder!.start();
+      } catch (e) {
+        print('❌ Failed to start recorder: $e');
+        _onError?.call(
+          'Microphone access denied. Please enable in Settings > Phil > Microphone',
+        );
+        _isListening = false;
+        _recorder = null;
+        return;
+      }
 
       // Listen to audio stream and buffer it - no sending until stop
       _audioSubscription = _recorder!.audioStream.listen(
@@ -127,7 +136,7 @@ class SpeechService {
     try {
       // Keep buffer for accumulation, just read it
       final audioToSend = List<int>.from(_audioBuffer);
-      
+
       // Only clear buffer on final send
       if (isFinal) {
         _audioBuffer.clear();
@@ -146,9 +155,7 @@ class SpeechService {
           },
           'languageCodes': ['th-TH', 'en-US'], // Code-switching support
           'model': 'chirp_3', // Chirp 3 model
-          'features': {
-            'enableAutomaticPunctuation': true,
-          },
+          'features': {'enableAutomaticPunctuation': true},
         },
         'content': audioContent,
       };
@@ -178,7 +185,10 @@ class SpeechService {
   }
 
   /// Handle V2 API response
-  void _handleV2Response(Map<String, dynamic> response, {bool isFinal = false}) {
+  void _handleV2Response(
+    Map<String, dynamic> response, {
+    bool isFinal = false,
+  }) {
     try {
       final results = response['results'] as List<dynamic>?;
       if (results == null || results.isEmpty) return;
@@ -196,7 +206,7 @@ class SpeechService {
       }
 
       if (transcripts.isEmpty) return;
-      
+
       final fullTranscript = transcripts.join(' ');
 
       if (isFinal) {

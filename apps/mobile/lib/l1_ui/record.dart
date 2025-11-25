@@ -4,6 +4,15 @@ import '../l3_service/gemini_service.dart';
 import '../l3_service/tts_service.dart';
 import '../l3_service/speech_service.dart';
 
+// Chat state machine enum
+enum ChatState {
+  idle, // Ready to record
+  recording, // Capturing audio
+  transcribing, // Processing speech to text
+  aiThinking, // Waiting for Gemini response
+  aiSpeaking, // TTS playing
+}
+
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
 
@@ -13,10 +22,7 @@ class RecordPage extends StatefulWidget {
 
 class _RecordPageState extends State<RecordPage>
     with SingleTickerProviderStateMixin {
-  bool _isRecording = false;
-  bool _isProcessing = false;
-  bool _isAiThinking = false;
-  bool _isAiSpeaking = false;
+  ChatState _chatState = ChatState.idle;
   bool _showTextInput = false;
   bool _isTtsEnabled = true;
   String _partialTranscription = '';
@@ -73,10 +79,9 @@ class _RecordPageState extends State<RecordPage>
     _textController.clear();
     _scrollToBottom();
 
-    // Enter PROCESSING state
+    // Enter AI_THINKING state
     setState(() {
-      _isProcessing = true;
-      _isAiThinking = true;
+      _chatState = ChatState.aiThinking;
     });
 
     // Get AI response from Gemini
@@ -86,13 +91,13 @@ class _RecordPageState extends State<RecordPage>
       aiResponse = await GeminiService.getInstance().sendMessage(text);
 
       // Check if processing was cancelled while waiting for response
-      if (!_isProcessing) {
+      if (_chatState != ChatState.aiThinking) {
         print('🚫 Processing was cancelled, ignoring response');
         return;
       }
     } catch (e) {
       // Check if cancelled during error handling
-      if (!_isProcessing) {
+      if (_chatState != ChatState.aiThinking) {
         return;
       }
       aiResponse =
@@ -102,8 +107,7 @@ class _RecordPageState extends State<RecordPage>
     // If we got here, processing wasn't cancelled
     // Add AI text bubble BEFORE starting TTS
     setState(() {
-      _isProcessing = false;
-      _isAiThinking = false;
+      _chatState = ChatState.idle;
       _messages.add(
         ChatMessage(text: aiResponse, isUser: false, timestamp: DateTime.now()),
       );
@@ -119,7 +123,7 @@ class _RecordPageState extends State<RecordPage>
   /// Start TTS playback in AI_SPEAKING state (non-blocking)
   void _startTTS(String text) async {
     setState(() {
-      _isAiSpeaking = true;
+      _chatState = ChatState.aiSpeaking;
     });
 
     try {
@@ -130,46 +134,59 @@ class _RecordPageState extends State<RecordPage>
 
     // Return to IDLE
     setState(() {
-      _isAiSpeaking = false;
+      _chatState = ChatState.idle;
     });
   }
 
   /// Handle mic button tap - Clean state machine
   void _handleVoiceInput() async {
-    // STATE: PROCESSING - Cancel and return to IDLE
-    if (_isProcessing) {
-      print('🚫 Cancelling processing');
+    // STATE: TRANSCRIBING - Cancel transcription and return to IDLE
+    if (_chatState == ChatState.transcribing) {
+      print('🚫 Cancelling transcription');
+      // Note: stopListening() was already called, just cancel waiting for result
       setState(() {
-        _isProcessing = false;
-        _isAiThinking = false;
+        _chatState = ChatState.idle;
+      });
+      return;
+    }
+
+    // STATE: AI_THINKING - Cancel and return to IDLE
+    if (_chatState == ChatState.aiThinking) {
+      print('🚫 Cancelling AI request');
+      setState(() {
+        _chatState = ChatState.idle;
       });
       // The _handleUserInput method will check this flag and ignore response
       return;
     }
 
     // STATE: AI_SPEAKING - Stop TTS and return to IDLE
-    if (_isAiSpeaking) {
+    if (_chatState == ChatState.aiSpeaking) {
       print('🛑 Stopping AI speech');
       await TTSService.getInstance().stop();
       setState(() {
-        _isAiSpeaking = false;
+        _chatState = ChatState.idle;
       });
       // Return to IDLE (don't start recording)
       return;
     }
 
     // STATE: RECORDING - Stop and process
-    if (_isRecording) {
+    if (_chatState == ChatState.recording) {
       print('⏹️ Stopping recording');
       setState(() {
-        _isRecording = false;
+        _chatState = ChatState.transcribing; // Show "transcribing..." indicator
       });
+      _scrollToBottom(); // Scroll to show transcribing indicator
 
       // Stop Google Cloud Speech-to-Text
       try {
         await _speechService.stopListening();
       } catch (e) {
         print('❌ Error stopping speech: $e');
+        setState(() {
+          _chatState = ChatState.idle;
+        });
       }
 
       return;
@@ -186,7 +203,7 @@ class _RecordPageState extends State<RecordPage>
     }
 
     setState(() {
-      _isRecording = true;
+      _chatState = ChatState.recording;
       _partialTranscription = '';
     });
 
@@ -203,17 +220,18 @@ class _RecordPageState extends State<RecordPage>
         onFinalResult: (text) {
           // Final transcription → send to Gemini
           print('✅ Final: $text');
+          setState(() {
+            _chatState =
+                ChatState.idle; // Clear transcribing indicator and recording
+          });
           if (text.isNotEmpty) {
-            setState(() {
-              _isRecording = false;
-            });
             _handleUserInput(text);
           }
         },
         onError: (error) {
           print('❌ Speech error: $error');
           setState(() {
-            _isRecording = false;
+            _chatState = ChatState.idle;
             _partialTranscription = '';
           });
         },
@@ -221,7 +239,7 @@ class _RecordPageState extends State<RecordPage>
     } catch (e) {
       print('❌ Error starting speech: $e');
       setState(() {
-        _isRecording = false;
+        _chatState = ChatState.idle;
       });
     }
   }
@@ -343,10 +361,17 @@ class _RecordPageState extends State<RecordPage>
                           horizontal: 16,
                           vertical: 20,
                         ),
-                        itemCount: _messages.length + (_isAiThinking ? 1 : 0),
+                        itemCount:
+                            _messages.length +
+                            (_chatState == ChatState.transcribing ? 1 : 0) +
+                            (_chatState == ChatState.aiThinking ? 1 : 0),
                         itemBuilder: (context, index) {
                           if (index < _messages.length) {
                             return _buildMessageBubble(_messages[index]);
+                          } else if (_chatState == ChatState.transcribing &&
+                              index == _messages.length) {
+                            // Show transcribing indicator first
+                            return _buildTranscribingIndicator();
                           } else {
                             // Show thinking indicator
                             return _buildThinkingIndicator();
@@ -361,7 +386,8 @@ class _RecordPageState extends State<RecordPage>
                 child: Column(
                   children: [
                     // Show partial transcription while recording
-                    if (_isRecording && _partialTranscription.isNotEmpty)
+                    if (_chatState == ChatState.recording &&
+                        _partialTranscription.isNotEmpty)
                       Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: const EdgeInsets.symmetric(
@@ -395,7 +421,7 @@ class _RecordPageState extends State<RecordPage>
                             animation: _pulseAnimation,
                             builder: (context, child) {
                               return Transform.scale(
-                                scale: _isAiSpeaking
+                                scale: _chatState == ChatState.aiSpeaking
                                     ? _pulseAnimation.value
                                     : 1.0,
                                 child: Container(
@@ -503,6 +529,53 @@ class _RecordPageState extends State<RecordPage>
     );
   }
 
+  Widget _buildTranscribingIndicator() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16, right: 40),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.blue[900],
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [_buildAnimatedDots()],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnimatedDots() {
+    return TweenAnimationBuilder<int>(
+      tween: IntTween(begin: 0, end: 3),
+      duration: const Duration(milliseconds: 1500),
+      builder: (context, value, child) {
+        return Text(
+          '.' * ((value % 4) + 1),
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 2,
+          ),
+        );
+      },
+      onEnd: () {
+        // Restart animation
+        if (_chatState == ChatState.transcribing) {
+          setState(() {});
+        }
+      },
+    );
+  }
+
   Widget _buildThinkingIndicator() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -560,7 +633,7 @@ class _RecordPageState extends State<RecordPage>
   Widget _buildMessageBubble(ChatMessage message) {
     final isLastMessage = _messages.isNotEmpty && _messages.last == message;
     final showSpeakingIndicator =
-        !message.isUser && isLastMessage && _isAiSpeaking;
+        !message.isUser && isLastMessage && _chatState == ChatState.aiSpeaking;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -642,17 +715,31 @@ class _RecordPageState extends State<RecordPage>
   }
 
   Color _getButtonColor() {
-    if (_isRecording) return Colors.green;
-    if (_isProcessing) return Colors.grey;
-    if (_isAiSpeaking) return Colors.blue;
-    return Colors.white;
+    switch (_chatState) {
+      case ChatState.recording:
+        return Colors.green;
+      case ChatState.transcribing:
+      case ChatState.aiThinking:
+        return Colors.grey;
+      case ChatState.aiSpeaking:
+        return Colors.blue;
+      case ChatState.idle:
+        return Colors.white;
+    }
   }
 
   IconData _getButtonIcon() {
-    if (_isRecording) return Icons.stop;
-    if (_isProcessing) return Icons.more_horiz;
-    if (_isAiSpeaking) return Icons.smart_toy;
-    return Icons.mic;
+    switch (_chatState) {
+      case ChatState.recording:
+        return Icons.stop;
+      case ChatState.transcribing:
+      case ChatState.aiThinking:
+        return Icons.more_horiz;
+      case ChatState.aiSpeaking:
+        return Icons.smart_toy;
+      case ChatState.idle:
+        return Icons.mic;
+    }
   }
 
   String _formatTime(DateTime time) {
