@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../l2_domain/models/workout.dart';
 import '../l2_domain/models/workout_exercise.dart';
 import '../l3_service/workout_service.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'exercise_form_screen.dart';
 
 class ExerciseDetailPage extends StatefulWidget {
   final String exerciseName;
@@ -57,7 +59,11 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
 
       if (exercises.isNotEmpty) {
         sessions.add(
-          ExerciseSession(workoutDate: workout.dateTime, exercises: exercises),
+          ExerciseSession(
+            workoutDate: workout.dateTime,
+            exercises: exercises,
+            workout: workout,
+          ),
         );
       }
     }
@@ -368,44 +374,107 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
   }
 
   Widget _buildSessionCard(ExerciseSession session, String metricType) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _formatDate(session.workoutDate),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+    return GestureDetector(
+      onTap: () async {
+        // Find the exercise in this session that matches the current exercise name
+        final exerciseIndex = session.workout.exercises
+            .indexWhere((e) => e.name == widget.exerciseName);
+        
+        if (exerciseIndex == -1) return;
+        
+        final exercise = session.workout.exercises[exerciseIndex];
+        
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ExerciseFormScreen(
+              exerciseId: exercise.exerciseId,
+              exerciseName: exercise.name,
+              category: exercise.category,
+              muscleGroup: exercise.muscleGroup,
+              initialParameters: exercise.parameters,
+              exerciseNumber: exerciseIndex + 1,
+              onSave: (exerciseData) async {
+                // Update the exercise in the workout
+                final updatedExercise = WorkoutExercise(
+                  exerciseId: exerciseData['exerciseId'],
+                  name: exerciseData['name'],
+                  category: exerciseData['category'],
+                  muscleGroup: exerciseData['muscleGroup'],
+                  parameters: exerciseData['parameters'],
+                );
+                
+                final exercises = List<WorkoutExercise>.from(session.workout.exercises);
+                exercises[exerciseIndex] = updatedExercise;
+                
+                final updatedWorkout = Workout(
+                  id: session.workout.id,
+                  dateTime: session.workout.dateTime,
+                  exercises: exercises,
+                  durationMinutes: session.workout.durationMinutes,
+                );
+                
+                await _workoutService.updateWorkout(updatedWorkout);
+                await _loadExerciseSessions();
+              },
+              onDelete: () async {
+                // Remove this exercise from the workout
+                final exercises = List<WorkoutExercise>.from(session.workout.exercises);
+                exercises.removeAt(exerciseIndex);
+                
+                final updatedWorkout = Workout(
+                  id: session.workout.id,
+                  dateTime: session.workout.dateTime,
+                  exercises: exercises,
+                  durationMinutes: session.workout.durationMinutes,
+                );
+                
+                await _workoutService.updateWorkout(updatedWorkout);
+                await _loadExerciseSessions();
+              },
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[900],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _formatDate(session.workoutDate),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  _getSessionSummary(session, metricType),
-                  style: TextStyle(color: Colors.grey[400], fontSize: 13),
-                ),
-              ],
+                  const SizedBox(height: 6),
+                  Text(
+                    _getSessionSummary(session, metricType),
+                    style: TextStyle(color: Colors.grey[400], fontSize: 13),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Text(
-            _getSessionMetricValue(session, metricType),
-            style: TextStyle(
-              color: _getChartColor(metricType),
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+            Text(
+              _getSessionMetricValue(session, metricType),
+              style: TextStyle(
+                color: _getChartColor(metricType),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -474,6 +543,11 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
 class ExerciseSession {
   final DateTime workoutDate;
   final List<WorkoutExercise> exercises;
+  final Workout workout;
 
-  ExerciseSession({required this.workoutDate, required this.exercises});
+  ExerciseSession({
+    required this.workoutDate,
+    required this.exercises,
+    required this.workout,
+  });
 }
