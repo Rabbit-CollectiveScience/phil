@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'l1_ui/record.dart';
 import 'l1_ui/dashboard.dart';
+import 'l1_ui/exercise_list_page.dart';
 import 'l1_ui/settings.dart';
 import 'l4_infrastructure/database/hive_config.dart';
 
@@ -52,6 +53,7 @@ class _MainNavigatorState extends State<MainNavigator> {
     _pages = [
       const RecordPage(),
       DashboardPage(key: _dashboardKey),
+      const ExerciseListPage(),
       SettingsPage(
         onNavigateToDashboard: _navigateToDashboard,
         onDataChanged: _refreshDashboard,
@@ -92,6 +94,7 @@ class _MainNavigatorState extends State<MainNavigator> {
               selectedItemColor: const Color(0xFF2E2E2E),
               unselectedItemColor: const Color(0xFF888888),
               elevation: 0,
+              type: BottomNavigationBarType.fixed,
               currentIndex: _currentIndex,
               onTap: (index) {
                 setState(() {
@@ -108,6 +111,11 @@ class _MainNavigatorState extends State<MainNavigator> {
                   icon: Icon(Icons.dashboard_outlined),
                   activeIcon: Icon(Icons.dashboard),
                   label: 'Dashboard',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.fitness_center_outlined),
+                  activeIcon: Icon(Icons.fitness_center),
+                  label: 'Exercises',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.settings_outlined),

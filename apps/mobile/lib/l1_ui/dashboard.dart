@@ -94,11 +94,7 @@ class DashboardPageState extends State<DashboardPage>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildTodayTab(),
-          _buildThisWeekTab(),
-          _buildRecordsTab(),
-        ],
+        children: [_buildTodayTab(), _buildThisWeekTab(), _buildRecordsTab()],
       ),
     );
   }
@@ -245,14 +241,14 @@ class DashboardPageState extends State<DashboardPage>
             children: [
               // Streaks Card
               _buildStreaksCard(records),
-              
+
               const SizedBox(height: 16),
-              
+
               // Personal Records Card
               _buildPersonalRecordsCard(records),
-              
+
               const SizedBox(height: 16),
-              
+
               // Volume Milestones Card
               _buildVolumeMilestonesCard(records),
             ],
@@ -268,17 +264,17 @@ class DashboardPageState extends State<DashboardPage>
     int longestStreak = 0;
     int tempStreak = 0;
     DateTime? lastWorkoutDate;
-    
+
     final sortedWorkouts = List<Workout>.from(_workouts)
       ..sort((a, b) => a.dateTime.compareTo(b.dateTime));
-    
+
     for (final workout in sortedWorkouts) {
       final workoutDate = DateTime(
         workout.dateTime.year,
         workout.dateTime.month,
         workout.dateTime.day,
       );
-      
+
       if (lastWorkoutDate == null) {
         tempStreak = 1;
       } else {
@@ -286,15 +282,17 @@ class DashboardPageState extends State<DashboardPage>
         if (daysDiff == 1) {
           tempStreak++;
         } else if (daysDiff > 1) {
-          longestStreak = tempStreak > longestStreak ? tempStreak : longestStreak;
+          longestStreak = tempStreak > longestStreak
+              ? tempStreak
+              : longestStreak;
           tempStreak = 1;
         }
       }
       lastWorkoutDate = workoutDate;
     }
-    
+
     longestStreak = tempStreak > longestStreak ? tempStreak : longestStreak;
-    
+
     // Check if streak is current
     if (lastWorkoutDate != null) {
       final today = DateTime.now();
@@ -302,23 +300,29 @@ class DashboardPageState extends State<DashboardPage>
       final daysSinceLastWorkout = todayDate.difference(lastWorkoutDate).inDays;
       currentStreak = daysSinceLastWorkout <= 1 ? tempStreak : 0;
     }
-    
+
     // Total stats
     int totalWorkouts = _workouts.length;
-    int totalExercises = _workouts.fold(0, (sum, w) => sum + w.exercises.length);
-    double totalVolume = _workouts.fold(0.0, (sum, w) => 
-      sum + WorkoutStatsService.calculateWorkoutVolume(w));
-    
+    int totalExercises = _workouts.fold(
+      0,
+      (sum, w) => sum + w.exercises.length,
+    );
+    double totalVolume = _workouts.fold(
+      0.0,
+      (sum, w) => sum + WorkoutStatsService.calculateWorkoutVolume(w),
+    );
+
     // Exercise PRs (max weight per exercise)
     Map<String, Map<String, dynamic>> exercisePRs = {};
     for (final workout in _workouts) {
       for (final exercise in workout.exercises) {
-        if (exercise.muscleGroup != 'cardio' && exercise.muscleGroup != 'flexibility') {
+        if (exercise.muscleGroup != 'cardio' &&
+            exercise.muscleGroup != 'flexibility') {
           final weight = exercise.parameters['weight'] as num? ?? 0;
           final reps = exercise.parameters['reps'] as int? ?? 0;
-          
+
           if (weight > 0) {
-            if (!exercisePRs.containsKey(exercise.name) || 
+            if (!exercisePRs.containsKey(exercise.name) ||
                 weight > (exercisePRs[exercise.name]!['weight'] as num)) {
               exercisePRs[exercise.name] = {
                 'weight': weight,
@@ -330,13 +334,13 @@ class DashboardPageState extends State<DashboardPage>
         }
       }
     }
-    
+
     // Single workout records
     double maxWorkoutVolume = 0;
     Workout? maxVolumeWorkout;
     int maxExercisesInWorkout = 0;
     Workout? maxExercisesWorkout;
-    
+
     for (final workout in _workouts) {
       final volume = WorkoutStatsService.calculateWorkoutVolume(workout);
       if (volume > maxWorkoutVolume) {
@@ -348,7 +352,7 @@ class DashboardPageState extends State<DashboardPage>
         maxExercisesWorkout = workout;
       }
     }
-    
+
     return {
       'currentStreak': currentStreak,
       'longestStreak': longestStreak,
@@ -404,19 +408,12 @@ class DashboardPageState extends State<DashboardPage>
                     const SizedBox(height: 4),
                     Text(
                       'Current Streak',
-                      style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.grey[400], fontSize: 12),
                     ),
                   ],
                 ),
               ),
-              Container(
-                width: 1,
-                height: 50,
-                color: Colors.grey[700],
-              ),
+              Container(width: 1, height: 50, color: Colors.grey[700]),
               Expanded(
                 child: Column(
                   children: [
@@ -431,10 +428,7 @@ class DashboardPageState extends State<DashboardPage>
                     const SizedBox(height: 4),
                     Text(
                       'Longest Streak',
-                      style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.grey[400], fontSize: 12),
                     ),
                   ],
                 ),
@@ -453,9 +447,13 @@ class DashboardPageState extends State<DashboardPage>
   }
 
   Widget _buildPersonalRecordsCard(Map<String, dynamic> records) {
-    final exercisePRs = records['exercisePRs'] as Map<String, Map<String, dynamic>>;
+    final exercisePRs =
+        records['exercisePRs'] as Map<String, Map<String, dynamic>>;
     final topPRs = exercisePRs.entries.toList()
-      ..sort((a, b) => (b.value['weight'] as num).compareTo(a.value['weight'] as num));
+      ..sort(
+        (a, b) =>
+            (b.value['weight'] as num).compareTo(a.value['weight'] as num),
+      );
     final displayPRs = topPRs.take(5).toList();
 
     return Container(
@@ -572,7 +570,7 @@ class DashboardPageState extends State<DashboardPage>
           const SizedBox(height: 16),
           const Divider(color: Colors.grey, height: 1),
           const SizedBox(height: 16),
-          if (records['maxVolumeWorkout'] != null) 
+          if (records['maxVolumeWorkout'] != null)
             Row(
               children: [
                 Expanded(
@@ -581,18 +579,14 @@ class DashboardPageState extends State<DashboardPage>
                     children: [
                       Text(
                         'Best Single Workout',
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 13,
-                        ),
+                        style: TextStyle(color: Colors.grey[400], fontSize: 13),
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        _formatDate((records['maxVolumeWorkout'] as Workout).dateTime),
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 11,
+                        _formatDate(
+                          (records['maxVolumeWorkout'] as Workout).dateTime,
                         ),
+                        style: TextStyle(color: Colors.grey[500], fontSize: 11),
                       ),
                     ],
                   ),
@@ -607,8 +601,7 @@ class DashboardPageState extends State<DashboardPage>
                 ),
               ],
             ),
-          if (records['maxVolumeWorkout'] != null)
-            const SizedBox(height: 16),
+          if (records['maxVolumeWorkout'] != null) const SizedBox(height: 16),
           if (records['maxExercisesWorkout'] != null)
             Row(
               children: [
@@ -618,18 +611,14 @@ class DashboardPageState extends State<DashboardPage>
                     children: [
                       Text(
                         'Most Exercises',
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 13,
-                        ),
+                        style: TextStyle(color: Colors.grey[400], fontSize: 13),
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        _formatDate((records['maxExercisesWorkout'] as Workout).dateTime),
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 11,
+                        _formatDate(
+                          (records['maxExercisesWorkout'] as Workout).dateTime,
                         ),
+                        style: TextStyle(color: Colors.grey[500], fontSize: 11),
                       ),
                     ],
                   ),
@@ -653,13 +642,7 @@ class DashboardPageState extends State<DashboardPage>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey[400],
-            fontSize: 13,
-          ),
-        ),
+        Text(label, style: TextStyle(color: Colors.grey[400], fontSize: 13)),
         Text(
           value,
           style: const TextStyle(
@@ -680,7 +663,20 @@ class DashboardPageState extends State<DashboardPage>
   }
 
   String _formatDate(DateTime date) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
