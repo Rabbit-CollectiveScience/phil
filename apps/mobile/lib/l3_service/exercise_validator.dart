@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import '../l3_data/repositories/custom_exercise_repository.dart';
 
 /// Validates exercise names and parameters against the exercise database
 class ExerciseValidator {
   static ExerciseValidator? _instance;
   List<Map<String, dynamic>>? _exercises;
   bool _isInitialized = false;
+  final CustomExerciseRepository _customRepository = CustomExerciseRepository();
 
   ExerciseValidator._();
 
@@ -20,12 +22,17 @@ class ExerciseValidator {
     if (_isInitialized) return;
 
     try {
-      final jsonString = await rootBundle
-          .loadString('assets/data/exercises/index.json');
+      final jsonString = await rootBundle.loadString(
+        'assets/data/exercises/index.json',
+      );
       final jsonData = json.decode(jsonString);
       _exercises = List<Map<String, dynamic>>.from(
         jsonData['exercises'].map((e) => Map<String, dynamic>.from(e)),
       );
+      
+      // Initialize custom exercise repository
+      await _customRepository.initialize();
+      
       _isInitialized = true;
     } catch (e) {
       print('Error loading exercise database: $e');
@@ -33,13 +40,43 @@ class ExerciseValidator {
     }
   }
 
-  /// Find exercise by exact name match
-  Map<String, dynamic>? findExerciseByName(String name) {
+  /// Find exercise by exact name match (checks both canonical and custom exercises)
+  Future<Map<String, dynamic>?> findExerciseByName(String name) async {
     if (!_isInitialized || _exercises == null) {
-      throw StateError('ExerciseValidator not initialized. Call initialize() first.');
+      throw StateError(
+        'ExerciseValidator not initialized. Call initialize() first.',
+      );
     }
 
-    // Try exact match first (case-insensitive)
+    // Try canonical database first (exact match, case-insensitive)
+    final normalizedName = name.toLowerCase().trim();
+    for (final exercise in _exercises!) {
+      if (exercise['name'].toString().toLowerCase() == normalizedName) {
+        return exercise;
+      }
+    }
+
+    // Check custom exercises
+    try {
+      final customExercise = await _customRepository.findByName(name);
+      if (customExercise != null) {
+        return customExercise.toMap();
+      }
+    } catch (e) {
+      // Not found in custom exercises
+    }
+
+    return null;
+  }
+
+  /// Find exercise by exact name match in canonical database only (synchronous)
+  Map<String, dynamic>? findCanonicalExerciseByName(String name) {
+    if (!_isInitialized || _exercises == null) {
+      throw StateError(
+        'ExerciseValidator not initialized. Call initialize() first.',
+      );
+    }
+
     final normalizedName = name.toLowerCase().trim();
     for (final exercise in _exercises!) {
       if (exercise['name'].toString().toLowerCase() == normalizedName) {
@@ -53,7 +90,9 @@ class ExerciseValidator {
   /// Find exercise by ID
   Map<String, dynamic>? findExerciseById(String id) {
     if (!_isInitialized || _exercises == null) {
-      throw StateError('ExerciseValidator not initialized. Call initialize() first.');
+      throw StateError(
+        'ExerciseValidator not initialized. Call initialize() first.',
+      );
     }
 
     for (final exercise in _exercises!) {
@@ -67,12 +106,16 @@ class ExerciseValidator {
 
   /// Find closest matching exercise using fuzzy matching
   /// Returns the best match and its similarity score (0-1)
-  ({Map<String, dynamic>? exercise, double similarity})? findClosestMatch(
-    String name,
-    {String? category, double minSimilarity = 0.6}
-  ) {
+  /// Checks both canonical database and custom exercises
+  Future<({Map<String, dynamic>? exercise, double similarity})?> findClosestMatch(
+    String name, {
+    String? category,
+    double minSimilarity = 0.6,
+  }) async {
     if (!_isInitialized || _exercises == null) {
-      throw StateError('ExerciseValidator not initialized. Call initialize() first.');
+      throw StateError(
+        'ExerciseValidator not initialized. Call initialize() first.',
+      );
     }
 
     Map<String, dynamic>? bestMatch;
@@ -80,6 +123,7 @@ class ExerciseValidator {
 
     final normalizedSearch = name.toLowerCase().trim();
 
+    // Check canonical exercises
     for (final exercise in _exercises!) {
       // Filter by category if specified
       if (category != null && exercise['category'] != category) {
@@ -92,6 +136,23 @@ class ExerciseValidator {
       if (score > bestScore) {
         bestScore = score;
         bestMatch = exercise;
+      }
+    }
+
+    // Check custom exercises
+    final customExercises = await _customRepository.getAll();
+    for (final customExercise in customExercises) {
+      // Filter by category if specified
+      if (category != null && customExercise.category != category) {
+        continue;
+      }
+
+      final exerciseName = customExercise.name.toLowerCase();
+      final score = _calculateSimilarity(normalizedSearch, exerciseName);
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = customExercise.toMap();
       }
     }
 
@@ -154,8 +215,8 @@ class ExerciseValidator {
   }
 
   /// Validate that an exercise belongs to the expected category
-  bool validateCategory(String exerciseName, String expectedCategory) {
-    final exercise = findExerciseByName(exerciseName);
+  Future<bool> validateCategory(String exerciseName, String expectedCategory) async {
+    final exercise = await findExerciseByName(exerciseName);
     if (exercise == null) return false;
     return exercise['category'] == expectedCategory;
   }
@@ -163,12 +224,12 @@ class ExerciseValidator {
   /// Get all exercises for a specific category
   List<Map<String, dynamic>> getExercisesByCategory(String category) {
     if (!_isInitialized || _exercises == null) {
-      throw StateError('ExerciseValidator not initialized. Call initialize() first.');
+      throw StateError(
+        'ExerciseValidator not initialized. Call initialize() first.',
+      );
     }
 
-    return _exercises!
-        .where((e) => e['category'] == category)
-        .toList();
+    return _exercises!.where((e) => e['category'] == category).toList();
   }
 
   /// Check if exercise database is loaded

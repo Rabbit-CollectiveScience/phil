@@ -30,7 +30,8 @@ class _RecordPageState extends State<RecordPage>
   String _partialTranscription = '';
   final List<ChatMessage> _messages = [];
   final TextEditingController _textController = TextEditingController();
-  final VoiceLoggingController _voiceLoggingController = VoiceLoggingController();
+  final VoiceLoggingController _voiceLoggingController =
+      VoiceLoggingController();
   WorkoutExercise? _lastLoggedExercise;
   final ScrollController _scrollController = ScrollController();
   late AnimationController _pulseController;
@@ -101,18 +102,29 @@ class _RecordPageState extends State<RecordPage>
     // Get AI response from Gemini with function calling
     String aiResponse;
     WorkoutExercise? loggedExercise;
+    bool isCustomExerciseCreated = false;
 
     try {
-      final response = await GeminiService.getInstance().sendMessageWithFunctions(text);
+      final response = await GeminiService.getInstance()
+          .sendMessageWithFunctions(text);
       aiResponse = response.message;
-      
+
+      // Check if a custom exercise was created
+      if (response.result != null && response.result!.isCustomExerciseCreation) {
+        isCustomExerciseCreated = response.result!.success;
+        print(isCustomExerciseCreated
+            ? '✅ Custom exercise created: ${response.result!.functionResponse?['exercise']?['name']}'
+            : '❌ Failed to create custom exercise: ${response.result!.message}');
+      }
       // Check if an exercise was logged
-      if (response.result != null && response.result!.success) {
+      else if (response.result != null && response.result!.success) {
         loggedExercise = response.result!.exercise;
         print('✅ Workout logged: ${loggedExercise?.name}');
-        
+
         // Save to Hive using VoiceLoggingController
-        final loggingResult = await _voiceLoggingController.processVoiceInput(text);
+        final loggingResult = await _voiceLoggingController.processVoiceInput(
+          text,
+        );
         if (loggingResult.success) {
           print('💾 Saved to Hive: ${loggingResult.exercise?.name}');
           _lastLoggedExercise = loggingResult.exercise;
@@ -146,26 +158,39 @@ class _RecordPageState extends State<RecordPage>
       _chatState = ChatState.idle;
       _messages.add(
         ChatMessage(
-          text: aiResponse, 
-          isUser: false, 
+          text: aiResponse,
+          isUser: false,
           timestamp: DateTime.now(),
           isWorkoutLogged: loggedExercise != null,
+          isCustomExerciseCreated: isCustomExerciseCreated,
         ),
       );
     });
     _scrollToBottom();
 
-    // Show success snackbar if workout was logged
-    if (loggedExercise != null && mounted) {
+    // Show success snackbar based on action
+    if (isCustomExerciseCreated && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Row(
+            children: [
+              Icon(Icons.add_circle, color: Colors.white),
+              SizedBox(width: 8),
+              Expanded(child: Text('✨ Created new custom exercise!')),
+            ],
+          ),
+          backgroundColor: Colors.purple.shade600,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } else if (loggedExercise != null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
             children: [
               const Icon(Icons.check_circle, color: Colors.white),
               const SizedBox(width: 8),
-              Expanded(
-                child: Text('✅ Logged: ${loggedExercise.name}'),
-              ),
+              Expanded(child: Text('✅ Logged: ${loggedExercise.name}')),
             ],
           ),
           backgroundColor: Colors.green,
@@ -843,7 +868,10 @@ class _RecordPageState extends State<RecordPage>
                   if (message.isWorkoutLogged) ...[
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(8),
@@ -852,12 +880,49 @@ class _RecordPageState extends State<RecordPage>
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.check_circle, color: Colors.green, size: 14),
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 14,
+                          ),
                           SizedBox(width: 4),
                           Text(
                             'Workout Logged',
                             style: TextStyle(
                               color: Colors.green,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  if (message.isCustomExerciseCreated) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.purple.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.purple, width: 1),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.add_circle,
+                            color: Colors.purple,
+                            size: 14,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            'Custom Exercise Created',
+                            style: TextStyle(
+                              color: Colors.purple,
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
                             ),
@@ -938,11 +1003,13 @@ class ChatMessage {
   final bool isUser;
   final DateTime timestamp;
   final bool isWorkoutLogged;
+  final bool isCustomExerciseCreated;
 
   ChatMessage({
     required this.text,
     required this.isUser,
     required this.timestamp,
     this.isWorkoutLogged = false,
+    this.isCustomExerciseCreated = false,
   });
 }

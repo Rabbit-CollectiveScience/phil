@@ -41,21 +41,35 @@ CORE RESPONSIBILITIES:
 - Help users log exercises using the available functions
 - Understand natural voice input and extract workout details
 - Use the appropriate function (strength/cardio/flexibility) based on exercise type
+- Create custom exercises when users mention exercises not in the database
 - Always respond in the SAME LANGUAGE the user speaks to you
 
 AVAILABLE FUNCTIONS:
+LOGGING:
 - log_strength_exercise: For weights, resistance training (bench press, squats, curls, etc.)
 - log_cardio_exercise: For running, cycling, rowing, swimming, etc.
 - log_flexibility_exercise: For stretching, yoga, mobility work
 
+CUSTOM EXERCISE CREATION:
+- add_custom_strength_exercise: Create a new strength exercise when not found in database
+- add_custom_cardio_exercise: Create a new cardio exercise when not found in database
+- add_custom_flexibility_exercise: Create a new flexibility exercise when not found in database
+
 RULES:
 - When user mentions an exercise, ALWAYS use a function to log it
 - Match exercise names from the valid exercise lists in function descriptions
+- If an exercise is not recognized, use add_custom_[type]_exercise to create it, then log it
 - Extract all mentioned parameters (sets, reps, weight, duration, distance, etc.)
 - Convert imperial units to metric (lbs → kg × 0.453592, miles → km × 1.60934)
 - Be conversational and encouraging
 - Keep responses SHORT after logging (1-2 sentences)
 - If unsure about details, ask clarifying questions
+
+CUSTOM EXERCISE WORKFLOW:
+If user mentions "Wall Sit" (not in database):
+1. Call add_custom_strength_exercise(name="Wall Sit", muscle_group="legs", equipment="bodyweight", movement_pattern="isometric")
+2. Respond: "I created 'Wall Sit' as a new exercise! How long did you hold it?"
+3. Then log it with log_strength_exercise once user provides details
 
 EXAMPLES:
 User: "I did 3 sets of 10 bench press at 135 pounds"
@@ -71,7 +85,9 @@ User: "Stretched hamstrings for 30 seconds, 3 times"
 → Respond: "Good work on flexibility! Logged 3x30s hamstring stretches 🧘"
 '''),
       tools: [
-        Tool(functionDeclarations: WorkoutFunctionDeclarations.getDeclarations()),
+        Tool(
+          functionDeclarations: WorkoutFunctionDeclarations.getDeclarations(),
+        ),
       ],
     );
 
@@ -147,9 +163,8 @@ User: "3 sets of 10 at 135 pounds" → "Awesome work! 3 sets of 10 at 135 lbs. K
   }
 
   /// Send a message with function calling support for workout logging
-  Future<({String message, FunctionExecutionResult? result})> sendMessageWithFunctions(
-    String userMessage,
-  ) async {
+  Future<({String message, FunctionExecutionResult? result})>
+  sendMessageWithFunctions(String userMessage) async {
     try {
       // Initialize if needed
       if (!_isInitializedWithFunctions) {
@@ -157,15 +172,19 @@ User: "3 sets of 10 at 135 pounds" → "Awesome work! 3 sets of 10 at 135 lbs. K
       }
 
       // Send message using chat session with functions
-      var response = await _chatWithFunctions!.sendMessage(Content.text(userMessage));
+      var response = await _chatWithFunctions!.sendMessage(
+        Content.text(userMessage),
+      );
 
       // Check if the model wants to call a function
       final functionCalls = response.functionCalls.toList();
-      
+
       if (functionCalls.isNotEmpty) {
         // Execute the first function call
         final functionCall = functionCalls.first;
-        final executionResult = await _functionExecutor.executeFunction(functionCall);
+        final executionResult = await _functionExecutor.executeFunction(
+          functionCall,
+        );
 
         // Send function response back to model using FunctionResponse
         response = await _chatWithFunctions!.sendMessage(
@@ -182,9 +201,10 @@ User: "3 sets of 10 at 135 pounds" → "Awesome work! 3 sets of 10 at 135 lbs. K
       }
 
       // No function call - just return the text response
-      final aiMessage = response.text?.trim() ?? "I'm here to help you log workouts! What did you do today?";
+      final aiMessage =
+          response.text?.trim() ??
+          "I'm here to help you log workouts! What did you do today?";
       return (message: aiMessage, result: null);
-      
     } catch (e) {
       print('Error sending message with functions to Gemini: $e');
 
@@ -192,14 +212,15 @@ User: "3 sets of 10 at 135 pounds" → "Awesome work! 3 sets of 10 at 135 lbs. K
       if (e.toString().contains('API_KEY') ||
           e.toString().contains('API key')) {
         return (
-          message: "⚠️ API key not configured. Please add your Gemini API key to config.dart",
-          result: null
+          message:
+              "⚠️ API key not configured. Please add your Gemini API key to config.dart",
+          result: null,
         );
       }
 
       return (
         message: "Oops! Something went wrong. Let's try that again?",
-        result: null
+        result: null,
       );
     }
   }

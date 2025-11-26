@@ -1,14 +1,18 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'custom_exercise_function_declarations.dart';
 
 /// Function declarations for voice-based workout logging
 /// Uses 3 separate functions based on exercise category for type-safe parameters
 class WorkoutFunctionDeclarations {
-  /// Get all function declarations for workout logging
+  /// Get all function declarations for workout logging (includes custom exercise creation)
   static List<FunctionDeclaration> getDeclarations() {
     return [
+      // Logging functions
       _logStrengthExercise(),
       _logCardioExercise(),
       _logFlexibilityExercise(),
+      // Custom exercise creation functions
+      ...CustomExerciseFunctionDeclarations.getDeclarations(),
     ];
   }
 

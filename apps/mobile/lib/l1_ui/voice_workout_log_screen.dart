@@ -13,7 +13,7 @@ class VoiceWorkoutLogScreen extends StatefulWidget {
 class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
   final VoiceLoggingController _controller = VoiceLoggingController();
   final TextEditingController _textController = TextEditingController();
-  
+
   String _currentTranscription = '';
   String _aiResponse = '';
   WorkoutExercise? _lastLoggedExercise;
@@ -42,7 +42,7 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
 
     try {
       final result = await _controller.processVoiceInput(input);
-      
+
       setState(() {
         _aiResponse = result.message;
         _conversationHistory.add({
@@ -51,17 +51,16 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
           'timestamp': DateTime.now(),
           'success': result.success,
         });
-        
+
         if (result.success && result.exercise != null) {
           _lastLoggedExercise = result.exercise;
         }
-        
+
         _isProcessing = false;
       });
-      
+
       // Clear input
       _textController.clear();
-      
     } catch (e) {
       setState(() {
         _aiResponse = 'Error: $e';
@@ -83,7 +82,7 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
         correctionText,
         _lastLoggedExercise!,
       );
-      
+
       setState(() {
         _aiResponse = result.message;
         _conversationHistory.add({
@@ -93,14 +92,13 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
           'success': result.success,
           'isCorrection': true,
         });
-        
+
         if (result.success && result.exercise != null) {
           _lastLoggedExercise = result.exercise;
         }
-        
+
         _isProcessing = false;
       });
-      
     } catch (e) {
       setState(() {
         _aiResponse = 'Error: $e';
@@ -141,11 +139,10 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
                 ? _buildEmptyState()
                 : _buildConversationList(),
           ),
-          
+
           // Last logged exercise card (if any)
-          if (_lastLoggedExercise != null)
-            _buildLastExerciseCard(),
-          
+          if (_lastLoggedExercise != null) _buildLastExerciseCard(),
+
           // Input area
           _buildInputArea(),
         ],
@@ -160,11 +157,7 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.mic,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.mic, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               'Voice Workout Logger',
@@ -174,10 +167,7 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
             Text(
               'Tell me what you did!\nExample: "3 sets of 10 bench press at 135 pounds"',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.grey[600], fontSize: 16),
             ),
             const SizedBox(height: 24),
             _buildQuickExamples(),
@@ -205,13 +195,15 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        ...examples.map((example) => Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: OutlinedButton(
-            onPressed: () => _processInput(example),
-            child: Text(example),
+        ...examples.map(
+          (example) => Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: OutlinedButton(
+              onPressed: () => _processInput(example),
+              child: Text(example),
+            ),
           ),
-        )),
+        ),
       ],
     );
   }
@@ -223,12 +215,12 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
       itemBuilder: (context, index) {
         final message = _conversationHistory[index];
         final isUser = message['role'] == 'user';
-        
+
         return Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
           child: Row(
-            mainAxisAlignment: isUser 
-                ? MainAxisAlignment.end 
+            mainAxisAlignment: isUser
+                ? MainAxisAlignment.end
                 : MainAxisAlignment.start,
             children: [
               Flexible(
@@ -238,7 +230,7 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: isUser 
+                    color: isUser
                         ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
                         : Colors.grey[200],
                     borderRadius: BorderRadius.circular(16),
@@ -252,8 +244,8 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
                       Text(
                         message['message'],
                         style: TextStyle(
-                          color: isUser 
-                              ? Theme.of(context).primaryColor 
+                          color: isUser
+                              ? Theme.of(context).primaryColor
                               : Colors.black87,
                         ),
                       ),
@@ -292,7 +284,7 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
 
   Widget _buildLastExerciseCard() {
     final exercise = _lastLoggedExercise!;
-    
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
@@ -320,10 +312,7 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
           const SizedBox(height: 8),
           Text(
             exercise.name,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           Text(
@@ -353,7 +342,7 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
   String _formatExerciseParameters(WorkoutExercise exercise) {
     final params = exercise.parameters;
     final parts = <String>[];
-    
+
     if (params.containsKey('sets')) {
       parts.add('${params['sets']} sets');
     }
@@ -372,13 +361,13 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
     if (params.containsKey('holdDuration')) {
       parts.add('${params['holdDuration']}s hold');
     }
-    
+
     return parts.join(' • ');
   }
 
   Widget _buildCorrectionDialog() {
     final correctionController = TextEditingController();
-    
+
     return AlertDialog(
       title: const Text('Correct Exercise'),
       content: Column(
@@ -438,7 +427,9 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
                 // Placeholder - would trigger voice recording
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Voice recording coming soon! Use text input for now.'),
+                    content: Text(
+                      'Voice recording coming soon! Use text input for now.',
+                    ),
                   ),
                 );
               },

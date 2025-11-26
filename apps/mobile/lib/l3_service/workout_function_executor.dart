@@ -1,6 +1,7 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
 import '../l2_domain/models/workout_exercise.dart';
 import 'exercise_validator.dart';
+import 'custom_exercise_executor.dart';
 
 /// Result of a function execution
 class FunctionExecutionResult {
@@ -8,18 +9,21 @@ class FunctionExecutionResult {
   final WorkoutExercise? exercise;
   final String message;
   final Map<String, dynamic>? functionResponse;
+  final bool isCustomExerciseCreation; // Flag to distinguish creation vs logging
 
   FunctionExecutionResult({
     required this.success,
     this.exercise,
     required this.message,
     this.functionResponse,
+    this.isCustomExerciseCreation = false,
   });
 }
 
 /// Executes workout logging functions and validates parameters
 class WorkoutFunctionExecutor {
   final ExerciseValidator _validator = ExerciseValidator.getInstance();
+  final CustomExerciseExecutor _customExecutor = CustomExerciseExecutor();
 
   /// Execute a function call from Gemini
   Future<FunctionExecutionResult> executeFunction(
@@ -34,6 +38,12 @@ class WorkoutFunctionExecutor {
     final args = functionCall.args;
 
     try {
+      // Route to custom exercise executor if it's a creation function
+      if (functionName.startsWith('add_custom_')) {
+        return await _executeCustomExerciseCreation(functionName, args);
+      }
+
+      // Otherwise handle as a logging function
       switch (functionName) {
         case 'log_strength_exercise':
           return await _executeStrengthLog(args);
@@ -57,6 +67,21 @@ class WorkoutFunctionExecutor {
     }
   }
 
+  /// Execute custom exercise creation
+  Future<FunctionExecutionResult> _executeCustomExerciseCreation(
+    String functionName,
+    Map<String, dynamic> args,
+  ) async {
+    final result = await _customExecutor.executeFunction(functionName, args);
+
+    return FunctionExecutionResult(
+      success: result['success'] as bool,
+      message: result['message'] as String? ?? result['error'] as String? ?? '',
+      functionResponse: result,
+      isCustomExerciseCreation: true,
+    );
+  }
+
   /// Execute strength exercise logging
   Future<FunctionExecutionResult> _executeStrengthLog(
     Map<String, dynamic> args,
@@ -70,7 +95,10 @@ class WorkoutFunctionExecutor {
     final notes = args['notes'] as String?;
 
     // Validate required parameters
-    if (exerciseName == null || sets == null || reps == null || weightKg == null) {
+    if (exerciseName == null ||
+        sets == null ||
+        reps == null ||
+        weightKg == null) {
       return FunctionExecutionResult(
         success: false,
         message: 'Missing required parameters for strength exercise',
@@ -79,11 +107,11 @@ class WorkoutFunctionExecutor {
     }
 
     // Find exercise in database
-    var exercise = _validator.findExerciseByName(exerciseName);
-    
+    var exercise = await _validator.findExerciseByName(exerciseName);
+
     // If not found, try fuzzy matching
     if (exercise == null) {
-      final match = _validator.findClosestMatch(
+      final match = await _validator.findClosestMatch(
         exerciseName,
         category: 'strength',
       );
@@ -98,7 +126,7 @@ class WorkoutFunctionExecutor {
         message: 'Exercise not found: $exerciseName',
         functionResponse: {
           'error': 'Exercise not found',
-          'suggestion': 'Try a different exercise name or check spelling'
+          'suggestion': 'Try a different exercise name or check spelling',
         },
       );
     }
@@ -107,10 +135,11 @@ class WorkoutFunctionExecutor {
     if (exercise['category'] != 'strength') {
       return FunctionExecutionResult(
         success: false,
-        message: '${exercise['name']} is not a strength exercise. It\'s a ${exercise['category']} exercise.',
+        message:
+            '${exercise['name']} is not a strength exercise. It\'s a ${exercise['category']} exercise.',
         functionResponse: {
           'error': 'Wrong category',
-          'actual_category': exercise['category']
+          'actual_category': exercise['category'],
         },
       );
     }
@@ -135,7 +164,8 @@ class WorkoutFunctionExecutor {
     return FunctionExecutionResult(
       success: true,
       exercise: workoutExercise,
-      message: 'Logged: $sets sets of $reps reps ${exercise['name']} at ${weightKg}kg',
+      message:
+          'Logged: $sets sets of $reps reps ${exercise['name']} at ${weightKg}kg',
       functionResponse: {
         'success': true,
         'exercise': exercise['name'],
@@ -167,11 +197,11 @@ class WorkoutFunctionExecutor {
     }
 
     // Find exercise in database
-    var exercise = _validator.findExerciseByName(exerciseName);
-    
+    var exercise = await _validator.findExerciseByName(exerciseName);
+
     // If not found, try fuzzy matching
     if (exercise == null) {
-      final match = _validator.findClosestMatch(
+      final match = await _validator.findClosestMatch(
         exerciseName,
         category: 'cardio',
       );
@@ -186,7 +216,7 @@ class WorkoutFunctionExecutor {
         message: 'Exercise not found: $exerciseName',
         functionResponse: {
           'error': 'Exercise not found',
-          'suggestion': 'Try a different exercise name or check spelling'
+          'suggestion': 'Try a different exercise name or check spelling',
         },
       );
     }
@@ -195,10 +225,11 @@ class WorkoutFunctionExecutor {
     if (exercise['category'] != 'cardio') {
       return FunctionExecutionResult(
         success: false,
-        message: '${exercise['name']} is not a cardio exercise. It\'s a ${exercise['category']} exercise.',
+        message:
+            '${exercise['name']} is not a cardio exercise. It\'s a ${exercise['category']} exercise.',
         functionResponse: {
           'error': 'Wrong category',
-          'actual_category': exercise['category']
+          'actual_category': exercise['category'],
         },
       );
     }
@@ -221,12 +252,15 @@ class WorkoutFunctionExecutor {
 
     // Build message
     final distanceStr = distanceKm != null ? ', ${distanceKm}km' : '';
-    final paceStr = paceMinPerKm != null ? ', ${paceMinPerKm.toStringAsFixed(1)} min/km' : '';
+    final paceStr = paceMinPerKm != null
+        ? ', ${paceMinPerKm.toStringAsFixed(1)} min/km'
+        : '';
 
     return FunctionExecutionResult(
       success: true,
       exercise: workoutExercise,
-      message: 'Logged: ${durationMinutes} min ${exercise['name']}$distanceStr$paceStr',
+      message:
+          'Logged: ${durationMinutes} min ${exercise['name']}$distanceStr$paceStr',
       functionResponse: {
         'success': true,
         'exercise': exercise['name'],
@@ -257,11 +291,11 @@ class WorkoutFunctionExecutor {
     }
 
     // Find exercise in database
-    var exercise = _validator.findExerciseByName(exerciseName);
-    
+    var exercise = await _validator.findExerciseByName(exerciseName);
+
     // If not found, try fuzzy matching
     if (exercise == null) {
-      final match = _validator.findClosestMatch(
+      final match = await _validator.findClosestMatch(
         exerciseName,
         category: 'flexibility',
       );
@@ -276,7 +310,7 @@ class WorkoutFunctionExecutor {
         message: 'Exercise not found: $exerciseName',
         functionResponse: {
           'error': 'Exercise not found',
-          'suggestion': 'Try a different exercise name or check spelling'
+          'suggestion': 'Try a different exercise name or check spelling',
         },
       );
     }
@@ -285,10 +319,11 @@ class WorkoutFunctionExecutor {
     if (exercise['category'] != 'flexibility') {
       return FunctionExecutionResult(
         success: false,
-        message: '${exercise['name']} is not a flexibility exercise. It\'s a ${exercise['category']} exercise.',
+        message:
+            '${exercise['name']} is not a flexibility exercise. It\'s a ${exercise['category']} exercise.',
         functionResponse: {
           'error': 'Wrong category',
-          'actual_category': exercise['category']
+          'actual_category': exercise['category'],
         },
       );
     }
@@ -311,7 +346,8 @@ class WorkoutFunctionExecutor {
     return FunctionExecutionResult(
       success: true,
       exercise: workoutExercise,
-      message: 'Logged: ${exercise['name']} held for ${holdDurationSeconds}s (${sets}x)',
+      message:
+          'Logged: ${exercise['name']} held for ${holdDurationSeconds}s (${sets}x)',
       functionResponse: {
         'success': true,
         'exercise': exercise['name'],

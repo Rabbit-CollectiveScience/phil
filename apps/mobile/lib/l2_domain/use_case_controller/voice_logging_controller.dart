@@ -22,22 +22,24 @@ class VoiceLoggingResult {
 /// Handles: audio → transcription → Gemini → function call → validation → save
 class VoiceLoggingController {
   final GeminiService _geminiService = GeminiService.getInstance();
-  
+
   /// Process voice transcription and log workout
   /// Returns result with success status, message, and logged exercise
   Future<VoiceLoggingResult> processVoiceInput(String transcription) async {
     try {
       // Send to Gemini with function calling
-      final response = await _geminiService.sendMessageWithFunctions(transcription);
-      
+      final response = await _geminiService.sendMessageWithFunctions(
+        transcription,
+      );
+
       // Check if function was executed
       if (response.result != null) {
         final executionResult = response.result!;
-        
+
         if (executionResult.success && executionResult.exercise != null) {
           // Save to Hive
           await _saveExerciseToWorkout(executionResult.exercise!);
-          
+
           return VoiceLoggingResult(
             success: true,
             message: response.message,
@@ -52,14 +54,13 @@ class VoiceLoggingController {
           );
         }
       }
-      
+
       // No function called - just conversational response
       return VoiceLoggingResult(
         success: false,
         message: response.message,
         error: 'No workout logged - just conversation',
       );
-      
     } catch (e) {
       return VoiceLoggingResult(
         success: false,
@@ -72,23 +73,23 @@ class VoiceLoggingController {
   /// Save exercise to today's workout (or create new workout)
   Future<void> _saveExerciseToWorkout(WorkoutExercise exercise) async {
     final workoutBox = await Hive.openBox<Workout>('workouts');
-    
+
     // Find or create today's workout
     final now = DateTime.now();
     final todayStart = DateTime(now.year, now.month, now.day);
     final todayEnd = todayStart.add(const Duration(days: 1));
-    
+
     Workout? todayWorkout;
-    
+
     // Search for existing workout today
     for (final workout in workoutBox.values) {
-      if (workout.dateTime.isAfter(todayStart) && 
+      if (workout.dateTime.isAfter(todayStart) &&
           workout.dateTime.isBefore(todayEnd)) {
         todayWorkout = workout;
         break;
       }
     }
-    
+
     if (todayWorkout == null) {
       // Create new workout for today
       todayWorkout = Workout(
@@ -107,7 +108,7 @@ class VoiceLoggingController {
         exercises: updatedExercises,
         durationMinutes: todayWorkout.durationMinutes,
       );
-      
+
       // Find and update the workout
       final key = workoutBox.keys.firstWhere(
         (k) => workoutBox.get(k)?.id == todayWorkout!.id,
@@ -123,35 +124,37 @@ class VoiceLoggingController {
   ) async {
     try {
       // Build context for correction
-      final contextMessage = '''
+      final contextMessage =
+          '''
 User wants to correct their last logged exercise:
 Original: ${originalExercise.name} - ${originalExercise.parameters}
 Correction: $correctionText
 
 Please update the exercise with the corrected information.
 ''';
-      
-      final response = await _geminiService.sendMessageWithFunctions(contextMessage);
-      
+
+      final response = await _geminiService.sendMessageWithFunctions(
+        contextMessage,
+      );
+
       if (response.result != null && response.result!.success) {
         final correctedExercise = response.result!.exercise!;
-        
+
         // Update in Hive by removing old and adding new
         await _replaceExercise(originalExercise, correctedExercise);
-        
+
         return VoiceLoggingResult(
           success: true,
           message: response.message,
           exercise: correctedExercise,
         );
       }
-      
+
       return VoiceLoggingResult(
         success: false,
         message: response.message,
         error: 'Could not process correction',
       );
-      
     } catch (e) {
       return VoiceLoggingResult(
         success: false,
@@ -167,12 +170,12 @@ Please update the exercise with the corrected information.
     WorkoutExercise newExercise,
   ) async {
     final workoutBox = await Hive.openBox<Workout>('workouts');
-    
+
     // Find today's workout
     final now = DateTime.now();
     final todayStart = DateTime(now.year, now.month, now.day);
     final todayEnd = todayStart.add(const Duration(days: 1));
-    
+
     for (final key in workoutBox.keys) {
       final workout = workoutBox.get(key);
       if (workout != null &&
@@ -186,14 +189,14 @@ Please update the exercise with the corrected information.
           }
           return ex;
         }).toList();
-        
+
         final updatedWorkout = Workout(
           id: workout.id,
           dateTime: workout.dateTime,
           exercises: updatedExercises,
           durationMinutes: workout.durationMinutes,
         );
-        
+
         await workoutBox.put(key, updatedWorkout);
         break;
       }
