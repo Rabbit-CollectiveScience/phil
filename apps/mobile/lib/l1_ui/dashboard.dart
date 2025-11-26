@@ -21,6 +21,13 @@ class _DashboardPageState extends State<DashboardPage> {
     _loadWorkouts();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload workouts when tab becomes visible
+    _loadWorkouts();
+  }
+
   Future<void> _loadWorkouts() async {
     setState(() => _isLoading = true);
     final workouts = await _workoutService.getAllWorkouts();

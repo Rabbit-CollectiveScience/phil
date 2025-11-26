@@ -43,6 +43,17 @@ class MainNavigator extends StatefulWidget {
 
 class _MainNavigatorState extends State<MainNavigator> {
   int _currentIndex = 0;
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      const RecordPage(),
+      const DashboardPage(),
+      SettingsPage(onNavigateToDashboard: _navigateToDashboard),
+    ];
+  }
 
   void _navigateToDashboard() {
     setState(() {
@@ -50,16 +61,13 @@ class _MainNavigatorState extends State<MainNavigator> {
     });
   }
 
-  List<Widget> get _pages => [
-    const RecordPage(),
-    const DashboardPage(),
-    SettingsPage(onNavigateToDashboard: _navigateToDashboard),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           color: Color(0xFFEDE8D5),

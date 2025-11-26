@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import '../models/workout.dart';
 import '../models/workout_exercise.dart';
 import '../../l3_service/gemini_service.dart';
+import '../../l4_infrastructure/database/boxes.dart';
 
 /// Result of voice logging attempt
 class VoiceLoggingResult {
@@ -72,7 +73,7 @@ class VoiceLoggingController {
 
   /// Save exercise to today's workout (or create new workout)
   Future<void> _saveExerciseToWorkout(WorkoutExercise exercise) async {
-    final workoutBox = await Hive.openBox<Workout>('workouts');
+    final workoutBox = Hive.box<Workout>(HiveBoxes.workouts);
 
     // Find or create today's workout
     final now = DateTime.now();
@@ -166,7 +167,7 @@ Please update the exercise with the corrected information.
     WorkoutExercise oldExercise,
     WorkoutExercise newExercise,
   ) async {
-    final workoutBox = await Hive.openBox<Workout>('workouts');
+    final workoutBox = Hive.box<Workout>(HiveBoxes.workouts);
 
     // Find today's workout
     final now = DateTime.now();
