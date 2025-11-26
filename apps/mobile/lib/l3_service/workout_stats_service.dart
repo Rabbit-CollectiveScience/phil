@@ -121,7 +121,7 @@ class WorkoutStatsService {
       for (final exercise in workout.exercises) {
         if (exercise.muscleGroup.isNotEmpty) {
           final params = exercise.parameters;
-          
+
           // Count cardio and flexibility separately
           if (exercise.muscleGroup == 'cardio') {
             cardioCount++;
@@ -155,7 +155,7 @@ class WorkoutStatsService {
           }
         }
       }
-      
+
       // Count unique flexibility sessions
       if (hasFlexibility) {
         flexibilityWorkoutIds.add(workout.id);

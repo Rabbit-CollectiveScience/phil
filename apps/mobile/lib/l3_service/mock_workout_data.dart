@@ -7,6 +7,39 @@ import '../l2_domain/models/workout_exercise.dart';
 class MockWorkoutData {
   static final List<Workout> mockWorkouts = [
     // === WEEK 4 (Current Week: Nov 25-27) ===
+    
+    // Morning Run - Nov 27, 2025
+    Workout(
+      id: '1732691400000', // Nov 27, 2025 6:30
+      dateTime: DateTime(2025, 11, 27, 6, 30),
+      durationMinutes: 35,
+      exercises: [
+        WorkoutExercise(
+          exerciseId: 'running',
+          name: 'Running',
+          category: 'cardio',
+          muscleGroup: 'cardio',
+          parameters: {
+            'duration': 25,
+            'distance': 4.5,
+            'pace': '5:33',
+          },
+          createdAt: DateTime(2025, 11, 27, 6, 30),
+          updatedAt: DateTime(2025, 11, 27, 6, 30),
+        ),
+        WorkoutExercise(
+          exerciseId: 'stair-climber',
+          name: 'Stair Climber',
+          category: 'cardio',
+          muscleGroup: 'cardio',
+          parameters: {
+            'duration': 10,
+          },
+          createdAt: DateTime(2025, 11, 27, 6, 55),
+          updatedAt: DateTime(2025, 11, 27, 6, 55),
+        ),
+      ],
+    ),
 
     // Push Day - Nov 27, 2025
     Workout(
@@ -189,7 +222,28 @@ class MockWorkoutData {
     ),
 
     // === WEEK 3 (Nov 18-24) ===
-
+    
+    // Cycling - Nov 24, 2025
+    Workout(
+      id: '1732459200000', // Nov 24, 2025 8:00
+      dateTime: DateTime(2025, 11, 24, 8, 0),
+      durationMinutes: 40,
+      exercises: [
+        WorkoutExercise(
+          exerciseId: 'cycling',
+          name: 'Cycling',
+          category: 'cardio',
+          muscleGroup: 'cardio',
+          parameters: {
+            'duration': 40,
+            'distance': 15.0,
+          },
+          createdAt: DateTime(2025, 11, 24, 8, 0),
+          updatedAt: DateTime(2025, 11, 24, 8, 0),
+        ),
+      ],
+    ),
+    
     // HIIT Cardio - Nov 23, 2025
     Workout(
       id: '1732369800000', // Nov 23, 2025 16:30
@@ -407,7 +461,39 @@ class MockWorkoutData {
     ),
 
     // === WEEK 2 (Nov 11-17) ===
-
+    
+    // Rowing & Cardio - Nov 17, 2025
+    Workout(
+      id: '1731855000000', // Nov 17, 2025 9:30
+      dateTime: DateTime(2025, 11, 17, 9, 30),
+      durationMinutes: 30,
+      exercises: [
+        WorkoutExercise(
+          exerciseId: 'rowing-machine',
+          name: 'Rowing Machine',
+          category: 'cardio',
+          muscleGroup: 'cardio',
+          parameters: {
+            'duration': 20,
+            'distance': 4.0,
+          },
+          createdAt: DateTime(2025, 11, 17, 9, 30),
+          updatedAt: DateTime(2025, 11, 17, 9, 30),
+        ),
+        WorkoutExercise(
+          exerciseId: 'elliptical',
+          name: 'Elliptical',
+          category: 'cardio',
+          muscleGroup: 'cardio',
+          parameters: {
+            'duration': 10,
+          },
+          createdAt: DateTime(2025, 11, 17, 9, 50),
+          updatedAt: DateTime(2025, 11, 17, 9, 50),
+        ),
+      ],
+    ),
+    
     // Core & Abs - Nov 16, 2025
     Workout(
       id: '1731768600000', // Nov 16, 2025 13:30
@@ -621,7 +707,41 @@ class MockWorkoutData {
     ),
 
     // === WEEK 1 (Nov 4-10) ===
-
+    
+    // Treadmill Run - Nov 10, 2025
+    Workout(
+      id: '1731247200000', // Nov 10, 2025 7:00
+      dateTime: DateTime(2025, 11, 10, 7, 0),
+      durationMinutes: 30,
+      exercises: [
+        WorkoutExercise(
+          exerciseId: 'treadmill-run',
+          name: 'Treadmill Run',
+          category: 'cardio',
+          muscleGroup: 'cardio',
+          parameters: {
+            'duration': 25,
+            'distance': 4.0,
+            'pace': '6:15',
+          },
+          createdAt: DateTime(2025, 11, 10, 7, 0),
+          updatedAt: DateTime(2025, 11, 10, 7, 0),
+        ),
+        WorkoutExercise(
+          exerciseId: 'incline-walk',
+          name: 'Incline Walk',
+          category: 'cardio',
+          muscleGroup: 'cardio',
+          parameters: {
+            'duration': 5,
+            'incline': 12,
+          },
+          createdAt: DateTime(2025, 11, 10, 7, 25),
+          updatedAt: DateTime(2025, 11, 10, 7, 25),
+        ),
+      ],
+    ),
+    
     // Full Body - Nov 9, 2025
     Workout(
       id: '1731168600000', // Nov 9, 2025 16:30
