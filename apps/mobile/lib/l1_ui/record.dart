@@ -3,6 +3,8 @@ import 'browse_exercises_screen.dart';
 import '../l3_service/gemini_service.dart';
 import '../l3_service/tts_service.dart';
 import '../l3_service/speech_service.dart';
+import '../l2_domain/use_case_controller/voice_logging_controller.dart';
+import '../l2_domain/models/workout_exercise.dart';
 
 // Chat state machine enum
 enum ChatState {
@@ -28,6 +30,8 @@ class _RecordPageState extends State<RecordPage>
   String _partialTranscription = '';
   final List<ChatMessage> _messages = [];
   final TextEditingController _textController = TextEditingController();
+  final VoiceLoggingController _voiceLoggingController = VoiceLoggingController();
+  WorkoutExercise? _lastLoggedExercise;
   final ScrollController _scrollController = ScrollController();
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
@@ -94,11 +98,26 @@ class _RecordPageState extends State<RecordPage>
       _chatState = ChatState.aiThinking;
     });
 
-    // Get AI response from Gemini
+    // Get AI response from Gemini with function calling
     String aiResponse;
+    WorkoutExercise? loggedExercise;
 
     try {
-      aiResponse = await GeminiService.getInstance().sendMessage(text);
+      final response = await GeminiService.getInstance().sendMessageWithFunctions(text);
+      aiResponse = response.message;
+      
+      // Check if an exercise was logged
+      if (response.result != null && response.result!.success) {
+        loggedExercise = response.result!.exercise;
+        print('✅ Workout logged: ${loggedExercise?.name}');
+        
+        // Save to Hive using VoiceLoggingController
+        final loggingResult = await _voiceLoggingController.processVoiceInput(text);
+        if (loggingResult.success) {
+          print('💾 Saved to Hive: ${loggingResult.exercise?.name}');
+          _lastLoggedExercise = loggingResult.exercise;
+        }
+      }
 
       // Check if processing was cancelled while waiting for response
       if (_geminiSessionId != currentSessionId) {
@@ -111,6 +130,7 @@ class _RecordPageState extends State<RecordPage>
         return;
       }
     } catch (e) {
+      print('❌ Error in function calling: $e');
       // Check if cancelled during error handling
       if (_geminiSessionId != currentSessionId ||
           _chatState != ChatState.aiThinking) {
@@ -125,10 +145,34 @@ class _RecordPageState extends State<RecordPage>
     setState(() {
       _chatState = ChatState.idle;
       _messages.add(
-        ChatMessage(text: aiResponse, isUser: false, timestamp: DateTime.now()),
+        ChatMessage(
+          text: aiResponse, 
+          isUser: false, 
+          timestamp: DateTime.now(),
+          isWorkoutLogged: loggedExercise != null,
+        ),
       );
     });
     _scrollToBottom();
+
+    // Show success snackbar if workout was logged
+    if (loggedExercise != null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.white),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text('✅ Logged: ${loggedExercise.name}'),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
 
     // Start TTS if enabled (non-blocking)
     if (_isTtsEnabled) {
@@ -554,15 +598,21 @@ class _RecordPageState extends State<RecordPage>
                             height: 44,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: _showTextInput ? Colors.blue[700] : Colors.grey[850],
+                              color: _showTextInput
+                                  ? Colors.blue[700]
+                                  : Colors.grey[850],
                               border: Border.all(
-                                color: _showTextInput ? Colors.blue : Colors.white24,
+                                color: _showTextInput
+                                    ? Colors.blue
+                                    : Colors.white24,
                                 width: 2,
                               ),
                             ),
                             child: Icon(
                               Icons.text_fields,
-                              color: _showTextInput ? Colors.white : Colors.white54,
+                              color: _showTextInput
+                                  ? Colors.white
+                                  : Colors.white54,
                               size: 22,
                             ),
                           ),
@@ -790,6 +840,32 @@ class _RecordPageState extends State<RecordPage>
                       ],
                     ],
                   ),
+                  if (message.isWorkoutLogged) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.green, width: 1),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.check_circle, color: Colors.green, size: 14),
+                          SizedBox(width: 4),
+                          Text(
+                            'Workout Logged',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 4),
                   Text(
                     _formatTime(message.timestamp),
@@ -861,10 +937,12 @@ class ChatMessage {
   final String text;
   final bool isUser;
   final DateTime timestamp;
+  final bool isWorkoutLogged;
 
   ChatMessage({
     required this.text,
     required this.isUser,
     required this.timestamp,
+    this.isWorkoutLogged = false,
   });
 }
