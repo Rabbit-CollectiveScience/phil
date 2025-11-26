@@ -6,7 +6,7 @@ class MockWorkoutData {
   static final List<Workout> mockWorkouts = [
     // Push Day - Nov 20, 2025
     Workout(
-      id: '1',
+      id: '1732115400000', // Nov 20, 2025 14:30
       dateTime: DateTime(2025, 11, 20, 14, 30),
       durationMinutes: 52,
       exercises: [
@@ -85,24 +85,10 @@ class MockWorkoutData {
 
     // Pull Day - Nov 18, 2025
     Workout(
-      id: '2',
+      id: '1731931740000', // Nov 18, 2025 10:15
       dateTime: DateTime(2025, 11, 18, 10, 15),
       durationMinutes: 48,
       exercises: [
-        WorkoutExercise(
-          exerciseId: 'deadlift',
-          name: 'Deadlift',
-          category: 'strength',
-          muscleGroup: 'back',
-          parameters: {
-            'sets': 4,
-            'reps': 5,
-            'weight': 124.74, // 275 lbs → kg
-            'restBetweenSets': 180,
-          },
-          createdAt: DateTime(2025, 11, 18, 10, 15),
-          updatedAt: DateTime(2025, 11, 18, 10, 15),
-        ),
         WorkoutExercise(
           exerciseId: 'deadlift',
           name: 'Deadlift',
@@ -178,7 +164,7 @@ class MockWorkoutData {
 
     // Leg Day - Nov 16, 2025
     Workout(
-      id: '3',
+      id: '1731754800000', // Nov 16, 2025 9:00
       dateTime: DateTime(2025, 11, 16, 9, 0),
       durationMinutes: 58,
       exercises: [
@@ -257,7 +243,7 @@ class MockWorkoutData {
 
     // Cardio & Core - Nov 14, 2025
     Workout(
-      id: '4',
+      id: '1731601500000', // Nov 14, 2025 17:45
       dateTime: DateTime(2025, 11, 14, 17, 45),
       durationMinutes: 35,
       exercises: [
@@ -316,7 +302,7 @@ class MockWorkoutData {
 
     // Full Body - Nov 12, 2025
     Workout(
-      id: '5',
+      id: '1731419580000', // Nov 12, 2025 13:20
       dateTime: DateTime(2025, 11, 12, 13, 20),
       durationMinutes: 45,
       exercises: [
