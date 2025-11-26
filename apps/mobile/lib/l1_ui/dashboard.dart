@@ -68,6 +68,7 @@ class DashboardPageState extends State<DashboardPage> {
     // Calculate stats
     final todayStats = WorkoutStatsService.getTodayStats(_workouts);
     final weeklyStats = WorkoutStatsService.getWeeklyStats(_workouts);
+    final thisWeekWorkouts = WorkoutStatsService.getThisWeekWorkouts(_workouts);
 
     return Scaffold(
       backgroundColor: const Color(0xFF3A3A3A),
@@ -88,9 +89,9 @@ class DashboardPageState extends State<DashboardPage> {
 
                 const SizedBox(height: 30),
 
-                // Recent Workouts Section
+                // This Week's Workouts Section
                 const Text(
-                  'Recent Workouts',
+                  'This Week\'s Workouts',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -100,7 +101,7 @@ class DashboardPageState extends State<DashboardPage> {
                 const SizedBox(height: 16),
 
                 // Workout Cards
-                if (_workouts.isEmpty)
+                if (thisWeekWorkouts.isEmpty)
                   Center(
                     child: Column(
                       children: [
@@ -112,7 +113,7 @@ class DashboardPageState extends State<DashboardPage> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'No workouts yet',
+                          'No workouts this week',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 16,
@@ -130,7 +131,7 @@ class DashboardPageState extends State<DashboardPage> {
                     ),
                   )
                 else
-                  ..._workouts.map(
+                  ...thisWeekWorkouts.map(
                     (workout) => Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: _buildWorkoutCard(context, workout),
@@ -270,6 +271,8 @@ class DashboardPageState extends State<DashboardPage> {
       int workoutCount,
       double totalVolume,
       int currentStreak,
+      int daysTrained,
+      int totalMinutes,
       Map<String, int> setsPerMuscleGroup,
       Map<String, double> volumePerMuscleGroup,
       int cardioCount,
@@ -304,8 +307,9 @@ class DashboardPageState extends State<DashboardPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              _buildStatColumn('${stats.daysTrained}', 'Days'),
               _buildStatColumn('${stats.workoutCount}', 'Workouts'),
-              _buildStatColumn('${stats.currentStreak}', 'Streak'),
+              _buildStatColumn('${stats.totalMinutes}', 'Minutes'),
             ],
           ),
           if (stats.volumePerMuscleGroup.isNotEmpty) ...[

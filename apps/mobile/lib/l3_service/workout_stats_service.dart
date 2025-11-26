@@ -91,6 +91,8 @@ class WorkoutStatsService {
     int workoutCount,
     double totalVolume,
     int currentStreak,
+    int daysTrained,
+    int totalMinutes,
     Map<String, int> setsPerMuscleGroup,
     Map<String, double> volumePerMuscleGroup,
     int cardioCount,
@@ -105,6 +107,8 @@ class WorkoutStatsService {
 
     int workoutCount = weekWorkouts.length;
     double totalVolume = 0.0;
+    int totalMinutes = 0;
+    Set<String> uniqueDays = {};
     Map<String, int> setsPerMuscleGroup = {};
     Map<String, double> volumePerMuscleGroup = {};
     int cardioCount = 0;
@@ -116,6 +120,16 @@ class WorkoutStatsService {
 
     for (final workout in weekWorkouts) {
       totalVolume += calculateWorkoutVolume(workout);
+      totalMinutes += workout.durationMinutes;
+      
+      // Track unique days
+      final day = DateTime(
+        workout.dateTime.year,
+        workout.dateTime.month,
+        workout.dateTime.day,
+      );
+      uniqueDays.add(day.toIso8601String());
+      
       bool hasFlexibility = false;
 
       for (final exercise in workout.exercises) {
@@ -169,6 +183,8 @@ class WorkoutStatsService {
       workoutCount: workoutCount,
       totalVolume: totalVolume,
       currentStreak: currentStreak,
+      daysTrained: uniqueDays.length,
+      totalMinutes: totalMinutes,
       setsPerMuscleGroup: setsPerMuscleGroup,
       volumePerMuscleGroup: volumePerMuscleGroup,
       cardioCount: cardioCount,
