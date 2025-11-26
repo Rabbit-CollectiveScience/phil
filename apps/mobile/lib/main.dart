@@ -44,14 +44,18 @@ class MainNavigator extends StatefulWidget {
 class _MainNavigatorState extends State<MainNavigator> {
   int _currentIndex = 0;
   late final List<Widget> _pages;
+  final GlobalKey<DashboardPageState> _dashboardKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _pages = [
       const RecordPage(),
-      const DashboardPage(),
-      SettingsPage(onNavigateToDashboard: _navigateToDashboard),
+      DashboardPage(key: _dashboardKey),
+      SettingsPage(
+        onNavigateToDashboard: _navigateToDashboard,
+        onDataChanged: _refreshDashboard,
+      ),
     ];
   }
 
@@ -59,6 +63,10 @@ class _MainNavigatorState extends State<MainNavigator> {
     setState(() {
       _currentIndex = 1;
     });
+  }
+
+  void _refreshDashboard() {
+    _dashboardKey.currentState?.refresh();
   }
 
   @override

@@ -6,8 +6,13 @@ import 'user_profile_screen.dart';
 
 class SettingsPage extends StatefulWidget {
   final VoidCallback onNavigateToDashboard;
+  final VoidCallback? onDataChanged;
 
-  const SettingsPage({super.key, required this.onNavigateToDashboard});
+  const SettingsPage({
+    super.key,
+    required this.onNavigateToDashboard,
+    this.onDataChanged,
+  });
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -55,7 +60,8 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       );
 
-      // Navigate to dashboard after success
+      // Refresh dashboard and navigate
+      widget.onDataChanged?.call();
       await Future.delayed(const Duration(milliseconds: 500));
       if (mounted) {
         widget.onNavigateToDashboard();
@@ -218,7 +224,8 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       );
 
-      // Navigate to dashboard after success
+      // Refresh dashboard and navigate
+      widget.onDataChanged?.call();
       await Future.delayed(const Duration(milliseconds: 500));
       if (mounted) {
         widget.onNavigateToDashboard();

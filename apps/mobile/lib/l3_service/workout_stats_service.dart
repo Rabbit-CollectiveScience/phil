@@ -123,7 +123,7 @@ class WorkoutStatsService {
           final exerciseVolume = calculateExerciseVolume(exercise);
           volumePerMuscleGroup[exercise.muscleGroup] =
               (volumePerMuscleGroup[exercise.muscleGroup] ?? 0.0) +
-                  exerciseVolume;
+              exerciseVolume;
         }
       }
     }

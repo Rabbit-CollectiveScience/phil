@@ -8,10 +8,10 @@ class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<DashboardPage> createState() => DashboardPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class DashboardPageState extends State<DashboardPage> {
   final WorkoutService _workoutService = WorkoutService();
   List<Workout> _workouts = [];
   bool _isLoading = true;
@@ -26,6 +26,11 @@ class _DashboardPageState extends State<DashboardPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Reload workouts when tab becomes visible
+    _loadWorkouts();
+  }
+
+  // Public method to refresh dashboard data
+  void refresh() {
     _loadWorkouts();
   }
 
@@ -330,7 +335,7 @@ class _DashboardPageState extends State<DashboardPage> {
               final muscle = entry.key;
               final volume = entry.value;
               final sets = stats.setsPerMuscleGroup[muscle] ?? 0;
-              
+
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
