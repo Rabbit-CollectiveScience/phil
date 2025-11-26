@@ -11,15 +11,23 @@ class DashboardPage extends StatefulWidget {
   State<DashboardPage> createState() => DashboardPageState();
 }
 
-class DashboardPageState extends State<DashboardPage> {
+class DashboardPageState extends State<DashboardPage> with SingleTickerProviderStateMixin {
   final WorkoutService _workoutService = WorkoutService();
   List<Workout> _workouts = [];
   bool _isLoading = true;
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     _loadWorkouts();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,80 +73,169 @@ class DashboardPageState extends State<DashboardPage> {
       );
     }
 
-    // Calculate stats
+    return Scaffold(
+      backgroundColor: const Color(0xFF3A3A3A),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF3A3A3A),
+        elevation: 0,
+        toolbarHeight: 0,
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: Colors.white,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.grey[600],
+          tabs: const [
+            Tab(text: 'Today'),
+            Tab(text: 'This Week'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildTodayTab(),
+          _buildThisWeekTab(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTodayTab() {
     final todayStats = WorkoutStatsService.getTodayStats(_workouts);
+    final todayWorkouts = WorkoutStatsService.getTodayWorkouts(_workouts);
+
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Today's Summary Card
+              _buildTodayCard(todayStats),
+
+              const SizedBox(height: 30),
+
+              // Today's Workouts Section
+              const Text(
+                'Today\'s Workouts',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Workout Cards
+              if (todayWorkouts.isEmpty)
+                Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 40),
+                      Icon(
+                        Icons.fitness_center_outlined,
+                        size: 80,
+                        color: Colors.grey[800],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No workouts today',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Start logging to track your progress',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                ...todayWorkouts.map(
+                  (workout) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: _buildWorkoutCard(context, workout),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThisWeekTab() {
     final weeklyStats = WorkoutStatsService.getWeeklyStats(_workouts);
     final thisWeekWorkouts = WorkoutStatsService.getThisWeekWorkouts(_workouts);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF3A3A3A),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Today's Summary Card
-                _buildTodayCard(todayStats),
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // This Week Stats Card
+              _buildWeeklyCard(weeklyStats),
 
-                const SizedBox(height: 16),
+              const SizedBox(height: 30),
 
-                // This Week Stats Card
-                _buildWeeklyCard(weeklyStats),
+              // This Week's Workouts Section
+              const Text(
+                'This Week\'s Workouts',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 16),
 
-                const SizedBox(height: 30),
-
-                // This Week's Workouts Section
-                const Text(
-                  'This Week\'s Workouts',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
+              // Workout Cards
+              if (thisWeekWorkouts.isEmpty)
+                Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 40),
+                      Icon(
+                        Icons.fitness_center_outlined,
+                        size: 80,
+                        color: Colors.grey[800],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No workouts this week',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Start logging to see your progress',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                ...thisWeekWorkouts.map(
+                  (workout) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: _buildWorkoutCard(context, workout),
                   ),
                 ),
-                const SizedBox(height: 16),
-
-                // Workout Cards
-                if (thisWeekWorkouts.isEmpty)
-                  Center(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 40),
-                        Icon(
-                          Icons.fitness_center_outlined,
-                          size: 80,
-                          color: Colors.grey[800],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'No workouts this week',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Start logging to see your progress',
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                else
-                  ...thisWeekWorkouts.map(
-                    (workout) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: _buildWorkoutCard(context, workout),
-                    ),
-                  ),
-              ],
-            ),
+            ],
           ),
         ),
       ),
