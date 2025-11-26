@@ -54,35 +54,78 @@ class WorkoutStatsService {
   /// Calculate today's stats
   static ({
     int exerciseCount,
-    double totalVolume,
+    int totalSets,
     int totalDuration,
-    Set<String> muscleGroups,
+    Map<String, int> setsPerMuscleGroup,
+    Map<String, double> volumePerMuscleGroup,
+    int cardioCount,
+    int cardioDuration,
+    double cardioDistance,
+    int flexibilityCount,
+    int flexibilityDuration,
   })
   getTodayStats(List<Workout> allWorkouts) {
     final todayWorkouts = getTodayWorkouts(allWorkouts);
 
     int exerciseCount = 0;
-    double totalVolume = 0.0;
+    int totalSets = 0;
     int totalDuration = 0;
-    Set<String> muscleGroups = {};
+    Map<String, int> setsPerMuscleGroup = {};
+    Map<String, double> volumePerMuscleGroup = {};
+    int cardioCount = 0;
+    int cardioDuration = 0;
+    double cardioDistance = 0.0;
+    int flexibilityCount = 0;
+    int flexibilityDuration = 0;
 
     for (final workout in todayWorkouts) {
       exerciseCount += workout.exercises.length;
-      totalVolume += calculateWorkoutVolume(workout);
       totalDuration += workout.durationMinutes;
 
       for (final exercise in workout.exercises) {
         if (exercise.muscleGroup.isNotEmpty) {
-          muscleGroups.add(exercise.muscleGroup);
+          final params = exercise.parameters;
+
+          // Count cardio and flexibility separately
+          if (exercise.muscleGroup == 'cardio') {
+            cardioCount++;
+            final duration = params['duration'] as int? ?? 0;
+            cardioDuration += duration;
+            final distance = params['distance'] as double? ?? 0.0;
+            cardioDistance += distance;
+          } else if (exercise.muscleGroup == 'flexibility') {
+            flexibilityCount++;
+            final duration = params['duration'] as int? ?? 0;
+            final sets = params['sets'] as int? ?? 0;
+            final holdDuration = params['holdDuration'] as int? ?? 0;
+            flexibilityDuration += duration + (sets * holdDuration ~/ 60);
+          } else {
+            // Track muscle groups with volume
+            final sets = params['sets'] as int? ?? 0;
+            totalSets += sets;
+            setsPerMuscleGroup[exercise.muscleGroup] =
+                (setsPerMuscleGroup[exercise.muscleGroup] ?? 0) + sets;
+
+            final exerciseVolume = calculateExerciseVolume(exercise);
+            volumePerMuscleGroup[exercise.muscleGroup] =
+                (volumePerMuscleGroup[exercise.muscleGroup] ?? 0.0) +
+                exerciseVolume;
+          }
         }
       }
     }
 
     return (
       exerciseCount: exerciseCount,
-      totalVolume: totalVolume,
+      totalSets: totalSets,
       totalDuration: totalDuration,
-      muscleGroups: muscleGroups,
+      setsPerMuscleGroup: setsPerMuscleGroup,
+      volumePerMuscleGroup: volumePerMuscleGroup,
+      cardioCount: cardioCount,
+      cardioDuration: cardioDuration,
+      cardioDistance: cardioDistance,
+      flexibilityCount: flexibilityCount,
+      flexibilityDuration: flexibilityDuration,
     );
   }
 
@@ -121,7 +164,7 @@ class WorkoutStatsService {
     for (final workout in weekWorkouts) {
       totalVolume += calculateWorkoutVolume(workout);
       totalMinutes += workout.durationMinutes;
-      
+
       // Track unique days
       final day = DateTime(
         workout.dateTime.year,
@@ -129,7 +172,7 @@ class WorkoutStatsService {
         workout.dateTime.day,
       );
       uniqueDays.add(day.toIso8601String());
-      
+
       bool hasFlexibility = false;
 
       for (final exercise in workout.exercises) {

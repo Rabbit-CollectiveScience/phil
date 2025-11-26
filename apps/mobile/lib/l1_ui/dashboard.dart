@@ -148,9 +148,15 @@ class DashboardPageState extends State<DashboardPage> {
   Widget _buildTodayCard(
     ({
       int exerciseCount,
-      double totalVolume,
+      int totalSets,
       int totalDuration,
-      Set<String> muscleGroups,
+      Map<String, int> setsPerMuscleGroup,
+      Map<String, double> volumePerMuscleGroup,
+      int cardioCount,
+      int cardioDuration,
+      double cardioDistance,
+      int flexibilityCount,
+      int flexibilityDuration,
     })
     stats,
   ) {
@@ -177,89 +183,154 @@ class DashboardPageState extends State<DashboardPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${stats.exerciseCount}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Text(
-                    'Exercises',
-                    style: TextStyle(color: Colors.white54, fontSize: 14),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    WorkoutStatsService.formatVolume(stats.totalVolume),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const Text(
-                    'Total Volume',
-                    style: TextStyle(color: Colors.white54, fontSize: 12),
-                  ),
-                ],
-              ),
+              _buildStatColumn('${stats.exerciseCount}', 'Exercises'),
+              _buildStatColumn('${stats.totalSets}', 'Sets'),
+              _buildStatColumn('${stats.totalDuration}', 'Minutes'),
             ],
           ),
-          if (stats.totalDuration > 0) ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                const Icon(
-                  Icons.timer_outlined,
-                  color: Colors.white54,
-                  size: 16,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  '${stats.totalDuration} min',
-                  style: const TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-              ],
-            ),
-          ],
-          if (stats.muscleGroups.isNotEmpty) ...[
+          if (stats.volumePerMuscleGroup.isNotEmpty) ...[
             const SizedBox(height: 16),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: stats.muscleGroups.map((muscle) {
-                return Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _getMuscleGroupColor(muscle).withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: _getMuscleGroupColor(muscle),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    WorkoutStatsService.capitalize(muscle),
-                    style: TextStyle(
-                      color: _getMuscleGroupColor(muscle),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                );
-              }).toList(),
+            const Divider(color: Colors.grey, height: 1),
+            const SizedBox(height: 12),
+            const Text(
+              'Training Volume by Muscle Group',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
             ),
+            const SizedBox(height: 12),
+            ...stats.volumePerMuscleGroup.entries.map((entry) {
+              final muscle = entry.key;
+              final volume = entry.value;
+              final sets = stats.setsPerMuscleGroup[muscle] ?? 0;
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: _getMuscleGroupColor(muscle),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        WorkoutStatsService.capitalize(muscle),
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '$sets sets',
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      WorkoutStatsService.formatVolume(volume),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ],
+          if (stats.cardioCount > 0 || stats.flexibilityCount > 0) ...[
+            const SizedBox(height: 16),
+            const Divider(color: Colors.grey, height: 1),
+            const SizedBox(height: 12),
+            const Text(
+              'Other Training',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 12),
+            if (stats.cardioCount > 0)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.redAccent,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Cardio',
+                        style: TextStyle(color: Colors.white70, fontSize: 13),
+                      ),
+                    ),
+                    Text(
+                      _formatCardioStats(
+                        stats.cardioDuration,
+                        stats.cardioDistance,
+                        stats.cardioCount,
+                      ),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            if (stats.flexibilityCount > 0)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.purpleAccent,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Flexibility',
+                        style: TextStyle(color: Colors.white70, fontSize: 13),
+                      ),
+                    ),
+                    Text(
+                      _formatFlexibilityStats(
+                        stats.flexibilityDuration,
+                        stats.flexibilityCount,
+                      ),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
           ],
         ],
       ),
