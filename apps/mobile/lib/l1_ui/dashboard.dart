@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l2_domain/models/workout.dart';
 import '../l3_service/workout_service.dart';
+import '../l3_service/workout_stats_service.dart';
 import 'workout_detail_screen.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -59,6 +60,10 @@ class _DashboardPageState extends State<DashboardPage> {
       );
     }
 
+    // Calculate stats
+    final todayStats = WorkoutStatsService.getTodayStats(_workouts);
+    final weeklyStats = WorkoutStatsService.getWeeklyStats(_workouts);
+
     return Scaffold(
       backgroundColor: const Color(0xFF3A3A3A),
       body: SafeArea(
@@ -68,92 +73,13 @@ class _DashboardPageState extends State<DashboardPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Today's Summary
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[900],
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.calendar_today,
-                            color: Colors.white70,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Today - ${DateTime.now().toString().split(' ')[0]}',
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      const Text(
-                        '0 exercises',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        '0 total reps',
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ),
+                // Today's Summary Card
+                _buildTodayCard(todayStats),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
 
-                // This Week Stats
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[900],
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.fitness_center,
-                            color: Colors.white70,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 8),
-                          const Text(
-                            'This Week',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildStat('0', 'workouts'),
-                          _buildStat('0', 'exercises'),
-                          _buildStat('0', 'streak'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                // This Week Stats Card
+                _buildWeeklyCard(weeklyStats),
 
                 const SizedBox(height: 30),
 
@@ -210,6 +136,266 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTodayCard(
+    ({
+      int exerciseCount,
+      double totalVolume,
+      int totalDuration,
+      Set<String> muscleGroups,
+    })
+    stats,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.calendar_today, color: Colors.white70, size: 16),
+              const SizedBox(width: 8),
+              Text(
+                'Today - ${DateTime.now().toString().split(' ')[0]}',
+                style: const TextStyle(color: Colors.white70, fontSize: 14),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${stats.exerciseCount}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Text(
+                    'Exercises',
+                    style: TextStyle(color: Colors.white54, fontSize: 14),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    WorkoutStatsService.formatVolume(stats.totalVolume),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Text(
+                    'Total Volume',
+                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          if (stats.totalDuration > 0) ...[
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                const Icon(
+                  Icons.timer_outlined,
+                  color: Colors.white54,
+                  size: 16,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  '${stats.totalDuration} min',
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+              ],
+            ),
+          ],
+          if (stats.muscleGroups.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: stats.muscleGroups.map((muscle) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: _getMuscleGroupColor(muscle).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: _getMuscleGroupColor(muscle),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    WorkoutStatsService.capitalize(muscle),
+                    style: TextStyle(
+                      color: _getMuscleGroupColor(muscle),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWeeklyCard(
+    ({
+      int workoutCount,
+      double totalVolume,
+      String mostTrainedMuscleGroup,
+      int currentStreak,
+      Map<String, int> setsPerMuscleGroup,
+      Map<String, double> volumePerMuscleGroup,
+    })
+    stats,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.fitness_center, color: Colors.white70, size: 16),
+              const SizedBox(width: 8),
+              const Text(
+                'This Week',
+                style: TextStyle(color: Colors.white70, fontSize: 14),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildStatColumn('${stats.workoutCount}', 'Workouts'),
+              _buildStatColumn('${stats.currentStreak}', 'Streak'),
+            ],
+          ),
+          if (stats.mostTrainedMuscleGroup != '-') ...[
+            const SizedBox(height: 16),
+            const Divider(color: Colors.grey, height: 1),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Icon(Icons.emoji_events, color: Colors.amber[700], size: 18),
+                const SizedBox(width: 8),
+                Text(
+                  'Most Trained: ${WorkoutStatsService.capitalize(stats.mostTrainedMuscleGroup)}',
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+              ],
+            ),
+          ],
+          if (stats.volumePerMuscleGroup.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            const Divider(color: Colors.grey, height: 1),
+            const SizedBox(height: 12),
+            const Text(
+              'Training Volume by Muscle Group',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 12),
+            ...stats.volumePerMuscleGroup.entries.map((entry) {
+              final muscle = entry.key;
+              final volume = entry.value;
+              final sets = stats.setsPerMuscleGroup[muscle] ?? 0;
+              
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: _getMuscleGroupColor(muscle),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        WorkoutStatsService.capitalize(muscle),
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '$sets sets',
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      WorkoutStatsService.formatVolume(volume),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatColumn(String value, String label) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white54, fontSize: 12),
+        ),
+      ],
     );
   }
 
@@ -352,25 +538,5 @@ class _DashboardPageState extends State<DashboardPage> {
   String _capitalizeFirstLetter(String text) {
     if (text.isEmpty) return text;
     return text[0].toUpperCase() + text.substring(1);
-  }
-
-  Widget _buildStat(String value, String label) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.white54, fontSize: 12),
-        ),
-      ],
-    );
   }
 }

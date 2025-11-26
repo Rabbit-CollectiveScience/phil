@@ -71,7 +71,9 @@ User: "Stretched hamstrings for 30 seconds, 3 times"
 → Respond: "Good work on flexibility! Logged 3x30s hamstring stretches 🧘"
 '''),
       tools: [
-        Tool(functionDeclarations: WorkoutFunctionDeclarations.getDeclarations()),
+        Tool(
+          functionDeclarations: WorkoutFunctionDeclarations.getDeclarations(),
+        ),
       ],
     );
 
@@ -147,9 +149,8 @@ User: "3 sets of 10 at 135 pounds" → "Awesome work! 3 sets of 10 at 135 lbs. K
   }
 
   /// Send a message with function calling support for workout logging
-  Future<({String message, FunctionExecutionResult? result})> sendMessageWithFunctions(
-    String userMessage,
-  ) async {
+  Future<({String message, FunctionExecutionResult? result})>
+  sendMessageWithFunctions(String userMessage) async {
     try {
       // Initialize if needed
       if (!_isInitializedWithFunctions) {
@@ -157,15 +158,19 @@ User: "3 sets of 10 at 135 pounds" → "Awesome work! 3 sets of 10 at 135 lbs. K
       }
 
       // Send message using chat session with functions
-      var response = await _chatWithFunctions!.sendMessage(Content.text(userMessage));
+      var response = await _chatWithFunctions!.sendMessage(
+        Content.text(userMessage),
+      );
 
       // Check if the model wants to call a function
       final functionCalls = response.functionCalls.toList();
-      
+
       if (functionCalls.isNotEmpty) {
         // Execute the first function call
         final functionCall = functionCalls.first;
-        final executionResult = await _functionExecutor.executeFunction(functionCall);
+        final executionResult = await _functionExecutor.executeFunction(
+          functionCall,
+        );
 
         // Send function response back to model using FunctionResponse
         response = await _chatWithFunctions!.sendMessage(
@@ -182,28 +187,33 @@ User: "3 sets of 10 at 135 pounds" → "Awesome work! 3 sets of 10 at 135 lbs. K
       }
 
       // No function call - just return the text response
-      final aiMessage = response.text?.trim() ?? "I'm here to help you log workouts! What did you do today?";
+      final aiMessage =
+          response.text?.trim() ??
+          "I'm here to help you log workouts! What did you do today?";
       return (message: aiMessage, result: null);
-      
     } catch (e) {
       print('Error sending message with functions to Gemini: $e');
 
       // If it's a chat history corruption issue, clear and reinitialize
-      if (e.toString().contains('Unhandled format for Content') || 
+      if (e.toString().contains('Unhandled format for Content') ||
           e.toString().contains('{role: model}')) {
         print('🔄 Chat history corrupted, reinitializing...');
         _isInitializedWithFunctions = false;
         _chatWithFunctions = null;
         _initializeModelWithFunctions();
-        
+
         // Retry the request with fresh chat
         try {
-          var response = await _chatWithFunctions!.sendMessage(Content.text(userMessage));
+          var response = await _chatWithFunctions!.sendMessage(
+            Content.text(userMessage),
+          );
           final functionCalls = response.functionCalls.toList();
-          
+
           if (functionCalls.isNotEmpty) {
             final functionCall = functionCalls.first;
-            final executionResult = await _functionExecutor.executeFunction(functionCall);
+            final executionResult = await _functionExecutor.executeFunction(
+              functionCall,
+            );
             response = await _chatWithFunctions!.sendMessage(
               Content.functionResponse(
                 functionCall.name,
@@ -213,8 +223,9 @@ User: "3 sets of 10 at 135 pounds" → "Awesome work! 3 sets of 10 at 135 lbs. K
             final aiMessage = response.text?.trim() ?? executionResult.message;
             return (message: aiMessage, result: executionResult);
           }
-          
-          final aiMessage = response.text?.trim() ?? "I'm here to help you log workouts!";
+
+          final aiMessage =
+              response.text?.trim() ?? "I'm here to help you log workouts!";
           return (message: aiMessage, result: null);
         } catch (retryError) {
           print('Error after retry: $retryError');
@@ -225,14 +236,15 @@ User: "3 sets of 10 at 135 pounds" → "Awesome work! 3 sets of 10 at 135 lbs. K
       if (e.toString().contains('API_KEY') ||
           e.toString().contains('API key')) {
         return (
-          message: "⚠️ API key not configured. Please add your Gemini API key to config.dart",
-          result: null
+          message:
+              "⚠️ API key not configured. Please add your Gemini API key to config.dart",
+          result: null,
         );
       }
 
       return (
         message: "Oops! Something went wrong. Let's try that again?",
-        result: null
+        result: null,
       );
     }
   }
