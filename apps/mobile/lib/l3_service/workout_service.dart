@@ -33,7 +33,15 @@ class WorkoutService {
 
   /// Delete a workout by ID
   Future<void> deleteWorkout(String id) async {
-    await _box.delete(id);
+    // Find and delete the workout by searching for matching workout.id
+    // (needed because old workouts may be stored with auto-increment keys)
+    for (final key in _box.keys) {
+      final workout = _box.get(key);
+      if (workout?.id == id) {
+        await _box.delete(key);
+        break;
+      }
+    }
   }
 
   /// Get workouts count

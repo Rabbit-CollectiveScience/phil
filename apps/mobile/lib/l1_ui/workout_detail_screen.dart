@@ -114,10 +114,20 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context); // Close dialog
-              Navigator.pop(context); // Close detail screen
-              widget.onDelete?.call();
+              // Delete the workout first
+              await _workoutService.deleteWorkout(widget.workout.id);
+              if (mounted) {
+                Navigator.pop(context); // Close detail screen
+                // Show confirmation
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Workout deleted'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
             },
             child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
