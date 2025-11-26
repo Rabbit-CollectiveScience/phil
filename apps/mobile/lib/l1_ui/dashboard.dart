@@ -208,8 +208,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildWorkoutCard(BuildContext context, Workout workout) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => WorkoutDetailScreen(
@@ -218,6 +218,8 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ),
         );
+        // Reload workouts after returning from detail screen
+        await _loadWorkouts();
       },
       child: Container(
         padding: const EdgeInsets.all(16),

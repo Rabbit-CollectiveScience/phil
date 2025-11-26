@@ -80,7 +80,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
     final updatedWorkout = Workout(
       id: widget.workout.id,
       dateTime: widget.workout.dateTime,
-      exercises: _exercises,
+      exercises: List.from(_exercises),
       durationMinutes: widget.workout.durationMinutes,
     );
     await _workoutService.updateWorkout(updatedWorkout);

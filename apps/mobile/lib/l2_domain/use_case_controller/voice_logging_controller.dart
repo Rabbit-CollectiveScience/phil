@@ -97,7 +97,7 @@ class VoiceLoggingController {
         exercises: [exercise],
         durationMinutes: 0,
       );
-      await workoutBox.add(todayWorkout);
+      await workoutBox.put(todayWorkout.id, todayWorkout);
     } else {
       // Add exercise to existing workout
       final updatedExercises = [...todayWorkout.exercises, exercise];
