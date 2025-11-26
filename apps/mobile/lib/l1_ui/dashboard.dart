@@ -269,10 +269,15 @@ class DashboardPageState extends State<DashboardPage> {
     ({
       int workoutCount,
       double totalVolume,
-      String mostTrainedMuscleGroup,
       int currentStreak,
       Map<String, int> setsPerMuscleGroup,
       Map<String, double> volumePerMuscleGroup,
+      int cardioCount,
+      int cardioDuration,
+      double cardioDistance,
+      int flexibilityCount,
+      int flexibilityDuration,
+      int flexibilitySessions,
     })
     stats,
   ) {
@@ -303,21 +308,6 @@ class DashboardPageState extends State<DashboardPage> {
               _buildStatColumn('${stats.currentStreak}', 'Streak'),
             ],
           ),
-          if (stats.mostTrainedMuscleGroup != '-') ...[
-            const SizedBox(height: 16),
-            const Divider(color: Colors.grey, height: 1),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Icon(Icons.emoji_events, color: Colors.amber[700], size: 18),
-                const SizedBox(width: 8),
-                Text(
-                  'Most Trained: ${WorkoutStatsService.capitalize(stats.mostTrainedMuscleGroup)}',
-                  style: const TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-              ],
-            ),
-          ],
           if (stats.volumePerMuscleGroup.isNotEmpty) ...[
             const SizedBox(height: 16),
             const Divider(color: Colors.grey, height: 1),
@@ -379,9 +369,107 @@ class DashboardPageState extends State<DashboardPage> {
               );
             }).toList(),
           ],
+          if (stats.cardioCount > 0 || stats.flexibilityCount > 0) ...[
+            const SizedBox(height: 16),
+            const Divider(color: Colors.grey, height: 1),
+            const SizedBox(height: 12),
+            const Text(
+              'Other Training',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 12),
+            if (stats.cardioCount > 0)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.redAccent,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Cardio',
+                        style: TextStyle(color: Colors.white70, fontSize: 13),
+                      ),
+                    ),
+                    Text(
+                      _formatCardioStats(
+                        stats.cardioDuration,
+                        stats.cardioDistance,
+                        stats.cardioCount,
+                      ),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            if (stats.flexibilityCount > 0)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.purpleAccent,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Flexibility',
+                        style: TextStyle(color: Colors.white70, fontSize: 13),
+                      ),
+                    ),
+                    Text(
+                      _formatFlexibilityStats(
+                        stats.flexibilityDuration,
+                        stats.flexibilitySessions,
+                      ),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
         ],
       ),
     );
+  }
+
+  String _formatCardioStats(int duration, double distance, int count) {
+    final parts = <String>[];
+    if (duration > 0) parts.add('$duration min');
+    if (distance > 0) parts.add('${distance.toStringAsFixed(1)} km');
+    if (parts.isEmpty) return '$count exercise${count == 1 ? '' : 's'}';
+    return '${parts.join(' • ')} ($count exercise${count == 1 ? '' : 's'})';
+  }
+
+  String _formatFlexibilityStats(int duration, int sessions) {
+    if (duration > 0) {
+      return '$duration min ($sessions session${sessions == 1 ? '' : 's'})';
+    }
+    return '$sessions session${sessions == 1 ? '' : 's'}';
   }
 
   Widget _buildStatColumn(String value, String label) {

@@ -90,53 +90,77 @@ class WorkoutStatsService {
   static ({
     int workoutCount,
     double totalVolume,
-    String mostTrainedMuscleGroup,
     int currentStreak,
     Map<String, int> setsPerMuscleGroup,
     Map<String, double> volumePerMuscleGroup,
+    int cardioCount,
+    int cardioDuration,
+    double cardioDistance,
+    int flexibilityCount,
+    int flexibilityDuration,
+    int flexibilitySessions,
   })
   getWeeklyStats(List<Workout> allWorkouts) {
     final weekWorkouts = getThisWeekWorkouts(allWorkouts);
 
     int workoutCount = weekWorkouts.length;
     double totalVolume = 0.0;
-    Map<String, int> muscleGroupCounts = {};
     Map<String, int> setsPerMuscleGroup = {};
     Map<String, double> volumePerMuscleGroup = {};
+    int cardioCount = 0;
+    int cardioDuration = 0;
+    double cardioDistance = 0.0;
+    int flexibilityCount = 0;
+    int flexibilityDuration = 0;
+    Set<String> flexibilityWorkoutIds = {};
 
     for (final workout in weekWorkouts) {
       totalVolume += calculateWorkoutVolume(workout);
+      bool hasFlexibility = false;
 
       for (final exercise in workout.exercises) {
         if (exercise.muscleGroup.isNotEmpty) {
-          muscleGroupCounts[exercise.muscleGroup] =
-              (muscleGroupCounts[exercise.muscleGroup] ?? 0) + 1;
-
-          // Calculate total sets for this muscle group
           final params = exercise.parameters;
-          final sets = params['sets'] as int? ?? 0;
+          
+          // Count cardio and flexibility separately
+          if (exercise.muscleGroup == 'cardio') {
+            cardioCount++;
+            // Sum duration
+            final duration = params['duration'] as int? ?? 0;
+            cardioDuration += duration;
+            // Sum distance
+            final distance = params['distance'] as double? ?? 0.0;
+            cardioDistance += distance;
+          } else if (exercise.muscleGroup == 'flexibility') {
+            flexibilityCount++;
+            hasFlexibility = true;
+            // Sum duration
+            final duration = params['duration'] as int? ?? 0;
+            final sets = params['sets'] as int? ?? 0;
+            final holdDuration = params['holdDuration'] as int? ?? 0;
+            flexibilityDuration += duration + (sets * holdDuration ~/ 60);
+          } else {
+            // Only count actual muscle groups for volume tracking
+            // Calculate total sets for this muscle group
+            final sets = params['sets'] as int? ?? 0;
 
-          setsPerMuscleGroup[exercise.muscleGroup] =
-              (setsPerMuscleGroup[exercise.muscleGroup] ?? 0) + sets;
+            setsPerMuscleGroup[exercise.muscleGroup] =
+                (setsPerMuscleGroup[exercise.muscleGroup] ?? 0) + sets;
 
-          // Calculate volume for this muscle group
-          final exerciseVolume = calculateExerciseVolume(exercise);
-          volumePerMuscleGroup[exercise.muscleGroup] =
-              (volumePerMuscleGroup[exercise.muscleGroup] ?? 0.0) +
-              exerciseVolume;
+            // Calculate volume for this muscle group
+            final exerciseVolume = calculateExerciseVolume(exercise);
+            volumePerMuscleGroup[exercise.muscleGroup] =
+                (volumePerMuscleGroup[exercise.muscleGroup] ?? 0.0) +
+                exerciseVolume;
+          }
         }
       }
-    }
-
-    // Find most trained muscle group
-    String mostTrainedMuscleGroup = '-';
-    int maxCount = 0;
-    muscleGroupCounts.forEach((muscle, count) {
-      if (count > maxCount) {
-        maxCount = count;
-        mostTrainedMuscleGroup = muscle;
+      
+      // Count unique flexibility sessions
+      if (hasFlexibility) {
+        flexibilityWorkoutIds.add(workout.id);
       }
-    });
+    }
 
     // Calculate current streak
     int currentStreak = _calculateStreak(allWorkouts);
@@ -144,10 +168,15 @@ class WorkoutStatsService {
     return (
       workoutCount: workoutCount,
       totalVolume: totalVolume,
-      mostTrainedMuscleGroup: mostTrainedMuscleGroup,
       currentStreak: currentStreak,
       setsPerMuscleGroup: setsPerMuscleGroup,
       volumePerMuscleGroup: volumePerMuscleGroup,
+      cardioCount: cardioCount,
+      cardioDuration: cardioDuration,
+      cardioDistance: cardioDistance,
+      flexibilityCount: flexibilityCount,
+      flexibilityDuration: flexibilityDuration,
+      flexibilitySessions: flexibilityWorkoutIds.length,
     );
   }
 
