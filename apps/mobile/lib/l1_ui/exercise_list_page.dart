@@ -6,10 +6,10 @@ class ExerciseListPage extends StatefulWidget {
   const ExerciseListPage({super.key});
 
   @override
-  State<ExerciseListPage> createState() => _ExerciseListPageState();
+  State<ExerciseListPage> createState() => ExerciseListPageState();
 }
 
-class _ExerciseListPageState extends State<ExerciseListPage> {
+class ExerciseListPageState extends State<ExerciseListPage> {
   final WorkoutService _workoutService = WorkoutService();
   Map<String, ExerciseSummary> _exerciseSummaries = {};
   List<ExerciseSummary> _filteredExercises = [];
@@ -23,69 +23,87 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
   }
 
   @override
+  void didUpdateWidget(ExerciseListPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _loadExercises();
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
 
+  void refresh() {
+    _loadExercises();
+  }
+
   Future<void> _loadExercises() async {
-    setState(() => _isLoading = true);
-    final workouts = await _workoutService.getAllWorkouts();
+    try {
+      setState(() => _isLoading = true);
+      final workouts = await _workoutService.getAllWorkouts();
 
-    // Group exercises and calculate summaries
-    Map<String, ExerciseSummary> summaries = {};
+      // Group exercises and calculate summaries
+      Map<String, ExerciseSummary> summaries = {};
 
-    for (final workout in workouts) {
-      for (final exercise in workout.exercises) {
-        if (!summaries.containsKey(exercise.name)) {
-          summaries[exercise.name] = ExerciseSummary(
-            name: exercise.name,
-            muscleGroup: exercise.muscleGroup,
-            lastPerformed: workout.dateTime,
-            totalSessions: 1,
-          );
-        } else {
-          summaries[exercise.name]!.totalSessions++;
-          if (workout.dateTime.isAfter(
-            summaries[exercise.name]!.lastPerformed,
-          )) {
-            summaries[exercise.name]!.lastPerformed = workout.dateTime;
+      for (final workout in workouts) {
+        for (final exercise in workout.exercises) {
+          if (!summaries.containsKey(exercise.name)) {
+            summaries[exercise.name] = ExerciseSummary(
+              name: exercise.name,
+              muscleGroup: exercise.muscleGroup,
+              lastPerformed: workout.dateTime,
+              totalSessions: 1,
+            );
+          } else {
+            summaries[exercise.name]!.totalSessions++;
+            if (workout.dateTime.isAfter(
+              summaries[exercise.name]!.lastPerformed,
+            )) {
+              summaries[exercise.name]!.lastPerformed = workout.dateTime;
+            }
           }
-        }
 
-        // Track last weight/distance/duration
-        if (exercise.muscleGroup == 'cardio') {
-          final distance = exercise.parameters['distance'] as double? ?? 0.0;
-          final duration = exercise.parameters['duration'] as int? ?? 0;
-          if (workout.dateTime == summaries[exercise.name]!.lastPerformed) {
-            summaries[exercise.name]!.lastDistance = distance;
-            summaries[exercise.name]!.lastDuration = duration;
-          }
-        } else if (exercise.muscleGroup == 'flexibility') {
-          final duration = exercise.parameters['duration'] as int? ?? 0;
-          final reps = exercise.parameters['sets'] as int? ?? 0;
-          if (workout.dateTime == summaries[exercise.name]!.lastPerformed) {
-            summaries[exercise.name]!.lastDuration = duration;
-            summaries[exercise.name]!.lastReps = reps;
-          }
-        } else {
-          final weight = exercise.parameters['weight'] as num? ?? 0;
-          final currentMax = summaries[exercise.name]!.maxWeight;
-          if (weight > currentMax) {
-            summaries[exercise.name]!.maxWeight = weight.toDouble();
+          // Track last weight/distance/duration
+          if (exercise.muscleGroup == 'cardio') {
+            final distance = exercise.parameters['distance'] as double? ?? 0.0;
+            final duration = (exercise.parameters['duration'] is int ? exercise.parameters['duration'] as int : (exercise.parameters['duration'] as double?)?.round()) ?? 0;
+            if (workout.dateTime == summaries[exercise.name]!.lastPerformed) {
+              summaries[exercise.name]!.lastDistance = distance;
+              summaries[exercise.name]!.lastDuration = duration;
+            }
+          } else if (exercise.muscleGroup == 'flexibility') {
+            final duration = (exercise.parameters['duration'] is int ? exercise.parameters['duration'] as int : (exercise.parameters['duration'] as double?)?.round()) ?? 0;
+            final reps = (exercise.parameters['sets'] is int ? exercise.parameters['sets'] as int : (exercise.parameters['sets'] as double?)?.round()) ?? 0;
+            if (workout.dateTime == summaries[exercise.name]!.lastPerformed) {
+              summaries[exercise.name]!.lastDuration = duration;
+              summaries[exercise.name]!.lastReps = reps;
+            }
+          } else {
+            final weight = exercise.parameters['weight'] as num? ?? 0;
+            final currentMax = summaries[exercise.name]!.maxWeight;
+            if (weight > currentMax) {
+              summaries[exercise.name]!.maxWeight = weight.toDouble();
+            }
           }
         }
       }
+
+      final sortedExercises = summaries.values.toList()
+        ..sort((a, b) => b.lastPerformed.compareTo(a.lastPerformed));
+
+      setState(() {
+        _exerciseSummaries = summaries;
+        _filteredExercises = sortedExercises;
+        _isLoading = false;
+      });
+    } catch (e, stackTrace) {
+      print('Error loading exercises: $e');
+      print('Stack trace: $stackTrace');
+      setState(() {
+        _isLoading = false;
+      });
     }
-
-    final sortedExercises = summaries.values.toList()
-      ..sort((a, b) => b.lastPerformed.compareTo(a.lastPerformed));
-
-    setState(() {
-      _exerciseSummaries = summaries;
-      _filteredExercises = sortedExercises;
-      _isLoading = false;
-    });
   }
 
   void _filterExercises(String query) {

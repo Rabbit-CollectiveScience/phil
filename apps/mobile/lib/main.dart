@@ -46,6 +46,7 @@ class _MainNavigatorState extends State<MainNavigator> {
   int _currentIndex = 0;
   late final List<Widget> _pages;
   final GlobalKey<DashboardPageState> _dashboardKey = GlobalKey();
+  final GlobalKey<ExerciseListPageState> _exerciseListKey = GlobalKey();
 
   @override
   void initState() {
@@ -53,7 +54,7 @@ class _MainNavigatorState extends State<MainNavigator> {
     _pages = [
       const RecordPage(),
       DashboardPage(key: _dashboardKey),
-      const ExerciseListPage(),
+      ExerciseListPage(key: _exerciseListKey),
       SettingsPage(
         onNavigateToDashboard: _navigateToDashboard,
         onDataChanged: _refreshDashboard,
@@ -100,6 +101,12 @@ class _MainNavigatorState extends State<MainNavigator> {
                 setState(() {
                   _currentIndex = index;
                 });
+                // Refresh pages when navigating to them
+                if (index == 1) {
+                  _dashboardKey.currentState?.refresh();
+                } else if (index == 2) {
+                  _exerciseListKey.currentState?.refresh();
+                }
               },
               items: const [
                 BottomNavigationBarItem(

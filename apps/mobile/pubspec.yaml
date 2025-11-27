@@ -1,8 +1,8 @@
-name: saikum
-description: "A new Flutter project."
+name: phil
+description: "AI-powered workout tracking and exercise analytics"
 publish_to: 'none'
 
-version: 3.0.4+5
+version: 1.0.0+1
 
 environment:
   sdk: ^3.8.1
