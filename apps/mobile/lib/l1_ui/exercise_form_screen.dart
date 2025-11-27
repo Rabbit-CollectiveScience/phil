@@ -13,6 +13,8 @@ class ExerciseFormScreen extends StatefulWidget {
   final int? exerciseNumber;
   final Function(Map<String, dynamic>) onSave;
   final VoidCallback? onDelete;
+  final DateTime? workoutDateTime;
+  final Function(DateTime)? onDateTimeChanged;
 
   const ExerciseFormScreen({
     super.key,
@@ -24,6 +26,8 @@ class ExerciseFormScreen extends StatefulWidget {
     this.exerciseNumber,
     required this.onSave,
     this.onDelete,
+    this.workoutDateTime,
+    this.onDateTimeChanged,
   });
 
   bool get isEditMode => initialParameters != null;
@@ -242,6 +246,104 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
     );
   }
 
+  Future<void> _showDateTimePicker() async {
+    if (widget.workoutDateTime == null) return;
+
+    // Show date picker
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: widget.workoutDateTime!,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(const Duration(days: 1)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: _getMuscleGroupColor(widget.muscleGroup),
+              onPrimary: Colors.white,
+              surface: Colors.grey[900]!,
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate == null) return;
+
+    // Show time picker
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(widget.workoutDateTime!),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: _getMuscleGroupColor(widget.muscleGroup),
+              onPrimary: Colors.white,
+              surface: Colors.grey[900]!,
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedTime == null) return;
+
+    // Combine date and time
+    final newDateTime = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+
+    widget.onDateTimeChanged?.call(newDateTime);
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+    String dateStr;
+    if (date == today) {
+      dateStr = 'Today';
+    } else if (date == yesterday) {
+      dateStr = 'Yesterday';
+    } else {
+      final months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+      dateStr =
+          '${months[dateTime.month - 1]} ${dateTime.day}, ${dateTime.year}';
+    }
+
+    final hour = dateTime.hour == 0
+        ? 12
+        : (dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour);
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final period = dateTime.hour >= 12 ? 'PM' : 'AM';
+
+    return '$dateStr at $hour:$minute $period';
+  }
+
   void _confirmDiscard() {
     if (widget.isEditMode && !_hasChanges) {
       Navigator.pop(context);
@@ -394,7 +496,66 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
                           ],
                         ),
 
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 24),
+
+                        // Workout Date & Time Section (if editing)
+                        if (widget.workoutDateTime != null)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Workout Date & Time',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              InkWell(
+                                onTap: _showDateTimePicker,
+                                borderRadius: BorderRadius.circular(12),
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[900],
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: Colors.grey[800]!,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_today,
+                                        color: Colors.grey[400],
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          _formatDateTime(
+                                            widget.workoutDateTime!,
+                                          ),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.edit,
+                                        color: Colors.grey[600],
+                                        size: 18,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                          ),
 
                         // Parameters Section
                         const Text(

@@ -377,13 +377,14 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
     return GestureDetector(
       onTap: () async {
         // Find the exercise in this session that matches the current exercise name
-        final exerciseIndex = session.workout.exercises
-            .indexWhere((e) => e.name == widget.exerciseName);
-        
+        final exerciseIndex = session.workout.exercises.indexWhere(
+          (e) => e.name == widget.exerciseName,
+        );
+
         if (exerciseIndex == -1) return;
-        
+
         final exercise = session.workout.exercises[exerciseIndex];
-        
+
         await Navigator.push(
           context,
           MaterialPageRoute(
@@ -394,6 +395,19 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
               muscleGroup: exercise.muscleGroup,
               initialParameters: exercise.parameters,
               exerciseNumber: exerciseIndex + 1,
+              workoutDateTime: session.workout.dateTime,
+              onDateTimeChanged: (newDateTime) async {
+                // Update workout with new datetime
+                final updatedWorkout = Workout(
+                  id: session.workout.id,
+                  dateTime: newDateTime,
+                  exercises: session.workout.exercises,
+                  durationMinutes: session.workout.durationMinutes,
+                );
+
+                await _workoutService.updateWorkout(updatedWorkout);
+                await _loadExerciseSessions();
+              },
               onSave: (exerciseData) async {
                 // Update the exercise in the workout
                 final updatedExercise = WorkoutExercise(
@@ -403,32 +417,36 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
                   muscleGroup: exerciseData['muscleGroup'],
                   parameters: exerciseData['parameters'],
                 );
-                
-                final exercises = List<WorkoutExercise>.from(session.workout.exercises);
+
+                final exercises = List<WorkoutExercise>.from(
+                  session.workout.exercises,
+                );
                 exercises[exerciseIndex] = updatedExercise;
-                
+
                 final updatedWorkout = Workout(
                   id: session.workout.id,
                   dateTime: session.workout.dateTime,
                   exercises: exercises,
                   durationMinutes: session.workout.durationMinutes,
                 );
-                
+
                 await _workoutService.updateWorkout(updatedWorkout);
                 await _loadExerciseSessions();
               },
               onDelete: () async {
                 // Remove this exercise from the workout
-                final exercises = List<WorkoutExercise>.from(session.workout.exercises);
+                final exercises = List<WorkoutExercise>.from(
+                  session.workout.exercises,
+                );
                 exercises.removeAt(exerciseIndex);
-                
+
                 final updatedWorkout = Workout(
                   id: session.workout.id,
                   dateTime: session.workout.dateTime,
                   exercises: exercises,
                   durationMinutes: session.workout.durationMinutes,
                 );
-                
+
                 await _workoutService.updateWorkout(updatedWorkout);
                 await _loadExerciseSessions();
               },

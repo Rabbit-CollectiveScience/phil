@@ -290,6 +290,27 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
               muscleGroup: exercise.muscleGroup,
               initialParameters: exercise.parameters,
               exerciseNumber: number,
+              workoutDateTime: widget.workout.dateTime,
+              onDateTimeChanged: (newDateTime) async {
+                // Update workout with new datetime
+                final updatedWorkout = Workout(
+                  id: widget.workout.id,
+                  dateTime: newDateTime,
+                  exercises: _exercises,
+                  durationMinutes: widget.workout.durationMinutes,
+                );
+
+                await _workoutService.updateWorkout(updatedWorkout);
+
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Workout date/time updated'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+              },
               onSave: (exerciseData) => _updateExercise(index, exerciseData),
               onDelete: () => _deleteExercise(index),
             ),
