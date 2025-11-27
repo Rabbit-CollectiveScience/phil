@@ -6,8 +6,16 @@ class WorkoutStatsService {
   /// Calculate total volume for an exercise (sets × reps × weight)
   static double calculateExerciseVolume(WorkoutExercise exercise) {
     final params = exercise.parameters;
-    final sets = (params['sets'] is int ? params['sets'] as int : (params['sets'] as double?)?.round()) ?? 0;
-    final reps = (params['reps'] is int ? params['reps'] as int : (params['reps'] as double?)?.round()) ?? 0;
+    final sets =
+        (params['sets'] is int
+            ? params['sets'] as int
+            : (params['sets'] as double?)?.round()) ??
+        0;
+    final reps =
+        (params['reps'] is int
+            ? params['reps'] as int
+            : (params['reps'] as double?)?.round()) ??
+        0;
     final weight = params['weight'] as num? ?? 0;
 
     return sets * reps * weight.toDouble();
@@ -89,19 +97,39 @@ class WorkoutStatsService {
           // Count cardio and flexibility separately
           if (exercise.muscleGroup == 'cardio') {
             cardioCount++;
-            final duration = (params['duration'] is int ? params['duration'] as int : (params['duration'] as double?)?.round()) ?? 0;
+            final duration =
+                (params['duration'] is int
+                    ? params['duration'] as int
+                    : (params['duration'] as double?)?.round()) ??
+                0;
             cardioDuration += duration;
             final distance = params['distance'] as double? ?? 0.0;
             cardioDistance += distance;
           } else if (exercise.muscleGroup == 'flexibility') {
             flexibilityCount++;
-            final duration = (params['duration'] is int ? params['duration'] as int : (params['duration'] as double?)?.round()) ?? 0;
-            final sets = (params['sets'] is int ? params['sets'] as int : (params['sets'] as double?)?.round()) ?? 0;
-            final holdDuration = (params['holdDuration'] is int ? params['holdDuration'] as int : (params['holdDuration'] as double?)?.round()) ?? 0;
+            final duration =
+                (params['duration'] is int
+                    ? params['duration'] as int
+                    : (params['duration'] as double?)?.round()) ??
+                0;
+            final sets =
+                (params['sets'] is int
+                    ? params['sets'] as int
+                    : (params['sets'] as double?)?.round()) ??
+                0;
+            final holdDuration =
+                (params['holdDuration'] is int
+                    ? params['holdDuration'] as int
+                    : (params['holdDuration'] as double?)?.round()) ??
+                0;
             flexibilityDuration += duration + (sets * holdDuration ~/ 60);
           } else {
             // Track muscle groups with volume
-            final sets = (params['sets'] is int ? params['sets'] as int : (params['sets'] as double?)?.round()) ?? 0;
+            final sets =
+                (params['sets'] is int
+                    ? params['sets'] as int
+                    : (params['sets'] as double?)?.round()) ??
+                0;
             totalSets += sets;
             setsPerMuscleGroup[exercise.muscleGroup] =
                 (setsPerMuscleGroup[exercise.muscleGroup] ?? 0) + sets;
@@ -183,7 +211,11 @@ class WorkoutStatsService {
           if (exercise.muscleGroup == 'cardio') {
             cardioCount++;
             // Sum duration
-            final duration = (params['duration'] is int ? params['duration'] as int : (params['duration'] as double?)?.round()) ?? 0;
+            final duration =
+                (params['duration'] is int
+                    ? params['duration'] as int
+                    : (params['duration'] as double?)?.round()) ??
+                0;
             cardioDuration += duration;
             // Sum distance
             final distance = params['distance'] as double? ?? 0.0;
@@ -192,14 +224,30 @@ class WorkoutStatsService {
             flexibilityCount++;
             hasFlexibility = true;
             // Sum duration
-            final duration = (params['duration'] is int ? params['duration'] as int : (params['duration'] as double?)?.round()) ?? 0;
-            final sets = (params['sets'] is int ? params['sets'] as int : (params['sets'] as double?)?.round()) ?? 0;
-            final holdDuration = (params['holdDuration'] is int ? params['holdDuration'] as int : (params['holdDuration'] as double?)?.round()) ?? 0;
+            final duration =
+                (params['duration'] is int
+                    ? params['duration'] as int
+                    : (params['duration'] as double?)?.round()) ??
+                0;
+            final sets =
+                (params['sets'] is int
+                    ? params['sets'] as int
+                    : (params['sets'] as double?)?.round()) ??
+                0;
+            final holdDuration =
+                (params['holdDuration'] is int
+                    ? params['holdDuration'] as int
+                    : (params['holdDuration'] as double?)?.round()) ??
+                0;
             flexibilityDuration += duration + (sets * holdDuration ~/ 60);
           } else {
             // Only count actual muscle groups for volume tracking
             // Calculate total sets for this muscle group
-            final sets = (params['sets'] is int ? params['sets'] as int : (params['sets'] as double?)?.round()) ?? 0;
+            final sets =
+                (params['sets'] is int
+                    ? params['sets'] as int
+                    : (params['sets'] as double?)?.round()) ??
+                0;
 
             setsPerMuscleGroup[exercise.muscleGroup] =
                 (setsPerMuscleGroup[exercise.muscleGroup] ?? 0) + sets;

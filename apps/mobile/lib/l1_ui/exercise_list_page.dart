@@ -67,14 +67,26 @@ class ExerciseListPageState extends State<ExerciseListPage> {
           // Track last weight/distance/duration
           if (exercise.muscleGroup == 'cardio') {
             final distance = exercise.parameters['distance'] as double? ?? 0.0;
-            final duration = (exercise.parameters['duration'] is int ? exercise.parameters['duration'] as int : (exercise.parameters['duration'] as double?)?.round()) ?? 0;
+            final duration =
+                (exercise.parameters['duration'] is int
+                    ? exercise.parameters['duration'] as int
+                    : (exercise.parameters['duration'] as double?)?.round()) ??
+                0;
             if (workout.dateTime == summaries[exercise.name]!.lastPerformed) {
               summaries[exercise.name]!.lastDistance = distance;
               summaries[exercise.name]!.lastDuration = duration;
             }
           } else if (exercise.muscleGroup == 'flexibility') {
-            final duration = (exercise.parameters['duration'] is int ? exercise.parameters['duration'] as int : (exercise.parameters['duration'] as double?)?.round()) ?? 0;
-            final reps = (exercise.parameters['sets'] is int ? exercise.parameters['sets'] as int : (exercise.parameters['sets'] as double?)?.round()) ?? 0;
+            final duration =
+                (exercise.parameters['duration'] is int
+                    ? exercise.parameters['duration'] as int
+                    : (exercise.parameters['duration'] as double?)?.round()) ??
+                0;
+            final reps =
+                (exercise.parameters['sets'] is int
+                    ? exercise.parameters['sets'] as int
+                    : (exercise.parameters['sets'] as double?)?.round()) ??
+                0;
             if (workout.dateTime == summaries[exercise.name]!.lastPerformed) {
               summaries[exercise.name]!.lastDuration = duration;
               summaries[exercise.name]!.lastReps = reps;

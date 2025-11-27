@@ -312,8 +312,16 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
   double _calculateSessionVolume(ExerciseSession session) {
     double total = 0;
     for (final exercise in session.exercises) {
-      final sets = (exercise.parameters['sets'] is int ? exercise.parameters['sets'] as int : (exercise.parameters['sets'] as double?)?.round()) ?? 0;
-      final reps = (exercise.parameters['reps'] is int ? exercise.parameters['reps'] as int : (exercise.parameters['reps'] as double?)?.round()) ?? 0;
+      final sets =
+          (exercise.parameters['sets'] is int
+              ? exercise.parameters['sets'] as int
+              : (exercise.parameters['sets'] as double?)?.round()) ??
+          0;
+      final reps =
+          (exercise.parameters['reps'] is int
+              ? exercise.parameters['reps'] as int
+              : (exercise.parameters['reps'] as double?)?.round()) ??
+          0;
       final weight = exercise.parameters['weight'] as num? ?? 0;
       total += sets * reps * weight.toDouble();
     }
@@ -340,7 +348,11 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
   int _calculateSessionTotalDuration(ExerciseSession session) {
     int total = 0;
     for (final exercise in session.exercises) {
-      total += (exercise.parameters['duration'] is int ? exercise.parameters['duration'] as int : (exercise.parameters['duration'] as double?)?.round()) ?? 0;
+      total +=
+          (exercise.parameters['duration'] is int
+              ? exercise.parameters['duration'] as int
+              : (exercise.parameters['duration'] as double?)?.round()) ??
+          0;
     }
     return total;
   }
@@ -348,8 +360,16 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
   int _calculateSessionTotalReps(ExerciseSession session) {
     int total = 0;
     for (final exercise in session.exercises) {
-      final sets = (exercise.parameters['sets'] is int ? exercise.parameters['sets'] as int : (exercise.parameters['sets'] as double?)?.round()) ?? 0;
-      final reps = (exercise.parameters['reps'] is int ? exercise.parameters['reps'] as int : (exercise.parameters['reps'] as double?)?.round()) ?? 0;
+      final sets =
+          (exercise.parameters['sets'] is int
+              ? exercise.parameters['sets'] as int
+              : (exercise.parameters['sets'] as double?)?.round()) ??
+          0;
+      final reps =
+          (exercise.parameters['reps'] is int
+              ? exercise.parameters['reps'] as int
+              : (exercise.parameters['reps'] as double?)?.round()) ??
+          0;
       total += sets * reps;
     }
     return total;
@@ -519,8 +539,16 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
     int totalSets = 0;
     int totalReps = 0;
     for (final exercise in session.exercises) {
-      totalSets += (exercise.parameters['sets'] is int ? exercise.parameters['sets'] as int : (exercise.parameters['sets'] as double?)?.round()) ?? 0;
-      totalReps += (exercise.parameters['reps'] is int ? exercise.parameters['reps'] as int : (exercise.parameters['reps'] as double?)?.round()) ?? 0;
+      totalSets +=
+          (exercise.parameters['sets'] is int
+              ? exercise.parameters['sets'] as int
+              : (exercise.parameters['sets'] as double?)?.round()) ??
+          0;
+      totalReps +=
+          (exercise.parameters['reps'] is int
+              ? exercise.parameters['reps'] as int
+              : (exercise.parameters['reps'] as double?)?.round()) ??
+          0;
     }
     return '$totalSets sets • $totalReps total reps';
   }

@@ -241,14 +241,25 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                     ),
                   )
                 else
-                  ..._exercises.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final exercise = entry.value;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: _buildExerciseCard(exercise, index + 1, index),
-                    );
-                  }).toList(),
+                  ..._exercises
+                      .asMap()
+                      .entries
+                      .map((entry) {
+                        final index = entry.key;
+                        final exercise = entry.value;
+                        final displayNumber =
+                            _exercises.length - index; // Reverse numbering
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _buildExerciseCard(
+                            exercise,
+                            displayNumber,
+                            index,
+                          ),
+                        );
+                      })
+                      .toList()
+                      .reversed,
               ],
             ),
           ),
