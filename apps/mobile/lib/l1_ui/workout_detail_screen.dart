@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l2_domain/models/workout.dart';
 import '../l2_domain/models/workout_exercise.dart';
-import '../l3_service/workout_service.dart';
+import '../l2_domain/controller/workout_controller.dart';
 import '../l3_service/settings_service.dart';
 import 'exercise_form_screen.dart';
 
@@ -16,7 +16,7 @@ class WorkoutDetailScreen extends StatefulWidget {
 }
 
 class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
-  final WorkoutService _workoutService = WorkoutService();
+  final WorkoutController _workoutController = WorkoutController();
   late List<WorkoutExercise> _exercises;
   String _weightUnit = 'lbs';
   String _distanceUnit = 'miles';
@@ -59,7 +59,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
       exercises: _exercises,
       durationMinutes: widget.workout.durationMinutes,
     );
-    await _workoutService.updateWorkout(updatedWorkout);
+    await _workoutController.updateWorkout(updatedWorkout);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -83,7 +83,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
       exercises: List.from(_exercises),
       durationMinutes: widget.workout.durationMinutes,
     );
-    await _workoutService.updateWorkout(updatedWorkout);
+    await _workoutController.updateWorkout(updatedWorkout);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -117,7 +117,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
             onPressed: () async {
               Navigator.pop(context); // Close dialog
               // Delete the workout first
-              await _workoutService.deleteWorkout(widget.workout.id);
+              await _workoutController.deleteWorkout(widget.workout.id);
               if (mounted) {
                 Navigator.pop(context); // Close detail screen
                 // Show confirmation
@@ -308,10 +308,10 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                   createdAt: newDateTime,
                   updatedAt: DateTime.now(),
                 );
-                
+
                 final exercises = List<WorkoutExercise>.from(_exercises);
                 exercises[index] = updatedExercise;
-                
+
                 final updatedWorkout = Workout(
                   id: widget.workout.id,
                   dateTime: widget.workout.dateTime,
@@ -319,7 +319,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                   durationMinutes: widget.workout.durationMinutes,
                 );
 
-                await _workoutService.updateWorkout(updatedWorkout);
+                await _workoutController.updateWorkout(updatedWorkout);
                 setState(() {
                   _exercises = exercises;
                 });

@@ -433,12 +433,12 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
                   createdAt: newDateTime,
                   updatedAt: DateTime.now(),
                 );
-                
+
                 final exercises = List<WorkoutExercise>.from(
                   session.workout.exercises,
                 );
                 exercises[exerciseIndex] = updatedExercise;
-                
+
                 final updatedWorkout = Workout(
                   id: session.workout.id,
                   dateTime: session.workout.dateTime,

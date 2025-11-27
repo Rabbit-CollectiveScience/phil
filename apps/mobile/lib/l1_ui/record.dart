@@ -3,7 +3,7 @@ import 'browse_exercises_screen.dart';
 import '../l3_service/gemini_service.dart';
 import '../l3_service/tts_service.dart';
 import '../l3_service/speech_service.dart';
-import '../l2_domain/use_case_controller/voice_logging_controller.dart';
+import '../l2_domain/controller/workout_controller.dart';
 import '../l2_domain/models/workout_exercise.dart';
 
 // Chat state machine enum
@@ -30,7 +30,7 @@ class _RecordPageState extends State<RecordPage>
   String _partialTranscription = '';
   final List<ChatMessage> _messages = [];
   final TextEditingController _textController = TextEditingController();
-  final VoiceLoggingController _voiceLoggingController = VoiceLoggingController();
+  final WorkoutController _workoutController = WorkoutController();
   WorkoutExercise? _lastLoggedExercise;
   final ScrollController _scrollController = ScrollController();
   late AnimationController _pulseController;
@@ -103,20 +103,21 @@ class _RecordPageState extends State<RecordPage>
     WorkoutExercise? loggedExercise;
 
     try {
-      final response = await GeminiService.getInstance().sendMessageWithFunctions(text);
+      final response = await GeminiService.getInstance()
+          .sendMessageWithFunctions(text);
       aiResponse = response.message;
-      
+
       // Check if an exercise was logged
       if (response.result != null && response.result!.success) {
         loggedExercise = response.result!.exercise;
         print('✅ Workout logged: ${loggedExercise?.name}');
-        
-        // Save to Hive using VoiceLoggingController
-        final loggingResult = await _voiceLoggingController.processVoiceInput(text);
-        if (loggingResult.success) {
-          print('💾 Saved to Hive: ${loggingResult.exercise?.name}');
-          _lastLoggedExercise = loggingResult.exercise;
-        }
+
+        // Save to Hive using WorkoutController directly
+        await _workoutController.addExerciseToAppropriateWorkout(
+          exercise: loggedExercise!,
+        );
+        print('💾 Saved to Hive: ${loggedExercise.name}');
+        _lastLoggedExercise = loggedExercise;
       }
 
       // Check if processing was cancelled while waiting for response
@@ -146,8 +147,8 @@ class _RecordPageState extends State<RecordPage>
       _chatState = ChatState.idle;
       _messages.add(
         ChatMessage(
-          text: aiResponse, 
-          isUser: false, 
+          text: aiResponse,
+          isUser: false,
           timestamp: DateTime.now(),
           isWorkoutLogged: loggedExercise != null,
         ),
@@ -163,9 +164,7 @@ class _RecordPageState extends State<RecordPage>
             children: [
               const Icon(Icons.check_circle, color: Colors.white),
               const SizedBox(width: 8),
-              Expanded(
-                child: Text('✅ Logged: ${loggedExercise.name}'),
-              ),
+              Expanded(child: Text('✅ Logged: ${loggedExercise.name}')),
             ],
           ),
           backgroundColor: Colors.green,
@@ -843,7 +842,10 @@ class _RecordPageState extends State<RecordPage>
                   if (message.isWorkoutLogged) ...[
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(8),
@@ -852,7 +854,11 @@ class _RecordPageState extends State<RecordPage>
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.check_circle, color: Colors.green, size: 14),
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 14,
+                          ),
                           SizedBox(width: 4),
                           Text(
                             'Workout Logged',

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../l3_service/workout_service.dart';
+import '../l2_domain/controller/workout_controller.dart';
 import 'exercise_detail_page.dart';
 
 class ExerciseListPage extends StatefulWidget {
@@ -10,7 +10,7 @@ class ExerciseListPage extends StatefulWidget {
 }
 
 class ExerciseListPageState extends State<ExerciseListPage> {
-  final WorkoutService _workoutService = WorkoutService();
+  final WorkoutController _workoutController = WorkoutController();
   Map<String, ExerciseSummary> _exerciseSummaries = {};
   List<ExerciseSummary> _filteredExercises = [];
   bool _isLoading = true;
@@ -41,7 +41,7 @@ class ExerciseListPageState extends State<ExerciseListPage> {
   Future<void> _loadExercises() async {
     try {
       setState(() => _isLoading = true);
-      final workouts = await _workoutService.getAllWorkouts();
+      final workouts = await _workoutController.getAllWorkouts();
 
       // Group exercises and calculate summaries
       Map<String, ExerciseSummary> summaries = {};

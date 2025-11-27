@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../l2_domain/models/workout_exercise.dart';
-import '../l3_service/workout_service.dart';
+import '../l2_domain/controller/workout_controller.dart';
 import 'exercise_form_screen.dart';
 
 class ExerciseDetailScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class ExerciseDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final workoutService = WorkoutService();
+    final workoutController = WorkoutController();
 
     return ExerciseFormScreen(
       exerciseId: exerciseId,
@@ -37,16 +37,14 @@ class ExerciseDetailScreen extends StatelessWidget {
           // createdAt and updatedAt default to DateTime.now() in constructor
         );
 
-        // Use auto-grouping to add to existing workout or create new one
-        await workoutService.addExerciseWithAutoGrouping(exercise);
+        // Use auto-grouping to add to existing workout or create new one (1-hour threshold)
+        final workout = await workoutController.addExerciseToAppropriateWorkout(
+          exercise: exercise,
+        );
 
         if (context.mounted) {
-          // Get updated workouts to check if grouped
-          final workouts = await workoutService.getAllWorkouts();
-          final addedToExisting =
-              workouts.isNotEmpty &&
-              workouts.first.exercises.length > 1 &&
-              workouts.first.exercises.last.exerciseId == exercise.exerciseId;
+          // Check if this was added to existing workout or created new one
+          final addedToExisting = workout.exercises.length > 1;
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
