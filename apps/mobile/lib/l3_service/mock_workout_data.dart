@@ -56,8 +56,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 27, 14, 30),
         ),
         WorkoutExercise(
-          exerciseId: 'incline-dumbbell-press',
-          name: 'Incline Dumbbell Press',
+          exerciseId: 'incline-dumbbell-bench-press',
+          name: 'Incline Dumbbell Bench Press',
           category: 'strength',
           muscleGroup: 'chest',
           parameters: {
@@ -98,7 +98,7 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 27, 15, 12),
         ),
         WorkoutExercise(
-          exerciseId: 'tricep-dips',
+          exerciseId: 'tricep-dip',
           name: 'Tricep Dips',
           category: 'strength',
           muscleGroup: 'arms',
@@ -121,8 +121,8 @@ class MockWorkoutData {
       durationMinutes: 40,
       exercises: [
         WorkoutExercise(
-          exerciseId: 'yoga-flow',
-          name: 'Yoga Flow',
+          exerciseId: 'downward-dog',
+          name: 'Downward Dog',
           category: 'flexibility',
           muscleGroup: 'flexibility',
           parameters: {'duration': 25, 'style': 'Vinyasa'},
@@ -171,7 +171,7 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 25, 10, 30),
         ),
         WorkoutExercise(
-          exerciseId: 'pull-ups',
+          exerciseId: 'pull-up',
           name: 'Pull-ups',
           category: 'strength',
           muscleGroup: 'back',
@@ -242,7 +242,7 @@ class MockWorkoutData {
       durationMinutes: 30,
       exercises: [
         WorkoutExercise(
-          exerciseId: 'burpees',
+          exerciseId: 'burpee',
           name: 'Burpees',
           category: 'cardio',
           muscleGroup: 'cardio',
@@ -260,7 +260,7 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 23, 16, 40),
         ),
         WorkoutExercise(
-          exerciseId: 'mountain-climbers',
+          exerciseId: 'mountain-climber',
           name: 'Mountain Climbers',
           category: 'cardio',
           muscleGroup: 'cardio',
@@ -334,8 +334,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 21, 10, 15),
         ),
         WorkoutExercise(
-          exerciseId: 'calf-raise',
-          name: 'Calf Raise',
+          exerciseId: 'standing-calf-raise',
+          name: 'Standing Calf Raise',
           category: 'strength',
           muscleGroup: 'legs',
           parameters: {
@@ -357,8 +357,8 @@ class MockWorkoutData {
       durationMinutes: 52,
       exercises: [
         WorkoutExercise(
-          exerciseId: 'overhead-press',
-          name: 'Overhead Press',
+          exerciseId: 'overhead-press-machine',
+          name: 'Overhead Press Machine',
           category: 'strength',
           muscleGroup: 'shoulders',
           parameters: {
@@ -422,8 +422,8 @@ class MockWorkoutData {
       durationMinutes: 35,
       exercises: [
         WorkoutExercise(
-          exerciseId: 'dynamic-stretching',
-          name: 'Dynamic Stretching',
+          exerciseId: 'leg-raise',
+          name: 'Leg Raise',
           category: 'flexibility',
           muscleGroup: 'flexibility',
           parameters: {'duration': 15},
@@ -440,8 +440,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 18, 11, 15),
         ),
         WorkoutExercise(
-          exerciseId: 'shoulder-mobility',
-          name: 'Shoulder Mobility',
+          exerciseId: 'shoulder-stretch',
+          name: 'Shoulder Stretch',
           category: 'flexibility',
           muscleGroup: 'flexibility',
           parameters: {'sets': 3, 'reps': 10, 'restBetweenSets': 45},
@@ -551,8 +551,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 14, 17, 0),
         ),
         WorkoutExercise(
-          exerciseId: 'sprint-intervals',
-          name: 'Sprint Intervals',
+          exerciseId: 'sprints',
+          name: 'Sprints',
           category: 'cardio',
           muscleGroup: 'cardio',
           parameters: {'sets': 6, 'duration': 1, 'restBetweenSets': 90},
@@ -583,8 +583,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 13, 14, 30),
         ),
         WorkoutExercise(
-          exerciseId: 'cable-fly',
-          name: 'Cable Fly',
+          exerciseId: 'cable-chest-fly',
+          name: 'Cable Chest Fly',
           category: 'strength',
           muscleGroup: 'chest',
           parameters: {
@@ -611,8 +611,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 13, 15, 0),
         ),
         WorkoutExercise(
-          exerciseId: 'tricep-extension',
-          name: 'Tricep Extension',
+          exerciseId: 'overhead-tricep-extension',
+          name: 'Overhead Tricep Extension',
           category: 'strength',
           muscleGroup: 'arms',
           parameters: {
@@ -756,8 +756,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 9, 16, 45),
         ),
         WorkoutExercise(
-          exerciseId: 'bent-over-row',
-          name: 'Bent Over Row',
+          exerciseId: 'barbell-row',
+          name: 'Barbell Row',
           category: 'strength',
           muscleGroup: 'back',
           parameters: {
@@ -788,8 +788,8 @@ class MockWorkoutData {
       durationMinutes: 45,
       exercises: [
         WorkoutExercise(
-          exerciseId: 'sun-salutation',
-          name: 'Sun Salutation',
+          exerciseId: 'downward-dog',
+          name: 'Downward Dog',
           category: 'flexibility',
           muscleGroup: 'flexibility',
           parameters: {'sets': 5, 'reps': 1, 'restBetweenSets': 30},
@@ -797,8 +797,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 7, 19, 30),
         ),
         WorkoutExercise(
-          exerciseId: 'warrior-pose',
-          name: 'Warrior Pose',
+          exerciseId: 'spinal-twist',
+          name: 'Spinal Twist',
           category: 'flexibility',
           muscleGroup: 'flexibility',
           parameters: {'sets': 4, 'holdDuration': 45, 'restBetweenSets': 20},
@@ -806,8 +806,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 7, 19, 45),
         ),
         WorkoutExercise(
-          exerciseId: 'child-pose',
-          name: "Child's Pose",
+          exerciseId: 'childs-pose',
+          name: 'Childs Pose',
           category: 'flexibility',
           muscleGroup: 'flexibility',
           parameters: {'sets': 2, 'holdDuration': 90, 'restBetweenSets': 30},
@@ -889,8 +889,8 @@ class MockWorkoutData {
       durationMinutes: 40,
       exercises: [
         WorkoutExercise(
-          exerciseId: 'freestyle-swimming',
-          name: 'Freestyle Swimming',
+          exerciseId: 'swimming',
+          name: 'Swimming',
           category: 'cardio',
           muscleGroup: 'cardio',
           parameters: {'duration': 20, 'distance': 1.0},
@@ -898,8 +898,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 5, 18, 30),
         ),
         WorkoutExercise(
-          exerciseId: 'backstroke',
-          name: 'Backstroke',
+          exerciseId: 'swimming',
+          name: 'Swimming',
           category: 'cardio',
           muscleGroup: 'cardio',
           parameters: {'duration': 10, 'distance': 0.5},
@@ -907,8 +907,8 @@ class MockWorkoutData {
           updatedAt: DateTime(2025, 11, 5, 18, 50),
         ),
         WorkoutExercise(
-          exerciseId: 'water-treading',
-          name: 'Water Treading',
+          exerciseId: 'swimming',
+          name: 'Swimming',
           category: 'cardio',
           muscleGroup: 'cardio',
           parameters: {'duration': 10},
