@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../l3_service/seed_data_service.dart';
 import '../l3_service/workout_service.dart';
 import '../l3_service/settings_service.dart';
@@ -21,6 +22,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _isLoadingMockData = false;
   bool _isClearingData = false;
+  bool _showDevOptions = false;
   String _weightUnit = 'kg';
   String _distanceUnit = 'km';
 
@@ -405,6 +407,21 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  /// Launch URL in external browser
+  Future<void> _launchURL(String urlString) async {
+    final url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Could not open $urlString'),
+            backgroundColor: Colors.red[700],
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -445,49 +462,68 @@ class _SettingsPageState extends State<SettingsPage> {
 
             // Data Section
             _buildSectionHeader('Data'),
-            _buildSettingsTile(
-              icon: Icons.download_outlined,
-              title: 'Export Data',
-              subtitle: 'Download your workout history',
-              onTap: () {},
-            ),
-            _buildSettingsTile(
-              icon: Icons.science_outlined,
-              title: 'Add Mock Data',
-              subtitle: 'Load sample workouts for testing',
-              onTap: _isLoadingMockData ? () {} : () => _addMockData(),
-              trailing: _isLoadingMockData
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.white70,
+            if (_showDevOptions)
+              _buildSettingsTile(
+                icon: Icons.download_outlined,
+                title: 'Export Data',
+                subtitle: 'Download your workout history',
+                onTap: () {},
+              ),
+            if (_showDevOptions)
+              _buildSettingsTile(
+                icon: Icons.science_outlined,
+                title: 'Add Mock Data',
+                subtitle: 'Load sample workouts for testing',
+                onTap: _isLoadingMockData ? () {} : () => _addMockData(),
+                trailing: _isLoadingMockData
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white70,
+                          ),
                         ),
-                      ),
-                    )
-                  : null,
-            ),
-            _buildSettingsTile(
-              icon: Icons.delete_outline,
-              title: 'Clear Data',
-              subtitle: 'Delete all workout logs',
-              onTap: _isClearingData ? () {} : () => _clearAllData(),
-              trailing: _isClearingData
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                      ),
-                    )
-                  : const Icon(
-                      Icons.warning_amber,
-                      color: Colors.orange,
-                      size: 20,
+                      )
+                    : null,
+              ),
+            GestureDetector(
+              onLongPress: () {
+                setState(() {
+                  _showDevOptions = !_showDevOptions;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      _showDevOptions
+                          ? '🔓 Developer options enabled'
+                          : '🔒 Developer options hidden',
                     ),
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              },
+              child: _buildSettingsTile(
+                icon: Icons.delete_outline,
+                title: 'Clear Data',
+                subtitle: 'Delete all workout logs',
+                onTap: _isClearingData ? () {} : () => _clearAllData(),
+                trailing: _isClearingData
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                        ),
+                      )
+                    : const Icon(
+                        Icons.warning_amber,
+                        color: Colors.orange,
+                        size: 20,
+                      ),
+              ),
             ),
 
             const SizedBox(height: 20),
@@ -498,19 +534,23 @@ class _SettingsPageState extends State<SettingsPage> {
               icon: Icons.info_outline,
               title: 'About Phil',
               subtitle: 'Version 3.0.4',
-              onTap: () {},
+              onTap: () =>
+                  _launchURL('https://landing-page-59.lovable.app/about'),
             ),
             _buildSettingsTile(
               icon: Icons.privacy_tip_outlined,
               title: 'Privacy Policy',
               subtitle: 'Read our privacy policy',
-              onTap: () {},
+              onTap: () => _launchURL(
+                'https://landing-page-59.lovable.app/privacy-policy',
+              ),
             ),
             _buildSettingsTile(
               icon: Icons.description_outlined,
-              title: 'Terms of Service',
-              subtitle: 'View terms and conditions',
-              onTap: () {},
+              title: 'EULA',
+              subtitle: 'End User License Agreement',
+              onTap: () =>
+                  _launchURL('https://landing-page-59.lovable.app/about'),
             ),
 
             const SizedBox(height: 40),
