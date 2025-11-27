@@ -59,9 +59,10 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
             .toList();
 
         if (exercises.isNotEmpty) {
+          // Use the exercise's createdAt time, not the workout's dateTime
           sessions.add(
             ExerciseSession(
-              workoutDate: workout.dateTime,
+              workoutDate: exercises.first.createdAt,
               exercises: exercises,
               workout: workout,
             ),
@@ -425,13 +426,23 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage>
               muscleGroup: exercise.muscleGroup,
               initialParameters: exercise.parameters,
               exerciseNumber: exerciseIndex + 1,
-              workoutDateTime: session.workout.dateTime,
+              workoutDateTime: exercise.createdAt,
               onDateTimeChanged: (newDateTime) async {
-                // Update workout with new datetime
+                // Update this exercise's createdAt time
+                final updatedExercise = exercise.copyWith(
+                  createdAt: newDateTime,
+                  updatedAt: DateTime.now(),
+                );
+                
+                final exercises = List<WorkoutExercise>.from(
+                  session.workout.exercises,
+                );
+                exercises[exerciseIndex] = updatedExercise;
+                
                 final updatedWorkout = Workout(
                   id: session.workout.id,
-                  dateTime: newDateTime,
-                  exercises: session.workout.exercises,
+                  dateTime: session.workout.dateTime,
+                  exercises: exercises,
                   durationMinutes: session.workout.durationMinutes,
                 );
 

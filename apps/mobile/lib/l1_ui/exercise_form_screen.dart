@@ -498,13 +498,13 @@ class _ExerciseFormScreenState extends State<ExerciseFormScreen> {
 
                         const SizedBox(height: 24),
 
-                        // Workout Date & Time Section (if editing)
+                        // Exercise Time Section (if editing)
                         if (widget.workoutDateTime != null)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Workout Date & Time',
+                                'Exercise Time',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,

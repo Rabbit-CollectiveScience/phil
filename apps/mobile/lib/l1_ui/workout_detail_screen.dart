@@ -301,22 +301,33 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
               muscleGroup: exercise.muscleGroup,
               initialParameters: exercise.parameters,
               exerciseNumber: number,
-              workoutDateTime: widget.workout.dateTime,
+              workoutDateTime: exercise.createdAt,
               onDateTimeChanged: (newDateTime) async {
-                // Update workout with new datetime
+                // Update this exercise's createdAt time
+                final updatedExercise = exercise.copyWith(
+                  createdAt: newDateTime,
+                  updatedAt: DateTime.now(),
+                );
+                
+                final exercises = List<WorkoutExercise>.from(_exercises);
+                exercises[index] = updatedExercise;
+                
                 final updatedWorkout = Workout(
                   id: widget.workout.id,
-                  dateTime: newDateTime,
-                  exercises: _exercises,
+                  dateTime: widget.workout.dateTime,
+                  exercises: exercises,
                   durationMinutes: widget.workout.durationMinutes,
                 );
 
                 await _workoutService.updateWorkout(updatedWorkout);
+                setState(() {
+                  _exercises = exercises;
+                });
 
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Workout date/time updated'),
+                      content: Text('Exercise time updated'),
                       duration: Duration(seconds: 2),
                     ),
                   );
@@ -375,6 +386,11 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                     _capitalizeFirstLetter(exercise.muscleGroup),
                     style: TextStyle(color: Colors.grey[500], fontSize: 12),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _formatTime(exercise.createdAt),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 11),
+                  ),
                   const SizedBox(height: 6),
                   Text(
                     exercise.formattedParametersWithPreferences(
@@ -420,5 +436,14 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
   String _capitalizeFirstLetter(String text) {
     if (text.isEmpty) return text;
     return text[0].toUpperCase() + text.substring(1);
+  }
+
+  String _formatTime(DateTime dateTime) {
+    final hour = dateTime.hour == 0
+        ? 12
+        : (dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour);
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final period = dateTime.hour >= 12 ? 'PM' : 'AM';
+    return '$hour:$minute $period';
   }
 }
