@@ -464,18 +464,138 @@ class _RecordPageState extends State<RecordPage>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.chat_bubble_outline,
-                              size: 80,
-                              color: Colors.grey[800],
+                            // Large microphone
+                            GestureDetector(
+                              onTap: _handleVoiceInput,
+                              child: AnimatedBuilder(
+                                animation: _pulseAnimation,
+                                builder: (context, child) {
+                                  return Transform.scale(
+                                    scale: _pulseAnimation.value,
+                                    child: Container(
+                                      width: 160,
+                                      height: 160,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: RadialGradient(
+                                          colors: [
+                                            Colors.blue.withOpacity(0.3),
+                                            Colors.blue.withOpacity(0.1),
+                                          ],
+                                        ),
+                                        border: Border.all(
+                                          color: Colors.blue,
+                                          width: 3,
+                                        ),
+                                      ),
+                                      child: const Icon(
+                                        Icons.mic,
+                                        size: 80,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Start logging your workout',
+                            
+                            const SizedBox(height: 24),
+                            
+                            // Row of three smaller icons
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Cardio
+                                GestureDetector(
+                                  onTap: _handleVoiceInput,
+                                  child: Container(
+                                    width: 70,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.blue.withOpacity(0.2),
+                                      border: Border.all(
+                                        color: Colors.blue.withOpacity(0.5),
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.directions_run,
+                                      size: 35,
+                                      color: Colors.blue.withOpacity(0.7),
+                                    ),
+                                  ),
+                                ),
+                                
+                                const SizedBox(width: 20),
+                                
+                                // Weight
+                                GestureDetector(
+                                  onTap: _handleVoiceInput,
+                                  child: Container(
+                                    width: 70,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.blue.withOpacity(0.2),
+                                      border: Border.all(
+                                        color: Colors.blue.withOpacity(0.5),
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.fitness_center,
+                                      size: 35,
+                                      color: Colors.blue.withOpacity(0.7),
+                                    ),
+                                  ),
+                                ),
+                                
+                                const SizedBox(width: 20),
+                                
+                                // Flexibility
+                                GestureDetector(
+                                  onTap: _handleVoiceInput,
+                                  child: Container(
+                                    width: 70,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.blue.withOpacity(0.2),
+                                      border: Border.all(
+                                        color: Colors.blue.withOpacity(0.5),
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.self_improvement,
+                                      size: 35,
+                                      color: Colors.blue.withOpacity(0.7),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            
+                            const SizedBox(height: 32),
+                            // Primary text
+                            const Text(
+                              'Tap to log your workout',
                               style: TextStyle(
-                                color: Colors.grey[600],
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            // Secondary text
+                            Text(
+                              'Just say what you did, I\'ll track it',
+                              style: TextStyle(
+                                color: Colors.white70,
                                 fontSize: 16,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
