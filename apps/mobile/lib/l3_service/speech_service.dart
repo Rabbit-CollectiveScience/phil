@@ -98,6 +98,7 @@ class SpeechService {
 
       // Start recording (this will trigger iOS permission dialog if needed)
       try {
+        await _recorder!.initialize();
         await _recorder!.start();
       } catch (e) {
         print('❌ Failed to start recorder: $e');
