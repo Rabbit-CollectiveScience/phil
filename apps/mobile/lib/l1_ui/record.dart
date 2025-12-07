@@ -498,9 +498,9 @@ class _RecordPageState extends State<RecordPage>
                                 },
                               ),
                             ),
-                            
+
                             const SizedBox(height: 24),
-                            
+
                             // Row of three smaller icons
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -526,9 +526,9 @@ class _RecordPageState extends State<RecordPage>
                                     ),
                                   ),
                                 ),
-                                
+
                                 const SizedBox(width: 20),
-                                
+
                                 // Weight
                                 GestureDetector(
                                   onTap: _handleVoiceInput,
@@ -550,9 +550,9 @@ class _RecordPageState extends State<RecordPage>
                                     ),
                                   ),
                                 ),
-                                
+
                                 const SizedBox(width: 20),
-                                
+
                                 // Flexibility
                                 GestureDetector(
                                   onTap: _handleVoiceInput,
@@ -576,7 +576,7 @@ class _RecordPageState extends State<RecordPage>
                                 ),
                               ],
                             ),
-                            
+
                             const SizedBox(height: 32),
                             // Primary text
                             const Text(
