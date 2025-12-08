@@ -50,6 +50,7 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
           'message': result.message,
           'timestamp': DateTime.now(),
           'success': result.success,
+          'exercise': result.exercise, // Store exercise for success cards
         });
 
         if (result.success && result.exercise != null) {
@@ -215,70 +216,181 @@ class _VoiceWorkoutLogScreenState extends State<VoiceWorkoutLogScreen> {
       itemBuilder: (context, index) {
         final message = _conversationHistory[index];
         final isUser = message['role'] == 'user';
+        final isSuccess = message['success'] == true;
 
         return Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
-          child: Row(
-            mainAxisAlignment: isUser
-                ? MainAxisAlignment.end
-                : MainAxisAlignment.start,
-            children: [
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isUser
-                        ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                        : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(16),
-                    border: message['success'] == true
-                        ? Border.all(color: Colors.green, width: 2)
-                        : null,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        message['message'],
-                        style: TextStyle(
-                          color: isUser
-                              ? Theme.of(context).primaryColor
-                              : Colors.black87,
-                        ),
-                      ),
-                      if (message['success'] == true)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 4.0),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.check_circle,
-                                size: 16,
-                                color: Colors.green,
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                'Logged successfully',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+          child: isUser
+              ? _buildUserMessage(message)
+              : isSuccess
+              ? _buildSuccessCard(message)
+              : _buildConversationBubble(message),
         );
       },
+    );
+  }
+
+  /// Build user message bubble (right-aligned, primary color)
+  Widget _buildUserMessage(Map<String, dynamic> message) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(
+              message['message'],
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Build success card for logged exercises (green with exercise details)
+  Widget _buildSuccessCard(Map<String, dynamic> message) {
+    final exercise = message['exercise'] as WorkoutExercise?;
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 320),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFE8F5E9), // Light green background
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: const Color(0xFF66BB6A), // Green border
+            width: 2,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            const Row(
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: Color(0xFF2E7D32), // Dark green
+                  size: 20,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'Exercise Logged',
+                  style: TextStyle(
+                    color: Color(0xFF1B5E20), // Darker green
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Exercise details (if available)
+            if (exercise != null) ...[
+              Text(
+                exercise.name,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                _formatExerciseParameters(exercise),
+                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+              ),
+              const SizedBox(height: 12),
+            ],
+
+            // AI message
+            Text(
+              message['message'],
+              style: const TextStyle(fontSize: 14, color: Colors.black87),
+            ),
+
+            // Quick action buttons
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                OutlinedButton.icon(
+                  onPressed: () {
+                    // TODO: Implement edit functionality
+                    print('Edit tapped');
+                  },
+                  icon: const Icon(Icons.edit, size: 16),
+                  label: const Text('Edit'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFF1976D2), // Blue
+                    side: const BorderSide(
+                      color: Color(0xFF1976D2),
+                      width: 1.5,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    // TODO: Implement delete functionality
+                    print('Delete tapped');
+                  },
+                  icon: const Icon(Icons.delete_outline, size: 16),
+                  label: const Text('Delete'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFFD32F2F), // Red
+                    side: const BorderSide(
+                      color: Color(0xFFD32F2F),
+                      width: 1.5,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build standard conversation bubble (gray, for non-success AI messages)
+  Widget _buildConversationBubble(Map<String, dynamic> message) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(
+              message['message'],
+              style: TextStyle(color: Colors.grey[800]),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -151,6 +151,7 @@ class _RecordPageState extends State<RecordPage>
           isUser: false,
           timestamp: DateTime.now(),
           isWorkoutLogged: loggedExercise != null,
+          exercise: loggedExercise,
         ),
       );
     });
@@ -901,6 +902,184 @@ class _RecordPageState extends State<RecordPage>
   }
 
   Widget _buildMessageBubble(ChatMessage message) {
+    // User messages - keep original style
+    if (message.isUser) {
+      return _buildUserBubble(message);
+    }
+
+    // AI messages with logged exercise - show green success card
+    if (message.isWorkoutLogged && message.exercise != null) {
+      return _buildSuccessCard(message);
+    }
+
+    // Regular AI conversation - standard bubble
+    return _buildConversationBubble(message);
+  }
+
+  Widget _buildUserBubble(ChatMessage message) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.blue[700],
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Text(
+                message.text,
+                style: const TextStyle(color: Colors.white, fontSize: 15),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          CircleAvatar(
+            backgroundColor: Colors.blue[700],
+            radius: 16,
+            child: const Icon(Icons.person, color: Colors.white, size: 18),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSuccessCard(ChatMessage message) {
+    final exercise = message.exercise!;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 16,
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/bot_avatar.png',
+                width: 32,
+                height: 32,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8F5E9),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF66BB6A), width: 2),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.check_circle,
+                        color: Color(0xFF2E7D32),
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'Exercise Logged',
+                        style: TextStyle(
+                          color: Color(0xFF1B5E20),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Exercise details
+                  Text(
+                    exercise.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _formatExerciseParameters(exercise),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // AI message
+                  Text(
+                    message.text,
+                    style: const TextStyle(fontSize: 14, color: Colors.black87),
+                  ),
+
+                  // Quick action buttons
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          print('Edit tapped for ${exercise.name}');
+                        },
+                        icon: const Icon(Icons.edit, size: 16),
+                        label: const Text('Edit'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF1976D2),
+                          side: const BorderSide(
+                            color: Color(0xFF1976D2),
+                            width: 1.5,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          print('Delete tapped for ${exercise.name}');
+                        },
+                        icon: const Icon(Icons.delete_outline, size: 16),
+                        label: const Text('Delete'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFFD32F2F),
+                          side: const BorderSide(
+                            color: Color(0xFFD32F2F),
+                            width: 1.5,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConversationBubble(ChatMessage message) {
     final isLastMessage = _messages.isNotEmpty && _messages.last == message;
     final showSpeakingIndicator =
         !message.isUser && isLastMessage && _chatState == ChatState.aiSpeaking;
@@ -908,31 +1087,27 @@ class _RecordPageState extends State<RecordPage>
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment: message.isUser
-            ? MainAxisAlignment.end
-            : MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!message.isUser) ...[
-            CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 16,
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/images/bot_avatar.png',
-                  width: 32,
-                  height: 32,
-                  fit: BoxFit.cover,
-                ),
+          CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 16,
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/bot_avatar.png',
+                width: 32,
+                height: 32,
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(width: 8),
-          ],
+          ),
+          const SizedBox(width: 8),
           Flexible(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: message.isUser ? Colors.blue[700] : Colors.grey[900],
+                color: Colors.grey[900],
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -959,39 +1134,6 @@ class _RecordPageState extends State<RecordPage>
                       ],
                     ],
                   ),
-                  if (message.isWorkoutLogged) ...[
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.green, width: 1),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
-                            size: 14,
-                          ),
-                          SizedBox(width: 4),
-                          Text(
-                            'Workout Logged',
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
                   const SizedBox(height: 4),
                   Text(
                     _formatTime(message.timestamp),
@@ -1004,17 +1146,35 @@ class _RecordPageState extends State<RecordPage>
               ),
             ),
           ),
-          if (message.isUser) ...[
-            const SizedBox(width: 8),
-            CircleAvatar(
-              backgroundColor: Colors.blue[700],
-              radius: 16,
-              child: const Icon(Icons.person, color: Colors.white, size: 18),
-            ),
-          ],
         ],
       ),
     );
+  }
+
+  String _formatExerciseParameters(WorkoutExercise exercise) {
+    final params = exercise.parameters;
+    final parts = <String>[];
+
+    if (params.containsKey('sets')) {
+      parts.add('${params['sets']} sets');
+    }
+    if (params.containsKey('reps')) {
+      parts.add('${params['reps']} reps');
+    }
+    if (params.containsKey('weight')) {
+      parts.add('${params['weight']}kg');
+    }
+    if (params.containsKey('duration')) {
+      parts.add('${params['duration']} min');
+    }
+    if (params.containsKey('distance')) {
+      parts.add('${params['distance']}km');
+    }
+    if (params.containsKey('holdDuration')) {
+      parts.add('${params['holdDuration']}s hold');
+    }
+
+    return parts.join(' • ');
   }
 
   Color _getButtonColor() {
@@ -1064,11 +1224,13 @@ class ChatMessage {
   final bool isUser;
   final DateTime timestamp;
   final bool isWorkoutLogged;
+  final WorkoutExercise? exercise;
 
   ChatMessage({
     required this.text,
     required this.isUser,
     required this.timestamp,
     this.isWorkoutLogged = false,
+    this.exercise,
   });
 }
