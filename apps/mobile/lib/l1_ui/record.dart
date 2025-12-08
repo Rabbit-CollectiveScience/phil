@@ -142,18 +142,33 @@ class _RecordPageState extends State<RecordPage>
     }
 
     // If we got here, processing wasn't cancelled
-    // Add AI text bubble BEFORE starting TTS
+    // Add messages: conversational bubble first, then success card if exercise logged
     setState(() {
       _chatState = ChatState.idle;
+      
+      // 1. Always add conversational response bubble
       _messages.add(
         ChatMessage(
           text: aiResponse,
           isUser: false,
           timestamp: DateTime.now(),
-          isWorkoutLogged: loggedExercise != null,
-          exercise: loggedExercise,
+          isWorkoutLogged: false, // This is just conversation
+          exercise: null,
         ),
       );
+      
+      // 2. If exercise was logged, add success card immediately after
+      if (loggedExercise != null) {
+        _messages.add(
+          ChatMessage(
+            text: '', // Success card doesn't need text, just exercise data
+            isUser: false,
+            timestamp: DateTime.now(),
+            isWorkoutLogged: true, // This triggers green card rendering
+            exercise: loggedExercise,
+          ),
+        );
+      }
     });
     _scrollToBottom();
 
@@ -909,7 +924,7 @@ class _RecordPageState extends State<RecordPage>
 
     // AI messages with logged exercise - show green success card
     if (message.isWorkoutLogged && message.exercise != null) {
-      return _buildSuccessCard(message);
+      return _buildSuccessCard(message, isFollowingConversation: true);
     }
 
     // Regular AI conversation - standard bubble
@@ -947,33 +962,25 @@ class _RecordPageState extends State<RecordPage>
     );
   }
 
-  Widget _buildSuccessCard(ChatMessage message) {
+  Widget _buildSuccessCard(ChatMessage message, {bool isFollowingConversation = false}) {
     final exercise = message.exercise!;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: EdgeInsets.only(
+        top: isFollowingConversation ? 4 : 0, // Tight spacing when following conversation
+        bottom: 16,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 16,
-            child: ClipOval(
-              child: Image.asset(
-                'assets/images/bot_avatar.png',
-                width: 32,
-                height: 32,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
+          // Invisible spacer to match avatar width + spacing (32 + 8 = 40)
+          const SizedBox(width: 40),
           Flexible(
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFFE8F5E9),
+                color: const Color(0xFFC8E6C9), // More vibrant green (was E8F5E9)
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: const Color(0xFF66BB6A), width: 2),
               ),
