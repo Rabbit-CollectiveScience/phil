@@ -5,6 +5,8 @@ import '../l3_service/tts_service.dart';
 import '../l3_service/speech_service.dart';
 import '../l2_domain/controller/workout_controller.dart';
 import '../l2_domain/models/workout_exercise.dart';
+import '../l2_domain/models/workout.dart';
+import 'exercise_form_screen.dart';
 
 // Chat state machine enum
 enum ChatState {
@@ -101,6 +103,7 @@ class _RecordPageState extends State<RecordPage>
     // Get AI response from Gemini with function calling
     String aiResponse;
     WorkoutExercise? loggedExercise;
+    String? workoutId;
 
     try {
       final response = await GeminiService.getInstance()
@@ -112,11 +115,12 @@ class _RecordPageState extends State<RecordPage>
         loggedExercise = response.result!.exercise;
         print('✅ Workout logged: ${loggedExercise?.name}');
 
-        // Save to Hive using WorkoutController directly
-        await _workoutController.addExerciseToAppropriateWorkout(
+        // Save to Hive using WorkoutController directly and capture workout reference
+        final workout = await _workoutController.addExerciseToAppropriateWorkout(
           exercise: loggedExercise!,
         );
-        print('💾 Saved to Hive: ${loggedExercise.name}');
+        workoutId = workout.id;
+        print('💾 Saved to Hive: ${loggedExercise.name} in workout ${workoutId}');
         _lastLoggedExercise = loggedExercise;
       }
 
@@ -145,7 +149,7 @@ class _RecordPageState extends State<RecordPage>
     // Add messages: conversational bubble first, then success card if exercise logged
     setState(() {
       _chatState = ChatState.idle;
-      
+
       // 1. Always add conversational response bubble
       _messages.add(
         ChatMessage(
@@ -156,7 +160,7 @@ class _RecordPageState extends State<RecordPage>
           exercise: null,
         ),
       );
-      
+
       // 2. If exercise was logged, add success card immediately after
       if (loggedExercise != null) {
         _messages.add(
@@ -166,6 +170,7 @@ class _RecordPageState extends State<RecordPage>
             timestamp: DateTime.now(),
             isWorkoutLogged: true, // This triggers green card rendering
             exercise: loggedExercise,
+            workoutId: workoutId, // Store workout reference for edit/delete
           ),
         );
       }
@@ -962,12 +967,17 @@ class _RecordPageState extends State<RecordPage>
     );
   }
 
-  Widget _buildSuccessCard(ChatMessage message, {bool isFollowingConversation = false}) {
+  Widget _buildSuccessCard(
+    ChatMessage message, {
+    bool isFollowingConversation = false,
+  }) {
     final exercise = message.exercise!;
 
     return Padding(
       padding: EdgeInsets.only(
-        top: isFollowingConversation ? 4 : 0, // Tight spacing when following conversation
+        top: isFollowingConversation
+            ? 4
+            : 0, // Tight spacing when following conversation
         bottom: 16,
       ),
       child: Row(
@@ -980,7 +990,9 @@ class _RecordPageState extends State<RecordPage>
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFFC8E6C9), // More vibrant green (was E8F5E9)
+                color: const Color(
+                  0xFFC8E6C9,
+                ), // More vibrant green (was E8F5E9)
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: const Color(0xFF66BB6A), width: 2),
               ),
@@ -1035,9 +1047,7 @@ class _RecordPageState extends State<RecordPage>
                   Row(
                     children: [
                       OutlinedButton.icon(
-                        onPressed: () {
-                          print('Edit tapped for ${exercise.name}');
-                        },
+                        onPressed: () => _handleExerciseEdit(message),
                         icon: const Icon(Icons.edit, size: 16),
                         label: const Text('Edit'),
                         style: OutlinedButton.styleFrom(
@@ -1056,9 +1066,7 @@ class _RecordPageState extends State<RecordPage>
                       ),
                       const SizedBox(width: 8),
                       OutlinedButton.icon(
-                        onPressed: () {
-                          print('Delete tapped for ${exercise.name}');
-                        },
+                        onPressed: () => _confirmDeleteExercise(message),
                         icon: const Icon(Icons.delete_outline, size: 16),
                         label: const Text('Delete'),
                         style: OutlinedButton.styleFrom(
@@ -1216,6 +1224,227 @@ class _RecordPageState extends State<RecordPage>
     return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
 
+  /// Handle exercise edit - Navigate to ExerciseFormScreen
+  void _handleExerciseEdit(ChatMessage message) {
+    final exercise = message.exercise;
+    final workoutId = message.workoutId;
+
+    if (exercise == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cannot edit: Exercise data missing')),
+      );
+      return;
+    }
+
+    if (workoutId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cannot edit older messages')),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExerciseFormScreen(
+          exerciseId: exercise.exerciseId,
+          exerciseName: exercise.name,
+          category: exercise.category,
+          muscleGroup: exercise.muscleGroup,
+          initialParameters: exercise.parameters,
+          onSave: (updatedData) => _handleExerciseSave(message, updatedData),
+          onDelete: () => _handleExerciseDelete(message),
+        ),
+      ),
+    );
+  }
+
+  /// Handle exercise save after editing
+  Future<void> _handleExerciseSave(
+    ChatMessage message,
+    Map<String, dynamic> updatedData,
+  ) async {
+    final originalExercise = message.exercise;
+    final workoutId = message.workoutId;
+
+    if (originalExercise == null || workoutId == null) return;
+
+    try {
+      // Fetch the workout
+      final workout = await _workoutController.getWorkout(workoutId);
+
+      if (workout == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Workout no longer exists')),
+          );
+        }
+        return;
+      }
+
+      // Create updated exercise
+      final updatedExercise = WorkoutExercise(
+        exerciseId: updatedData['exerciseId'],
+        name: updatedData['name'],
+        category: updatedData['category'],
+        muscleGroup: updatedData['muscleGroup'],
+        parameters: updatedData['parameters'],
+        createdAt: originalExercise.createdAt,
+        updatedAt: DateTime.now(),
+      );
+
+      // Replace in workout
+      await _workoutController.replaceExercise(
+        workout: workout,
+        oldExercise: originalExercise,
+        newExercise: updatedExercise,
+      );
+
+      // Update the message in chat
+      setState(() {
+        final messageIndex = _messages.indexOf(message);
+        if (messageIndex != -1) {
+          _messages[messageIndex] = ChatMessage(
+            text: message.text,
+            isUser: message.isUser,
+            timestamp: message.timestamp,
+            isWorkoutLogged: message.isWorkoutLogged,
+            exercise: updatedExercise,
+            workoutId: workoutId,
+          );
+        }
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('✅ Updated: ${updatedExercise.name}'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating exercise: $e')),
+        );
+      }
+    }
+  }
+
+  /// Show confirmation dialog before deleting
+  void _confirmDeleteExercise(ChatMessage message) {
+    final exercise = message.exercise;
+    if (exercise == null) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.grey[900],
+        title: const Text(
+          'Delete Exercise',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          'Remove "${exercise.name}" from your workout?',
+          style: const TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              _handleExerciseDelete(message);
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Handle exercise deletion
+  Future<void> _handleExerciseDelete(ChatMessage message) async {
+    final exercise = message.exercise;
+    final workoutId = message.workoutId;
+
+    if (exercise == null || workoutId == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cannot delete: Missing data')),
+        );
+      }
+      return;
+    }
+
+    try {
+      // Fetch the workout
+      final workout = await _workoutController.getWorkout(workoutId);
+
+      if (workout == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Workout no longer exists')),
+          );
+        }
+        return;
+      }
+
+      // Remove exercise from workout
+      final updatedExercises = workout.exercises
+          .where((ex) => ex.createdAt != exercise.createdAt)
+          .toList();
+
+      final updatedWorkout = Workout(
+        id: workout.id,
+        dateTime: workout.dateTime,
+        exercises: updatedExercises,
+        durationMinutes: workout.durationMinutes,
+      );
+
+      await _workoutController.updateWorkout(updatedWorkout);
+
+      // Find and remove both the conversation bubble and success card
+      setState(() {
+        final successCardIndex = _messages.indexOf(message);
+        
+        if (successCardIndex != -1) {
+          // Remove the success card
+          _messages.removeAt(successCardIndex);
+          
+          // Try to find and remove the conversation bubble immediately before it
+          if (successCardIndex > 0) {
+            final previousMessage = _messages[successCardIndex - 1];
+            // Check if it's a conversation bubble from same time period
+            if (!previousMessage.isUser && 
+                !previousMessage.isWorkoutLogged &&
+                message.timestamp.difference(previousMessage.timestamp).inSeconds < 2) {
+              _messages.removeAt(successCardIndex - 1);
+            }
+          }
+        }
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('🗑️ Deleted: ${exercise.name}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error deleting exercise: $e')),
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _pulseController.dispose();
@@ -1232,6 +1461,7 @@ class ChatMessage {
   final DateTime timestamp;
   final bool isWorkoutLogged;
   final WorkoutExercise? exercise;
+  final String? workoutId;
 
   ChatMessage({
     required this.text,
@@ -1239,5 +1469,6 @@ class ChatMessage {
     required this.timestamp,
     this.isWorkoutLogged = false,
     this.exercise,
+    this.workoutId,
   });
 }
