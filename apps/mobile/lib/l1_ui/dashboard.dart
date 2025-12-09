@@ -3,6 +3,7 @@ import '../l2_domain/models/workout.dart';
 import '../l3_service/workout_service.dart';
 import '../l3_service/workout_stats_service.dart';
 import 'workout_detail_screen.dart';
+import 'widgets/weekly_volume_chart.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -167,6 +168,7 @@ class DashboardPageState extends State<DashboardPage>
   Widget _buildThisWeekTab() {
     final weeklyStats = WorkoutStatsService.getWeeklyStats(_workouts);
     final thisWeekWorkouts = WorkoutStatsService.getThisWeekWorkouts(_workouts);
+    final volumeData = WorkoutStatsService.getLast7DaysVolume(_workouts);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -175,6 +177,11 @@ class DashboardPageState extends State<DashboardPage>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Weekly Volume Chart
+              WeeklyVolumeChart(dailyData: volumeData),
+
+              const SizedBox(height: 20),
+
               // This Week Stats Card
               _buildWeeklyCard(weeklyStats),
 

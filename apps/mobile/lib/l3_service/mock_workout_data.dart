@@ -10,7 +10,7 @@ class MockWorkoutData {
     // Get the most recent Monday as reference date
     final now = DateTime.now();
     final referenceDate = _getMostRecentMonday(now);
-    
+
     return _generateMockWorkouts(referenceDate, weeksBack: 10);
   }
 
@@ -23,86 +23,95 @@ class MockWorkoutData {
   }
 
   /// Generate workouts spanning the specified number of weeks
-  static List<Workout> _generateMockWorkouts(DateTime referenceDate, {required int weeksBack}) {
+  static List<Workout> _generateMockWorkouts(
+    DateTime referenceDate, {
+    required int weeksBack,
+  }) {
     final workouts = <Workout>[];
-    
+
     // Exercise library with baseline stats (starting point)
     final exerciseLibrary = _getExerciseLibrary();
-    
+
     // Training split: 5 days per week
     // Monday: Push, Tuesday: Pull, Wednesday: Legs
     // Thursday: Cardio, Friday: Upper Body, Saturday/Sunday: Rest
-    
+
     for (int week = 0; week < weeksBack; week++) {
-      final weekStart = referenceDate.subtract(Duration(days: 7 * (weeksBack - week - 1)));
-      
+      final weekStart = referenceDate.subtract(
+        Duration(days: 7 * (weeksBack - week - 1)),
+      );
+
       // Calculate progression multiplier (increases every 2 weeks)
       final progressionWeek = week ~/ 2;
-      final weightMultiplier = 1.0 + (progressionWeek * 0.05); // +5% every 2 weeks
+      final weightMultiplier =
+          1.0 + (progressionWeek * 0.05); // +5% every 2 weeks
       final repsBonus = progressionWeek; // +1 rep every 2 weeks
-      final distanceMultiplier = 1.0 + (progressionWeek * 0.03); // +3% every 2 weeks
-      
+      final distanceMultiplier =
+          1.0 + (progressionWeek * 0.03); // +3% every 2 weeks
+
       // Occasional missed day (10% chance)
       final skipMonday = week % 7 == 3;
       final skipFriday = week % 11 == 5;
-      
+
       // Monday: Push Day
       if (!skipMonday) {
         final monday = weekStart;
-        workouts.add(_createPushWorkout(
-          monday,
+        workouts.add(
+          _createPushWorkout(
+            monday,
+            exerciseLibrary,
+            weightMultiplier,
+            repsBonus,
+          ),
+        );
+      }
+
+      // Tuesday: Pull Day
+      final tuesday = weekStart.add(const Duration(days: 1));
+      workouts.add(
+        _createPullWorkout(
+          tuesday,
           exerciseLibrary,
           weightMultiplier,
           repsBonus,
-        ));
-      }
-      
-      // Tuesday: Pull Day
-      final tuesday = weekStart.add(const Duration(days: 1));
-      workouts.add(_createPullWorkout(
-        tuesday,
-        exerciseLibrary,
-        weightMultiplier,
-        repsBonus,
-      ));
-      
+        ),
+      );
+
       // Wednesday: Leg Day
       final wednesday = weekStart.add(const Duration(days: 2));
-      workouts.add(_createLegWorkout(
-        wednesday,
-        exerciseLibrary,
-        weightMultiplier,
-        repsBonus,
-      ));
-      
+      workouts.add(
+        _createLegWorkout(
+          wednesday,
+          exerciseLibrary,
+          weightMultiplier,
+          repsBonus,
+        ),
+      );
+
       // Thursday: Cardio Day
       final thursday = weekStart.add(const Duration(days: 3));
-      workouts.add(_createCardioWorkout(
-        thursday,
-        distanceMultiplier,
-      ));
-      
+      workouts.add(_createCardioWorkout(thursday, distanceMultiplier));
+
       // Friday: Upper Body + Flexibility
       if (!skipFriday) {
         final friday = weekStart.add(const Duration(days: 4));
-        workouts.add(_createUpperBodyWorkout(
-          friday,
-          exerciseLibrary,
-          weightMultiplier,
-          repsBonus,
-        ));
+        workouts.add(
+          _createUpperBodyWorkout(
+            friday,
+            exerciseLibrary,
+            weightMultiplier,
+            repsBonus,
+          ),
+        );
       }
-      
+
       // Occasional weekend cardio (every 3 weeks)
       if (week % 3 == 0) {
         final saturday = weekStart.add(const Duration(days: 5));
-        workouts.add(_createWeekendCardioWorkout(
-          saturday,
-          distanceMultiplier,
-        ));
+        workouts.add(_createWeekendCardioWorkout(saturday, distanceMultiplier));
       }
     }
-    
+
     return workouts;
   }
 
@@ -116,7 +125,7 @@ class MockWorkoutData {
       'lateral-raise': {'weight': 12.0, 'reps': 12, 'sets': 3},
       'tricep-dips': {'weight': 0.0, 'reps': 12, 'sets': 3},
       'cable-fly': {'weight': 15.0, 'reps': 12, 'sets': 3},
-      
+
       // Pull exercises
       'deadlift': {'weight': 100.0, 'reps': 5, 'sets': 4},
       'pull-ups': {'weight': 0.0, 'reps': 8, 'sets': 4},
@@ -125,7 +134,7 @@ class MockWorkoutData {
       'face-pulls': {'weight': 20.0, 'reps': 15, 'sets': 3},
       'bicep-curls': {'weight': 15.0, 'reps': 12, 'sets': 3},
       'hammer-curls': {'weight': 17.5, 'reps': 10, 'sets': 3},
-      
+
       // Leg exercises
       'squat': {'weight': 80.0, 'reps': 8, 'sets': 4},
       'leg-press': {'weight': 140.0, 'reps': 12, 'sets': 3},
@@ -133,7 +142,7 @@ class MockWorkoutData {
       'leg-curl': {'weight': 50.0, 'reps': 12, 'sets': 3},
       'leg-extension': {'weight': 55.0, 'reps': 12, 'sets': 3},
       'calf-raise': {'weight': 60.0, 'reps': 15, 'sets': 4},
-      
+
       // Cardio baselines
       'running': {'distance': 4.0, 'duration': 25},
       'cycling': {'distance': 12.0, 'duration': 30},
@@ -149,7 +158,7 @@ class MockWorkoutData {
     int repsBonus,
   ) {
     final workoutTime = date.add(const Duration(hours: 18)); // 6 PM
-    
+
     return Workout(
       id: workoutTime.millisecondsSinceEpoch.toString(),
       dateTime: workoutTime,
@@ -226,8 +235,10 @@ class MockWorkoutData {
     double weightMultiplier,
     int repsBonus,
   ) {
-    final workoutTime = date.add(const Duration(hours: 18, minutes: 30)); // 6:30 PM
-    
+    final workoutTime = date.add(
+      const Duration(hours: 18, minutes: 30),
+    ); // 6:30 PM
+
     return Workout(
       id: workoutTime.millisecondsSinceEpoch.toString(),
       dateTime: workoutTime,
@@ -314,8 +325,10 @@ class MockWorkoutData {
     double weightMultiplier,
     int repsBonus,
   ) {
-    final workoutTime = date.add(const Duration(hours: 17, minutes: 45)); // 5:45 PM
-    
+    final workoutTime = date.add(
+      const Duration(hours: 17, minutes: 45),
+    ); // 5:45 PM
+
     return Workout(
       id: workoutTime.millisecondsSinceEpoch.toString(),
       dateTime: workoutTime,
@@ -391,11 +404,11 @@ class MockWorkoutData {
     double distanceMultiplier,
   ) {
     final workoutTime = date.add(const Duration(hours: 7)); // 7 AM
-    
+
     final distance = (4.0 * distanceMultiplier).clamp(4.0, 6.5);
     final duration = (distance / 4.0 * 25).round();
     final pace = _calculatePace(distance, duration);
-    
+
     return Workout(
       id: workoutTime.millisecondsSinceEpoch.toString(),
       dateTime: workoutTime,
@@ -434,11 +447,13 @@ class MockWorkoutData {
     double weightMultiplier,
     int repsBonus,
   ) {
-    final workoutTime = date.add(const Duration(hours: 18, minutes: 15)); // 6:15 PM
-    
+    final workoutTime = date.add(
+      const Duration(hours: 18, minutes: 15),
+    ); // 6:15 PM
+
     // Use 85% of normal weight for this lighter session
     final lightWeightMultiplier = weightMultiplier * 0.85;
-    
+
     return Workout(
       id: workoutTime.millisecondsSinceEpoch.toString(),
       dateTime: workoutTime,
@@ -503,10 +518,10 @@ class MockWorkoutData {
     double distanceMultiplier,
   ) {
     final workoutTime = date.add(const Duration(hours: 8)); // 8 AM
-    
+
     final cyclingDistance = (12.0 * distanceMultiplier).clamp(12.0, 18.0);
     final cyclingDuration = (cyclingDistance / 12.0 * 30).round();
-    
+
     return Workout(
       id: workoutTime.millisecondsSinceEpoch.toString(),
       dateTime: workoutTime,
@@ -529,10 +544,7 @@ class MockWorkoutData {
           name: 'Rowing Machine',
           category: 'cardio',
           muscleGroup: 'cardio',
-          parameters: {
-            'duration': 15,
-            'distance': 3.0,
-          },
+          parameters: {'duration': 15, 'distance': 3.0},
           createdAt: workoutTime.add(Duration(minutes: cyclingDuration)),
           updatedAt: workoutTime.add(Duration(minutes: cyclingDuration)),
         ),
@@ -554,13 +566,13 @@ class MockWorkoutData {
     final baseWeight = baseline['weight'] as double;
     final baseReps = baseline['reps'] as int;
     final sets = baseline['sets'] as int;
-    
+
     // Apply progression
-    final weight = baseWeight > 0 
+    final weight = baseWeight > 0
         ? double.parse((baseWeight * weightMultiplier).toStringAsFixed(1))
         : 0.0;
     final reps = baseReps + repsBonus;
-    
+
     return WorkoutExercise(
       exerciseId: exerciseId,
       name: name,

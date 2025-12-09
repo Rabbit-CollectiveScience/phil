@@ -360,4 +360,40 @@ class WorkoutStatsService {
     if (text.isEmpty) return text;
     return text[0].toUpperCase() + text.substring(1);
   }
+
+  /// Get daily strength volume for the last 7 days
+  static List<({DateTime date, double volume})> getLast7DaysVolume(
+    List<Workout> allWorkouts,
+  ) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final result = <({DateTime date, double volume})>[];
+
+    // Generate last 7 days
+    for (int i = 6; i >= 0; i--) {
+      final date = today.subtract(Duration(days: i));
+      final nextDay = date.add(const Duration(days: 1));
+
+      // Get workouts for this specific day
+      final dayWorkouts = allWorkouts.where((workout) {
+        return workout.dateTime.isAfter(date) &&
+            workout.dateTime.isBefore(nextDay);
+      }).toList();
+
+      // Calculate total strength volume for the day
+      double totalVolume = 0.0;
+      for (final workout in dayWorkouts) {
+        for (final exercise in workout.exercises) {
+          // Only count strength exercises (exclude cardio and flexibility)
+          if (exercise.category == 'strength') {
+            totalVolume += calculateExerciseVolume(exercise);
+          }
+        }
+      }
+
+      result.add((date: date, volume: totalVolume));
+    }
+
+    return result;
+  }
 }
