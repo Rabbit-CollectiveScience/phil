@@ -168,7 +168,6 @@ class DashboardPageState extends State<DashboardPage>
   Widget _buildThisWeekTab() {
     final weeklyStats = WorkoutStatsService.getWeeklyStats(_workouts);
     final thisWeekWorkouts = WorkoutStatsService.getThisWeekWorkouts(_workouts);
-    final volumeData = WorkoutStatsService.getLast7DaysVolume(_workouts);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -178,7 +177,7 @@ class DashboardPageState extends State<DashboardPage>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Weekly Volume Chart
-              WeeklyVolumeChart(dailyData: volumeData),
+              WeeklyVolumeChart(allWorkouts: _workouts),
 
               const SizedBox(height: 20),
 
