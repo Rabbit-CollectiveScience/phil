@@ -445,7 +445,6 @@ class _RecordPageState extends State<RecordPage>
       appBar: AppBar(
         backgroundColor: const Color(0xFF3A3A3A),
         elevation: 0,
-        title: const Text('Record', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline, color: Colors.white),
@@ -486,7 +485,21 @@ class _RecordPageState extends State<RecordPage>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Large microphone
+                            const Spacer(flex: 1),
+
+                            // Main title
+                            const Text(
+                              'Ready to train?',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            const SizedBox(height: 32),
+
+                            // Pulsating coach bunny circle
                             GestureDetector(
                               onTap: _handleVoiceInput,
                               child: AnimatedBuilder(
@@ -510,10 +523,11 @@ class _RecordPageState extends State<RecordPage>
                                           width: 3,
                                         ),
                                       ),
-                                      child: const Icon(
-                                        Icons.mic,
-                                        size: 80,
-                                        color: Colors.blue,
+                                      child: ClipOval(
+                                        child: Image.asset(
+                                          'assets/images/coach_bunny.png',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   );
@@ -523,7 +537,20 @@ class _RecordPageState extends State<RecordPage>
 
                             const SizedBox(height: 24),
 
-                            // Row of three smaller icons
+                            // Subtitle (moved before category bubbles)
+                            const Text(
+                              'Tap mic to start logging',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            // Row of three smaller category icons
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -600,25 +627,31 @@ class _RecordPageState extends State<RecordPage>
                             ),
 
                             const SizedBox(height: 32),
-                            // Primary text
-                            const Text(
-                              'Tap to log your workout',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+
+                            // Example prompts
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  _buildExamplePrompt(
+                                    '💬 "3 sets of bench press at 60kg"',
+                                  ),
+                                  const SizedBox(height: 8),
+                                  _buildExamplePrompt(
+                                    '💬 "Ran 5km in 30 minutes"',
+                                  ),
+                                  const SizedBox(height: 8),
+                                  _buildExamplePrompt(
+                                    '💬 "Yoga for 20 minutes"',
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 12),
-                            // Secondary text
-                            Text(
-                              'Just say what you did, I\'ll track it',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 16,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
+
+                            const Spacer(flex: 3),
                           ],
                         ),
                       )
@@ -1562,6 +1595,18 @@ class _RecordPageState extends State<RecordPage>
     _scrollController.dispose();
     _speechService.dispose();
     super.dispose();
+  }
+
+  Widget _buildExamplePrompt(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 13,
+        fontStyle: FontStyle.italic,
+      ),
+      textAlign: TextAlign.center,
+    );
   }
 }
 
