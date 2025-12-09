@@ -1,986 +1,587 @@
 import '../l2_domain/models/workout.dart';
 import '../l2_domain/models/workout_exercise.dart';
 
-/// Mock workout data with 4 weeks of comprehensive training
+/// Mock workout data with 10 weeks of progressive training
 /// Covers all muscle groups, cardio, and flexibility
 /// All weights in kg and distances in km (base units)
+/// Data is dynamically generated from the most recent Monday
 class MockWorkoutData {
-  static final List<Workout> mockWorkouts = [
-    // === WEEK 4 (Current Week: Nov 25-27) ===
+  static List<Workout> get mockWorkouts {
+    // Get the most recent Monday as reference date
+    final now = DateTime.now();
+    final referenceDate = _getMostRecentMonday(now);
+    
+    return _generateMockWorkouts(referenceDate, weeksBack: 10);
+  }
 
-    // Morning Run - Nov 27, 2025
-    Workout(
-      id: '1732691400000', // Nov 27, 2025 6:30
-      dateTime: DateTime(2025, 11, 27, 6, 30),
-      durationMinutes: 35,
+  /// Get the most recent Monday (today if Monday, or previous Monday)
+  static DateTime _getMostRecentMonday(DateTime date) {
+    final weekday = date.weekday; // Monday = 1, Sunday = 7
+    final daysToSubtract = weekday == DateTime.monday ? 0 : weekday - 1;
+    final monday = date.subtract(Duration(days: daysToSubtract));
+    return DateTime(monday.year, monday.month, monday.day);
+  }
+
+  /// Generate workouts spanning the specified number of weeks
+  static List<Workout> _generateMockWorkouts(DateTime referenceDate, {required int weeksBack}) {
+    final workouts = <Workout>[];
+    
+    // Exercise library with baseline stats (starting point)
+    final exerciseLibrary = _getExerciseLibrary();
+    
+    // Training split: 5 days per week
+    // Monday: Push, Tuesday: Pull, Wednesday: Legs
+    // Thursday: Cardio, Friday: Upper Body, Saturday/Sunday: Rest
+    
+    for (int week = 0; week < weeksBack; week++) {
+      final weekStart = referenceDate.subtract(Duration(days: 7 * (weeksBack - week - 1)));
+      
+      // Calculate progression multiplier (increases every 2 weeks)
+      final progressionWeek = week ~/ 2;
+      final weightMultiplier = 1.0 + (progressionWeek * 0.05); // +5% every 2 weeks
+      final repsBonus = progressionWeek; // +1 rep every 2 weeks
+      final distanceMultiplier = 1.0 + (progressionWeek * 0.03); // +3% every 2 weeks
+      
+      // Occasional missed day (10% chance)
+      final skipMonday = week % 7 == 3;
+      final skipFriday = week % 11 == 5;
+      
+      // Monday: Push Day
+      if (!skipMonday) {
+        final monday = weekStart;
+        workouts.add(_createPushWorkout(
+          monday,
+          exerciseLibrary,
+          weightMultiplier,
+          repsBonus,
+        ));
+      }
+      
+      // Tuesday: Pull Day
+      final tuesday = weekStart.add(const Duration(days: 1));
+      workouts.add(_createPullWorkout(
+        tuesday,
+        exerciseLibrary,
+        weightMultiplier,
+        repsBonus,
+      ));
+      
+      // Wednesday: Leg Day
+      final wednesday = weekStart.add(const Duration(days: 2));
+      workouts.add(_createLegWorkout(
+        wednesday,
+        exerciseLibrary,
+        weightMultiplier,
+        repsBonus,
+      ));
+      
+      // Thursday: Cardio Day
+      final thursday = weekStart.add(const Duration(days: 3));
+      workouts.add(_createCardioWorkout(
+        thursday,
+        distanceMultiplier,
+      ));
+      
+      // Friday: Upper Body + Flexibility
+      if (!skipFriday) {
+        final friday = weekStart.add(const Duration(days: 4));
+        workouts.add(_createUpperBodyWorkout(
+          friday,
+          exerciseLibrary,
+          weightMultiplier,
+          repsBonus,
+        ));
+      }
+      
+      // Occasional weekend cardio (every 3 weeks)
+      if (week % 3 == 0) {
+        final saturday = weekStart.add(const Duration(days: 5));
+        workouts.add(_createWeekendCardioWorkout(
+          saturday,
+          distanceMultiplier,
+        ));
+      }
+    }
+    
+    return workouts;
+  }
+
+  /// Exercise library with baseline parameters
+  static Map<String, Map<String, dynamic>> _getExerciseLibrary() {
+    return {
+      // Push exercises
+      'bench-press': {'weight': 60.0, 'reps': 8, 'sets': 4},
+      'incline-db-press': {'weight': 25.0, 'reps': 10, 'sets': 3},
+      'overhead-press': {'weight': 40.0, 'reps': 8, 'sets': 4},
+      'lateral-raise': {'weight': 12.0, 'reps': 12, 'sets': 3},
+      'tricep-dips': {'weight': 0.0, 'reps': 12, 'sets': 3},
+      'cable-fly': {'weight': 15.0, 'reps': 12, 'sets': 3},
+      
+      // Pull exercises
+      'deadlift': {'weight': 100.0, 'reps': 5, 'sets': 4},
+      'pull-ups': {'weight': 0.0, 'reps': 8, 'sets': 4},
+      'barbell-row': {'weight': 70.0, 'reps': 8, 'sets': 4},
+      'lat-pulldown': {'weight': 60.0, 'reps': 10, 'sets': 3},
+      'face-pulls': {'weight': 20.0, 'reps': 15, 'sets': 3},
+      'bicep-curls': {'weight': 15.0, 'reps': 12, 'sets': 3},
+      'hammer-curls': {'weight': 17.5, 'reps': 10, 'sets': 3},
+      
+      // Leg exercises
+      'squat': {'weight': 80.0, 'reps': 8, 'sets': 4},
+      'leg-press': {'weight': 140.0, 'reps': 12, 'sets': 3},
+      'romanian-deadlift': {'weight': 70.0, 'reps': 10, 'sets': 3},
+      'leg-curl': {'weight': 50.0, 'reps': 12, 'sets': 3},
+      'leg-extension': {'weight': 55.0, 'reps': 12, 'sets': 3},
+      'calf-raise': {'weight': 60.0, 'reps': 15, 'sets': 4},
+      
+      // Cardio baselines
+      'running': {'distance': 4.0, 'duration': 25},
+      'cycling': {'distance': 12.0, 'duration': 30},
+      'rowing': {'distance': 3.0, 'duration': 15},
+    };
+  }
+
+  /// Create Push Day workout (Chest, Shoulders, Triceps)
+  static Workout _createPushWorkout(
+    DateTime date,
+    Map<String, Map<String, dynamic>> library,
+    double weightMultiplier,
+    int repsBonus,
+  ) {
+    final workoutTime = date.add(const Duration(hours: 18)); // 6 PM
+    
+    return Workout(
+      id: workoutTime.millisecondsSinceEpoch.toString(),
+      dateTime: workoutTime,
+      durationMinutes: 65,
+      exercises: [
+        _createExercise(
+          'barbell-bench-press',
+          'Barbell Bench Press',
+          'strength',
+          'chest',
+          library['bench-press']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime,
+        ),
+        _createExercise(
+          'incline-dumbbell-press',
+          'Incline Dumbbell Press',
+          'strength',
+          'chest',
+          library['incline-db-press']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 12)),
+        ),
+        _createExercise(
+          'overhead-press',
+          'Overhead Press',
+          'strength',
+          'shoulders',
+          library['overhead-press']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 25)),
+        ),
+        _createExercise(
+          'lateral-raise',
+          'Lateral Raise',
+          'strength',
+          'shoulders',
+          library['lateral-raise']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 38)),
+        ),
+        _createExercise(
+          'cable-chest-fly',
+          'Cable Chest Fly',
+          'strength',
+          'chest',
+          library['cable-fly']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 48)),
+        ),
+        _createExercise(
+          'tricep-dips',
+          'Tricep Dips',
+          'strength',
+          'arms',
+          library['tricep-dips']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 58)),
+        ),
+      ],
+    );
+  }
+
+  /// Create Pull Day workout (Back, Biceps)
+  static Workout _createPullWorkout(
+    DateTime date,
+    Map<String, Map<String, dynamic>> library,
+    double weightMultiplier,
+    int repsBonus,
+  ) {
+    final workoutTime = date.add(const Duration(hours: 18, minutes: 30)); // 6:30 PM
+    
+    return Workout(
+      id: workoutTime.millisecondsSinceEpoch.toString(),
+      dateTime: workoutTime,
+      durationMinutes: 70,
+      exercises: [
+        _createExercise(
+          'deadlift',
+          'Deadlift',
+          'strength',
+          'back',
+          library['deadlift']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime,
+        ),
+        _createExercise(
+          'pull-ups',
+          'Pull Ups',
+          'strength',
+          'back',
+          library['pull-ups']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 15)),
+        ),
+        _createExercise(
+          'barbell-row',
+          'Barbell Row',
+          'strength',
+          'back',
+          library['barbell-row']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 28)),
+        ),
+        _createExercise(
+          'lat-pulldown',
+          'Lat Pulldown',
+          'strength',
+          'back',
+          library['lat-pulldown']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 40)),
+        ),
+        _createExercise(
+          'face-pulls',
+          'Face Pulls',
+          'strength',
+          'shoulders',
+          library['face-pulls']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 50)),
+        ),
+        _createExercise(
+          'barbell-curl',
+          'Barbell Curl',
+          'strength',
+          'arms',
+          library['bicep-curls']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 58)),
+        ),
+        _createExercise(
+          'hammer-curls',
+          'Hammer Curls',
+          'strength',
+          'arms',
+          library['hammer-curls']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 65)),
+        ),
+      ],
+    );
+  }
+
+  /// Create Leg Day workout
+  static Workout _createLegWorkout(
+    DateTime date,
+    Map<String, Map<String, dynamic>> library,
+    double weightMultiplier,
+    int repsBonus,
+  ) {
+    final workoutTime = date.add(const Duration(hours: 17, minutes: 45)); // 5:45 PM
+    
+    return Workout(
+      id: workoutTime.millisecondsSinceEpoch.toString(),
+      dateTime: workoutTime,
+      durationMinutes: 75,
+      exercises: [
+        _createExercise(
+          'barbell-squat',
+          'Barbell Squat',
+          'strength',
+          'legs',
+          library['squat']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime,
+        ),
+        _createExercise(
+          'leg-press',
+          'Leg Press',
+          'strength',
+          'legs',
+          library['leg-press']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 15)),
+        ),
+        _createExercise(
+          'romanian-deadlift',
+          'Romanian Deadlift',
+          'strength',
+          'legs',
+          library['romanian-deadlift']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 28)),
+        ),
+        _createExercise(
+          'leg-curl',
+          'Leg Curl',
+          'strength',
+          'legs',
+          library['leg-curl']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 40)),
+        ),
+        _createExercise(
+          'leg-extension',
+          'Leg Extension',
+          'strength',
+          'legs',
+          library['leg-extension']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 50)),
+        ),
+        _createExercise(
+          'calf-raise',
+          'Calf Raise',
+          'strength',
+          'legs',
+          library['calf-raise']!,
+          weightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 60)),
+        ),
+      ],
+    );
+  }
+
+  /// Create Cardio Day workout
+  static Workout _createCardioWorkout(
+    DateTime date,
+    double distanceMultiplier,
+  ) {
+    final workoutTime = date.add(const Duration(hours: 7)); // 7 AM
+    
+    final distance = (4.0 * distanceMultiplier).clamp(4.0, 6.5);
+    final duration = (distance / 4.0 * 25).round();
+    final pace = _calculatePace(distance, duration);
+    
+    return Workout(
+      id: workoutTime.millisecondsSinceEpoch.toString(),
+      dateTime: workoutTime,
+      durationMinutes: duration + 10,
       exercises: [
         WorkoutExercise(
           exerciseId: 'running',
           name: 'Running',
           category: 'cardio',
           muscleGroup: 'cardio',
-          parameters: {'duration': 25, 'distance': 4.5, 'pace': '5:33'},
-          createdAt: DateTime(2025, 11, 27, 6, 30),
-          updatedAt: DateTime(2025, 11, 27, 6, 30),
+          parameters: {
+            'duration': duration,
+            'distance': double.parse(distance.toStringAsFixed(1)),
+            'pace': pace,
+          },
+          createdAt: workoutTime,
+          updatedAt: workoutTime,
         ),
         WorkoutExercise(
-          exerciseId: 'stair-climber',
-          name: 'Stair Climber',
-          category: 'cardio',
-          muscleGroup: 'cardio',
+          exerciseId: 'stretching',
+          name: 'Post-Run Stretching',
+          category: 'flexibility',
+          muscleGroup: 'flexibility',
           parameters: {'duration': 10},
-          createdAt: DateTime(2025, 11, 27, 6, 55),
-          updatedAt: DateTime(2025, 11, 27, 6, 55),
+          createdAt: workoutTime.add(Duration(minutes: duration)),
+          updatedAt: workoutTime.add(Duration(minutes: duration)),
         ),
       ],
-    ),
+    );
+  }
 
-    // Push Day - Nov 27, 2025
-    Workout(
-      id: '1732720200000', // Nov 27, 2025 14:30
-      dateTime: DateTime(2025, 11, 27, 14, 30),
+  /// Create Upper Body workout (lighter, with flexibility)
+  static Workout _createUpperBodyWorkout(
+    DateTime date,
+    Map<String, Map<String, dynamic>> library,
+    double weightMultiplier,
+    int repsBonus,
+  ) {
+    final workoutTime = date.add(const Duration(hours: 18, minutes: 15)); // 6:15 PM
+    
+    // Use 85% of normal weight for this lighter session
+    final lightWeightMultiplier = weightMultiplier * 0.85;
+    
+    return Workout(
+      id: workoutTime.millisecondsSinceEpoch.toString(),
+      dateTime: workoutTime,
       durationMinutes: 55,
       exercises: [
-        WorkoutExercise(
-          exerciseId: 'barbell-bench-press',
-          name: 'Barbell Bench Press',
-          category: 'strength',
-          muscleGroup: 'chest',
-          parameters: {
-            'sets': 4,
-            'reps': 8,
-            'weight': 85.0,
-            'restBetweenSets': 120,
-          },
-          createdAt: DateTime(2025, 11, 27, 14, 30),
-          updatedAt: DateTime(2025, 11, 27, 14, 30),
+        _createExercise(
+          'incline-dumbbell-press',
+          'Incline Dumbbell Press',
+          'strength',
+          'chest',
+          library['incline-db-press']!,
+          lightWeightMultiplier,
+          repsBonus,
+          workoutTime,
+        ),
+        _createExercise(
+          'lat-pulldown',
+          'Lat Pulldown',
+          'strength',
+          'back',
+          library['lat-pulldown']!,
+          lightWeightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 12)),
+        ),
+        _createExercise(
+          'lateral-raise',
+          'Lateral Raise',
+          'strength',
+          'shoulders',
+          library['lateral-raise']!,
+          lightWeightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 22)),
+        ),
+        _createExercise(
+          'barbell-curl',
+          'Barbell Curl',
+          'strength',
+          'arms',
+          library['bicep-curls']!,
+          lightWeightMultiplier,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 32)),
         ),
         WorkoutExercise(
-          exerciseId: 'incline-dumbbell-bench-press',
-          name: 'Incline Dumbbell Bench Press',
-          category: 'strength',
-          muscleGroup: 'chest',
-          parameters: {
-            'sets': 3,
-            'reps': 10,
-            'weight': 30.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 27, 14, 45),
-          updatedAt: DateTime(2025, 11, 27, 14, 45),
-        ),
-        WorkoutExercise(
-          exerciseId: 'dumbbell-shoulder-press',
-          name: 'Dumbbell Shoulder Press',
-          category: 'strength',
-          muscleGroup: 'shoulders',
-          parameters: {
-            'sets': 4,
-            'reps': 10,
-            'weight': 24.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 27, 15, 0),
-          updatedAt: DateTime(2025, 11, 27, 15, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'lateral-raise',
-          name: 'Lateral Raise',
-          category: 'strength',
-          muscleGroup: 'shoulders',
-          parameters: {
-            'sets': 3,
-            'reps': 15,
-            'weight': 10.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 27, 15, 12),
-          updatedAt: DateTime(2025, 11, 27, 15, 12),
-        ),
-        WorkoutExercise(
-          exerciseId: 'tricep-dip',
-          name: 'Tricep Dips',
-          category: 'strength',
-          muscleGroup: 'arms',
-          parameters: {
-            'sets': 3,
-            'reps': 12,
-            'bodyweight': true,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 27, 15, 20),
-          updatedAt: DateTime(2025, 11, 27, 15, 20),
-        ),
-      ],
-    ),
-
-    // Yoga & Flexibility - Nov 26, 2025
-    Workout(
-      id: '1732631400000', // Nov 26, 2025 18:30
-      dateTime: DateTime(2025, 11, 26, 18, 30),
-      durationMinutes: 40,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'downward-dog',
-          name: 'Downward Dog',
+          exerciseId: 'yoga-flow',
+          name: 'Yoga Flow',
           category: 'flexibility',
           muscleGroup: 'flexibility',
-          parameters: {'duration': 25, 'style': 'Vinyasa'},
-          createdAt: DateTime(2025, 11, 26, 18, 30),
-          updatedAt: DateTime(2025, 11, 26, 18, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'pigeon-pose',
-          name: 'Pigeon Pose',
-          category: 'flexibility',
-          muscleGroup: 'flexibility',
-          parameters: {'sets': 2, 'holdDuration': 90, 'restBetweenSets': 30},
-          createdAt: DateTime(2025, 11, 26, 18, 55),
-          updatedAt: DateTime(2025, 11, 26, 18, 55),
-        ),
-        WorkoutExercise(
-          exerciseId: 'seated-forward-fold',
-          name: 'Seated Forward Fold',
-          category: 'flexibility',
-          muscleGroup: 'flexibility',
-          parameters: {'sets': 2, 'holdDuration': 60, 'restBetweenSets': 30},
-          createdAt: DateTime(2025, 11, 26, 19, 0),
-          updatedAt: DateTime(2025, 11, 26, 19, 0),
+          parameters: {'duration': 15},
+          createdAt: workoutTime.add(const Duration(minutes: 40)),
+          updatedAt: workoutTime.add(const Duration(minutes: 40)),
         ),
       ],
-    ),
+    );
+  }
 
-    // Pull Day - Nov 25, 2025
-    Workout(
-      id: '1732536600000', // Nov 25, 2025 10:30
-      dateTime: DateTime(2025, 11, 25, 10, 30),
-      durationMinutes: 50,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'deadlift',
-          name: 'Deadlift',
-          category: 'strength',
-          muscleGroup: 'back',
-          parameters: {
-            'sets': 4,
-            'reps': 6,
-            'weight': 130.0,
-            'restBetweenSets': 180,
-          },
-          createdAt: DateTime(2025, 11, 25, 10, 30),
-          updatedAt: DateTime(2025, 11, 25, 10, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'pull-up',
-          name: 'Pull-ups',
-          category: 'strength',
-          muscleGroup: 'back',
-          parameters: {
-            'sets': 4,
-            'reps': 10,
-            'bodyweight': true,
-            'restBetweenSets': 120,
-          },
-          createdAt: DateTime(2025, 11, 25, 10, 45),
-          updatedAt: DateTime(2025, 11, 25, 10, 45),
-        ),
-        WorkoutExercise(
-          exerciseId: 'barbell-row',
-          name: 'Barbell Row',
-          category: 'strength',
-          muscleGroup: 'back',
-          parameters: {
-            'sets': 3,
-            'reps': 10,
-            'weight': 75.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 25, 11, 0),
-          updatedAt: DateTime(2025, 11, 25, 11, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'barbell-curl',
-          name: 'Barbell Curl',
-          category: 'strength',
-          muscleGroup: 'arms',
-          parameters: {
-            'sets': 3,
-            'reps': 12,
-            'weight': 35.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 25, 11, 12),
-          updatedAt: DateTime(2025, 11, 25, 11, 12),
-        ),
-      ],
-    ),
-
-    // === WEEK 3 (Nov 18-24) ===
-
-    // Cycling - Nov 24, 2025
-    Workout(
-      id: '1732459200000', // Nov 24, 2025 8:00
-      dateTime: DateTime(2025, 11, 24, 8, 0),
-      durationMinutes: 40,
+  /// Create weekend cardio workout
+  static Workout _createWeekendCardioWorkout(
+    DateTime date,
+    double distanceMultiplier,
+  ) {
+    final workoutTime = date.add(const Duration(hours: 8)); // 8 AM
+    
+    final cyclingDistance = (12.0 * distanceMultiplier).clamp(12.0, 18.0);
+    final cyclingDuration = (cyclingDistance / 12.0 * 30).round();
+    
+    return Workout(
+      id: workoutTime.millisecondsSinceEpoch.toString(),
+      dateTime: workoutTime,
+      durationMinutes: cyclingDuration + 15,
       exercises: [
         WorkoutExercise(
           exerciseId: 'cycling',
           name: 'Cycling',
           category: 'cardio',
           muscleGroup: 'cardio',
-          parameters: {'duration': 40, 'distance': 15.0},
-          createdAt: DateTime(2025, 11, 24, 8, 0),
-          updatedAt: DateTime(2025, 11, 24, 8, 0),
-        ),
-      ],
-    ),
-
-    // HIIT Cardio - Nov 23, 2025
-    Workout(
-      id: '1732369800000', // Nov 23, 2025 16:30
-      dateTime: DateTime(2025, 11, 23, 16, 30),
-      durationMinutes: 30,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'burpee',
-          name: 'Burpees',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'sets': 5, 'reps': 15, 'restBetweenSets': 45},
-          createdAt: DateTime(2025, 11, 23, 16, 30),
-          updatedAt: DateTime(2025, 11, 23, 16, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'jump-rope',
-          name: 'Jump Rope',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'sets': 5, 'duration': 2, 'restBetweenSets': 30},
-          createdAt: DateTime(2025, 11, 23, 16, 40),
-          updatedAt: DateTime(2025, 11, 23, 16, 40),
-        ),
-        WorkoutExercise(
-          exerciseId: 'mountain-climber',
-          name: 'Mountain Climbers',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'sets': 4, 'reps': 30, 'restBetweenSets': 45},
-          createdAt: DateTime(2025, 11, 23, 16, 50),
-          updatedAt: DateTime(2025, 11, 23, 16, 50),
-        ),
-      ],
-    ),
-
-    // Leg Day - Nov 21, 2025
-    Workout(
-      id: '1732199400000', // Nov 21, 2025 9:30
-      dateTime: DateTime(2025, 11, 21, 9, 30),
-      durationMinutes: 60,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'barbell-squat',
-          name: 'Barbell Squat',
-          category: 'strength',
-          muscleGroup: 'legs',
           parameters: {
-            'sets': 4,
-            'reps': 8,
-            'weight': 105.0,
-            'restBetweenSets': 150,
+            'duration': cyclingDuration,
+            'distance': double.parse(cyclingDistance.toStringAsFixed(1)),
           },
-          createdAt: DateTime(2025, 11, 21, 9, 30),
-          updatedAt: DateTime(2025, 11, 21, 9, 30),
+          createdAt: workoutTime,
+          updatedAt: workoutTime,
         ),
-        WorkoutExercise(
-          exerciseId: 'romanian-deadlift',
-          name: 'Romanian Deadlift',
-          category: 'strength',
-          muscleGroup: 'legs',
-          parameters: {
-            'sets': 3,
-            'reps': 10,
-            'weight': 85.0,
-            'restBetweenSets': 120,
-          },
-          createdAt: DateTime(2025, 11, 21, 9, 45),
-          updatedAt: DateTime(2025, 11, 21, 9, 45),
-        ),
-        WorkoutExercise(
-          exerciseId: 'leg-press',
-          name: 'Leg Press',
-          category: 'strength',
-          muscleGroup: 'legs',
-          parameters: {
-            'sets': 3,
-            'reps': 12,
-            'weight': 150.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 21, 10, 0),
-          updatedAt: DateTime(2025, 11, 21, 10, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'leg-curl',
-          name: 'Leg Curl',
-          category: 'strength',
-          muscleGroup: 'legs',
-          parameters: {
-            'sets': 3,
-            'reps': 12,
-            'weight': 45.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 21, 10, 15),
-          updatedAt: DateTime(2025, 11, 21, 10, 15),
-        ),
-        WorkoutExercise(
-          exerciseId: 'standing-calf-raise',
-          name: 'Standing Calf Raise',
-          category: 'strength',
-          muscleGroup: 'legs',
-          parameters: {
-            'sets': 4,
-            'reps': 15,
-            'weight': 65.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 21, 10, 25),
-          updatedAt: DateTime(2025, 11, 21, 10, 25),
-        ),
-      ],
-    ),
-
-    // Upper Body - Nov 19, 2025
-    Workout(
-      id: '1732023000000', // Nov 19, 2025 15:30
-      dateTime: DateTime(2025, 11, 19, 15, 30),
-      durationMinutes: 52,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'overhead-press-machine',
-          name: 'Overhead Press Machine',
-          category: 'strength',
-          muscleGroup: 'shoulders',
-          parameters: {
-            'sets': 4,
-            'reps': 8,
-            'weight': 50.0,
-            'restBetweenSets': 120,
-          },
-          createdAt: DateTime(2025, 11, 19, 15, 30),
-          updatedAt: DateTime(2025, 11, 19, 15, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'dumbbell-bench-press',
-          name: 'Dumbbell Bench Press',
-          category: 'strength',
-          muscleGroup: 'chest',
-          parameters: {
-            'sets': 3,
-            'reps': 10,
-            'weight': 32.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 19, 15, 45),
-          updatedAt: DateTime(2025, 11, 19, 15, 45),
-        ),
-        WorkoutExercise(
-          exerciseId: 'cable-row',
-          name: 'Cable Row',
-          category: 'strength',
-          muscleGroup: 'back',
-          parameters: {
-            'sets': 3,
-            'reps': 12,
-            'weight': 60.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 19, 16, 0),
-          updatedAt: DateTime(2025, 11, 19, 16, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'hammer-curl',
-          name: 'Hammer Curl',
-          category: 'strength',
-          muscleGroup: 'arms',
-          parameters: {
-            'sets': 3,
-            'reps': 12,
-            'weight': 18.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 19, 16, 12),
-          updatedAt: DateTime(2025, 11, 19, 16, 12),
-        ),
-      ],
-    ),
-
-    // Stretching & Mobility - Nov 18, 2025
-    Workout(
-      id: '1731938400000', // Nov 18, 2025 11:00
-      dateTime: DateTime(2025, 11, 18, 11, 0),
-      durationMinutes: 35,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'leg-raise',
-          name: 'Leg Raise',
-          category: 'flexibility',
-          muscleGroup: 'flexibility',
-          parameters: {'duration': 15},
-          createdAt: DateTime(2025, 11, 18, 11, 0),
-          updatedAt: DateTime(2025, 11, 18, 11, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'hip-flexor-stretch',
-          name: 'Hip Flexor Stretch',
-          category: 'flexibility',
-          muscleGroup: 'flexibility',
-          parameters: {'sets': 2, 'holdDuration': 60, 'restBetweenSets': 30},
-          createdAt: DateTime(2025, 11, 18, 11, 15),
-          updatedAt: DateTime(2025, 11, 18, 11, 15),
-        ),
-        WorkoutExercise(
-          exerciseId: 'shoulder-stretch',
-          name: 'Shoulder Stretch',
-          category: 'flexibility',
-          muscleGroup: 'flexibility',
-          parameters: {'sets': 3, 'reps': 10, 'restBetweenSets': 45},
-          createdAt: DateTime(2025, 11, 18, 11, 20),
-          updatedAt: DateTime(2025, 11, 18, 11, 20),
-        ),
-      ],
-    ),
-
-    // === WEEK 2 (Nov 11-17) ===
-
-    // Rowing & Cardio - Nov 17, 2025
-    Workout(
-      id: '1731855000000', // Nov 17, 2025 9:30
-      dateTime: DateTime(2025, 11, 17, 9, 30),
-      durationMinutes: 30,
-      exercises: [
         WorkoutExercise(
           exerciseId: 'rowing-machine',
           name: 'Rowing Machine',
           category: 'cardio',
           muscleGroup: 'cardio',
-          parameters: {'duration': 20, 'distance': 4.0},
-          createdAt: DateTime(2025, 11, 17, 9, 30),
-          updatedAt: DateTime(2025, 11, 17, 9, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'elliptical',
-          name: 'Elliptical',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'duration': 10},
-          createdAt: DateTime(2025, 11, 17, 9, 50),
-          updatedAt: DateTime(2025, 11, 17, 9, 50),
+          parameters: {
+            'duration': 15,
+            'distance': 3.0,
+          },
+          createdAt: workoutTime.add(Duration(minutes: cyclingDuration)),
+          updatedAt: workoutTime.add(Duration(minutes: cyclingDuration)),
         ),
       ],
-    ),
+    );
+  }
 
-    // Core & Abs - Nov 16, 2025
-    Workout(
-      id: '1731768600000', // Nov 16, 2025 13:30
-      dateTime: DateTime(2025, 11, 16, 13, 30),
-      durationMinutes: 30,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'plank',
-          name: 'Plank',
-          category: 'strength',
-          muscleGroup: 'core',
-          parameters: {'sets': 4, 'holdDuration': 60, 'restBetweenSets': 45},
-          createdAt: DateTime(2025, 11, 16, 13, 30),
-          updatedAt: DateTime(2025, 11, 16, 13, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'russian-twist',
-          name: 'Russian Twist',
-          category: 'strength',
-          muscleGroup: 'core',
-          parameters: {
-            'sets': 3,
-            'reps': 25,
-            'weight': 12.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 16, 13, 40),
-          updatedAt: DateTime(2025, 11, 16, 13, 40),
-        ),
-        WorkoutExercise(
-          exerciseId: 'hanging-leg-raise',
-          name: 'Hanging Leg Raise',
-          category: 'strength',
-          muscleGroup: 'core',
-          parameters: {
-            'sets': 3,
-            'reps': 15,
-            'bodyweight': true,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 16, 13, 50),
-          updatedAt: DateTime(2025, 11, 16, 13, 50),
-        ),
-        WorkoutExercise(
-          exerciseId: 'bicycle-crunch',
-          name: 'Bicycle Crunch',
-          category: 'strength',
-          muscleGroup: 'core',
-          parameters: {'sets': 3, 'reps': 30, 'restBetweenSets': 60},
-          createdAt: DateTime(2025, 11, 16, 14, 0),
-          updatedAt: DateTime(2025, 11, 16, 14, 0),
-        ),
-      ],
-    ),
+  /// Helper to create a strength exercise with progression
+  static WorkoutExercise _createExercise(
+    String exerciseId,
+    String name,
+    String category,
+    String muscleGroup,
+    Map<String, dynamic> baseline,
+    double weightMultiplier,
+    int repsBonus,
+    DateTime timestamp,
+  ) {
+    final baseWeight = baseline['weight'] as double;
+    final baseReps = baseline['reps'] as int;
+    final sets = baseline['sets'] as int;
+    
+    // Apply progression
+    final weight = baseWeight > 0 
+        ? double.parse((baseWeight * weightMultiplier).toStringAsFixed(1))
+        : 0.0;
+    final reps = baseReps + repsBonus;
+    
+    return WorkoutExercise(
+      exerciseId: exerciseId,
+      name: name,
+      category: category,
+      muscleGroup: muscleGroup,
+      parameters: {
+        'sets': sets,
+        'reps': reps,
+        if (weight > 0) 'weight': weight,
+        'restBetweenSets': 90,
+      },
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    );
+  }
 
-    // Running & Cardio - Nov 14, 2025
-    Workout(
-      id: '1731595200000', // Nov 14, 2025 17:00
-      dateTime: DateTime(2025, 11, 14, 17, 0),
-      durationMinutes: 45,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'running',
-          name: 'Running',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'duration': 30, 'distance': 5.0, 'pace': '6:00'},
-          createdAt: DateTime(2025, 11, 14, 17, 0),
-          updatedAt: DateTime(2025, 11, 14, 17, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'sprints',
-          name: 'Sprints',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'sets': 6, 'duration': 1, 'restBetweenSets': 90},
-          createdAt: DateTime(2025, 11, 14, 17, 30),
-          updatedAt: DateTime(2025, 11, 14, 17, 30),
-        ),
-      ],
-    ),
-
-    // Push Day - Nov 13, 2025
-    Workout(
-      id: '1731501000000', // Nov 13, 2025 14:30
-      dateTime: DateTime(2025, 11, 13, 14, 30),
-      durationMinutes: 50,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'barbell-bench-press',
-          name: 'Barbell Bench Press',
-          category: 'strength',
-          muscleGroup: 'chest',
-          parameters: {
-            'sets': 4,
-            'reps': 8,
-            'weight': 82.5,
-            'restBetweenSets': 120,
-          },
-          createdAt: DateTime(2025, 11, 13, 14, 30),
-          updatedAt: DateTime(2025, 11, 13, 14, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'cable-chest-fly',
-          name: 'Cable Chest Fly',
-          category: 'strength',
-          muscleGroup: 'chest',
-          parameters: {
-            'sets': 3,
-            'reps': 12,
-            'weight': 25.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 13, 14, 45),
-          updatedAt: DateTime(2025, 11, 13, 14, 45),
-        ),
-        WorkoutExercise(
-          exerciseId: 'arnold-press',
-          name: 'Arnold Press',
-          category: 'strength',
-          muscleGroup: 'shoulders',
-          parameters: {
-            'sets': 3,
-            'reps': 10,
-            'weight': 20.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 13, 15, 0),
-          updatedAt: DateTime(2025, 11, 13, 15, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'overhead-tricep-extension',
-          name: 'Overhead Tricep Extension',
-          category: 'strength',
-          muscleGroup: 'arms',
-          parameters: {
-            'sets': 3,
-            'reps': 12,
-            'weight': 28.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 13, 15, 12),
-          updatedAt: DateTime(2025, 11, 13, 15, 12),
-        ),
-      ],
-    ),
-
-    // Pull Day - Nov 11, 2025
-    Workout(
-      id: '1731330600000', // Nov 11, 2025 10:30
-      dateTime: DateTime(2025, 11, 11, 10, 30),
-      durationMinutes: 48,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'deadlift',
-          name: 'Deadlift',
-          category: 'strength',
-          muscleGroup: 'back',
-          parameters: {
-            'sets': 4,
-            'reps': 5,
-            'weight': 125.0,
-            'restBetweenSets': 180,
-          },
-          createdAt: DateTime(2025, 11, 11, 10, 30),
-          updatedAt: DateTime(2025, 11, 11, 10, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'lat-pulldown',
-          name: 'Lat Pulldown',
-          category: 'strength',
-          muscleGroup: 'back',
-          parameters: {
-            'sets': 3,
-            'reps': 10,
-            'weight': 70.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 11, 10, 48),
-          updatedAt: DateTime(2025, 11, 11, 10, 48),
-        ),
-        WorkoutExercise(
-          exerciseId: 'face-pull',
-          name: 'Face Pull',
-          category: 'strength',
-          muscleGroup: 'back',
-          parameters: {
-            'sets': 3,
-            'reps': 15,
-            'weight': 30.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 11, 11, 0),
-          updatedAt: DateTime(2025, 11, 11, 11, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'preacher-curl',
-          name: 'Preacher Curl',
-          category: 'strength',
-          muscleGroup: 'arms',
-          parameters: {
-            'sets': 3,
-            'reps': 12,
-            'weight': 30.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 11, 11, 10),
-          updatedAt: DateTime(2025, 11, 11, 11, 10),
-        ),
-      ],
-    ),
-
-    // === WEEK 1 (Nov 4-10) ===
-
-    // Treadmill Run - Nov 10, 2025
-    Workout(
-      id: '1731247200000', // Nov 10, 2025 7:00
-      dateTime: DateTime(2025, 11, 10, 7, 0),
-      durationMinutes: 30,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'treadmill-run',
-          name: 'Treadmill Run',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'duration': 25, 'distance': 4.0, 'pace': '6:15'},
-          createdAt: DateTime(2025, 11, 10, 7, 0),
-          updatedAt: DateTime(2025, 11, 10, 7, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'incline-walk',
-          name: 'Incline Walk',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'duration': 5, 'incline': 12},
-          createdAt: DateTime(2025, 11, 10, 7, 25),
-          updatedAt: DateTime(2025, 11, 10, 7, 25),
-        ),
-      ],
-    ),
-
-    // Full Body - Nov 9, 2025
-    Workout(
-      id: '1731168600000', // Nov 9, 2025 16:30
-      dateTime: DateTime(2025, 11, 9, 16, 30),
-      durationMinutes: 55,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'front-squat',
-          name: 'Front Squat',
-          category: 'strength',
-          muscleGroup: 'legs',
-          parameters: {
-            'sets': 4,
-            'reps': 8,
-            'weight': 75.0,
-            'restBetweenSets': 120,
-          },
-          createdAt: DateTime(2025, 11, 9, 16, 30),
-          updatedAt: DateTime(2025, 11, 9, 16, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'push-up',
-          name: 'Push-up',
-          category: 'strength',
-          muscleGroup: 'chest',
-          parameters: {
-            'sets': 4,
-            'reps': 20,
-            'bodyweight': true,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 9, 16, 45),
-          updatedAt: DateTime(2025, 11, 9, 16, 45),
-        ),
-        WorkoutExercise(
-          exerciseId: 'barbell-row',
-          name: 'Barbell Row',
-          category: 'strength',
-          muscleGroup: 'back',
-          parameters: {
-            'sets': 3,
-            'reps': 10,
-            'weight': 65.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 9, 16, 58),
-          updatedAt: DateTime(2025, 11, 9, 16, 58),
-        ),
-        WorkoutExercise(
-          exerciseId: 'plank',
-          name: 'Plank',
-          category: 'strength',
-          muscleGroup: 'core',
-          parameters: {'sets': 3, 'holdDuration': 50, 'restBetweenSets': 60},
-          createdAt: DateTime(2025, 11, 9, 17, 10),
-          updatedAt: DateTime(2025, 11, 9, 17, 10),
-        ),
-      ],
-    ),
-
-    // Yoga Flow - Nov 7, 2025
-    Workout(
-      id: '1730999400000', // Nov 7, 2025 19:30
-      dateTime: DateTime(2025, 11, 7, 19, 30),
-      durationMinutes: 45,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'downward-dog',
-          name: 'Downward Dog',
-          category: 'flexibility',
-          muscleGroup: 'flexibility',
-          parameters: {'sets': 5, 'reps': 1, 'restBetweenSets': 30},
-          createdAt: DateTime(2025, 11, 7, 19, 30),
-          updatedAt: DateTime(2025, 11, 7, 19, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'spinal-twist',
-          name: 'Spinal Twist',
-          category: 'flexibility',
-          muscleGroup: 'flexibility',
-          parameters: {'sets': 4, 'holdDuration': 45, 'restBetweenSets': 20},
-          createdAt: DateTime(2025, 11, 7, 19, 45),
-          updatedAt: DateTime(2025, 11, 7, 19, 45),
-        ),
-        WorkoutExercise(
-          exerciseId: 'childs-pose',
-          name: 'Childs Pose',
-          category: 'flexibility',
-          muscleGroup: 'flexibility',
-          parameters: {'sets': 2, 'holdDuration': 90, 'restBetweenSets': 30},
-          createdAt: DateTime(2025, 11, 7, 20, 0),
-          updatedAt: DateTime(2025, 11, 7, 20, 0),
-        ),
-      ],
-    ),
-
-    // Leg Day - Nov 6, 2025
-    Workout(
-      id: '1730908800000', // Nov 6, 2025 9:00
-      dateTime: DateTime(2025, 11, 6, 9, 0),
-      durationMinutes: 58,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'barbell-squat',
-          name: 'Barbell Squat',
-          category: 'strength',
-          muscleGroup: 'legs',
-          parameters: {
-            'sets': 4,
-            'reps': 8,
-            'weight': 100.0,
-            'restBetweenSets': 150,
-          },
-          createdAt: DateTime(2025, 11, 6, 9, 0),
-          updatedAt: DateTime(2025, 11, 6, 9, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'walking-lunge',
-          name: 'Walking Lunge',
-          category: 'strength',
-          muscleGroup: 'legs',
-          parameters: {
-            'sets': 3,
-            'reps': 20,
-            'weight': 20.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 6, 9, 15),
-          updatedAt: DateTime(2025, 11, 6, 9, 15),
-        ),
-        WorkoutExercise(
-          exerciseId: 'leg-extension',
-          name: 'Leg Extension',
-          category: 'strength',
-          muscleGroup: 'legs',
-          parameters: {
-            'sets': 3,
-            'reps': 15,
-            'weight': 55.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 6, 9, 30),
-          updatedAt: DateTime(2025, 11, 6, 9, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'seated-calf-raise',
-          name: 'Seated Calf Raise',
-          category: 'strength',
-          muscleGroup: 'legs',
-          parameters: {
-            'sets': 4,
-            'reps': 20,
-            'weight': 40.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 6, 9, 45),
-          updatedAt: DateTime(2025, 11, 6, 9, 45),
-        ),
-      ],
-    ),
-
-    // Swimming - Nov 5, 2025
-    Workout(
-      id: '1730829000000', // Nov 5, 2025 18:30
-      dateTime: DateTime(2025, 11, 5, 18, 30),
-      durationMinutes: 40,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'swimming',
-          name: 'Swimming',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'duration': 20, 'distance': 1.0},
-          createdAt: DateTime(2025, 11, 5, 18, 30),
-          updatedAt: DateTime(2025, 11, 5, 18, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 'swimming',
-          name: 'Swimming',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'duration': 10, 'distance': 0.5},
-          createdAt: DateTime(2025, 11, 5, 18, 50),
-          updatedAt: DateTime(2025, 11, 5, 18, 50),
-        ),
-        WorkoutExercise(
-          exerciseId: 'swimming',
-          name: 'Swimming',
-          category: 'cardio',
-          muscleGroup: 'cardio',
-          parameters: {'duration': 10},
-          createdAt: DateTime(2025, 11, 5, 19, 0),
-          updatedAt: DateTime(2025, 11, 5, 19, 0),
-        ),
-      ],
-    ),
-
-    // Upper Body - Nov 4, 2025
-    Workout(
-      id: '1730739000000', // Nov 4, 2025 14:30
-      dateTime: DateTime(2025, 11, 4, 14, 30),
-      durationMinutes: 50,
-      exercises: [
-        WorkoutExercise(
-          exerciseId: 'barbell-bench-press',
-          name: 'Barbell Bench Press',
-          category: 'strength',
-          muscleGroup: 'chest',
-          parameters: {
-            'sets': 4,
-            'reps': 10,
-            'weight': 80.0,
-            'restBetweenSets': 120,
-          },
-          createdAt: DateTime(2025, 11, 4, 14, 30),
-          updatedAt: DateTime(2025, 11, 4, 14, 30),
-        ),
-        WorkoutExercise(
-          exerciseId: 't-bar-row',
-          name: 'T-Bar Row',
-          category: 'strength',
-          muscleGroup: 'back',
-          parameters: {
-            'sets': 3,
-            'reps': 10,
-            'weight': 55.0,
-            'restBetweenSets': 90,
-          },
-          createdAt: DateTime(2025, 11, 4, 14, 45),
-          updatedAt: DateTime(2025, 11, 4, 14, 45),
-        ),
-        WorkoutExercise(
-          exerciseId: 'military-press',
-          name: 'Military Press',
-          category: 'strength',
-          muscleGroup: 'shoulders',
-          parameters: {
-            'sets': 3,
-            'reps': 8,
-            'weight': 45.0,
-            'restBetweenSets': 120,
-          },
-          createdAt: DateTime(2025, 11, 4, 15, 0),
-          updatedAt: DateTime(2025, 11, 4, 15, 0),
-        ),
-        WorkoutExercise(
-          exerciseId: 'concentration-curl',
-          name: 'Concentration Curl',
-          category: 'strength',
-          muscleGroup: 'arms',
-          parameters: {
-            'sets': 3,
-            'reps': 12,
-            'weight': 15.0,
-            'restBetweenSets': 60,
-          },
-          createdAt: DateTime(2025, 11, 4, 15, 15),
-          updatedAt: DateTime(2025, 11, 4, 15, 15),
-        ),
-      ],
-    ),
-  ];
+  /// Calculate pace in min:sec per km format
+  static String _calculatePace(double distance, int duration) {
+    final paceMinutes = duration / distance;
+    final minutes = paceMinutes.floor();
+    final seconds = ((paceMinutes - minutes) * 60).round();
+    return '$minutes:${seconds.toString().padLeft(2, '0')}';
+  }
 }
