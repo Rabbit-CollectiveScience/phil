@@ -116,11 +116,12 @@ class _RecordPageState extends State<RecordPage>
         print('✅ Workout logged: ${loggedExercise?.name}');
 
         // Save to Hive using WorkoutController directly and capture workout reference
-        final workout = await _workoutController.addExerciseToAppropriateWorkout(
-          exercise: loggedExercise!,
-        );
+        final workout = await _workoutController
+            .addExerciseToAppropriateWorkout(exercise: loggedExercise!);
         workoutId = workout.id;
-        print('💾 Saved to Hive: ${loggedExercise.name} in workout ${workoutId}');
+        print(
+          '💾 Saved to Hive: ${loggedExercise.name} in workout ${workoutId}',
+        );
         _lastLoggedExercise = loggedExercise;
       }
 
@@ -1029,11 +1030,8 @@ class _RecordPageState extends State<RecordPage>
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _formatExerciseParameters(exercise),
-                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                  ),
+                  const SizedBox(height: 8),
+                  _buildParameterGrid(exercise),
                   const SizedBox(height: 12),
 
                   // AI message
@@ -1166,30 +1164,139 @@ class _RecordPageState extends State<RecordPage>
     );
   }
 
+  Widget _buildParameterGrid(WorkoutExercise exercise) {
+    final params = exercise.parameters;
+    final paramItems = <Map<String, String>>[];
+
+    if (params.containsKey('sets')) {
+      paramItems.add({
+        'icon': '🔄',
+        'value': '${params['sets']}',
+        'label': 'sets',
+      });
+    }
+    if (params.containsKey('reps')) {
+      paramItems.add({
+        'icon': '💪',
+        'value': '${params['reps']}',
+        'label': 'reps',
+      });
+    }
+    if (params.containsKey('weight')) {
+      paramItems.add({
+        'icon': '⚖️',
+        'value': '${params['weight']}',
+        'label': 'kg',
+      });
+    }
+    if (params.containsKey('duration')) {
+      paramItems.add({
+        'icon': '⏱️',
+        'value': '${params['duration']}',
+        'label': 'min',
+      });
+    }
+    if (params.containsKey('distance')) {
+      paramItems.add({
+        'icon': '📏',
+        'value': '${params['distance']}',
+        'label': 'km',
+      });
+    }
+    if (params.containsKey('holdDuration')) {
+      paramItems.add({
+        'icon': '⏸️',
+        'value': '${params['holdDuration']}',
+        'label': 's hold',
+      });
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2A2A),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          children: List.generate(paramItems.length, (index) {
+            final item = paramItems[index];
+            return Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: index < paramItems.length - 1
+                      ? Border(
+                          right: BorderSide(
+                            color: const Color(0xFF404040),
+                            width: 1,
+                          ),
+                        )
+                      : null,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 8,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(item['icon']!, style: const TextStyle(fontSize: 24)),
+                    const SizedBox(height: 4),
+                    Text(
+                      item['value']!,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      item['label']!,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFFB0B0B0),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
   String _formatExerciseParameters(WorkoutExercise exercise) {
     final params = exercise.parameters;
     final parts = <String>[];
 
     if (params.containsKey('sets')) {
-      parts.add('${params['sets']} sets');
+      parts.add('🔄 ${params['sets']} sets');
     }
     if (params.containsKey('reps')) {
-      parts.add('${params['reps']} reps');
+      parts.add('💪 ${params['reps']} reps');
     }
     if (params.containsKey('weight')) {
-      parts.add('${params['weight']}kg');
+      parts.add('⚖️ ${params['weight']}kg');
     }
     if (params.containsKey('duration')) {
-      parts.add('${params['duration']} min');
+      parts.add('⏱️ ${params['duration']} min');
     }
     if (params.containsKey('distance')) {
-      parts.add('${params['distance']}km');
+      parts.add('📏 ${params['distance']}km');
     }
     if (params.containsKey('holdDuration')) {
-      parts.add('${params['holdDuration']}s hold');
+      parts.add('⏸️ ${params['holdDuration']}s hold');
     }
 
-    return parts.join(' • ');
+    return parts.join('  •  ');
   }
 
   Color _getButtonColor() {
@@ -1325,9 +1432,9 @@ class _RecordPageState extends State<RecordPage>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating exercise: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error updating exercise: $e')));
       }
     }
   }
@@ -1410,18 +1517,21 @@ class _RecordPageState extends State<RecordPage>
       // Find and remove both the conversation bubble and success card
       setState(() {
         final successCardIndex = _messages.indexOf(message);
-        
+
         if (successCardIndex != -1) {
           // Remove the success card
           _messages.removeAt(successCardIndex);
-          
+
           // Try to find and remove the conversation bubble immediately before it
           if (successCardIndex > 0) {
             final previousMessage = _messages[successCardIndex - 1];
             // Check if it's a conversation bubble from same time period
-            if (!previousMessage.isUser && 
+            if (!previousMessage.isUser &&
                 !previousMessage.isWorkoutLogged &&
-                message.timestamp.difference(previousMessage.timestamp).inSeconds < 2) {
+                message.timestamp
+                        .difference(previousMessage.timestamp)
+                        .inSeconds <
+                    2) {
               _messages.removeAt(successCardIndex - 1);
             }
           }
@@ -1438,9 +1548,9 @@ class _RecordPageState extends State<RecordPage>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error deleting exercise: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error deleting exercise: $e')));
       }
     }
   }
