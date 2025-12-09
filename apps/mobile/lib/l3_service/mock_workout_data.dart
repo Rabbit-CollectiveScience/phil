@@ -37,6 +37,16 @@ class MockWorkoutData {
     final currentWeekMonday = _getMostRecentMonday(now);
     final currentWeekSunday = currentWeekMonday.add(const Duration(days: 6));
 
+    // Generate workouts through the end of current week (next Sunday at 23:59:59)
+    final endOfWeek = DateTime(
+      currentWeekSunday.year,
+      currentWeekSunday.month,
+      currentWeekSunday.day,
+      23,
+      59,
+      59,
+    );
+
     // Helper to check if a date is in current week
     bool isCurrentWeek(DateTime date) {
       return date.isAfter(
@@ -66,7 +76,7 @@ class MockWorkoutData {
       // Monday: Push Day
       final monday = weekStart;
       final skipMonday = !isCurWeek && week % 7 == 3;
-      if (!skipMonday && (monday.isBefore(now.add(const Duration(days: 1))))) {
+      if (!skipMonday && (monday.isBefore(endOfWeek))) {
         workouts.add(
           _createPushWorkout(
             monday,
@@ -79,7 +89,7 @@ class MockWorkoutData {
 
       // Tuesday: Pull Day (or balanced if current week)
       final tuesday = weekStart.add(const Duration(days: 1));
-      if (tuesday.isBefore(now.add(const Duration(days: 1)))) {
+      if (tuesday.isBefore(endOfWeek)) {
         workouts.add(
           _createPullWorkout(
             tuesday,
@@ -92,7 +102,7 @@ class MockWorkoutData {
 
       // Wednesday: Leg Day (or balanced if current week)
       final wednesday = weekStart.add(const Duration(days: 2));
-      if (wednesday.isBefore(now.add(const Duration(days: 1)))) {
+      if (wednesday.isBefore(endOfWeek)) {
         workouts.add(
           _createLegWorkout(
             wednesday,
@@ -105,7 +115,7 @@ class MockWorkoutData {
 
       // Thursday: Full Body for current week, Cardio for past weeks
       final thursday = weekStart.add(const Duration(days: 3));
-      if (thursday.isBefore(now.add(const Duration(days: 1)))) {
+      if (thursday.isBefore(endOfWeek)) {
         if (isCurWeek) {
           // Current week: Full body strength (balanced volume)
           workouts.add(
@@ -125,7 +135,7 @@ class MockWorkoutData {
       // Friday: Upper Body
       final friday = weekStart.add(const Duration(days: 4));
       final skipFriday = !isCurWeek && week % 11 == 5;
-      if (!skipFriday && friday.isBefore(now.add(const Duration(days: 1)))) {
+      if (!skipFriday && friday.isBefore(endOfWeek)) {
         workouts.add(
           _createUpperBodyWorkout(
             friday,
@@ -138,7 +148,7 @@ class MockWorkoutData {
 
       // Saturday: Strength for current week, occasional cardio for past
       final saturday = weekStart.add(const Duration(days: 5));
-      if (saturday.isBefore(now.add(const Duration(days: 1)))) {
+      if (saturday.isBefore(endOfWeek)) {
         if (isCurWeek) {
           // Current week: Leg focus (balanced volume)
           workouts.add(
@@ -158,7 +168,7 @@ class MockWorkoutData {
 
       // Sunday: Strength for current week
       final sunday = weekStart.add(const Duration(days: 6));
-      if (sunday.isBefore(now.add(const Duration(days: 1)))) {
+      if (sunday.isBefore(endOfWeek)) {
         if (isCurWeek) {
           // Current week: Upper body (balanced volume)
           workouts.add(
