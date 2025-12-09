@@ -361,17 +361,21 @@ class WorkoutStatsService {
     return text[0].toUpperCase() + text.substring(1);
   }
 
-  /// Get daily strength volume for the last 7 days
+  /// Get daily strength volume for the current week (Monday to Sunday)
   static List<({DateTime date, double volume})> getLast7DaysVolume(
     List<Workout> allWorkouts,
   ) {
     final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
+
+    // Calculate Monday of current week
+    final weekStart = now.subtract(Duration(days: now.weekday - 1));
+    final monday = DateTime(weekStart.year, weekStart.month, weekStart.day);
+
     final result = <({DateTime date, double volume})>[];
 
-    // Generate last 7 days
-    for (int i = 6; i >= 0; i--) {
-      final date = today.subtract(Duration(days: i));
+    // Generate Monday through Sunday of current week
+    for (int i = 0; i < 7; i++) {
+      final date = monday.add(Duration(days: i));
       final nextDay = date.add(const Duration(days: 1));
 
       // Get workouts for this specific day

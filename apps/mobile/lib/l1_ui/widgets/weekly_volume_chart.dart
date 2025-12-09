@@ -4,10 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 class WeeklyVolumeChart extends StatelessWidget {
   final List<({DateTime date, double volume})> dailyData;
 
-  const WeeklyVolumeChart({
-    super.key,
-    required this.dailyData,
-  });
+  const WeeklyVolumeChart({super.key, required this.dailyData});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +22,7 @@ class WeeklyVolumeChart extends StatelessWidget {
         color: const Color(0xFF2A2A2A),
         borderRadius: BorderRadius.circular(16),
       ),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,21 +30,18 @@ class WeeklyVolumeChart extends StatelessWidget {
             'Weekly Volume',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
             'Last 7 days',
-            style: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.grey[500], fontSize: 12),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           SizedBox(
-            height: 200,
+            height: 80,
             child: BarChart(
               BarChartData(
                 alignment: BarChartAlignment.spaceAround,
@@ -77,15 +71,16 @@ class WeeklyVolumeChart extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= dailyData.length) return const Text('');
+                        if (value.toInt() >= dailyData.length)
+                          return const Text('');
                         final data = dailyData[value.toInt()];
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
                             _getWeekdayShort(data.date),
                             style: TextStyle(
-                              color: _isToday(data.date) 
-                                  ? Colors.white 
+                              color: _isToday(data.date)
+                                  ? Colors.white
                                   : Colors.grey[600],
                               fontSize: 12,
                               fontWeight: _isToday(data.date)
@@ -111,17 +106,15 @@ class WeeklyVolumeChart extends StatelessWidget {
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: maxVolume > 0 ? maxVolume / 4 : 25,
-                  getDrawingHorizontalLine: (value) => FlLine(
-                    color: Colors.grey[800],
-                    strokeWidth: 0.5,
-                  ),
+                  getDrawingHorizontalLine: (value) =>
+                      FlLine(color: Colors.grey[800], strokeWidth: 0.5),
                 ),
                 borderData: FlBorderData(show: false),
                 barGroups: dailyData.asMap().entries.map((entry) {
                   final index = entry.key;
                   final data = entry.value;
                   final isToday = _isToday(data.date);
-                  
+
                   return BarChartGroupData(
                     x: index,
                     barRods: [
@@ -130,20 +123,17 @@ class WeeklyVolumeChart extends StatelessWidget {
                         gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
-                          colors: isToday 
+                          colors: isToday
                               ? [
                                   const Color(0xFF4A90E2),
                                   const Color(0xFF7AB8FF),
                                 ]
                               : data.volume > 0
-                                  ? [
-                                      const Color(0xFF3A7BC8),
-                                      const Color(0xFF5A9BD8),
-                                    ]
-                                  : [
-                                      Colors.grey[800]!,
-                                      Colors.grey[700]!,
-                                    ],
+                              ? [
+                                  const Color(0xFF3A7BC8),
+                                  const Color(0xFF5A9BD8),
+                                ]
+                              : [Colors.grey[800]!, Colors.grey[700]!],
                         ),
                         width: isToday ? 28 : 24,
                         borderRadius: const BorderRadius.vertical(
@@ -156,7 +146,7 @@ class WeeklyVolumeChart extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           _buildSummaryStats(),
         ],
       ),
@@ -175,17 +165,9 @@ class WeeklyVolumeChart extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _buildStatItem('Total', '${totalVolume.toStringAsFixed(0)} kg'),
-        Container(
-          width: 1,
-          height: 30,
-          color: Colors.grey[800],
-        ),
+        Container(width: 1, height: 30, color: Colors.grey[800]),
         _buildStatItem('Days', '$daysWithWorkouts'),
-        Container(
-          width: 1,
-          height: 30,
-          color: Colors.grey[800],
-        ),
+        Container(width: 1, height: 30, color: Colors.grey[800]),
         _buildStatItem('Avg/Day', '${avgVolume.toStringAsFixed(0)} kg'),
       ],
     );
@@ -198,18 +180,12 @@ class WeeklyVolumeChart extends StatelessWidget {
           value,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey[500],
-            fontSize: 12,
-          ),
-        ),
+        const SizedBox(height: 2),
+        Text(label, style: TextStyle(color: Colors.grey[500], fontSize: 11)),
       ],
     );
   }
@@ -224,18 +200,11 @@ class WeeklyVolumeChart extends StatelessWidget {
       child: Center(
         child: Column(
           children: [
-            Icon(
-              Icons.bar_chart_outlined,
-              size: 60,
-              color: Colors.grey[700],
-            ),
+            Icon(Icons.bar_chart_outlined, size: 60, color: Colors.grey[700]),
             const SizedBox(height: 16),
             Text(
               'No strength workouts this week',
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.grey[600], fontSize: 16),
             ),
           ],
         ),

@@ -7,11 +7,11 @@ import '../l2_domain/models/workout_exercise.dart';
 /// Data is dynamically generated from the most recent Monday
 class MockWorkoutData {
   static List<Workout> get mockWorkouts {
-    // Get the most recent Monday as reference date
+    // Get today as reference date (not Monday)
     final now = DateTime.now();
-    final referenceDate = _getMostRecentMonday(now);
+    final today = DateTime(now.year, now.month, now.day);
 
-    return _generateMockWorkouts(referenceDate, weeksBack: 10);
+    return _generateMockWorkouts(today, weeksBack: 10);
   }
 
   /// Get the most recent Monday (today if Monday, or previous Monday)
@@ -32,14 +32,24 @@ class MockWorkoutData {
     // Exercise library with baseline stats (starting point)
     final exerciseLibrary = _getExerciseLibrary();
 
-    // Training split: 5 days per week
-    // Monday: Push, Tuesday: Pull, Wednesday: Legs
-    // Thursday: Cardio, Friday: Upper Body, Saturday/Sunday: Rest
+    // Get current week bounds (Monday to Sunday)
+    final now = DateTime.now();
+    final currentWeekMonday = _getMostRecentMonday(now);
+    final currentWeekSunday = currentWeekMonday.add(const Duration(days: 6));
+
+    // Helper to check if a date is in current week
+    bool isCurrentWeek(DateTime date) {
+      return date.isAfter(
+            currentWeekMonday.subtract(const Duration(days: 1)),
+          ) &&
+          date.isBefore(currentWeekSunday.add(const Duration(days: 1)));
+    }
 
     for (int week = 0; week < weeksBack; week++) {
-      final weekStart = referenceDate.subtract(
-        Duration(days: 7 * (weeksBack - week - 1)),
-      );
+      // Calculate the Monday of this week, going backwards from today
+      final daysBack = 7 * (weeksBack - week - 1);
+      final targetDate = referenceDate.subtract(Duration(days: daysBack));
+      final weekStart = _getMostRecentMonday(targetDate);
 
       // Calculate progression multiplier (increases every 2 weeks)
       final progressionWeek = week ~/ 2;
@@ -49,13 +59,14 @@ class MockWorkoutData {
       final distanceMultiplier =
           1.0 + (progressionWeek * 0.03); // +3% every 2 weeks
 
-      // Occasional missed day (10% chance)
-      final skipMonday = week % 7 == 3;
-      final skipFriday = week % 11 == 5;
+      // For current week: balanced strength every day, similar volumes
+      // For past weeks: varied schedule
+      final isCurWeek = isCurrentWeek(weekStart);
 
       // Monday: Push Day
-      if (!skipMonday) {
-        final monday = weekStart;
+      final monday = weekStart;
+      final skipMonday = !isCurWeek && week % 7 == 3;
+      if (!skipMonday && (monday.isBefore(now.add(const Duration(days: 1))))) {
         workouts.add(
           _createPushWorkout(
             monday,
@@ -66,35 +77,55 @@ class MockWorkoutData {
         );
       }
 
-      // Tuesday: Pull Day
+      // Tuesday: Pull Day (or balanced if current week)
       final tuesday = weekStart.add(const Duration(days: 1));
-      workouts.add(
-        _createPullWorkout(
-          tuesday,
-          exerciseLibrary,
-          weightMultiplier,
-          repsBonus,
-        ),
-      );
+      if (tuesday.isBefore(now.add(const Duration(days: 1)))) {
+        workouts.add(
+          _createPullWorkout(
+            tuesday,
+            exerciseLibrary,
+            weightMultiplier,
+            repsBonus,
+          ),
+        );
+      }
 
-      // Wednesday: Leg Day
+      // Wednesday: Leg Day (or balanced if current week)
       final wednesday = weekStart.add(const Duration(days: 2));
-      workouts.add(
-        _createLegWorkout(
-          wednesday,
-          exerciseLibrary,
-          weightMultiplier,
-          repsBonus,
-        ),
-      );
+      if (wednesday.isBefore(now.add(const Duration(days: 1)))) {
+        workouts.add(
+          _createLegWorkout(
+            wednesday,
+            exerciseLibrary,
+            weightMultiplier,
+            repsBonus,
+          ),
+        );
+      }
 
-      // Thursday: Cardio Day
+      // Thursday: Full Body for current week, Cardio for past weeks
       final thursday = weekStart.add(const Duration(days: 3));
-      workouts.add(_createCardioWorkout(thursday, distanceMultiplier));
+      if (thursday.isBefore(now.add(const Duration(days: 1)))) {
+        if (isCurWeek) {
+          // Current week: Full body strength (balanced volume)
+          workouts.add(
+            _createFullBodyWorkout(
+              thursday,
+              exerciseLibrary,
+              weightMultiplier,
+              repsBonus,
+            ),
+          );
+        } else {
+          // Past weeks: Cardio only
+          workouts.add(_createCardioWorkout(thursday, distanceMultiplier));
+        }
+      }
 
-      // Friday: Upper Body + Flexibility
-      if (!skipFriday) {
-        final friday = weekStart.add(const Duration(days: 4));
+      // Friday: Upper Body
+      final friday = weekStart.add(const Duration(days: 4));
+      final skipFriday = !isCurWeek && week % 11 == 5;
+      if (!skipFriday && friday.isBefore(now.add(const Duration(days: 1)))) {
         workouts.add(
           _createUpperBodyWorkout(
             friday,
@@ -105,10 +136,40 @@ class MockWorkoutData {
         );
       }
 
-      // Occasional weekend cardio (every 3 weeks)
-      if (week % 3 == 0) {
-        final saturday = weekStart.add(const Duration(days: 5));
-        workouts.add(_createWeekendCardioWorkout(saturday, distanceMultiplier));
+      // Saturday: Strength for current week, occasional cardio for past
+      final saturday = weekStart.add(const Duration(days: 5));
+      if (saturday.isBefore(now.add(const Duration(days: 1)))) {
+        if (isCurWeek) {
+          // Current week: Leg focus (balanced volume)
+          workouts.add(
+            _createLegWorkout(
+              saturday,
+              exerciseLibrary,
+              weightMultiplier * 0.9,
+              repsBonus,
+            ),
+          );
+        } else if (week % 3 == 0) {
+          workouts.add(
+            _createWeekendCardioWorkout(saturday, distanceMultiplier),
+          );
+        }
+      }
+
+      // Sunday: Strength for current week
+      final sunday = weekStart.add(const Duration(days: 6));
+      if (sunday.isBefore(now.add(const Duration(days: 1)))) {
+        if (isCurWeek) {
+          // Current week: Upper body (balanced volume)
+          workouts.add(
+            _createUpperBodyWorkout(
+              sunday,
+              exerciseLibrary,
+              weightMultiplier * 0.85,
+              repsBonus,
+            ),
+          );
+        }
       }
     }
 
@@ -393,6 +454,64 @@ class MockWorkoutData {
           weightMultiplier,
           repsBonus,
           workoutTime.add(const Duration(minutes: 60)),
+        ),
+      ],
+    );
+  }
+
+  /// Create Full Body workout (balanced volume for current week)
+  static Workout _createFullBodyWorkout(
+    DateTime date,
+    Map<String, Map<String, dynamic>> library,
+    double weightMultiplier,
+    int repsBonus,
+  ) {
+    final workoutTime = date.add(const Duration(hours: 18)); // 6 PM
+
+    return Workout(
+      id: workoutTime.millisecondsSinceEpoch.toString(),
+      dateTime: workoutTime,
+      durationMinutes: 60,
+      exercises: [
+        _createExercise(
+          'barbell-squat',
+          'Barbell Squat',
+          'strength',
+          'legs',
+          library['squat']!,
+          weightMultiplier * 0.9,
+          repsBonus,
+          workoutTime,
+        ),
+        _createExercise(
+          'barbell-bench-press',
+          'Barbell Bench Press',
+          'strength',
+          'chest',
+          library['bench-press']!,
+          weightMultiplier * 0.9,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 15)),
+        ),
+        _createExercise(
+          'barbell-row',
+          'Barbell Row',
+          'strength',
+          'back',
+          library['barbell-row']!,
+          weightMultiplier * 0.9,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 28)),
+        ),
+        _createExercise(
+          'overhead-press',
+          'Overhead Press',
+          'strength',
+          'shoulders',
+          library['overhead-press']!,
+          weightMultiplier * 0.9,
+          repsBonus,
+          workoutTime.add(const Duration(minutes: 40)),
         ),
       ],
     );
