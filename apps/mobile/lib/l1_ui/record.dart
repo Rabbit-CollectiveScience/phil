@@ -487,7 +487,7 @@ class _RecordPageState extends State<RecordPage>
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const SizedBox(height: 24),
-                            
+
                             // Rabbit + Speech Bubble Row
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -546,7 +546,7 @@ class _RecordPageState extends State<RecordPage>
                             // Animated voice wave
                             _AnimatedVoiceWave(),
 
-                            const SizedBox(height: 40),
+                            const Spacer(flex: 3),
 
                             // Subtitle
                             const Text(
@@ -557,84 +557,6 @@ class _RecordPageState extends State<RecordPage>
                                 fontWeight: FontWeight.w500,
                               ),
                               textAlign: TextAlign.center,
-                            ),
-
-                            const SizedBox(height: 24),
-
-                            // Row of three smaller category icons
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Cardio
-                                GestureDetector(
-                                  onTap: _handleVoiceInput,
-                                  child: Container(
-                                    width: 70,
-                                    height: 70,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue.withOpacity(0.2),
-                                      border: Border.all(
-                                        color: Colors.blue.withOpacity(0.5),
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.directions_run,
-                                      size: 35,
-                                      color: Colors.blue.withOpacity(0.7),
-                                    ),
-                                  ),
-                                ),
-
-                                const SizedBox(width: 20),
-
-                                // Weight
-                                GestureDetector(
-                                  onTap: _handleVoiceInput,
-                                  child: Container(
-                                    width: 70,
-                                    height: 70,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue.withOpacity(0.2),
-                                      border: Border.all(
-                                        color: Colors.blue.withOpacity(0.5),
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.fitness_center,
-                                      size: 35,
-                                      color: Colors.blue.withOpacity(0.7),
-                                    ),
-                                  ),
-                                ),
-
-                                const SizedBox(width: 20),
-
-                                // Flexibility
-                                GestureDetector(
-                                  onTap: _handleVoiceInput,
-                                  child: Container(
-                                    width: 70,
-                                    height: 70,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue.withOpacity(0.2),
-                                      border: Border.all(
-                                        color: Colors.blue.withOpacity(0.5),
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.self_improvement,
-                                      size: 35,
-                                      color: Colors.blue.withOpacity(0.7),
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
 
                             const SizedBox(height: 32),
@@ -648,21 +570,21 @@ class _RecordPageState extends State<RecordPage>
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   _buildExamplePrompt(
-                                    '💬 "3 sets of bench press at 60kg"',
+                                    '🏋️ "3 sets of bench press at 60kg"',
                                   ),
                                   const SizedBox(height: 8),
                                   _buildExamplePrompt(
-                                    '💬 "Ran 5km in 30 minutes"',
+                                    '🏃 "Ran 5km in 30 minutes"',
                                   ),
                                   const SizedBox(height: 8),
                                   _buildExamplePrompt(
-                                    '💬 "Yoga for 20 minutes"',
+                                    '🧘 "Yoga for 20 minutes"',
                                   ),
                                 ],
                               ),
                             ),
 
-                            const Spacer(flex: 3),
+                            const SizedBox(height: 40),
                           ],
                         ),
                       )
@@ -1609,14 +1531,26 @@ class _RecordPageState extends State<RecordPage>
   }
 
   Widget _buildExamplePrompt(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 13,
-        fontStyle: FontStyle.italic,
-      ),
+    return RichText(
       textAlign: TextAlign.center,
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: text.substring(0, 2), // Emoji
+            style: const TextStyle(
+              fontSize: 28,
+            ),
+          ),
+          TextSpan(
+            text: text.substring(2), // Rest of text
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
