@@ -484,73 +484,69 @@ class _RecordPageState extends State<RecordPage>
                         _chatState != ChatState.aiThinking
                     ? Center(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Spacer(flex: 1),
+                            const SizedBox(height: 24),
 
-                            // Main title
-                            const Text(
-                              'Ready to train?',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
+                            // Rabbit + Speech Bubble Row
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  // Rabbit avatar (smaller, no pulse)
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.blue,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: ClipOval(
+                                      child: Image.asset(
+                                        'assets/images/coach_bunny.png',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  // Chat bubble with larger text
+                                  Flexible(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 16,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[900],
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: const Text(
+                                        'Talk to me about your workout. I\'ll log it',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
 
-                            const SizedBox(height: 32),
-
-                            // Rabbit + Speech Bubble Row
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                // Rabbit avatar (smaller, no pulse)
-                                Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.blue,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      'assets/images/coach_bunny.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                // Chat bubble
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[900],
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: const Text(
-                                    'Let me log your workout for you',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 32),
+                            const SizedBox(height: 48),
 
                             // Animated voice wave
                             _AnimatedVoiceWave(),
 
-                            const SizedBox(height: 24),
+                            const Spacer(flex: 3),
 
                             // Subtitle
                             const Text(
@@ -561,84 +557,6 @@ class _RecordPageState extends State<RecordPage>
                                 fontWeight: FontWeight.w500,
                               ),
                               textAlign: TextAlign.center,
-                            ),
-
-                            const SizedBox(height: 24),
-
-                            // Row of three smaller category icons
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Cardio
-                                GestureDetector(
-                                  onTap: _handleVoiceInput,
-                                  child: Container(
-                                    width: 70,
-                                    height: 70,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue.withOpacity(0.2),
-                                      border: Border.all(
-                                        color: Colors.blue.withOpacity(0.5),
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.directions_run,
-                                      size: 35,
-                                      color: Colors.blue.withOpacity(0.7),
-                                    ),
-                                  ),
-                                ),
-
-                                const SizedBox(width: 20),
-
-                                // Weight
-                                GestureDetector(
-                                  onTap: _handleVoiceInput,
-                                  child: Container(
-                                    width: 70,
-                                    height: 70,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue.withOpacity(0.2),
-                                      border: Border.all(
-                                        color: Colors.blue.withOpacity(0.5),
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.fitness_center,
-                                      size: 35,
-                                      color: Colors.blue.withOpacity(0.7),
-                                    ),
-                                  ),
-                                ),
-
-                                const SizedBox(width: 20),
-
-                                // Flexibility
-                                GestureDetector(
-                                  onTap: _handleVoiceInput,
-                                  child: Container(
-                                    width: 70,
-                                    height: 70,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue.withOpacity(0.2),
-                                      border: Border.all(
-                                        color: Colors.blue.withOpacity(0.5),
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.self_improvement,
-                                      size: 35,
-                                      color: Colors.blue.withOpacity(0.7),
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
 
                             const SizedBox(height: 32),
@@ -652,21 +570,21 @@ class _RecordPageState extends State<RecordPage>
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   _buildExamplePrompt(
-                                    '💬 "3 sets of bench press at 60kg"',
+                                    '🏋️ "3 sets of bench press at 60kg"',
                                   ),
                                   const SizedBox(height: 8),
                                   _buildExamplePrompt(
-                                    '💬 "Ran 5km in 30 minutes"',
+                                    '🏃 "Ran 5km in 30 minutes"',
                                   ),
                                   const SizedBox(height: 8),
                                   _buildExamplePrompt(
-                                    '💬 "Yoga for 20 minutes"',
+                                    '🧘 "Yoga for 20 minutes"',
                                   ),
                                 ],
                               ),
                             ),
 
-                            const Spacer(flex: 3),
+                            const SizedBox(height: 40),
                           ],
                         ),
                       )
@@ -1613,14 +1531,26 @@ class _RecordPageState extends State<RecordPage>
   }
 
   Widget _buildExamplePrompt(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 13,
-        fontStyle: FontStyle.italic,
-      ),
+    return RichText(
       textAlign: TextAlign.center,
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: text.substring(0, 2), // Emoji
+            style: const TextStyle(
+              fontSize: 28,
+            ),
+          ),
+          TextSpan(
+            text: text.substring(2), // Rest of text
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1638,26 +1568,111 @@ class _AnimatedVoiceWaveState extends State<_AnimatedVoiceWave>
   final int _sampleCount = 50;
   final math.Random _random = math.Random();
 
+  // Speech simulation state
+  int _speechCycleFrame = 0;
+  static const int _silenceDuration =
+      5; // Very brief initial silence (1.75 seconds)
+  static const int _speakingDuration = 90;
+  int _frameCounter = 0; // Counter for slowing down wave movement
+  static const int _frameSkipInterval =
+      7; // Only shift wave every 7 frames (~3 per sec at 50ms)
+
+  // Wave pattern state
+  double _wavePhase = 0.0;
+  int _barsInCurrentSegment = 0;
+  int _currentSegmentLength = 0;
+  bool _isInPause = false;
+
+  int _getRandomWordLength() {
+    // Words vary from 8 to 20 bars
+    return 8 + _random.nextInt(13);
+  }
+
+  int _getRandomPauseLength() {
+    // Pauses vary from 1 to 6 bars
+    return 1 + _random.nextInt(6);
+  }
+
   @override
   void initState() {
     super.initState();
-    _samples = List.generate(_sampleCount, (i) => 0.3 + _random.nextDouble() * 0.4);
-    
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    )..addListener(() {
-        setState(() {
-          // Update samples to create wave animation
-          for (int i = 0; i < _sampleCount; i++) {
-            // Each bar updates at slightly different rates
-            if (_random.nextDouble() > 0.7) {
-              _samples[i] = 0.2 + _random.nextDouble() * 0.6;
+    // Start with flat line (silence)
+    _samples = List.generate(_sampleCount, (i) => 0.1);
+    _currentSegmentLength = _getRandomWordLength();
+
+    _animationController =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 50),
+        )..addListener(() {
+          setState(() {
+            _frameCounter++;
+
+            // Only shift bars every N frames to slow down movement
+            if (_frameCounter % _frameSkipInterval != 0) {
+              return;
             }
-          }
+
+            _speechCycleFrame++;
+
+            // Shift all bars to the left (wave moves right to left)
+            for (int i = 0; i < _sampleCount - 1; i++) {
+              _samples[i] = _samples[i + 1];
+            }
+
+            // Generate new bar on the right side
+            if (_speechCycleFrame < _silenceDuration) {
+              // Silent period - flat line
+              _samples[_sampleCount - 1] = 0.1;
+            } else if (_speechCycleFrame <
+                _silenceDuration + _speakingDuration) {
+              // Speaking period - generate speech-like waveform with variable pauses
+              _barsInCurrentSegment++;
+
+              // Check if we need to switch between word and pause
+              if (_barsInCurrentSegment >= _currentSegmentLength) {
+                _barsInCurrentSegment = 0;
+                _isInPause = !_isInPause;
+                _currentSegmentLength = _isInPause
+                    ? _getRandomPauseLength()
+                    : _getRandomWordLength();
+                if (!_isInPause) {
+                  _wavePhase = 0.0; // Reset wave phase for new word
+                }
+              }
+
+              if (_isInPause) {
+                // Pause between words - low amplitude
+                _samples[_sampleCount - 1] = 0.1 + _random.nextDouble() * 0.05;
+              } else {
+                // Within a word - create smooth wave pattern
+                // Use sine wave for gradual up and down motion
+                _wavePhase +=
+                    0.6 +
+                    _random.nextDouble() * 0.4; // Vary wave frequency slightly
+                final sineValue = math.sin(_wavePhase);
+
+                // Map sine (-1 to 1) to speech amplitude (0.2 to 0.8)
+                // Add some randomness for natural variation
+                final baseAmplitude = (sineValue + 1.0) / 2.0; // 0 to 1
+                final randomVariation =
+                    _random.nextDouble() * 0.15 - 0.075; // -0.075 to +0.075
+                final amplitude =
+                    0.25 + (baseAmplitude * 0.55) + randomVariation;
+
+                _samples[_sampleCount - 1] = amplitude.clamp(0.15, 0.85);
+              }
+            } else {
+              // Reset cycle
+              _speechCycleFrame = 0;
+              _barsInCurrentSegment = 0;
+              _wavePhase = 0.0;
+              _isInPause = false;
+              _currentSegmentLength = _getRandomWordLength();
+            }
+          });
         });
-      });
-    
+
     _animationController.repeat();
   }
 
