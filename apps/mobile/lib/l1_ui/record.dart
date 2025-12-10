@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'browse_exercises_screen.dart';
 import '../l3_service/gemini_service.dart';
 import '../l3_service/tts_service.dart';
@@ -500,59 +499,45 @@ class _RecordPageState extends State<RecordPage>
 
                             const SizedBox(height: 32),
 
-                            // Rabbit + Speech Bubble Row
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                // Rabbit avatar (smaller, no pulse)
-                                Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.blue,
-                                      width: 2,
+                            // Pulsating coach bunny circle
+                            GestureDetector(
+                              onTap: _handleVoiceInput,
+                              child: AnimatedBuilder(
+                                animation: _pulseAnimation,
+                                builder: (context, child) {
+                                  return Transform.scale(
+                                    scale: _pulseAnimation.value,
+                                    child: Container(
+                                      width: 160,
+                                      height: 160,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: RadialGradient(
+                                          colors: [
+                                            Colors.blue.withOpacity(0.3),
+                                            Colors.blue.withOpacity(0.1),
+                                          ],
+                                        ),
+                                        border: Border.all(
+                                          color: Colors.blue,
+                                          width: 3,
+                                        ),
+                                      ),
+                                      child: ClipOval(
+                                        child: Image.asset(
+                                          'assets/images/coach_bunny.png',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      'assets/images/coach_bunny.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                // Chat bubble
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[900],
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: const Text(
-                                    'Let me log your workout for you',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                  );
+                                },
+                              ),
                             ),
-
-                            const SizedBox(height: 32),
-
-                            // Animated voice wave
-                            _AnimatedVoiceWave(),
 
                             const SizedBox(height: 24),
 
-                            // Subtitle
+                            // Subtitle (moved before category bubbles)
                             const Text(
                               'Tap mic to start logging',
                               style: TextStyle(
@@ -1623,102 +1608,6 @@ class _RecordPageState extends State<RecordPage>
       textAlign: TextAlign.center,
     );
   }
-}
-
-// Animated voice wave widget
-class _AnimatedVoiceWave extends StatefulWidget {
-  @override
-  State<_AnimatedVoiceWave> createState() => _AnimatedVoiceWaveState();
-}
-
-class _AnimatedVoiceWaveState extends State<_AnimatedVoiceWave>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late List<double> _samples;
-  final int _sampleCount = 50;
-  final math.Random _random = math.Random();
-
-  @override
-  void initState() {
-    super.initState();
-    _samples = List.generate(_sampleCount, (i) => 0.3 + _random.nextDouble() * 0.4);
-    
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    )..addListener(() {
-        setState(() {
-          // Update samples to create wave animation
-          for (int i = 0; i < _sampleCount; i++) {
-            // Each bar updates at slightly different rates
-            if (_random.nextDouble() > 0.7) {
-              _samples[i] = 0.2 + _random.nextDouble() * 0.6;
-            }
-          }
-        });
-      });
-    
-    _animationController.repeat();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 80,
-      width: double.infinity,
-      child: CustomPaint(
-        painter: _WaveformPainter(_samples),
-        size: Size(double.infinity, 80),
-      ),
-    );
-  }
-}
-
-// Custom painter for centered waveform bars
-class _WaveformPainter extends CustomPainter {
-  final List<double> samples;
-
-  _WaveformPainter(this.samples);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFF4A90E2)
-      ..style = PaintingStyle.fill;
-
-    // Calculate bar dimensions to fill width
-    final barCount = samples.length;
-    final totalWidth = size.width;
-    final barSpacing = 2.0;
-    final totalSpacing = barSpacing * (barCount - 1);
-    final barWidth = (totalWidth - totalSpacing) / barCount;
-    final centerY = size.height / 2;
-
-    for (int i = 0; i < samples.length; i++) {
-      final x = i * (barWidth + barSpacing);
-      final barHeight = samples[i] * size.height * 0.8;
-
-      // Draw centered bar (grows both up and down from center)
-      final rect = RRect.fromRectAndRadius(
-        Rect.fromCenter(
-          center: Offset(x + barWidth / 2, centerY),
-          width: barWidth,
-          height: barHeight,
-        ),
-        const Radius.circular(2),
-      );
-      canvas.drawRRect(rect, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_WaveformPainter oldDelegate) => true;
 }
 
 class ChatMessage {

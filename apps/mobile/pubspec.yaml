@@ -2,7 +2,7 @@ name: phil
 description: "AI-powered workout tracking and exercise analytics"
 publish_to: 'none'
 
-version: 1.0.1+2
+version: 1.0.0+2
 
 environment:
   sdk: ^3.8.1
@@ -58,7 +58,6 @@ flutter:
     - assets/data/exercises/schemas/cardio/
     - assets/data/exercises/schemas/flexibility/
     - assets/images/
-    - assets/animations/
     - assets/phil-479202-d4e78adb0eea.json
 
 # ---------- App icons (both iOS & Android) ----------
