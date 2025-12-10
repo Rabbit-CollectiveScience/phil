@@ -1640,7 +1640,7 @@ class _AnimatedVoiceWaveState extends State<_AnimatedVoiceWave>
   
   // Speech simulation state
   int _speechCycleFrame = 0;
-  static const int _silenceDuration = 60;
+  static const int _silenceDuration = 5; // Very brief initial silence (1.75 seconds)
   static const int _speakingDuration = 90;
   int _frameCounter = 0; // Counter for slowing down wave movement
   static const int _frameSkipInterval = 7; // Only shift wave every 7 frames (~3 per sec at 50ms)
