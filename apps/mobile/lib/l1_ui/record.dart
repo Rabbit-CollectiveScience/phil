@@ -1637,23 +1637,60 @@ class _AnimatedVoiceWaveState extends State<_AnimatedVoiceWave>
   late List<double> _samples;
   final int _sampleCount = 50;
   final math.Random _random = math.Random();
+  
+  // Speech simulation state
+  int _speechCycleFrame = 0;
+  static const int _silenceDuration = 60;
+  static const int _speakingDuration = 90;
+  int _frameCounter = 0; // Counter for slowing down wave movement
+  static const int _frameSkipInterval = 7; // Only shift wave every 7 frames (~3 per sec at 50ms)
 
   @override
   void initState() {
     super.initState();
-    _samples = List.generate(_sampleCount, (i) => 0.3 + _random.nextDouble() * 0.4);
+    // Start with flat line (silence)
+    _samples = List.generate(_sampleCount, (i) => 0.1);
     
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 50),
     )..addListener(() {
         setState(() {
-          // Update samples to create wave animation
-          for (int i = 0; i < _sampleCount; i++) {
-            // Each bar updates at slightly different rates
-            if (_random.nextDouble() > 0.7) {
-              _samples[i] = 0.2 + _random.nextDouble() * 0.6;
+          _frameCounter++;
+          
+          // Only shift bars every N frames to slow down movement
+          if (_frameCounter % _frameSkipInterval != 0) {
+            return;
+          }
+          
+          _speechCycleFrame++;
+          
+          // Shift all bars to the left (wave moves right to left)
+          for (int i = 0; i < _sampleCount - 1; i++) {
+            _samples[i] = _samples[i + 1];
+          }
+          
+          // Generate new bar on the right side
+          if (_speechCycleFrame < _silenceDuration) {
+            // Silent period - flat line
+            _samples[_sampleCount - 1] = 0.1;
+          } else if (_speechCycleFrame < _silenceDuration + _speakingDuration) {
+            // Speaking period - generate speech-like waveform with pauses
+            final randomFactor = _random.nextDouble();
+            
+            if (randomFactor > 0.8) {
+              // Speech peaks (loud syllables)
+              _samples[_sampleCount - 1] = 0.65 + _random.nextDouble() * 0.25;
+            } else if (randomFactor < 0.2) {
+              // Brief pauses between words (shorter quiet periods)
+              _samples[_sampleCount - 1] = 0.1 + _random.nextDouble() * 0.08;
+            } else {
+              // Normal speech range
+              _samples[_sampleCount - 1] = 0.3 + _random.nextDouble() * 0.35;
             }
+          } else {
+            // Reset cycle
+            _speechCycleFrame = 0;
           }
         });
       });
