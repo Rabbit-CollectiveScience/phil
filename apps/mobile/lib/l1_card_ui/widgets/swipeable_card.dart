@@ -25,6 +25,9 @@ class _SwipeableCardState extends State<SwipeableCard>
   bool _isFlipping = false;
   late TextEditingController _weightController;
   late TextEditingController _repsController;
+  late FocusNode _weightFocusNode;
+  late FocusNode _repsFocusNode;
+  late final Widget _frontCard;
 
   @override
   void initState() {
@@ -41,9 +44,22 @@ class _SwipeableCardState extends State<SwipeableCard>
     if (widget.card.reps.isEmpty) {
       widget.card.reps = '10';
     }
-    
-    _weightController = TextEditingController(text: widget.card.weight);
-    _repsController = TextEditingController(text: widget.card.reps);
+
+    _weightController = TextEditingController(text: '${widget.card.weight} kg');
+    _repsController = TextEditingController(text: '${widget.card.reps} reps');
+    _weightFocusNode = FocusNode();
+    _repsFocusNode = FocusNode();
+
+    // Add listeners to show/hide buttons
+    _weightFocusNode.addListener(() {
+      setState(() {}); // Rebuild to show/hide buttons
+    });
+    _repsFocusNode.addListener(() {
+      setState(() {}); // Rebuild to show/hide buttons
+    });
+
+    // Build card sides once to avoid rebuilding during animation
+    _frontCard = _buildFrontCard();
 
     _flipController.addStatusListener((status) {
       if (status == AnimationStatus.completed ||
@@ -60,6 +76,8 @@ class _SwipeableCardState extends State<SwipeableCard>
     _flipController.dispose();
     _weightController.dispose();
     _repsController.dispose();
+    _weightFocusNode.dispose();
+    _repsFocusNode.dispose();
     super.dispose();
   }
 
@@ -119,8 +137,28 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   Widget _buildCardContent(bool isFrontVisible) {
-    // Pre-build both sides to avoid lag on first flip
-    final frontCard = Padding(
+    return RepaintBoundary(
+      child: Container(
+        width: 300,
+        height: 400,
+        decoration: BoxDecoration(
+          color: widget.card.color,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: isFrontVisible ? _frontCard : _buildBackCard(),
+      ),
+    );
+  }
+
+  Widget _buildFrontCard() {
+    return Padding(
       padding: const EdgeInsets.all(32.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -140,27 +178,23 @@ class _SwipeableCardState extends State<SwipeableCard>
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: widget.card.color,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 32,
-                vertical: 16,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
             child: const Text(
               "Let's do it!",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
         ],
       ),
     );
+  }
 
-    final backCard = Padding(
+  Widget _buildBackCard() {
+    return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -178,150 +212,148 @@ class _SwipeableCardState extends State<SwipeableCard>
                 ),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _weightController,
-                      onChanged: (value) {
-                        widget.card.weight = value;
-                      },
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: 'Weight (kg)',
-                        labelStyle: const TextStyle(color: Colors.white70),
-                        hintText: '0',
-                        hintStyle: const TextStyle(color: Colors.white30),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Colors.white70,
-                            width: 2,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                        ),
-                      ),
+              TextField(
+                controller: _weightController,
+                focusNode: _weightFocusNode,
+                readOnly: true,
+                onChanged: (value) {
+                  widget.card.weight = value;
+                },
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Weight',
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  hintText: '0 kg',
+                  hintStyle: const TextStyle(color: Colors.white30),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Colors.white70,
+                      width: 2,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          int current = int.tryParse(_weightController.text) ?? 0;
-                          _weightController.text = (current + 2).toString();
-                          widget.card.weight = _weightController.text;
-                        },
-                        icon: const Icon(Icons.arrow_upward),
-                        color: Colors.white,
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white24,
-                          padding: const EdgeInsets.all(8),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          int current = int.tryParse(_weightController.text) ?? 0;
-                          if (current > 0) {
-                            _weightController.text = (current - 2).toString();
-                            widget.card.weight = _weightController.text;
-                          }
-                        },
-                        icon: const Icon(Icons.arrow_downward),
-                        color: Colors.white,
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white24,
-                          padding: const EdgeInsets.all(8),
-                        ),
-                      ),
-                    ],
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Colors.white,
+                      width: 2,
+                    ),
                   ),
-                ],
+                  prefixIcon: _weightFocusNode.hasFocus
+                      ? IconButton(
+                          onPressed: () {
+                            String text = _weightController.text.replaceAll(RegExp(r'[^0-9]'), '');
+                            int current = int.tryParse(text) ?? 0;
+                            if (current > 2) {
+                              int newValue = current - 2;
+                              _weightController.text = '$newValue kg';
+                              widget.card.weight = newValue.toString();
+                            }
+                          },
+                          icon: const Icon(Icons.chevron_left),
+                          color: Colors.white,
+                          iconSize: 28,
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(4),
+                          ),
+                        )
+                      : null,
+                  suffixIcon: _weightFocusNode.hasFocus
+                      ? IconButton(
+                          onPressed: () {
+                            String text = _weightController.text.replaceAll(RegExp(r'[^0-9]'), '');
+                            int current = int.tryParse(text) ?? 0;
+                            int newValue = current + 2;
+                            _weightController.text = '$newValue kg';
+                            widget.card.weight = newValue.toString();
+                          },
+                          icon: const Icon(Icons.chevron_right),
+                          color: Colors.white,
+                          iconSize: 28,
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(4),
+                          ),
+                        )
+                      : null,
+                ),
               ),
               const SizedBox(height: 15),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _repsController,
-                      onChanged: (value) {
-                        widget.card.reps = value;
-                      },
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: 'Reps',
-                        labelStyle: const TextStyle(color: Colors.white70),
-                        hintText: '0',
-                        hintStyle: const TextStyle(color: Colors.white30),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Colors.white70,
-                            width: 2,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                        ),
-                      ),
+              TextField(
+                controller: _repsController,
+                focusNode: _repsFocusNode,
+                readOnly: true,
+                onChanged: (value) {
+                  widget.card.reps = value;
+                },
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Reps',
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  hintText: '0 reps',
+                  hintStyle: const TextStyle(color: Colors.white30),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Colors.white70,
+                      width: 2,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          int current = int.tryParse(_repsController.text) ?? 0;
-                          _repsController.text = (current + 1).toString();
-                          widget.card.reps = _repsController.text;
-                        },
-                        icon: const Icon(Icons.arrow_upward),
-                        color: Colors.white,
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white24,
-                          padding: const EdgeInsets.all(8),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          int current = int.tryParse(_repsController.text) ?? 0;
-                          if (current > 0) {
-                            _repsController.text = (current - 1).toString();
-                            widget.card.reps = _repsController.text;
-                          }
-                        },
-                        icon: const Icon(Icons.arrow_downward),
-                        color: Colors.white,
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white24,
-                          padding: const EdgeInsets.all(8),
-                        ),
-                      ),
-                    ],
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Colors.white,
+                      width: 2,
+                    ),
                   ),
-                ],
+                  prefixIcon: _repsFocusNode.hasFocus
+                      ? IconButton(
+                          onPressed: () {
+                            String text = _repsController.text.replaceAll(RegExp(r'[^0-9]'), '');
+                            int current = int.tryParse(text) ?? 0;
+                            if (current > 1) {
+                              int newValue = current - 1;
+                              _repsController.text = '$newValue reps';
+                              widget.card.reps = newValue.toString();
+                            }
+                          },
+                          icon: const Icon(Icons.chevron_left),
+                          color: Colors.white,
+                          iconSize: 28,
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(4),
+                          ),
+                        )
+                      : null,
+                  suffixIcon: _repsFocusNode.hasFocus
+                      ? IconButton(
+                          onPressed: () {
+                            String text = _repsController.text.replaceAll(RegExp(r'[^0-9]'), '');
+                            int current = int.tryParse(text) ?? 0;
+                            int newValue = current + 1;
+                            _repsController.text = '$newValue reps';
+                            widget.card.reps = newValue.toString();
+                          },
+                          icon: const Icon(Icons.chevron_right),
+                          color: Colors.white,
+                          iconSize: 28,
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(4),
+                          ),
+                        )
+                      : null,
+                ),
               ),
             ],
           ),
@@ -339,33 +371,11 @@ class _SwipeableCardState extends State<SwipeableCard>
               ),
               child: const Text(
                 'Zet',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
           ),
         ],
-      ),
-    );
-
-    return RepaintBoundary(
-      child: Container(
-        width: 300,
-        height: 400,
-        decoration: BoxDecoration(
-          color: widget.card.color,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: isFrontVisible ? frontCard : backCard,
       ),
     );
   }
@@ -375,14 +385,14 @@ class _SwipeableCardState extends State<SwipeableCard>
     // Always keep both sides rendered for smooth animation
     return Stack(
       children: [
-        // Always keep both sides pre-rendered
-        Offstage(
-          offstage: true,
-          child: _buildCardContent(false),
+        // Force both sides into render tree with opacity 0
+        Opacity(
+          opacity: 0.0,
+          child: IgnorePointer(child: _buildCardContent(false)),
         ),
-        Offstage(
-          offstage: true,
-          child: _buildCardContent(true),
+        Opacity(
+          opacity: 0.0,
+          child: IgnorePointer(child: _buildCardContent(true)),
         ),
         // Visible card with animation
         GestureDetector(
@@ -391,7 +401,9 @@ class _SwipeableCardState extends State<SwipeableCard>
           onPanUpdate: _handlePanUpdate,
           onPanEnd: _handlePanEnd,
           child: AnimatedContainer(
-            duration: _isDragging ? Duration.zero : const Duration(milliseconds: 300),
+            duration: _isDragging
+                ? Duration.zero
+                : const Duration(milliseconds: 300),
             curve: Curves.easeOut,
             transform: Matrix4.identity()
               ..translate(_dragOffset.dx, _dragOffset.dy)
