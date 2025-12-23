@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../l2_card_model/card_model.dart';
@@ -31,6 +32,8 @@ class _SwipeableCardState extends State<SwipeableCard>
   late FocusNode _repsFocusNode;
   late final Widget _frontCard;
   late final Widget _backCard;
+  Timer? _weightTimer;
+  Timer? _repsTimer;
 
   @override
   void initState() {
@@ -44,6 +47,22 @@ class _SwipeableCardState extends State<SwipeableCard>
     _repsController = TextEditingController(text: '${widget.card.reps} reps');
     _weightFocusNode = FocusNode();
     _repsFocusNode = FocusNode();
+
+    // Add listeners to start auto-hide timer when focused
+    _weightFocusNode.addListener(() {
+      if (_weightFocusNode.hasFocus) {
+        _startWeightTimer();
+      } else {
+        _weightTimer?.cancel();
+      }
+    });
+    _repsFocusNode.addListener(() {
+      if (_repsFocusNode.hasFocus) {
+        _startRepsTimer();
+      } else {
+        _repsTimer?.cancel();
+      }
+    });
 
     // Cache both front and back cards - ListenableBuilder handles focus reactivity
     _frontCard = _buildFrontCard();
@@ -68,6 +87,8 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   @override
   void dispose() {
+    _weightTimer?.cancel();
+    _repsTimer?.cancel();
     _flipController.dispose();
     _weightController.dispose();
     _repsController.dispose();
@@ -96,6 +117,24 @@ class _SwipeableCardState extends State<SwipeableCard>
         _flipController.value = 0.0;
       }
     }
+  }
+
+  void _startWeightTimer() {
+    _weightTimer?.cancel();
+    _weightTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted && _weightFocusNode.hasFocus) {
+        _weightFocusNode.unfocus();
+      }
+    });
+  }
+
+  void _startRepsTimer() {
+    _repsTimer?.cancel();
+    _repsTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted && _repsFocusNode.hasFocus) {
+        _repsFocusNode.unfocus();
+      }
+    });
   }
 
   void _handleTap() {
@@ -257,6 +296,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                     ),
                     child: IconButton(
                       onPressed: () {
+                        _startWeightTimer(); // Reset timer on interaction
                         String text = _weightController.text.replaceAll(
                           RegExp(r'[^0-9]'),
                           '',
@@ -289,6 +329,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                     ),
                     child: IconButton(
                       onPressed: () {
+                        _startWeightTimer(); // Reset timer on interaction
                         String text = _weightController.text.replaceAll(
                           RegExp(r'[^0-9]'),
                           '',
@@ -339,6 +380,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                     ),
                     child: IconButton(
                       onPressed: () {
+                        _startRepsTimer(); // Reset timer on interaction
                         String text = _repsController.text.replaceAll(
                           RegExp(r'[^0-9]'),
                           '',
@@ -371,6 +413,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                     ),
                     child: IconButton(
                       onPressed: () {
+                        _startRepsTimer(); // Reset timer on interaction
                         String text = _repsController.text.replaceAll(
                           RegExp(r'[^0-9]'),
                           '',
