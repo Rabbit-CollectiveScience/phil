@@ -5,11 +5,13 @@ import '../../l2_card_model/card_model.dart';
 class SwipeableCard extends StatefulWidget {
   final CardModel card;
   final VoidCallback onSwipedAway;
+  final Function(CardModel) onCardUpdate;
 
   const SwipeableCard({
     super.key,
     required this.card,
     required this.onSwipedAway,
+    required this.onCardUpdate,
   });
 
   @override
@@ -28,6 +30,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   late FocusNode _weightFocusNode;
   late FocusNode _repsFocusNode;
   late final Widget _frontCard;
+  late final Widget _backCard;
 
   @override
   void initState() {
@@ -37,29 +40,14 @@ class _SwipeableCardState extends State<SwipeableCard>
       vsync: this,
     );
 
-    // Initialize with default values if empty
-    if (widget.card.weight.isEmpty) {
-      widget.card.weight = '10';
-    }
-    if (widget.card.reps.isEmpty) {
-      widget.card.reps = '10';
-    }
-
     _weightController = TextEditingController(text: '${widget.card.weight} kg');
     _repsController = TextEditingController(text: '${widget.card.reps} reps');
     _weightFocusNode = FocusNode();
     _repsFocusNode = FocusNode();
 
-    // Add listeners to show/hide buttons
-    _weightFocusNode.addListener(() {
-      setState(() {}); // Rebuild to show/hide buttons
-    });
-    _repsFocusNode.addListener(() {
-      setState(() {}); // Rebuild to show/hide buttons
-    });
-
     // Build card sides once to avoid rebuilding during animation
     _frontCard = _buildFrontCard();
+    _backCard = _buildBackCard();
 
     _flipController.addStatusListener((status) {
       if (status == AnimationStatus.completed ||
@@ -91,7 +79,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     } else {
       _flipController.forward();
     }
-    widget.card.isFlipped = !widget.card.isFlipped;
+    widget.onCardUpdate(widget.card.copyWith(isFlipped: !widget.card.isFlipped));
   }
 
   void _handlePanStart(DragStartDetails details) {
@@ -152,7 +140,7 @@ class _SwipeableCardState extends State<SwipeableCard>
             ),
           ],
         ),
-        child: isFrontVisible ? _frontCard : _buildBackCard(),
+        child: isFrontVisible ? _frontCard : _backCard,
       ),
     );
   }
@@ -240,20 +228,20 @@ class _SwipeableCardState extends State<SwipeableCard>
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Colors.white,
-                      width: 2,
-                    ),
+                    borderSide: const BorderSide(color: Colors.white, width: 2),
                   ),
                   prefixIcon: _weightFocusNode.hasFocus
                       ? IconButton(
                           onPressed: () {
-                            String text = _weightController.text.replaceAll(RegExp(r'[^0-9]'), '');
+                            String text = _weightController.text.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              '',
+                            );
                             int current = int.tryParse(text) ?? 0;
                             if (current > 2) {
                               int newValue = current - 2;
                               _weightController.text = '$newValue kg';
-                              widget.card.weight = newValue.toString();
+                              widget.onCardUpdate(widget.card.copyWith(weight: newValue.toString()));
                             }
                           },
                           icon: const Icon(Icons.chevron_left),
@@ -267,11 +255,14 @@ class _SwipeableCardState extends State<SwipeableCard>
                   suffixIcon: _weightFocusNode.hasFocus
                       ? IconButton(
                           onPressed: () {
-                            String text = _weightController.text.replaceAll(RegExp(r'[^0-9]'), '');
+                            String text = _weightController.text.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              '',
+                            );
                             int current = int.tryParse(text) ?? 0;
                             int newValue = current + 2;
                             _weightController.text = '$newValue kg';
-                            widget.card.weight = newValue.toString();
+                            widget.onCardUpdate(widget.card.copyWith(weight: newValue.toString()));
                           },
                           icon: const Icon(Icons.chevron_right),
                           color: Colors.white,
@@ -312,20 +303,20 @@ class _SwipeableCardState extends State<SwipeableCard>
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Colors.white,
-                      width: 2,
-                    ),
+                    borderSide: const BorderSide(color: Colors.white, width: 2),
                   ),
                   prefixIcon: _repsFocusNode.hasFocus
                       ? IconButton(
                           onPressed: () {
-                            String text = _repsController.text.replaceAll(RegExp(r'[^0-9]'), '');
+                            String text = _repsController.text.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              '',
+                            );
                             int current = int.tryParse(text) ?? 0;
                             if (current > 1) {
                               int newValue = current - 1;
                               _repsController.text = '$newValue reps';
-                              widget.card.reps = newValue.toString();
+                              widget.onCardUpdate(widget.card.copyWith(reps: newValue.toString()));
                             }
                           },
                           icon: const Icon(Icons.chevron_left),
@@ -339,11 +330,14 @@ class _SwipeableCardState extends State<SwipeableCard>
                   suffixIcon: _repsFocusNode.hasFocus
                       ? IconButton(
                           onPressed: () {
-                            String text = _repsController.text.replaceAll(RegExp(r'[^0-9]'), '');
+                            String text = _repsController.text.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              '',
+                            );
                             int current = int.tryParse(text) ?? 0;
                             int newValue = current + 1;
                             _repsController.text = '$newValue reps';
-                            widget.card.reps = newValue.toString();
+                            widget.onCardUpdate(widget.card.copyWith(reps: newValue.toString()));
                           },
                           icon: const Icon(Icons.chevron_right),
                           color: Colors.white,

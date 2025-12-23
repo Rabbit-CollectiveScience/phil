@@ -67,6 +67,8 @@ class _CardHomePageState extends State<CardHomePage> {
       (index) => CardModel(
         exerciseName: exercises[index],
         color: colors[index % colors.length],
+        weight: '10',
+        reps: '10',
       ),
     );
   }
@@ -77,6 +79,12 @@ class _CardHomePageState extends State<CardHomePage> {
         final topCard = _cards.removeAt(0);
         _cards.add(topCard);
       }
+    });
+  }
+
+  void _updateCard(int index, CardModel updatedCard) {
+    setState(() {
+      _cards[index] = updatedCard;
     });
   }
 
@@ -127,6 +135,7 @@ class _CardHomePageState extends State<CardHomePage> {
                               key: ValueKey(_cards[0].exerciseName),
                               card: _cards[0],
                               onSwipedAway: _removeTopCard,
+                              onCardUpdate: (updatedCard) => _updateCard(0, updatedCard),
                             )
                           : IgnorePointer(
                               child: RepaintBoundary(
@@ -134,6 +143,7 @@ class _CardHomePageState extends State<CardHomePage> {
                                   key: ValueKey(_cards[i].exerciseName),
                                   card: _cards[i],
                                   onSwipedAway: () {},
+                                  onCardUpdate: (updatedCard) => _updateCard(i, updatedCard),
                                 ),
                               ),
                             ),
