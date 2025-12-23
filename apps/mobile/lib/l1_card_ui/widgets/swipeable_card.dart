@@ -236,21 +236,16 @@ class _SwipeableCardState extends State<SwipeableCard>
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 32,
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w300,
+                  letterSpacing: 1.5,
                 ),
                 decoration: InputDecoration(
-                  labelText: 'Weight',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  hintText: '0 kg',
-                  hintStyle: const TextStyle(color: Colors.white30),
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white70, width: 1),
-                  ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                   prefixIcon: ListenableBuilder(
                     listenable: _weightFocusNode,
                     builder: (context, child) => Opacity(
@@ -261,27 +256,27 @@ class _SwipeableCardState extends State<SwipeableCard>
                       ),
                     ),
                     child: IconButton(
-                        onPressed: () {
-                          String text = _weightController.text.replaceAll(
-                            RegExp(r'[^0-9]'),
-                            '',
+                      onPressed: () {
+                        String text = _weightController.text.replaceAll(
+                          RegExp(r'[^0-9]'),
+                          '',
+                        );
+                        int current = int.tryParse(text) ?? 0;
+                        if (current > 2) {
+                          int newValue = current - 2;
+                          _weightController.text = '$newValue kg';
+                          widget.onCardUpdate(
+                            widget.card.copyWith(weight: newValue.toString()),
                           );
-                          int current = int.tryParse(text) ?? 0;
-                          if (current > 2) {
-                            int newValue = current - 2;
-                            _weightController.text = '$newValue kg';
-                            widget.onCardUpdate(
-                              widget.card.copyWith(weight: newValue.toString()),
-                            );
-                          }
-                        },
-                        icon: const Icon(Icons.chevron_left),
-                        color: Colors.white,
-                        iconSize: 28,
-                        style: IconButton.styleFrom(
-                          padding: const EdgeInsets.all(4),
-                        ),
+                        }
+                      },
+                      icon: const Icon(Icons.chevron_left),
+                      color: Colors.white,
+                      iconSize: 28,
+                      style: IconButton.styleFrom(
+                        padding: const EdgeInsets.all(4),
                       ),
+                    ),
                   ),
                   suffixIcon: ListenableBuilder(
                     listenable: _weightFocusNode,
@@ -293,26 +288,25 @@ class _SwipeableCardState extends State<SwipeableCard>
                       ),
                     ),
                     child: IconButton(
-                        onPressed: () {
-                          String text = _weightController.text.replaceAll(
-                            RegExp(r'[^0-9]'),
-                            '',
-                          );
-                          int current = int.tryParse(text) ?? 0;
-                          int newValue = current + 2;
-                          _weightController.text = '$newValue kg';
-                          widget.onCardUpdate(
-                            widget.card.copyWith(weight: newValue.toString()),
-                          );
-                        },
-                        icon: const Icon(Icons.chevron_right),
-                        color: Colors.white,
-                        iconSize: 28,
-                        style: IconButton.styleFrom(
-                          padding: const EdgeInsets.all(4),
-                        ),
+                      onPressed: () {
+                        String text = _weightController.text.replaceAll(
+                          RegExp(r'[^0-9]'),
+                          '',
+                        );
+                        int current = int.tryParse(text) ?? 0;
+                        int newValue = current + 2;
+                        _weightController.text = '$newValue kg';
+                        widget.onCardUpdate(
+                          widget.card.copyWith(weight: newValue.toString()),
+                        );
+                      },
+                      icon: const Icon(Icons.chevron_right),
+                      color: Colors.white,
+                      iconSize: 28,
+                      style: IconButton.styleFrom(
+                        padding: const EdgeInsets.all(4),
                       ),
-
+                    ),
                   ),
                 ),
               ),
@@ -324,21 +318,16 @@ class _SwipeableCardState extends State<SwipeableCard>
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 32,
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w300,
+                  letterSpacing: 1.5,
                 ),
                 decoration: InputDecoration(
-                  labelText: 'Reps',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  hintText: '0 reps',
-                  hintStyle: const TextStyle(color: Colors.white30),
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white70, width: 1),
-                  ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                   prefixIcon: ListenableBuilder(
                     listenable: _repsFocusNode,
                     builder: (context, child) => Opacity(
@@ -349,27 +338,27 @@ class _SwipeableCardState extends State<SwipeableCard>
                       ),
                     ),
                     child: IconButton(
-                        onPressed: () {
-                          String text = _repsController.text.replaceAll(
-                            RegExp(r'[^0-9]'),
-                            '',
+                      onPressed: () {
+                        String text = _repsController.text.replaceAll(
+                          RegExp(r'[^0-9]'),
+                          '',
+                        );
+                        int current = int.tryParse(text) ?? 0;
+                        if (current > 1) {
+                          int newValue = current - 1;
+                          _repsController.text = '$newValue reps';
+                          widget.onCardUpdate(
+                            widget.card.copyWith(reps: newValue.toString()),
                           );
-                          int current = int.tryParse(text) ?? 0;
-                          if (current > 1) {
-                            int newValue = current - 1;
-                            _repsController.text = '$newValue reps';
-                            widget.onCardUpdate(
-                              widget.card.copyWith(reps: newValue.toString()),
-                            );
-                          }
-                        },
-                        icon: const Icon(Icons.chevron_left),
-                        color: Colors.white,
-                        iconSize: 28,
-                        style: IconButton.styleFrom(
-                          padding: const EdgeInsets.all(4),
-                        ),
+                        }
+                      },
+                      icon: const Icon(Icons.chevron_left),
+                      color: Colors.white,
+                      iconSize: 28,
+                      style: IconButton.styleFrom(
+                        padding: const EdgeInsets.all(4),
                       ),
+                    ),
                   ),
                   suffixIcon: ListenableBuilder(
                     listenable: _repsFocusNode,
@@ -381,25 +370,25 @@ class _SwipeableCardState extends State<SwipeableCard>
                       ),
                     ),
                     child: IconButton(
-                        onPressed: () {
-                          String text = _repsController.text.replaceAll(
-                            RegExp(r'[^0-9]'),
-                            '',
-                          );
-                          int current = int.tryParse(text) ?? 0;
-                          int newValue = current + 1;
-                          _repsController.text = '$newValue reps';
-                          widget.onCardUpdate(
-                            widget.card.copyWith(reps: newValue.toString()),
-                          );
-                        },
-                        icon: const Icon(Icons.chevron_right),
-                        color: Colors.white,
-                        iconSize: 28,
-                        style: IconButton.styleFrom(
-                          padding: const EdgeInsets.all(4),
-                        ),
+                      onPressed: () {
+                        String text = _repsController.text.replaceAll(
+                          RegExp(r'[^0-9]'),
+                          '',
+                        );
+                        int current = int.tryParse(text) ?? 0;
+                        int newValue = current + 1;
+                        _repsController.text = '$newValue reps';
+                        widget.onCardUpdate(
+                          widget.card.copyWith(reps: newValue.toString()),
+                        );
+                      },
+                      icon: const Icon(Icons.chevron_right),
+                      color: Colors.white,
+                      iconSize: 28,
+                      style: IconButton.styleFrom(
+                        padding: const EdgeInsets.all(4),
                       ),
+                    ),
                   ),
                 ),
               ),
