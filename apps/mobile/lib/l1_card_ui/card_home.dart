@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../l2_card_model/card_model.dart';
 import 'widgets/swipeable_card.dart';
@@ -11,6 +12,7 @@ class CardHomePage extends StatefulWidget {
 
 class _CardHomePageState extends State<CardHomePage> {
   late List<CardModel> _cards;
+  late List<int> _cardOrder; // Tracks which card index is at which position
 
   @override
   void initState() {
@@ -71,13 +73,17 @@ class _CardHomePageState extends State<CardHomePage> {
         reps: '10',
       ),
     );
+
+    // Initialize card order (0 is front, 1 is second, etc.)
+    _cardOrder = List.generate(_cards.length, (index) => index);
   }
 
   void _removeTopCard() {
     setState(() {
-      if (_cards.isNotEmpty) {
-        final topCard = _cards.removeAt(0);
-        _cards.add(topCard);
+      if (_cardOrder.isNotEmpty) {
+        // Rotate the order: move first card to back
+        final topIndex = _cardOrder.removeAt(0);
+        _cardOrder.add(topIndex);
       }
     });
   }
@@ -126,24 +132,24 @@ class _CardHomePageState extends State<CardHomePage> {
             : Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Pre-build up to 3 cards for smooth transitions
-                  for (int i = min(_cards.length - 1, 2); i >= 0; i--)
+                  // Build cards dynamically with stable keys
+                  for (int i = min(_cardOrder.length - 1, 2); i >= 0; i--)
                     Padding(
                       padding: EdgeInsets.only(top: i * 10.0, left: i * 5.0),
                       child: i == 0
                           ? SwipeableCard(
-                              key: ValueKey(_cards[0].exerciseName),
-                              card: _cards[0],
+                              key: ValueKey('card_${_cardOrder[0]}'),
+                              card: _cards[_cardOrder[0]],
                               onSwipedAway: _removeTopCard,
-                              onCardUpdate: (updatedCard) => _updateCard(0, updatedCard),
+                              onCardUpdate: (updatedCard) => _updateCard(_cardOrder[0], updatedCard),
                             )
                           : IgnorePointer(
                               child: RepaintBoundary(
                                 child: SwipeableCard(
-                                  key: ValueKey(_cards[i].exerciseName),
-                                  card: _cards[i],
+                                  key: ValueKey('card_${_cardOrder[i]}'),
+                                  card: _cards[_cardOrder[i]],
                                   onSwipedAway: () {},
-                                  onCardUpdate: (updatedCard) => _updateCard(i, updatedCard),
+                                  onCardUpdate: (updatedCard) => _updateCard(_cardOrder[i], updatedCard),
                                 ),
                               ),
                             ),
@@ -153,6 +159,4 @@ class _CardHomePageState extends State<CardHomePage> {
       ),
     );
   }
-
-  int min(int a, int b) => a < b ? a : b;
 }

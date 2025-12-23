@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class CardModel {
   final String exerciseName;
   final Color color;
-  bool isFlipped;
-  String weight;
-  String reps;
+  final bool isFlipped;
+  final String weight;
+  final String reps;
 
   CardModel({
     required this.exerciseName,

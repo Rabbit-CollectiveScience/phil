@@ -5,7 +5,7 @@ import '../../l2_card_model/card_model.dart';
 class SwipeableCard extends StatefulWidget {
   final CardModel card;
   final VoidCallback onSwipedAway;
-  final Function(CardModel) onCardUpdate;
+  final ValueChanged<CardModel> onCardUpdate;
 
   const SwipeableCard({
     super.key,
@@ -30,7 +30,6 @@ class _SwipeableCardState extends State<SwipeableCard>
   late FocusNode _weightFocusNode;
   late FocusNode _repsFocusNode;
   late final Widget _frontCard;
-  late final Widget _backCard;
 
   @override
   void initState() {
@@ -45,13 +44,19 @@ class _SwipeableCardState extends State<SwipeableCard>
     _weightFocusNode = FocusNode();
     _repsFocusNode = FocusNode();
 
-    // Build card sides once to avoid rebuilding during animation
+    // Only cache front card - back has dynamic focus UI
     _frontCard = _buildFrontCard();
-    _backCard = _buildBackCard();
 
     _flipController.addStatusListener((status) {
-      if (status == AnimationStatus.completed ||
-          status == AnimationStatus.dismissed) {
+      if (status == AnimationStatus.completed) {
+        // Animation finished - update card state and clear flipping flag
+        widget.onCardUpdate(widget.card.copyWith(isFlipped: true));
+        setState(() {
+          _isFlipping = false;
+        });
+      } else if (status == AnimationStatus.dismissed) {
+        // Animation reversed - update card state and clear flipping flag
+        widget.onCardUpdate(widget.card.copyWith(isFlipped: false));
         setState(() {
           _isFlipping = false;
         });
@@ -69,6 +74,28 @@ class _SwipeableCardState extends State<SwipeableCard>
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(SwipeableCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Update controllers when card data changes
+    if (oldWidget.card.weight != widget.card.weight) {
+      _weightController.text = '${widget.card.weight} kg';
+    }
+    if (oldWidget.card.reps != widget.card.reps) {
+      _repsController.text = '${widget.card.reps} reps';
+    }
+    
+    // Sync animation state with card flip state
+    if (oldWidget.card.isFlipped != widget.card.isFlipped) {
+      if (widget.card.isFlipped && _flipController.value == 0.0) {
+        _flipController.value = 1.0;
+      } else if (!widget.card.isFlipped && _flipController.value == 1.0) {
+        _flipController.value = 0.0;
+      }
+    }
+  }
+
   void _handleTap() {
     setState(() {
       _isFlipping = true;
@@ -79,7 +106,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     } else {
       _flipController.forward();
     }
-    widget.onCardUpdate(widget.card.copyWith(isFlipped: !widget.card.isFlipped));
+    // Don't update card state here - wait for animation to complete
   }
 
   void _handlePanStart(DragStartDetails details) {
@@ -140,7 +167,7 @@ class _SwipeableCardState extends State<SwipeableCard>
             ),
           ],
         ),
-        child: isFrontVisible ? _frontCard : _backCard,
+        child: isFrontVisible ? _frontCard : _buildBackCard(),
       ),
     );
   }
@@ -204,9 +231,6 @@ class _SwipeableCardState extends State<SwipeableCard>
                 controller: _weightController,
                 focusNode: _weightFocusNode,
                 readOnly: true,
-                onChanged: (value) {
-                  widget.card.weight = value;
-                },
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
@@ -241,7 +265,11 @@ class _SwipeableCardState extends State<SwipeableCard>
                             if (current > 2) {
                               int newValue = current - 2;
                               _weightController.text = '$newValue kg';
-                              widget.onCardUpdate(widget.card.copyWith(weight: newValue.toString()));
+                              widget.onCardUpdate(
+                                widget.card.copyWith(
+                                  weight: newValue.toString(),
+                                ),
+                              );
                             }
                           },
                           icon: const Icon(Icons.chevron_left),
@@ -262,7 +290,9 @@ class _SwipeableCardState extends State<SwipeableCard>
                             int current = int.tryParse(text) ?? 0;
                             int newValue = current + 2;
                             _weightController.text = '$newValue kg';
-                            widget.onCardUpdate(widget.card.copyWith(weight: newValue.toString()));
+                            widget.onCardUpdate(
+                              widget.card.copyWith(weight: newValue.toString()),
+                            );
                           },
                           icon: const Icon(Icons.chevron_right),
                           color: Colors.white,
@@ -279,9 +309,6 @@ class _SwipeableCardState extends State<SwipeableCard>
                 controller: _repsController,
                 focusNode: _repsFocusNode,
                 readOnly: true,
-                onChanged: (value) {
-                  widget.card.reps = value;
-                },
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
@@ -316,7 +343,9 @@ class _SwipeableCardState extends State<SwipeableCard>
                             if (current > 1) {
                               int newValue = current - 1;
                               _repsController.text = '$newValue reps';
-                              widget.onCardUpdate(widget.card.copyWith(reps: newValue.toString()));
+                              widget.onCardUpdate(
+                                widget.card.copyWith(reps: newValue.toString()),
+                              );
                             }
                           },
                           icon: const Icon(Icons.chevron_left),
@@ -337,7 +366,9 @@ class _SwipeableCardState extends State<SwipeableCard>
                             int current = int.tryParse(text) ?? 0;
                             int newValue = current + 1;
                             _repsController.text = '$newValue reps';
-                            widget.onCardUpdate(widget.card.copyWith(reps: newValue.toString()));
+                            widget.onCardUpdate(
+                              widget.card.copyWith(reps: newValue.toString()),
+                            );
                           },
                           icon: const Icon(Icons.chevron_right),
                           color: Colors.white,
@@ -376,56 +407,41 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   @override
   Widget build(BuildContext context) {
-    // Always keep both sides rendered for smooth animation
-    return Stack(
-      children: [
-        // Force both sides into render tree with opacity 0
-        Opacity(
-          opacity: 0.0,
-          child: IgnorePointer(child: _buildCardContent(false)),
-        ),
-        Opacity(
-          opacity: 0.0,
-          child: IgnorePointer(child: _buildCardContent(true)),
-        ),
-        // Visible card with animation
-        GestureDetector(
-          onTap: _handleTap,
-          onPanStart: _handlePanStart,
-          onPanUpdate: _handlePanUpdate,
-          onPanEnd: _handlePanEnd,
-          child: AnimatedContainer(
-            duration: _isDragging
-                ? Duration.zero
-                : const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-            transform: Matrix4.identity()
-              ..translate(_dragOffset.dx, _dragOffset.dy)
-              ..rotateZ(_dragRotation),
-            child: _isFlipping
-                ? AnimatedBuilder(
-                    animation: _flipController,
-                    builder: (context, child) {
-                      final angle = _flipController.value * pi;
-                      final isFrontVisible = angle < pi / 2;
+    return GestureDetector(
+      onTap: _handleTap,
+      onPanStart: _handlePanStart,
+      onPanUpdate: _handlePanUpdate,
+      onPanEnd: _handlePanEnd,
+      child: AnimatedContainer(
+        duration: _isDragging
+            ? Duration.zero
+            : const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+        transform: Matrix4.identity()
+          ..translate(_dragOffset.dx, _dragOffset.dy)
+          ..rotateZ(_dragRotation),
+        child: _isFlipping
+            ? AnimatedBuilder(
+                animation: _flipController,
+                builder: (context, child) {
+                  final angle = _flipController.value * pi;
+                  final isFrontVisible = angle < pi / 2;
 
-                      return Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.identity()
-                          ..setEntry(3, 2, 0.001)
-                          ..rotateY(angle),
-                        child: Transform(
-                          alignment: Alignment.center,
-                          transform: Matrix4.rotationY(isFrontVisible ? 0 : pi),
-                          child: _buildCardContent(isFrontVisible),
-                        ),
-                      );
-                    },
-                  )
-                : _buildCardContent(!widget.card.isFlipped),
-          ),
-        ),
-      ],
+                  return Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.identity()
+                      ..setEntry(3, 2, 0.001)
+                      ..rotateY(angle),
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationY(isFrontVisible ? 0 : pi),
+                      child: _buildCardContent(isFrontVisible),
+                    ),
+                  );
+                },
+              )
+            : _buildCardContent(!widget.card.isFlipped),
+      ),
     );
   }
 }
