@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'l1_ui/card_home.dart';
 import 'l1_ui/record.dart';
 import 'l1_ui/dashboard.dart';
 import 'l1_ui/exercise_list_page.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFF3A3A3A),
         useMaterial3: true,
       ),
-      home: const MainNavigator(),
+      home: const CardHomePage(),
     );
   }
 }
