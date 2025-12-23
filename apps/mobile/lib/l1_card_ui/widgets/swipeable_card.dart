@@ -6,12 +6,14 @@ import '../../l2_card_model/card_model.dart';
 class SwipeableCard extends StatefulWidget {
   final CardModel card;
   final VoidCallback onSwipedAway;
+  final VoidCallback onCompleted;
   final ValueChanged<CardModel> onCardUpdate;
 
   const SwipeableCard({
     super.key,
     required this.card,
     required this.onSwipedAway,
+    required this.onCompleted,
     required this.onCardUpdate,
   });
 
@@ -26,6 +28,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   double _dragRotation = 0.0;
   bool _isDragging = false;
   bool _isFlipping = false;
+  bool _isCompleting = false;
   late TextEditingController _weightController;
   late TextEditingController _repsController;
   late FocusNode _weightFocusNode;
@@ -166,10 +169,18 @@ class _SwipeableCardState extends State<SwipeableCard>
   void _handlePanEnd(DragEndDetails details) {
     final velocity = details.velocity.pixelsPerSecond;
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
-    if (_dragOffset.dx.abs() > screenWidth * 0.3 || velocity.dx.abs() > 500) {
+    // Check for downward swipe (completion)
+    if (_dragOffset.dy > screenHeight * 0.2 || velocity.dy > 500) {
+      _animateCardToComplete(velocity);
+    }
+    // Check for horizontal swipe (swipe away)
+    else if (_dragOffset.dx.abs() > screenWidth * 0.3 || velocity.dx.abs() > 500) {
       _animateCardAwayWithMomentum(velocity);
-    } else {
+    }
+    // Bounce back
+    else {
       setState(() {
         _dragOffset = Offset.zero;
         _dragRotation = 0.0;
@@ -178,10 +189,35 @@ class _SwipeableCardState extends State<SwipeableCard>
     }
   }
 
+  void _animateCardToComplete(Offset velocity) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    
+    setState(() {
+      _isCompleting = true;
+      _isDragging = false;
+    });
+
+    // Animate down off-screen with momentum
+    final momentumY = _dragOffset.dy + (velocity.dy * 0.3);
+    final exitDistance = screenHeight * 1.2;
+    
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (mounted) {
+        setState(() {
+          _dragOffset = Offset(0, exitDistance + momentumY);
+        });
+      }
+    });
+
+    Future.delayed(const Duration(milliseconds: 350), () {
+      widget.onCompleted();
+    });
+  }
+
   void _animateCardAwayWithMomentum(Offset velocity) {
     final screenWidth = MediaQuery.of(context).size.width;
     final direction = _dragOffset.dx > 0 ? 1 : -1;
-    
+
     // Calculate momentum-based exit with velocity continuation
     final momentumY = _dragOffset.dy + (velocity.dy * 0.3);
     final exitDistance = screenWidth * 1.5 * direction;
@@ -456,7 +492,9 @@ class _SwipeableCardState extends State<SwipeableCard>
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                _animateCardToComplete(Offset.zero);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFB9E479), // Lime green accent
                 foregroundColor: Colors.black,
@@ -494,7 +532,8 @@ class _SwipeableCardState extends State<SwipeableCard>
         curve: Curves.easeOut,
         transform: Matrix4.identity()
           ..translate(_dragOffset.dx, _dragOffset.dy)
-          ..rotateZ(_dragRotation),
+          ..rotateZ(_dragRotation)
+          ..scale(_isCompleting ? 0.6 : 1.0),
         child: _isFlipping
             ? AnimatedBuilder(
                 animation: _flipController,

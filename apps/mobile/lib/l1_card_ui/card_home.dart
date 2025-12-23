@@ -13,6 +13,7 @@ class CardHomePage extends StatefulWidget {
 class _CardHomePageState extends State<CardHomePage> {
   late List<CardModel> _cards;
   late List<int> _cardOrder; // Tracks which card index is at which position
+  final List<CardModel> _completedCards = []; // Track completed cards
 
   @override
   void initState() {
@@ -73,6 +74,15 @@ class _CardHomePageState extends State<CardHomePage> {
     });
   }
 
+  void _completeTopCard() {
+    setState(() {
+      if (_cardOrder.isNotEmpty) {
+        final topIndex = _cardOrder.removeAt(0);
+        _completedCards.add(_cards[topIndex]);
+      }
+    });
+  }
+
   void _updateCard(int index, CardModel updatedCard) {
     setState(() {
       _cards[index] = updatedCard;
@@ -105,32 +115,41 @@ class _CardHomePageState extends State<CardHomePage> {
                 ],
               )
             : Stack(
-                alignment: Alignment.center,
                 children: [
-                  // Build cards dynamically with stable keys
-                  for (int i = min(_cardOrder.length - 1, 2); i >= 0; i--)
-                    Padding(
-                      padding: EdgeInsets.only(top: i * 10.0, left: i * 5.0),
-                      child: i == 0
-                          ? SwipeableCard(
-                              key: ValueKey('card_${_cardOrder[0]}'),
-                              card: _cards[_cardOrder[0]],
-                              onSwipedAway: _removeTopCard,
-                              onCardUpdate: (updatedCard) =>
-                                  _updateCard(_cardOrder[0], updatedCard),
-                            )
-                          : IgnorePointer(
-                              child: RepaintBoundary(
-                                child: SwipeableCard(
-                                  key: ValueKey('card_${_cardOrder[i]}'),
-                                  card: _cards[_cardOrder[i]],
-                                  onSwipedAway: () {},
-                                  onCardUpdate: (updatedCard) =>
-                                      _updateCard(_cardOrder[i], updatedCard),
-                                ),
-                              ),
-                            ),
+                  // Main card area
+                  Center(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Build cards dynamically with stable keys
+                        for (int i = min(_cardOrder.length - 1, 2); i >= 0; i--)
+                          Padding(
+                            padding: EdgeInsets.only(top: i * 10.0, left: i * 5.0),
+                            child: i == 0
+                                ? SwipeableCard(
+                                    key: ValueKey('card_${_cardOrder[0]}'),
+                                    card: _cards[_cardOrder[0]],
+                                    onSwipedAway: _removeTopCard,
+                                    onCompleted: _completeTopCard,
+                                    onCardUpdate: (updatedCard) =>
+                                        _updateCard(_cardOrder[0], updatedCard),
+                                  )
+                                : IgnorePointer(
+                                    child: RepaintBoundary(
+                                      child: SwipeableCard(
+                                        key: ValueKey('card_${_cardOrder[i]}'),
+                                        card: _cards[_cardOrder[i]],
+                                        onSwipedAway: () {},
+                                        onCompleted: () {},
+                                        onCardUpdate: (updatedCard) =>
+                                            _updateCard(_cardOrder[i], updatedCard),
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                      ],
                     ),
+                  ),
                 ],
               ),
       ),
