@@ -168,7 +168,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     final screenWidth = MediaQuery.of(context).size.width;
 
     if (_dragOffset.dx.abs() > screenWidth * 0.3 || velocity.dx.abs() > 500) {
-      _animateCardAway();
+      _animateCardAwayWithMomentum(velocity);
     } else {
       setState(() {
         _dragOffset = Offset.zero;
@@ -178,13 +178,18 @@ class _SwipeableCardState extends State<SwipeableCard>
     }
   }
 
-  void _animateCardAway() {
+  void _animateCardAwayWithMomentum(Offset velocity) {
     final screenWidth = MediaQuery.of(context).size.width;
     final direction = _dragOffset.dx > 0 ? 1 : -1;
+    
+    // Calculate momentum-based exit with velocity continuation
+    final momentumY = _dragOffset.dy + (velocity.dy * 0.3);
+    final exitDistance = screenWidth * 1.5 * direction;
 
     setState(() {
-      _dragOffset = Offset(screenWidth * 1.5 * direction, _dragOffset.dy);
-      _dragRotation = 0.5 * direction;
+      _dragOffset = Offset(exitDistance, momentumY);
+      _dragRotation = (exitDistance / 1000).clamp(-0.5, 0.5);
+      _isDragging = false;
     });
 
     Future.delayed(const Duration(milliseconds: 300), () {

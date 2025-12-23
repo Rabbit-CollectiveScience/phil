@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.white,
           brightness: Brightness.dark,
         ),
-        scaffoldBackgroundColor: const Color(0xFF1A1A1A), // Bold Studio: deep charcoal
+        scaffoldBackgroundColor: const Color(
+          0xFF1A1A1A,
+        ), // Bold Studio: deep charcoal
         useMaterial3: true,
       ),
       home: const CardHomePage(),
