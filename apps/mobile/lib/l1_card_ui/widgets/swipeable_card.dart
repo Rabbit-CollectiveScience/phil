@@ -85,7 +85,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   @override
   void didUpdateWidget(SwipeableCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     // Update controllers when card data changes
     if (oldWidget.card.weight != widget.card.weight) {
       _weightController.text = '${widget.card.weight} kg';
@@ -93,7 +93,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     if (oldWidget.card.reps != widget.card.reps) {
       _repsController.text = '${widget.card.reps} reps';
     }
-    
+
     // Sync animation state with card flip state
     if (oldWidget.card.isFlipped != widget.card.isFlipped) {
       if (widget.card.isFlipped && _flipController.value == 0.0) {
@@ -262,54 +262,62 @@ class _SwipeableCardState extends State<SwipeableCard>
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Colors.white, width: 2),
                   ),
-                  prefixIcon: _weightFocusNode.hasFocus
-                      ? IconButton(
-                          onPressed: () {
-                            String text = _weightController.text.replaceAll(
-                              RegExp(r'[^0-9]'),
-                              '',
-                            );
-                            int current = int.tryParse(text) ?? 0;
-                            if (current > 2) {
-                              int newValue = current - 2;
-                              _weightController.text = '$newValue kg';
-                              widget.onCardUpdate(
-                                widget.card.copyWith(
-                                  weight: newValue.toString(),
-                                ),
-                              );
-                            }
-                          },
-                          icon: const Icon(Icons.chevron_left),
-                          color: Colors.white,
-                          iconSize: 28,
-                          style: IconButton.styleFrom(
-                            padding: const EdgeInsets.all(4),
-                          ),
-                        )
-                      : null,
-                  suffixIcon: _weightFocusNode.hasFocus
-                      ? IconButton(
-                          onPressed: () {
-                            String text = _weightController.text.replaceAll(
-                              RegExp(r'[^0-9]'),
-                              '',
-                            );
-                            int current = int.tryParse(text) ?? 0;
-                            int newValue = current + 2;
+                  prefixIcon: Opacity(
+                    opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
+                    child: IgnorePointer(
+                      ignoring: !_weightFocusNode.hasFocus,
+                      child: IconButton(
+                        onPressed: () {
+                          String text = _weightController.text.replaceAll(
+                            RegExp(r'[^0-9]'),
+                            '',
+                          );
+                          int current = int.tryParse(text) ?? 0;
+                          if (current > 2) {
+                            int newValue = current - 2;
                             _weightController.text = '$newValue kg';
                             widget.onCardUpdate(
-                              widget.card.copyWith(weight: newValue.toString()),
+                              widget.card.copyWith(
+                                weight: newValue.toString(),
+                              ),
                             );
-                          },
-                          icon: const Icon(Icons.chevron_right),
-                          color: Colors.white,
-                          iconSize: 28,
-                          style: IconButton.styleFrom(
-                            padding: const EdgeInsets.all(4),
-                          ),
-                        )
-                      : null,
+                          }
+                        },
+                        icon: const Icon(Icons.chevron_left),
+                        color: Colors.white,
+                        iconSize: 28,
+                        style: IconButton.styleFrom(
+                          padding: const EdgeInsets.all(4),
+                        ),
+                      ),
+                    ),
+                  ),
+                  suffixIcon: Opacity(
+                    opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
+                    child: IgnorePointer(
+                      ignoring: !_weightFocusNode.hasFocus,
+                      child: IconButton(
+                        onPressed: () {
+                          String text = _weightController.text.replaceAll(
+                            RegExp(r'[^0-9]'),
+                            '',
+                          );
+                          int current = int.tryParse(text) ?? 0;
+                          int newValue = current + 2;
+                          _weightController.text = '$newValue kg';
+                          widget.onCardUpdate(
+                            widget.card.copyWith(weight: newValue.toString()),
+                          );
+                        },
+                        icon: const Icon(Icons.chevron_right),
+                        color: Colors.white,
+                        iconSize: 28,
+                        style: IconButton.styleFrom(
+                          padding: const EdgeInsets.all(4),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 15),
@@ -340,52 +348,60 @@ class _SwipeableCardState extends State<SwipeableCard>
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Colors.white, width: 2),
                   ),
-                  prefixIcon: _repsFocusNode.hasFocus
-                      ? IconButton(
-                          onPressed: () {
-                            String text = _repsController.text.replaceAll(
-                              RegExp(r'[^0-9]'),
-                              '',
-                            );
-                            int current = int.tryParse(text) ?? 0;
-                            if (current > 1) {
-                              int newValue = current - 1;
-                              _repsController.text = '$newValue reps';
-                              widget.onCardUpdate(
-                                widget.card.copyWith(reps: newValue.toString()),
-                              );
-                            }
-                          },
-                          icon: const Icon(Icons.chevron_left),
-                          color: Colors.white,
-                          iconSize: 28,
-                          style: IconButton.styleFrom(
-                            padding: const EdgeInsets.all(4),
-                          ),
-                        )
-                      : null,
-                  suffixIcon: _repsFocusNode.hasFocus
-                      ? IconButton(
-                          onPressed: () {
-                            String text = _repsController.text.replaceAll(
-                              RegExp(r'[^0-9]'),
-                              '',
-                            );
-                            int current = int.tryParse(text) ?? 0;
-                            int newValue = current + 1;
+                  prefixIcon: Opacity(
+                    opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
+                    child: IgnorePointer(
+                      ignoring: !_repsFocusNode.hasFocus,
+                      child: IconButton(
+                        onPressed: () {
+                          String text = _repsController.text.replaceAll(
+                            RegExp(r'[^0-9]'),
+                            '',
+                          );
+                          int current = int.tryParse(text) ?? 0;
+                          if (current > 1) {
+                            int newValue = current - 1;
                             _repsController.text = '$newValue reps';
                             widget.onCardUpdate(
                               widget.card.copyWith(reps: newValue.toString()),
                             );
-                          },
-                          icon: const Icon(Icons.chevron_right),
-                          color: Colors.white,
-                          iconSize: 28,
-                          style: IconButton.styleFrom(
-                            padding: const EdgeInsets.all(4),
-                          ),
-                        )
-                      : null,
+                          }
+                        },
+                        icon: const Icon(Icons.chevron_left),
+                        color: Colors.white,
+                        iconSize: 28,
+                        style: IconButton.styleFrom(
+                          padding: const EdgeInsets.all(4),
+                        ),
+                      ),
+                    ),
+                  ),
+                  suffixIcon: Opacity(
+                    opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
+                    child: IgnorePointer(
+                      ignoring: !_repsFocusNode.hasFocus,
+                      child: IconButton(
+                        onPressed: () {
+                          String text = _repsController.text.replaceAll(
+                            RegExp(r'[^0-9]'),
+                            '',
+                          );
+                          int current = int.tryParse(text) ?? 0;
+                          int newValue = current + 1;
+                          _repsController.text = '$newValue reps';
+                          widget.onCardUpdate(
+                            widget.card.copyWith(reps: newValue.toString()),
+                          );
+                        },
+                        icon: const Icon(Icons.chevron_right),
+                        color: Colors.white,
+                        iconSize: 28,
+                        style: IconButton.styleFrom(
+                          padding: const EdgeInsets.all(4),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
