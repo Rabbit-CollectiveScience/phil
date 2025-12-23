@@ -124,7 +124,10 @@ class _CardHomePageState extends State<CardHomePage> {
                         // Build cards dynamically with stable keys
                         for (int i = min(_cardOrder.length - 1, 2); i >= 0; i--)
                           Padding(
-                            padding: EdgeInsets.only(top: i * 10.0, left: i * 5.0),
+                            padding: EdgeInsets.only(
+                              top: i * 10.0,
+                              left: i * 5.0,
+                            ),
                             child: i == 0
                                 ? SwipeableCard(
                                     key: ValueKey('card_${_cardOrder[0]}'),
@@ -142,12 +145,45 @@ class _CardHomePageState extends State<CardHomePage> {
                                         onSwipedAway: () {},
                                         onCompleted: () {},
                                         onCardUpdate: (updatedCard) =>
-                                            _updateCard(_cardOrder[i], updatedCard),
+                                            _updateCard(
+                                              _cardOrder[i],
+                                              updatedCard,
+                                            ),
                                       ),
                                     ),
                                   ),
                           ),
                       ],
+                    ),
+                  ),
+                  // Completed counter at bottom
+                  Positioned(
+                    bottom: 40,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: const Color(0xFF4A4A4A),
+                          border: Border.all(
+                            color: const Color(0xFFB9E479),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${_completedCards.length}',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xFFB9E479),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],

@@ -176,7 +176,8 @@ class _SwipeableCardState extends State<SwipeableCard>
       _animateCardToComplete(velocity);
     }
     // Check for horizontal swipe (swipe away)
-    else if (_dragOffset.dx.abs() > screenWidth * 0.3 || velocity.dx.abs() > 500) {
+    else if (_dragOffset.dx.abs() > screenWidth * 0.3 ||
+        velocity.dx.abs() > 500) {
       _animateCardAwayWithMomentum(velocity);
     }
     // Bounce back
@@ -191,7 +192,7 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   void _animateCardToComplete(Offset velocity) {
     final screenHeight = MediaQuery.of(context).size.height;
-    
+
     setState(() {
       _isCompleting = true;
       _isDragging = false;
@@ -200,7 +201,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     // Animate down off-screen with momentum
     final momentumY = _dragOffset.dy + (velocity.dy * 0.3);
     final exitDistance = screenHeight * 1.2;
-    
+
     Future.delayed(const Duration(milliseconds: 50), () {
       if (mounted) {
         setState(() {
