@@ -199,7 +199,7 @@ class _SwipeableCardState extends State<SwipeableCard>
         height: 400,
         decoration: BoxDecoration(
           color: widget.card.color,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(0),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
@@ -215,33 +215,40 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   Widget _buildFrontCard() {
     return Padding(
-      padding: const EdgeInsets.all(32.0),
+      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            widget.card.exerciseName,
+            widget.card.exerciseName.toUpperCase(),
             textAlign: TextAlign.center,
+            maxLines: 3,
             style: const TextStyle(
               fontSize: 36,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w900,
               color: Colors.white,
+              letterSpacing: 0.5,
+              height: 1.2,
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 50),
           ElevatedButton(
             onPressed: _handleTap,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: widget.card.color,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              backgroundColor: const Color(0xFFB9E479), // Lime green accent
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(0),
               ),
             ),
             child: const Text(
-              "Let's do it!",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              "START",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 2.0,
+              ),
             ),
           ),
         ],
@@ -251,23 +258,27 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   Widget _buildBackCard() {
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 28.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           Column(
             children: [
               Text(
-                widget.card.exerciseName,
+                widget.card.exerciseName.toUpperCase(),
                 textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w900,
                   color: Colors.white,
+                  letterSpacing: 1.2,
+                  height: 1.15,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               TextField(
                 controller: _weightController,
                 focusNode: _weightFocusNode,
@@ -311,7 +322,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                         }
                       },
                       icon: const Icon(Icons.chevron_left),
-                      color: Colors.white,
+                      color: const Color(0xFFB9E479), // Lime green accent
                       iconSize: 28,
                       style: IconButton.styleFrom(
                         padding: const EdgeInsets.all(4),
@@ -342,7 +353,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                         );
                       },
                       icon: const Icon(Icons.chevron_right),
-                      color: Colors.white,
+                      color: const Color(0xFFB9E479), // Lime green accent
                       iconSize: 28,
                       style: IconButton.styleFrom(
                         padding: const EdgeInsets.all(4),
@@ -395,7 +406,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                         }
                       },
                       icon: const Icon(Icons.chevron_left),
-                      color: Colors.white,
+                      color: const Color(0xFFB9E479), // Lime green accent
                       iconSize: 28,
                       style: IconButton.styleFrom(
                         padding: const EdgeInsets.all(4),
@@ -426,7 +437,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                         );
                       },
                       icon: const Icon(Icons.chevron_right),
-                      color: Colors.white,
+                      color: const Color(0xFFB9E479), // Lime green accent
                       iconSize: 28,
                       style: IconButton.styleFrom(
                         padding: const EdgeInsets.all(4),
@@ -442,16 +453,20 @@ class _SwipeableCardState extends State<SwipeableCard>
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: widget.card.color,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: const Color(0xFFB9E479), // Lime green accent
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 18),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(0),
                 ),
               ),
               child: const Text(
-                'Zet',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                'ZET',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2.0,
+                ),
               ),
             ),
           ),

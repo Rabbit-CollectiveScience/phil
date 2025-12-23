@@ -21,23 +21,8 @@ class _CardHomePageState extends State<CardHomePage> {
   }
 
   void _initializeCards() {
-    final colors = [
-      Colors.red,
-      Colors.blue,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
-      Colors.teal,
-      Colors.pink,
-      Colors.indigo,
-      Colors.amber,
-      Colors.cyan,
-      Colors.deepOrange,
-      Colors.lime,
-      Colors.brown,
-      Colors.blueGrey,
-      Colors.deepPurple,
-    ];
+    // Bold Studio theme - pronounced grey cards on deep charcoal background
+    const cardColor = Color(0xFF4A4A4A);
 
     final exercises = [
       // Compound exercises
@@ -68,7 +53,7 @@ class _CardHomePageState extends State<CardHomePage> {
       exercises.length,
       (index) => CardModel(
         exerciseName: exercises[index],
-        color: colors[index % colors.length],
+        color: cardColor,
         weight: '10',
         reps: '10',
       ),
@@ -103,16 +88,6 @@ class _CardHomePageState extends State<CardHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Card Interface POC'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _resetCards,
-            tooltip: 'Reset Cards',
-          ),
-        ],
-      ),
       body: Center(
         child: _cards.isEmpty
             ? Column(
