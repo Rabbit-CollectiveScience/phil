@@ -30,6 +30,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   late FocusNode _weightFocusNode;
   late FocusNode _repsFocusNode;
   late final Widget _frontCard;
+  late final Widget _backCard;
 
   @override
   void initState() {
@@ -44,16 +45,9 @@ class _SwipeableCardState extends State<SwipeableCard>
     _weightFocusNode = FocusNode();
     _repsFocusNode = FocusNode();
 
-    // Add listeners to rebuild when focus changes (to show/hide buttons)
-    _weightFocusNode.addListener(() {
-      setState(() {}); // Rebuild to show/hide buttons
-    });
-    _repsFocusNode.addListener(() {
-      setState(() {}); // Rebuild to show/hide buttons
-    });
-
-    // Only cache front card - back has dynamic focus UI
+    // Cache both front and back cards - ListenableBuilder handles focus reactivity
     _frontCard = _buildFrontCard();
+    _backCard = _buildBackCard();
 
     _flipController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -134,8 +128,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     final velocity = details.velocity.pixelsPerSecond;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    if (_dragOffset.dx.abs() > screenWidth * 0.3 ||
-        velocity.dx.abs() > 500) {
+    if (_dragOffset.dx.abs() > screenWidth * 0.3 || velocity.dx.abs() > 500) {
       _animateCardAway();
     } else {
       setState(() {
@@ -151,10 +144,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     final direction = _dragOffset.dx > 0 ? 1 : -1;
 
     setState(() {
-      _dragOffset = Offset(
-        screenWidth * 1.5 * direction,
-        _dragOffset.dy,
-      );
+      _dragOffset = Offset(screenWidth * 1.5 * direction, _dragOffset.dy);
       _dragRotation = 0.5 * direction;
     });
 
@@ -179,7 +169,7 @@ class _SwipeableCardState extends State<SwipeableCard>
             ),
           ],
         ),
-        child: isFrontVisible ? _frontCard : _buildBackCard(),
+        child: isFrontVisible ? _frontCard : _backCard,
       ),
     );
   }
@@ -261,11 +251,16 @@ class _SwipeableCardState extends State<SwipeableCard>
                   focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white, width: 2),
                   ),
-                  prefixIcon: Opacity(
-                    opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
-                    child: IgnorePointer(
-                      ignoring: !_weightFocusNode.hasFocus,
-                      child: IconButton(
+                  prefixIcon: ListenableBuilder(
+                    listenable: _weightFocusNode,
+                    builder: (context, child) => Opacity(
+                      opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
+                      child: IgnorePointer(
+                        ignoring: !_weightFocusNode.hasFocus,
+                        child: child!,
+                      ),
+                    ),
+                    child: IconButton(
                         onPressed: () {
                           String text = _weightController.text.replaceAll(
                             RegExp(r'[^0-9]'),
@@ -287,13 +282,17 @@ class _SwipeableCardState extends State<SwipeableCard>
                           padding: const EdgeInsets.all(4),
                         ),
                       ),
-                    ),
                   ),
-                  suffixIcon: Opacity(
-                    opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
-                    child: IgnorePointer(
-                      ignoring: !_weightFocusNode.hasFocus,
-                      child: IconButton(
+                  suffixIcon: ListenableBuilder(
+                    listenable: _weightFocusNode,
+                    builder: (context, child) => Opacity(
+                      opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
+                      child: IgnorePointer(
+                        ignoring: !_weightFocusNode.hasFocus,
+                        child: child!,
+                      ),
+                    ),
+                    child: IconButton(
                         onPressed: () {
                           String text = _weightController.text.replaceAll(
                             RegExp(r'[^0-9]'),
@@ -313,7 +312,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                           padding: const EdgeInsets.all(4),
                         ),
                       ),
-                    ),
+
                   ),
                 ),
               ),
@@ -340,11 +339,16 @@ class _SwipeableCardState extends State<SwipeableCard>
                   focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white, width: 2),
                   ),
-                  prefixIcon: Opacity(
-                    opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
-                    child: IgnorePointer(
-                      ignoring: !_repsFocusNode.hasFocus,
-                      child: IconButton(
+                  prefixIcon: ListenableBuilder(
+                    listenable: _repsFocusNode,
+                    builder: (context, child) => Opacity(
+                      opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
+                      child: IgnorePointer(
+                        ignoring: !_repsFocusNode.hasFocus,
+                        child: child!,
+                      ),
+                    ),
+                    child: IconButton(
                         onPressed: () {
                           String text = _repsController.text.replaceAll(
                             RegExp(r'[^0-9]'),
@@ -366,13 +370,17 @@ class _SwipeableCardState extends State<SwipeableCard>
                           padding: const EdgeInsets.all(4),
                         ),
                       ),
-                    ),
                   ),
-                  suffixIcon: Opacity(
-                    opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
-                    child: IgnorePointer(
-                      ignoring: !_repsFocusNode.hasFocus,
-                      child: IconButton(
+                  suffixIcon: ListenableBuilder(
+                    listenable: _repsFocusNode,
+                    builder: (context, child) => Opacity(
+                      opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
+                      child: IgnorePointer(
+                        ignoring: !_repsFocusNode.hasFocus,
+                        child: child!,
+                      ),
+                    ),
+                    child: IconButton(
                         onPressed: () {
                           String text = _repsController.text.replaceAll(
                             RegExp(r'[^0-9]'),
@@ -392,7 +400,6 @@ class _SwipeableCardState extends State<SwipeableCard>
                           padding: const EdgeInsets.all(4),
                         ),
                       ),
-                    ),
                   ),
                 ),
               ),
