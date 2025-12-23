@@ -23,6 +23,8 @@ class _SwipeableCardState extends State<SwipeableCard>
   double _dragRotation = 0.0;
   bool _isDragging = false;
   bool _isFlipping = false;
+  late TextEditingController _weightController;
+  late TextEditingController _repsController;
 
   @override
   void initState() {
@@ -31,9 +33,13 @@ class _SwipeableCardState extends State<SwipeableCard>
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    
+
+    _weightController = TextEditingController(text: widget.card.weight);
+    _repsController = TextEditingController(text: widget.card.reps);
+
     _flipController.addStatusListener((status) {
-      if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
         setState(() {
           _isFlipping = false;
         });
@@ -44,6 +50,8 @@ class _SwipeableCardState extends State<SwipeableCard>
   @override
   void dispose() {
     _flipController.dispose();
+    _weightController.dispose();
+    _repsController.dispose();
     super.dispose();
   }
 
@@ -51,7 +59,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     setState(() {
       _isFlipping = true;
     });
-    
+
     if (widget.card.isFlipped) {
       _flipController.reverse();
     } else {
@@ -76,7 +84,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   void _handlePanEnd(DragEndDetails details) {
     final velocity = details.velocity.pixelsPerSecond;
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     if (_dragOffset.dx.abs() > screenWidth * 0.3 || velocity.dx.abs() > 500) {
       _animateCardAway();
     } else {
@@ -91,7 +99,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   void _animateCardAway() {
     final screenWidth = MediaQuery.of(context).size.width;
     final direction = _dragOffset.dx > 0 ? 1 : -1;
-    
+
     setState(() {
       _dragOffset = Offset(screenWidth * 1.5 * direction, _dragOffset.dy);
       _dragRotation = 0.5 * direction;
@@ -118,18 +126,157 @@ class _SwipeableCardState extends State<SwipeableCard>
             ),
           ],
         ),
-        child: Center(
-          child: Text(
-            isFrontVisible
-                ? widget.card.number.toString()
-                : 'Back ${widget.card.number}',
-            style: const TextStyle(
-              fontSize: 72,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ),
+        child: isFrontVisible
+            ? Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.card.exerciseName,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    ElevatedButton(
+                      onPressed: _handleTap,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: widget.card.color,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        "Let's do it!",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(height: 20),
+                    Column(
+                      children: [
+                        Text(
+                          widget.card.exerciseName,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        TextField(
+                          controller: _weightController,
+                          onChanged: (value) {
+                            widget.card.weight = value;
+                          },
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: InputDecoration(
+                            labelText: 'Weight (lbs)',
+                            labelStyle: const TextStyle(color: Colors.white70),
+                            hintText: '0',
+                            hintStyle: const TextStyle(color: Colors.white30),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: Colors.white70,
+                                width: 2,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _repsController,
+                          onChanged: (value) {
+                            widget.card.reps = value;
+                          },
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: InputDecoration(
+                            labelText: 'Reps',
+                            labelStyle: const TextStyle(color: Colors.white70),
+                            hintText: '0',
+                            hintStyle: const TextStyle(color: Colors.white30),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: Colors.white70,
+                                width: 2,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: widget.card.color,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Done',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }
@@ -142,7 +289,7 @@ class _SwipeableCardState extends State<SwipeableCard>
             builder: (context, child) {
               final angle = _flipController.value * pi;
               final isFrontVisible = angle < pi / 2;
-              
+
               return Transform(
                 alignment: Alignment.center,
                 transform: Matrix4.identity()
@@ -164,7 +311,9 @@ class _SwipeableCardState extends State<SwipeableCard>
       onPanUpdate: _handlePanUpdate,
       onPanEnd: _handlePanEnd,
       child: AnimatedContainer(
-        duration: _isDragging ? Duration.zero : const Duration(milliseconds: 300),
+        duration: _isDragging
+            ? Duration.zero
+            : const Duration(milliseconds: 300),
         curve: Curves.easeOut,
         transform: Matrix4.identity()
           ..translate(_dragOffset.dx, _dragOffset.dy)

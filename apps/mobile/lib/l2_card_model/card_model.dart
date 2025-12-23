@@ -1,25 +1,33 @@
 import 'package:flutter/material.dart';
 
 class CardModel {
-  final int number;
+  final String exerciseName;
   final Color color;
   bool isFlipped;
+  String weight;
+  String reps;
 
   CardModel({
-    required this.number,
+    required this.exerciseName,
     required this.color,
     this.isFlipped = false,
+    this.weight = '',
+    this.reps = '',
   });
 
   CardModel copyWith({
-    int? number,
+    String? exerciseName,
     Color? color,
     bool? isFlipped,
+    String? weight,
+    String? reps,
   }) {
     return CardModel(
-      number: number ?? this.number,
+      exerciseName: exerciseName ?? this.exerciseName,
       color: color ?? this.color,
       isFlipped: isFlipped ?? this.isFlipped,
+      weight: weight ?? this.weight,
+      reps: reps ?? this.reps,
     );
   }
 }

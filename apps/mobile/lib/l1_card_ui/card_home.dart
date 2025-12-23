@@ -30,13 +30,43 @@ class _CardHomePageState extends State<CardHomePage> {
       Colors.indigo,
       Colors.amber,
       Colors.cyan,
+      Colors.deepOrange,
+      Colors.lime,
+      Colors.brown,
+      Colors.blueGrey,
+      Colors.deepPurple,
+    ];
+
+    final exercises = [
+      // Compound exercises
+      'Squat',
+      'Deadlift',
+      'Bench Press',
+      'Overhead Press',
+      'Barbell Row',
+      'Pull Up',
+      'Dip',
+      'Lunge',
+      'Romanian Deadlift',
+      'Front Squat',
+      // Isolation exercises
+      'Bicep Curl',
+      'Tricep Extension',
+      'Lateral Raise',
+      'Leg Curl',
+      'Leg Extension',
+      'Calf Raise',
+      'Face Pull',
+      'Cable Fly',
+      'Preacher Curl',
+      'Skull Crusher',
     ];
 
     _cards = List.generate(
-      10,
+      exercises.length,
       (index) => CardModel(
-        number: index + 1,
-        color: colors[index],
+        exerciseName: exercises[index],
+        color: colors[index % colors.length],
       ),
     );
   }
@@ -44,7 +74,8 @@ class _CardHomePageState extends State<CardHomePage> {
   void _removeTopCard() {
     setState(() {
       if (_cards.isNotEmpty) {
-        _cards.removeAt(0);
+        final topCard = _cards.removeAt(0);
+        _cards.add(topCard);
       }
     });
   }
@@ -93,14 +124,14 @@ class _CardHomePageState extends State<CardHomePage> {
                       padding: EdgeInsets.only(top: i * 10.0, left: i * 5.0),
                       child: i == 0
                           ? SwipeableCard(
-                              key: ValueKey(_cards[0].number),
+                              key: ValueKey(_cards[0].exerciseName),
                               card: _cards[0],
                               onSwipedAway: _removeTopCard,
                             )
                           : IgnorePointer(
                               child: RepaintBoundary(
                                 child: SwipeableCard(
-                                  key: ValueKey(_cards[i].number),
+                                  key: ValueKey(_cards[i].exerciseName),
                                   card: _cards[i],
                                   onSwipedAway: () {},
                                 ),
