@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../l2_card_model/card_model.dart';
 import 'widgets/swipeable_card.dart';
+import 'view_cards.dart';
 
 class CardHomePage extends StatefulWidget {
   const CardHomePage({super.key});
@@ -95,6 +96,31 @@ class _CardHomePageState extends State<CardHomePage> {
     });
   }
 
+  void _navigateToViewCards() {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return ViewCardsPage(completedCards: _completedCards);
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          // New page slides up from bottom
+          const beginIncoming = Offset(0.0, 1.0);
+          const endIncoming = Offset.zero;
+          const curve = Curves.easeOutCubic;
+
+          var incomingTween = Tween(begin: beginIncoming, end: endIncoming)
+              .chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(incomingTween),
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 400),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,8 +141,8 @@ class _CardHomePageState extends State<CardHomePage> {
                 ],
               )
             : Stack(
-                children: [
-                  // Main card area
+                  children: [
+                    // Main card area
                   Center(
                     child: Stack(
                       alignment: Alignment.center,
@@ -162,24 +188,33 @@ class _CardHomePageState extends State<CardHomePage> {
                     left: 0,
                     right: 0,
                     child: Center(
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFF4A4A4A),
-                          border: Border.all(
-                            color: const Color(0xFFB9E479),
-                            width: 2,
+                      child: GestureDetector(
+                        onTap: _navigateToViewCards,
+                        onVerticalDragEnd: (details) {
+                          // Detect upward swipe from counter
+                          if (details.primaryVelocity != null && details.primaryVelocity! < -500) {
+                            _navigateToViewCards();
+                          }
+                        },
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0xFF4A4A4A),
+                            border: Border.all(
+                              color: const Color(0xFFB9E479),
+                              width: 2,
+                            ),
                           ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${_completedCards.length}',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w900,
-                              color: Color(0xFFB9E479),
+                          child: Center(
+                            child: Text(
+                              '${_completedCards.length}',
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xFFB9E479),
+                              ),
                             ),
                           ),
                         ),

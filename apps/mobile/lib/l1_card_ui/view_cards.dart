@@ -1,0 +1,125 @@
+import 'package:flutter/material.dart';
+import '../l2_card_model/card_model.dart';
+
+class ViewCardsPage extends StatelessWidget {
+  final List<CardModel> completedCards;
+
+  const ViewCardsPage({
+    super.key,
+    required this.completedCards,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onVerticalDragEnd: (details) {
+        // Detect downward swipe
+        if (details.primaryVelocity != null && details.primaryVelocity! > 500) {
+          Navigator.pop(context);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFF1A1A1A),
+        body: Column(
+          children: [
+            // Counter circle at top to create connection illusion
+            const SizedBox(height: 80),
+            Center(
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFF4A4A4A),
+                    border: Border.all(
+                      color: const Color(0xFFB9E479),
+                      width: 2,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${completedCards.length}',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFFB9E479),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          const SizedBox(height: 40),
+          // Completed cards list
+          Expanded(
+            child: completedCards.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No completed exercises yet',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white54,
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    itemCount: completedCards.length,
+                    itemBuilder: (context, index) {
+                      final card = completedCards[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF4A4A4A),
+                          borderRadius: BorderRadius.circular(0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                card.exerciseName.toUpperCase(),
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  '${card.weight} kg',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300,
+                                    color: Color(0xFFB9E479),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Text(
+                                  '${card.reps} reps',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300,
+                                    color: Color(0xFFB9E479),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+      ),
+    );
+  }
+}
