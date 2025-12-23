@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'l1_ui/card_home.dart';
+import 'l1_card_ui/card_home.dart';
 import 'l1_ui/record.dart';
 import 'l1_ui/dashboard.dart';
 import 'l1_ui/exercise_list_page.dart';
