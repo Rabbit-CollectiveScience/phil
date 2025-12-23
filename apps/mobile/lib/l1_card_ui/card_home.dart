@@ -141,7 +141,8 @@ class _CardHomePageState extends State<CardHomePage> {
                               key: ValueKey('card_${_cardOrder[0]}'),
                               card: _cards[_cardOrder[0]],
                               onSwipedAway: _removeTopCard,
-                              onCardUpdate: (updatedCard) => _updateCard(_cardOrder[0], updatedCard),
+                              onCardUpdate: (updatedCard) =>
+                                  _updateCard(_cardOrder[0], updatedCard),
                             )
                           : IgnorePointer(
                               child: RepaintBoundary(
@@ -149,7 +150,8 @@ class _CardHomePageState extends State<CardHomePage> {
                                   key: ValueKey('card_${_cardOrder[i]}'),
                                   card: _cards[_cardOrder[i]],
                                   onSwipedAway: () {},
-                                  onCardUpdate: (updatedCard) => _updateCard(_cardOrder[i], updatedCard),
+                                  onCardUpdate: (updatedCard) =>
+                                      _updateCard(_cardOrder[i], updatedCard),
                                 ),
                               ),
                             ),

@@ -134,7 +134,8 @@ class _SwipeableCardState extends State<SwipeableCard>
     final velocity = details.velocity.pixelsPerSecond;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    if (_dragOffset.dx.abs() > screenWidth * 0.3 || velocity.dx.abs() > 500) {
+    if (_dragOffset.dx.abs() > screenWidth * 0.3 ||
+        velocity.dx.abs() > 500) {
       _animateCardAway();
     } else {
       setState(() {
@@ -150,7 +151,10 @@ class _SwipeableCardState extends State<SwipeableCard>
     final direction = _dragOffset.dx > 0 ? 1 : -1;
 
     setState(() {
-      _dragOffset = Offset(screenWidth * 1.5 * direction, _dragOffset.dy);
+      _dragOffset = Offset(
+        screenWidth * 1.5 * direction,
+        _dragOffset.dy,
+      );
       _dragRotation = 0.5 * direction;
     });
 
@@ -251,16 +255,11 @@ class _SwipeableCardState extends State<SwipeableCard>
                   labelStyle: const TextStyle(color: Colors.white70),
                   hintText: '0 kg',
                   hintStyle: const TextStyle(color: Colors.white30),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Colors.white70,
-                      width: 2,
-                    ),
+                  enabledBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white70, width: 1),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Colors.white, width: 2),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 2),
                   ),
                   prefixIcon: Opacity(
                     opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
@@ -277,9 +276,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                             int newValue = current - 2;
                             _weightController.text = '$newValue kg';
                             widget.onCardUpdate(
-                              widget.card.copyWith(
-                                weight: newValue.toString(),
-                              ),
+                              widget.card.copyWith(weight: newValue.toString()),
                             );
                           }
                         },
@@ -337,16 +334,11 @@ class _SwipeableCardState extends State<SwipeableCard>
                   labelStyle: const TextStyle(color: Colors.white70),
                   hintText: '0 reps',
                   hintStyle: const TextStyle(color: Colors.white30),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Colors.white70,
-                      width: 2,
-                    ),
+                  enabledBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white70, width: 1),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Colors.white, width: 2),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 2),
                   ),
                   prefixIcon: Opacity(
                     opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
