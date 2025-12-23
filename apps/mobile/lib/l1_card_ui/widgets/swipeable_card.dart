@@ -44,6 +44,14 @@ class _SwipeableCardState extends State<SwipeableCard>
     _weightFocusNode = FocusNode();
     _repsFocusNode = FocusNode();
 
+    // Add listeners to rebuild when focus changes (to show/hide buttons)
+    _weightFocusNode.addListener(() {
+      setState(() {}); // Rebuild to show/hide buttons
+    });
+    _repsFocusNode.addListener(() {
+      setState(() {}); // Rebuild to show/hide buttons
+    });
+
     // Only cache front card - back has dynamic focus UI
     _frontCard = _buildFrontCard();
 
