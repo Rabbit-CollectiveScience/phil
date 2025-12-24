@@ -49,10 +49,7 @@ class DashboardPage extends StatelessWidget {
               child: Center(
                 child: Text(
                   'Dashboard content coming soon',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                 ),
               ),
             ),
