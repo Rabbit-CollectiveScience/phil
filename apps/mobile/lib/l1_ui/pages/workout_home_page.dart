@@ -15,7 +15,8 @@ class WorkoutHomePage extends StatefulWidget {
   State<WorkoutHomePage> createState() => _WorkoutHomePageState();
 }
 
-class _WorkoutHomePageState extends State<WorkoutHomePage> {
+class _WorkoutHomePageState extends State<WorkoutHomePage>
+    with SingleTickerProviderStateMixin {
   // UI Constants
   static const double _iconSize = 44.0;
   static const double _iconPadding = 20.0;
@@ -28,15 +29,32 @@ class _WorkoutHomePageState extends State<WorkoutHomePage> {
   late List<int> _cardOrder;
   final List<CardModel> _completedCards = [];
   final GlobalKey<ExpandableSearchBarState> _searchBarKey = GlobalKey();
+  final GlobalKey _counterKey = GlobalKey();
+
+  // Token animation
+  bool _isTokenAnimating = false;
+  Offset _tokenStart = Offset.zero;
+  Offset _tokenEnd = Offset.zero;
+  late AnimationController _tokenController;
+  late Animation<Offset> _tokenAnimation;
 
   @override
   void initState() {
     super.initState();
     _initializeCards();
+    _tokenController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _tokenAnimation = Tween<Offset>(begin: Offset.zero, end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _tokenController, curve: Curves.easeInCubic),
+        );
   }
 
   @override
   void dispose() {
+    _tokenController.dispose();
     super.dispose();
   }
 
@@ -98,12 +116,43 @@ class _WorkoutHomePageState extends State<WorkoutHomePage> {
     });
   }
 
-  void _completeTopCard() {
+  void _completeTopCard(Offset buttonPosition) {
+    if (_isTokenAnimating) return; // Prevent multiple animations
+
+    // Get counter's actual position
+    final RenderBox? counterBox =
+        _counterKey.currentContext?.findRenderObject() as RenderBox?;
+    if (counterBox == null) return;
+
+    final Offset counterPosition = counterBox.localToGlobal(Offset.zero);
+    final Offset counterCenter = Offset(
+      counterPosition.dx + counterBox.size.width / 2,
+      counterPosition.dy + counterBox.size.height / 2,
+    );
+
     setState(() {
-      if (_cardOrder.isNotEmpty) {
-        final topIndex = _cardOrder[0];
-        _completedCards.add(_cards[topIndex]);
-      }
+      _isTokenAnimating = true;
+      _tokenStart = buttonPosition;
+      _tokenEnd = counterCenter;
+
+      _tokenAnimation = Tween<Offset>(begin: _tokenStart, end: _tokenEnd)
+          .animate(
+            CurvedAnimation(
+              parent: _tokenController,
+              curve: Curves.easeInCubic,
+            ),
+          );
+    });
+
+    _tokenController.forward(from: 0.0).then((_) {
+      // Animation complete, increment counter
+      setState(() {
+        if (_cardOrder.isNotEmpty) {
+          final topIndex = _cardOrder[0];
+          _completedCards.add(_cards[topIndex]);
+        }
+        _isTokenAnimating = false;
+      });
     });
   }
 
@@ -246,7 +295,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage> {
                                           ),
                                           card: _cards[_cardOrder[i]],
                                           onSwipedAway: () {},
-                                          onCompleted: () {},
+                                          onCompleted: (Offset _) {},
                                           onCardUpdate: (updatedCard) =>
                                               _updateCard(
                                                 _cardOrder[i],
@@ -294,6 +343,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage> {
                       right: 0,
                       child: Center(
                         child: CompletionCounter(
+                          key: _counterKey,
                           count: _completedCards.length,
                           size: _counterSize,
                           onTap: _navigateToViewCards,
@@ -301,6 +351,25 @@ class _WorkoutHomePageState extends State<WorkoutHomePage> {
                         ),
                       ),
                     ),
+                    // Falling token animation
+                    if (_isTokenAnimating)
+                      AnimatedBuilder(
+                        animation: _tokenAnimation,
+                        builder: (context, child) {
+                          return Positioned(
+                            left: _tokenAnimation.value.dx - 30,
+                            top: _tokenAnimation.value.dy - 30,
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xFFB9E479),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                   ],
                 ),
               ),

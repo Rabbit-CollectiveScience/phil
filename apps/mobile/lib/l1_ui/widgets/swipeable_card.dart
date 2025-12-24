@@ -6,7 +6,7 @@ import '../../l2_domain/card_model.dart';
 class SwipeableCard extends StatefulWidget {
   final CardModel card;
   final VoidCallback onSwipedAway;
-  final VoidCallback onCompleted;
+  final void Function(Offset buttonPosition) onCompleted;
   final ValueChanged<CardModel> onCardUpdate;
 
   const SwipeableCard({
@@ -171,8 +171,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     final screenWidth = MediaQuery.of(context).size.width;
 
     // Check for horizontal swipe (swipe away)
-    if (_dragOffset.dx.abs() > screenWidth * 0.3 ||
-        velocity.dx.abs() > 500) {
+    if (_dragOffset.dx.abs() > screenWidth * 0.3 || velocity.dx.abs() > 500) {
       _animateCardAwayWithMomentum(velocity);
     }
     // Bounce back
@@ -183,31 +182,6 @@ class _SwipeableCardState extends State<SwipeableCard>
         _isDragging = false;
       });
     }
-  }
-
-  void _animateCardToComplete(Offset velocity) {
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    setState(() {
-      _isCompleting = true;
-      _isDragging = false;
-    });
-
-    // Animate down off-screen with momentum
-    final momentumY = _dragOffset.dy + (velocity.dy * 0.3);
-    final exitDistance = screenHeight * 1.2;
-
-    Future.delayed(const Duration(milliseconds: 50), () {
-      if (mounted) {
-        setState(() {
-          _dragOffset = Offset(0, exitDistance + momentumY);
-        });
-      }
-    });
-
-    Future.delayed(const Duration(milliseconds: 350), () {
-      widget.onCompleted();
-    });
   }
 
   void _animateCardAwayWithMomentum(Offset velocity) {
@@ -487,26 +461,41 @@ class _SwipeableCardState extends State<SwipeableCard>
           ),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                widget.onCompleted();
+            child: Builder(
+              builder: (buttonContext) {
+                return ElevatedButton(
+                  onPressed: () {
+                    // Get button position in global coordinates using button's own context
+                    final RenderBox? box =
+                        buttonContext.findRenderObject() as RenderBox?;
+                    if (box != null) {
+                      final Offset position = box.localToGlobal(Offset.zero);
+                      final Offset buttonCenter = Offset(
+                        position.dx + box.size.width / 2,
+                        position.dy + box.size.height / 2,
+                      );
+                      widget.onCompleted(buttonCenter);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        const Color(0xFFB9E479), // Lime green accent
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                  ),
+                  child: const Text(
+                    'ZET',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                );
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFB9E479), // Lime green accent
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
-                ),
-              ),
-              child: const Text(
-                'ZET',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 2.0,
-                ),
-              ),
             ),
           ),
         ],
