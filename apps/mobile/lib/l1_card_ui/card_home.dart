@@ -312,9 +312,13 @@ class _CardHomePageState extends State<CardHomePage> {
                           child: ClipRect(
                             clipBehavior: Clip.hardEdge,
                             child: _showSearchOverlay
-                                ? Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
+                                ? OverflowBox(
+                                    alignment: Alignment.centerLeft,
+                                    minWidth: 0,
+                                    maxWidth: MediaQuery.of(context).size.width,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
                                       const Padding(
                                         padding: EdgeInsets.only(
                                           left: 12,
@@ -366,7 +370,8 @@ class _CardHomePageState extends State<CardHomePage> {
                                         ),
                                       ),
                                     ],
-                                  )
+                                  ),
+                                )
                                 : const Center(
                                     child: Icon(
                                       Icons.search,
