@@ -169,14 +169,9 @@ class _SwipeableCardState extends State<SwipeableCard>
   void _handlePanEnd(DragEndDetails details) {
     final velocity = details.velocity.pixelsPerSecond;
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
-    // Check for downward swipe (completion)
-    if (_dragOffset.dy > screenHeight * 0.2 || velocity.dy > 500) {
-      _animateCardToComplete(velocity);
-    }
     // Check for horizontal swipe (swipe away)
-    else if (_dragOffset.dx.abs() > screenWidth * 0.3 ||
+    if (_dragOffset.dx.abs() > screenWidth * 0.3 ||
         velocity.dx.abs() > 500) {
       _animateCardAwayWithMomentum(velocity);
     }
