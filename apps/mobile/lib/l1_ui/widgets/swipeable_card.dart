@@ -489,7 +489,7 @@ class _SwipeableCardState extends State<SwipeableCard>
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                _animateCardToComplete(Offset.zero);
+                widget.onCompleted();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFB9E479), // Lime green accent

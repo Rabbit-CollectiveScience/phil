@@ -101,7 +101,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage> {
   void _completeTopCard() {
     setState(() {
       if (_cardOrder.isNotEmpty) {
-        final topIndex = _cardOrder.removeAt(0);
+        final topIndex = _cardOrder[0];
         _completedCards.add(_cards[topIndex]);
       }
     });
