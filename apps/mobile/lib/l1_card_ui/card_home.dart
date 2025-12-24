@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l2_card_model/card_model.dart';
 import 'widgets/swipeable_card.dart';
 import 'view_cards.dart';
+import 'dashboard.dart';
 
 class CardHomePage extends StatefulWidget {
   const CardHomePage({super.key});
@@ -108,8 +109,10 @@ class _CardHomePageState extends State<CardHomePage> {
           const endIncoming = Offset.zero;
           const curve = Curves.easeOutCubic;
 
-          var incomingTween = Tween(begin: beginIncoming, end: endIncoming)
-              .chain(CurveTween(curve: curve));
+          var incomingTween = Tween(
+            begin: beginIncoming,
+            end: endIncoming,
+          ).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(incomingTween),
@@ -141,8 +144,8 @@ class _CardHomePageState extends State<CardHomePage> {
                 ],
               )
             : Stack(
-                  children: [
-                    // Main card area
+                children: [
+                  // Main card area
                   Center(
                     child: Stack(
                       alignment: Alignment.center,
@@ -182,6 +185,51 @@ class _CardHomePageState extends State<CardHomePage> {
                       ],
                     ),
                   ),
+                  // Search icon at top left
+                  Positioned(
+                    top: 60,
+                    left: 20,
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.15),
+                      ),
+                      child: const Icon(
+                        Icons.search,
+                        color: Colors.white70,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                  // Stats icon at top right
+                  Positioned(
+                    top: 60,
+                    right: 20,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const DashboardPage(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.15),
+                        ),
+                        child: const Icon(
+                          Icons.bar_chart_rounded,
+                          color: Colors.white70,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
                   // Completed counter at bottom
                   Positioned(
                     bottom: 40,
@@ -192,7 +240,8 @@ class _CardHomePageState extends State<CardHomePage> {
                         onTap: _navigateToViewCards,
                         onVerticalDragEnd: (details) {
                           // Detect upward swipe from counter
-                          if (details.primaryVelocity != null && details.primaryVelocity! < -500) {
+                          if (details.primaryVelocity != null &&
+                              details.primaryVelocity! < -500) {
                             _navigateToViewCards();
                           }
                         },

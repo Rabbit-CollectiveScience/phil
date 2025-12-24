@@ -4,10 +4,7 @@ import '../l2_card_model/card_model.dart';
 class ViewCardsPage extends StatelessWidget {
   final List<CardModel> completedCards;
 
-  const ViewCardsPage({
-    super.key,
-    required this.completedCards,
-  });
+  const ViewCardsPage({super.key, required this.completedCards});
 
   @override
   Widget build(BuildContext context) {
@@ -51,74 +48,71 @@ class ViewCardsPage extends StatelessWidget {
                 ),
               ),
             ),
-          const SizedBox(height: 40),
-          // Completed cards list
-          Expanded(
-            child: completedCards.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No completed exercises yet',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white54,
+            const SizedBox(height: 40),
+            // Completed cards list
+            Expanded(
+              child: completedCards.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No completed exercises yet',
+                        style: TextStyle(fontSize: 18, color: Colors.white54),
                       ),
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                    itemCount: completedCards.length,
-                    itemBuilder: (context, index) {
-                      final card = completedCards[index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF4A4A4A),
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                card.exerciseName.toUpperCase(),
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                  letterSpacing: 0.5,
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      itemCount: completedCards.length,
+                      itemBuilder: (context, index) {
+                        final card = completedCards[index];
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF4A4A4A),
+                            borderRadius: BorderRadius.circular(0),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  card.exerciseName.toUpperCase(),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white,
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  '${card.weight} kg',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w300,
-                                    color: Color(0xFFB9E479),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${card.weight} kg',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w300,
+                                      color: Color(0xFFB9E479),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 16),
-                                Text(
-                                  '${card.reps} reps',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w300,
-                                    color: Color(0xFFB9E479),
+                                  const SizedBox(width: 16),
+                                  Text(
+                                    '${card.reps} reps',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w300,
+                                      color: Color(0xFFB9E479),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-          ),
-        ],
-      ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
