@@ -8,6 +8,7 @@ class SwipeableCard extends StatefulWidget {
   final VoidCallback onSwipedAway;
   final void Function(Offset buttonPosition) onCompleted;
   final ValueChanged<CardModel> onCardUpdate;
+  final void Function(Offset position, bool isDragging)? onTokenDrag;
 
   const SwipeableCard({
     super.key,
@@ -15,6 +16,7 @@ class SwipeableCard extends StatefulWidget {
     required this.onSwipedAway,
     required this.onCompleted,
     required this.onCardUpdate,
+    this.onTokenDrag,
   });
 
   @override
@@ -37,6 +39,9 @@ class _SwipeableCardState extends State<SwipeableCard>
   late final Widget _backCard;
   Timer? _weightTimer;
   Timer? _repsTimer;
+  final GlobalKey _zetButtonKey = GlobalKey();
+  bool _isDraggingToken = false;
+  Offset? _dragStartGlobal;
 
   @override
   void initState() {
@@ -154,19 +159,58 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   void _handlePanStart(DragStartDetails details) {
+    // Check if drag started on ZET button
+    if (widget.card.isFlipped) {
+      final RenderBox? buttonBox =
+          _zetButtonKey.currentContext?.findRenderObject() as RenderBox?;
+      if (buttonBox != null) {
+        final Offset buttonPosition = buttonBox.localToGlobal(Offset.zero);
+        final Size buttonSize = buttonBox.size;
+        final Rect buttonRect = buttonPosition & buttonSize;
+        
+        if (buttonRect.contains(details.globalPosition)) {
+          // Started drag on ZET button
+          setState(() {
+            _isDraggingToken = true;
+            _dragStartGlobal = details.globalPosition;
+          });
+          widget.onTokenDrag?.call(details.globalPosition, true);
+          return;
+        }
+      }
+    }
+    
+    // Normal card drag
     setState(() {
       _isDragging = true;
     });
   }
 
   void _handlePanUpdate(DragUpdateDetails details) {
-    setState(() {
-      _dragOffset += details.delta;
-      _dragRotation = _dragOffset.dx / 1000;
-    });
+    if (_isDraggingToken) {
+      // Update token position
+      widget.onTokenDrag?.call(details.globalPosition, true);
+    } else {
+      // Normal card drag
+      setState(() {
+        _dragOffset += details.delta;
+        _dragRotation = _dragOffset.dx / 1000;
+      });
+    }
   }
 
   void _handlePanEnd(DragEndDetails details) {
+    if (_isDraggingToken) {
+      // End token drag
+      setState(() {
+        _isDraggingToken = false;
+        _dragStartGlobal = null;
+      });
+      widget.onTokenDrag?.call(details.globalPosition, false);
+      return;
+    }
+    
+    // Normal card drag end
     final velocity = details.velocity.pixelsPerSecond;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -460,6 +504,7 @@ class _SwipeableCardState extends State<SwipeableCard>
             ],
           ),
           SizedBox(
+            key: _zetButtonKey,
             width: double.infinity,
             child: Builder(
               builder: (buttonContext) {

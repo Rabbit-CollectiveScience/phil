@@ -37,6 +37,10 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   Offset _tokenEnd = Offset.zero;
   late AnimationController _tokenController;
   late Animation<Offset> _tokenAnimation;
+  
+  // Token dragging
+  bool _isTokenDragging = false;
+  Offset _tokenDragPosition = Offset.zero;
 
   @override
   void initState() {
@@ -154,6 +158,39 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         _isTokenAnimating = false;
       });
     });
+  }
+  
+  void _handleTokenDrag(Offset position, bool isDragging) {
+    if (!isDragging) {
+      // Drag ended, check if near counter
+      final RenderBox? counterBox =
+          _counterKey.currentContext?.findRenderObject() as RenderBox?;
+      if (counterBox != null) {
+        final Offset counterPosition = counterBox.localToGlobal(Offset.zero);
+        final Offset counterCenter = Offset(
+          counterPosition.dx + counterBox.size.width / 2,
+          counterPosition.dy + counterBox.size.height / 2,
+        );
+        
+        final double distance = (position - counterCenter).distance;
+        
+        if (distance < 100) {
+          // Close enough to counter, animate to it
+          _completeTopCard(position);
+        }
+      }
+      
+      // Reset drag state
+      setState(() {
+        _isTokenDragging = false;
+      });
+    } else {
+      // Update drag position
+      setState(() {
+        _isTokenDragging = true;
+        _tokenDragPosition = position;
+      });
+    }
   }
 
   void _updateCard(int index, CardModel updatedCard) {
@@ -281,6 +318,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                       card: _cards[_cardOrder[0]],
                                       onSwipedAway: _removeTopCard,
                                       onCompleted: _completeTopCard,
+                                      onTokenDrag: _handleTokenDrag,
                                       onCardUpdate: (updatedCard) =>
                                           _updateCard(
                                             _cardOrder[0],
@@ -380,6 +418,31 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                             ),
                           );
                         },
+                      ),
+                    // Dragging token
+                    if (_isTokenDragging)
+                      Positioned(
+                        left: _tokenDragPosition.dx - 30,
+                        top: _tokenDragPosition.dy - 30,
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xFFB9E479),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'ZET',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 2.0,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                   ],
                 ),
