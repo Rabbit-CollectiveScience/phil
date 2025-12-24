@@ -1,5 +1,5 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
-import '../config.dart';
+import '../../config.dart';
 import 'function_declarations.dart';
 import 'workout_function_executor.dart';
 

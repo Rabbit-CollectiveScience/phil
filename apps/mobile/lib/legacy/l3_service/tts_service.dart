@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
-import '../config.dart';
+import '../../config.dart';
 
 /// Service for handling Google Cloud Text-to-Speech
 class TTSService {

@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import '../config.dart';
+import '../../config.dart';
 
 /// Service for managing user preferences and settings
 class SettingsService {

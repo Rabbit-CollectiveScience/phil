@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'l1_card_ui/card_home.dart';
-import 'l1_ui/record.dart';
-import 'l1_ui/dashboard.dart';
-import 'l1_ui/exercise_list_page.dart';
-import 'l1_ui/settings.dart';
-import 'l4_infrastructure/database/hive_config.dart';
+import 'l1_ui/pages/workout_home_page.dart';
+import 'legacy/l1_ui/record.dart';
+import 'legacy/l1_ui/dashboard.dart';
+import 'legacy/l1_ui/exercise_list_page.dart';
+import 'legacy/l1_ui/settings.dart';
+import 'legacy/l4_infrastructure/database/hive_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         ), // Bold Studio: deep charcoal
         useMaterial3: true,
       ),
-      home: const CardHomePage(),
+      home: const WorkoutHomePage(),
     );
   }
 }

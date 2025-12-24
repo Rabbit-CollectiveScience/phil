@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../l3_service/device_info_service.dart';
-import '../config.dart';
+import '../../config.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});

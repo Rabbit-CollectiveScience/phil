@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../l2_card_model/card_model.dart';
+import '../../l2_domain/card_model.dart';
 
-class ViewCardsPage extends StatelessWidget {
+class CompletedListPage extends StatelessWidget {
   final List<CardModel> completedCards;
 
-  const ViewCardsPage({super.key, required this.completedCards});
+  const CompletedListPage({super.key, required this.completedCards});
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +27,9 @@ class ViewCardsPage extends StatelessWidget {
                 child: Container(
                   width: 60,
                   height: 60,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFF4A4A4A),
-                    border: Border.all(
-                      color: const Color(0xFFB9E479),
-                      width: 2,
-                    ),
+                    color: Color(0xFFB9E479),
                   ),
                   child: Center(
                     child: Text(
@@ -41,7 +37,7 @@ class ViewCardsPage extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
-                        color: Color(0xFFB9E479),
+                        color: Color(0xFF1A1A1A),
                       ),
                     ),
                   ),

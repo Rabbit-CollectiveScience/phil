@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../l2_card_model/card_model.dart';
+import '../../l2_domain/card_model.dart';
 
 class SwipeableCard extends StatefulWidget {
   final CardModel card;
