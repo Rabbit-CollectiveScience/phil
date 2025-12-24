@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'l1_ui/pages/workout_home_page.dart';
-import 'legacy/l1_ui/record.dart';
-import 'legacy/l1_ui/dashboard.dart';
-import 'legacy/l1_ui/exercise_list_page.dart';
-import 'legacy/l1_ui/settings.dart';
-import 'legacy/l4_infrastructure/database/hive_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Hive database
-  await HiveConfig.initialize();
 
   runApp(const MyApp());
 }
@@ -48,95 +40,15 @@ class MainNavigator extends StatefulWidget {
 class _MainNavigatorState extends State<MainNavigator> {
   int _currentIndex = 0;
   late final List<Widget> _pages;
-  final GlobalKey<DashboardPageState> _dashboardKey = GlobalKey();
-  final GlobalKey<ExerciseListPageState> _exerciseListKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    _pages = [
-      const RecordPage(),
-      DashboardPage(key: _dashboardKey),
-      ExerciseListPage(key: _exerciseListKey),
-      SettingsPage(
-        onNavigateToDashboard: _navigateToDashboard,
-        onDataChanged: _refreshDashboard,
-      ),
-    ];
-  }
-
-  void _navigateToDashboard() {
-    setState(() {
-      _currentIndex = 1;
-    });
-  }
-
-  void _refreshDashboard() {
-    _dashboardKey.currentState?.refresh();
+    _pages = [const WorkoutHomePage()];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _pages),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFFEDE8D5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 8,
-              offset: Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: SizedBox(
-            height: 70,
-            child: BottomNavigationBar(
-              backgroundColor: Colors.transparent,
-              selectedItemColor: const Color(0xFF2E2E2E),
-              unselectedItemColor: const Color(0xFF888888),
-              elevation: 0,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _currentIndex,
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-                // Refresh pages when navigating to them
-                if (index == 1) {
-                  _dashboardKey.currentState?.refresh();
-                } else if (index == 2) {
-                  _exerciseListKey.currentState?.refresh();
-                }
-              },
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.mic_none),
-                  activeIcon: Icon(Icons.mic),
-                  label: 'Record',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.dashboard_outlined),
-                  activeIcon: Icon(Icons.dashboard),
-                  label: 'Dashboard',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.fitness_center_outlined),
-                  activeIcon: Icon(Icons.fitness_center),
-                  label: 'Exercises',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings_outlined),
-                  activeIcon: Icon(Icons.settings),
-                  label: 'Settings',
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return Scaffold(body: _pages[_currentIndex]);
   }
 }

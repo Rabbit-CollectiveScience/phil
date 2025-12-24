@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 import '../../l2_domain/card_model.dart';
 import '../widgets/swipeable_card.dart';
 import '../widgets/expandable_search_bar.dart';
@@ -160,7 +161,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     });
   }
 
-  void _handleTokenDrag(Offset position, bool isDragging) {
+  void _handleTokenDrag(Offset position, bool isDragging) async {
     if (!isDragging) {
       // Drag ended, check if token reached counter level
       final RenderBox? counterBox =
@@ -168,11 +169,12 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       if (counterBox != null) {
         final Offset counterPosition = counterBox.localToGlobal(Offset.zero);
         final double counterTop = counterPosition.dy;
-        
+
         // Token center position >= counter top - 90px (30px half token + 60px buffer)
         // Registers one button width (60px) before visual contact
         if (position.dy >= counterTop - 90) {
           // Token reached counter zone, animate to it
+          Vibration.vibrate();
           _completeTopCard(position);
         }
       }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 import '../../l2_domain/card_model.dart';
 
 class SwipeableCard extends StatefulWidget {
@@ -521,6 +522,8 @@ class _SwipeableCardState extends State<SwipeableCard>
                         position.dx + box.size.width / 2,
                         position.dy + box.size.height / 2,
                       );
+
+                      Vibration.vibrate();
                       widget.onCompleted(buttonCenter);
                     }
                   },
