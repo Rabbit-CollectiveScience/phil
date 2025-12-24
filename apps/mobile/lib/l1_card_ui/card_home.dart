@@ -304,7 +304,7 @@ class _CardHomePageState extends State<CardHomePage> {
                               : _iconSize,
                           height: _iconSize,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(0),
+                            borderRadius: BorderRadius.circular(22),
                             color: _showSearchOverlay
                                 ? const Color(0xFF2A2A2A)
                                 : Colors.white.withOpacity(0.15),
