@@ -124,6 +124,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   void _completeTopCard(Offset buttonPosition) {
     if (_isTokenAnimating) return; // Prevent multiple animations
 
+    // Vibrate when token starts moving to counter
+    Vibration.vibrate(duration: 50);
+
     // Get counter's actual position
     final RenderBox? counterBox =
         _counterKey.currentContext?.findRenderObject() as RenderBox?;
@@ -174,7 +177,6 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         // Registers one button width (60px) before visual contact
         if (position.dy >= counterTop - 90) {
           // Token reached counter zone, animate to it
-          Vibration.vibrate();
           _completeTopCard(position);
         }
       }

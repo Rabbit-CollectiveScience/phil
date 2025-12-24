@@ -523,7 +523,6 @@ class _SwipeableCardState extends State<SwipeableCard>
                         position.dy + box.size.height / 2,
                       );
 
-                      Vibration.vibrate();
                       widget.onCompleted(buttonCenter);
                     }
                   },
