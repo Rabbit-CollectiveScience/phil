@@ -478,8 +478,9 @@ class _SwipeableCardState extends State<SwipeableCard>
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFFB9E479), // Lime green accent
+                    backgroundColor: const Color(
+                      0xFFB9E479,
+                    ), // Lime green accent
                     foregroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     shape: RoundedRectangleBorder(

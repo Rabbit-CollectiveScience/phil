@@ -366,6 +366,17 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                 shape: BoxShape.circle,
                                 color: Color(0xFFB9E479),
                               ),
+                              child: const Center(
+                                child: Text(
+                                  'ZET',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 2.0,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
                             ),
                           );
                         },
