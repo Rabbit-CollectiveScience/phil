@@ -121,19 +121,39 @@ class _CardHomePageState extends State<CardHomePage> {
     setState(() {
       _showSearchOverlay = true;
     });
-    // Delay focus to allow overlay to build
-    Future.delayed(const Duration(milliseconds: 100), () {
-      _searchFocusNode.requestFocus();
-    });
+    // Request focus immediately so expansion happens right away
+    _searchFocusNode.requestFocus();
   }
 
-  void _hideSearch() {
+  void _dismissKeyboard() {
     _searchFocusNode.unfocus();
+    // If text is empty, collapse
+    if (_searchController.text.isEmpty) {
+      setState(() {
+        _showSearchOverlay = false;
+      });
+    }
+  }
+
+  bool get _isSearchExpanded {
+    // Expand if overlay is shown (user tapped) OR has text
+    return _showSearchOverlay || _searchController.text.isNotEmpty;
+  }
+
+  void _clearSearch() {
     setState(() {
-      _showSearchOverlay = false;
       _searchController.clear();
       // Reset to original order
       _cardOrder = List.generate(_cards.length, (index) => index);
+      
+      // If keyboard is active (has focus), keep it up and field expanded
+      if (_searchFocusNode.hasFocus) {
+        // Keep _showSearchOverlay = true to stay expanded
+        _showSearchOverlay = true;
+      } else {
+        // No keyboard, collapse the field
+        _showSearchOverlay = false;
+      }
     });
   }
 
@@ -227,7 +247,7 @@ class _CardHomePageState extends State<CardHomePage> {
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
                   if (_showSearchOverlay) {
-                    _hideSearch();
+                    _dismissKeyboard();
                   }
                 },
                 child: Stack(
@@ -287,8 +307,8 @@ class _CardHomePageState extends State<CardHomePage> {
                       left: _iconPadding,
                       child: GestureDetector(
                         onTap: () {
-                          if (_showSearchOverlay) {
-                            // Tap on expanded bar does nothing (handled by close icon)
+                          if (_isSearchExpanded) {
+                            // Tap on expanded bar does nothing (handled by TextField and close icon)
                           } else {
                             _showSearch();
                           }
@@ -297,21 +317,21 @@ class _CardHomePageState extends State<CardHomePage> {
                         child: AnimatedContainer(
                           duration: _searchAnimationDuration,
                           curve: Curves.easeOutCubic,
-                          width: _showSearchOverlay
+                          width: _isSearchExpanded
                               ? MediaQuery.of(context).size.width -
-                                  _iconPadding -
-                                  _searchBarRightGap
+                                    _iconPadding -
+                                    _searchBarRightGap
                               : _iconSize,
                           height: _iconSize,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(22),
-                            color: _showSearchOverlay
+                            color: _isSearchExpanded
                                 ? const Color(0xFF2A2A2A)
                                 : Colors.white.withOpacity(0.15),
                           ),
                           child: ClipRect(
                             clipBehavior: Clip.hardEdge,
-                            child: _showSearchOverlay
+                            child: _isSearchExpanded
                                 ? OverflowBox(
                                     alignment: Alignment.centerLeft,
                                     minWidth: 0,
@@ -319,59 +339,69 @@ class _CardHomePageState extends State<CardHomePage> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 12,
-                                          right: 8,
-                                        ),
-                                        child: Icon(
-                                          Icons.search,
-                                          color: Color(0xFFB9E479),
-                                          size: 24,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _searchController,
-                                          focusNode: _searchFocusNode,
-                                          onChanged: _onSearchChanged,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                          decoration: const InputDecoration(
-                                            hintText: 'TYPE TO FILTER',
-                                            hintStyle: TextStyle(
-                                              color: Colors.white38,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              letterSpacing: 1.0,
-                                            ),
-                                            border: InputBorder.none,
-                                            isDense: true,
-                                            contentPadding: EdgeInsets.symmetric(
-                                              vertical: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: _hideSearch,
-                                        child: const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 12,
+                                        const Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 12,
+                                            right: 8,
                                           ),
                                           child: Icon(
-                                            Icons.close,
-                                            color: Colors.white70,
+                                            Icons.search,
+                                            color: Color(0xFFB9E479),
                                             size: 24,
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                )
+                                        Expanded(
+                                          child: TextField(
+                                            controller: _searchController,
+                                            focusNode: _searchFocusNode,
+                                            onChanged: _onSearchChanged,
+                                            enableInteractiveSelection: false,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            decoration: const InputDecoration(
+                                              hintText: 'TYPE TO FILTER',
+                                              hintStyle: TextStyle(
+                                                color: Colors.white38,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                letterSpacing: 1.0,
+                                              ),
+                                              border: InputBorder.none,
+                                              isDense: true,
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                    vertical: 12,
+                                                  ),
+                                            ),
+                                          ),
+                                        ),
+                                        ValueListenableBuilder<TextEditingValue>(
+                                          valueListenable: _searchController,
+                                          builder: (context, value, child) {
+                                            if (value.text.isEmpty) {
+                                              return const SizedBox.shrink();
+                                            }
+                                            return GestureDetector(
+                                              onTap: _clearSearch,
+                                              child: const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 12,
+                                                ),
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: Colors.white70,
+                                                  size: 24,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 : const Center(
                                     child: Icon(
                                       Icons.search,
