@@ -163,10 +163,13 @@ class _SwipeableCardState extends State<SwipeableCard>
     if (widget.card.isFlipped) {
       final RenderBox? cardBox = context.findRenderObject() as RenderBox?;
       if (cardBox != null) {
-        final Offset localPosition = cardBox.globalToLocal(details.globalPosition);
+        final Offset localPosition = cardBox.globalToLocal(
+          details.globalPosition,
+        );
         final double cardHeight = cardBox.size.height;
-        final double bottomThreshold = cardHeight * 0.75; // Bottom 25% starts at 75%
-        
+        final double bottomThreshold =
+            cardHeight * 0.75; // Bottom 25% starts at 75%
+
         if (localPosition.dy >= bottomThreshold) {
           // Started drag in bottom 25% - token drag mode
           setState(() {

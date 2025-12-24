@@ -162,20 +162,17 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
 
   void _handleTokenDrag(Offset position, bool isDragging) {
     if (!isDragging) {
-      // Drag ended, check if near counter
+      // Drag ended, check if token reached counter level
       final RenderBox? counterBox =
           _counterKey.currentContext?.findRenderObject() as RenderBox?;
       if (counterBox != null) {
         final Offset counterPosition = counterBox.localToGlobal(Offset.zero);
-        final Offset counterCenter = Offset(
-          counterPosition.dx + counterBox.size.width / 2,
-          counterPosition.dy + counterBox.size.height / 2,
-        );
-
-        final double distance = (position - counterCenter).distance;
-
-        if (distance < 100) {
-          // Close enough to counter, animate to it
+        final double counterTop = counterPosition.dy;
+        
+        // Token center position >= counter top - 90px (30px half token + 60px buffer)
+        // Registers one button width (60px) before visual contact
+        if (position.dy >= counterTop - 90) {
+          // Token reached counter zone, animate to it
           _completeTopCard(position);
         }
       }
