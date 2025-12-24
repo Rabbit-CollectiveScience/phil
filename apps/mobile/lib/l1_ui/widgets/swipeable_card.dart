@@ -159,17 +159,16 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   void _handlePanStart(DragStartDetails details) {
-    // Check if drag started on ZET button
+    // Check if drag started in bottom 25% of card when flipped
     if (widget.card.isFlipped) {
-      final RenderBox? buttonBox =
-          _zetButtonKey.currentContext?.findRenderObject() as RenderBox?;
-      if (buttonBox != null) {
-        final Offset buttonPosition = buttonBox.localToGlobal(Offset.zero);
-        final Size buttonSize = buttonBox.size;
-        final Rect buttonRect = buttonPosition & buttonSize;
+      final RenderBox? cardBox = context.findRenderObject() as RenderBox?;
+      if (cardBox != null) {
+        final Offset localPosition = cardBox.globalToLocal(details.globalPosition);
+        final double cardHeight = cardBox.size.height;
+        final double bottomThreshold = cardHeight * 0.75; // Bottom 25% starts at 75%
         
-        if (buttonRect.contains(details.globalPosition)) {
-          // Started drag on ZET button
+        if (localPosition.dy >= bottomThreshold) {
+          // Started drag in bottom 25% - token drag mode
           setState(() {
             _isDraggingToken = true;
             _dragStartGlobal = details.globalPosition;
@@ -179,7 +178,7 @@ class _SwipeableCardState extends State<SwipeableCard>
         }
       }
     }
-    
+
     // Normal card drag
     setState(() {
       _isDragging = true;
@@ -209,7 +208,7 @@ class _SwipeableCardState extends State<SwipeableCard>
       widget.onTokenDrag?.call(details.globalPosition, false);
       return;
     }
-    
+
     // Normal card drag end
     final velocity = details.velocity.pixelsPerSecond;
     final screenWidth = MediaQuery.of(context).size.width;

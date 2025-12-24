@@ -37,7 +37,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   Offset _tokenEnd = Offset.zero;
   late AnimationController _tokenController;
   late Animation<Offset> _tokenAnimation;
-  
+
   // Token dragging
   bool _isTokenDragging = false;
   Offset _tokenDragPosition = Offset.zero;
@@ -159,7 +159,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       });
     });
   }
-  
+
   void _handleTokenDrag(Offset position, bool isDragging) {
     if (!isDragging) {
       // Drag ended, check if near counter
@@ -171,15 +171,15 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
           counterPosition.dx + counterBox.size.width / 2,
           counterPosition.dy + counterBox.size.height / 2,
         );
-        
+
         final double distance = (position - counterCenter).distance;
-        
+
         if (distance < 100) {
           // Close enough to counter, animate to it
           _completeTopCard(position);
         }
       }
-      
+
       // Reset drag state
       setState(() {
         _isTokenDragging = false;
