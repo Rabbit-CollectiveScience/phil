@@ -205,7 +205,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage> {
                 ],
               )
             : GestureDetector(
-                behavior: HitTestBehavior.opaque,
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   _searchBarKey.currentState?.collapse();
                 },

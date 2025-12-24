@@ -78,7 +78,7 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
           expand();
         }
       },
-      behavior: HitTestBehavior.translucent,
+      behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: _animationDuration,
         curve: Curves.easeOutCubic,
@@ -97,11 +97,7 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
 
   Widget _buildCollapsedContent() {
     return const Center(
-      child: Icon(
-        Icons.search,
-        color: Colors.white70,
-        size: 24,
-      ),
+      child: Icon(Icons.search, color: Colors.white70, size: 24),
     );
   }
 
@@ -112,11 +108,7 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
           children: [
             const Padding(
               padding: EdgeInsets.only(left: 12, right: 8),
-              child: Icon(
-                Icons.search,
-                color: Color(0xFFB9E479),
-                size: 24,
-              ),
+              child: Icon(Icons.search, color: Color(0xFFB9E479), size: 24),
             ),
             Expanded(
               child: TextField(
@@ -164,11 +156,7 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
                 child: Container(
                   width: 48,
                   alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 24,
-                  ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 24),
                 ),
               );
             },
