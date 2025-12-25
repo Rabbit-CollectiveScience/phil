@@ -1,35 +1,37 @@
-import '../repositories/exercise_repository.dart';
 import '../../l2_domain/models/exercise.dart';
+import 'exercise_repository.dart';
 
-// Strategy: In-memory implementation of ExerciseRepository
+// Strategy: Stub implementation of ExerciseRepository
 //
 // Responsibility:
-// - Implements exercise repository using in-memory storage (hardcoded data)
-// - Strategy Pattern: Different way to access exercise data
-// - Will be replaced with other strategies (API, database) in production
+// - Provides hardcoded/stub data for testing and development
+// - Returns predefined exercise list
+// - Strategy Pattern: Simple stub data strategy
 //
-// Usage: For testing and initial development
+// Usage: For initial development and testing without real data source
 
-class InMemoryExerciseStrategy implements ExerciseRepository {
-  // TODO: Implement with hardcoded exercise list
-
+class StubExerciseRepository implements ExerciseRepository {
   @override
   Future<List<Exercise>> getAllExercises() async {
+    // TODO: Implement with stub/hardcoded exercise list
     throw UnimplementedError();
   }
 
   @override
   Future<Exercise> getExerciseById(String id) async {
+    // TODO: Implement
     throw UnimplementedError();
   }
 
   @override
   Future<List<Exercise>> searchExercises(String query) async {
+    // TODO: Implement
     throw UnimplementedError();
   }
 
   @override
   Future<Exercise> updateExercise(Exercise exercise) async {
+    // TODO: Implement
     throw UnimplementedError();
   }
 }

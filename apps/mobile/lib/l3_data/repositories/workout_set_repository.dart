@@ -13,7 +13,7 @@ import '../../l2_domain/models/workout_set.dart';
 // - Delete workout set
 // - Get workout history/analytics
 
-abstract class WorkoutRepository {
+abstract class WorkoutSetRepository {
   Future<WorkoutSet> saveWorkoutSet(WorkoutSet workoutSet);
   Future<List<WorkoutSet>> getWorkoutSets({
     DateTime? startDate,

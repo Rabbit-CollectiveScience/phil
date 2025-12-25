@@ -1,22 +1,19 @@
-import '../repositories/workout_repository.dart';
 import '../../l2_domain/models/workout_set.dart';
+import 'workout_set_repository.dart';
 
-// Strategy: In-memory implementation of WorkoutRepository
+// Strategy: Stub implementation of WorkoutSetRepository
 //
 // Responsibility:
-// - Implements workout repository using in-memory storage
-// - Strategy Pattern: Different way to persist workout data
-// - Will be replaced with other strategies (SQLite, Hive, etc.) in production
+// - Provides hardcoded/stub data for testing and development
+// - Returns predefined workout set data
+// - Strategy Pattern: Simple stub data strategy
 //
-// Usage: For testing and initial development
+// Usage: For initial development and testing without real data source
 
-class InMemoryWorkoutStrategy implements WorkoutRepository {
-  final List<WorkoutSet> _workoutSets = [];
-
-  // TODO: Implement with in-memory list
-
+class StubWorkoutSetRepository implements WorkoutSetRepository {
   @override
   Future<WorkoutSet> saveWorkoutSet(WorkoutSet workoutSet) async {
+    // TODO: Implement
     throw UnimplementedError();
   }
 
@@ -25,21 +22,25 @@ class InMemoryWorkoutStrategy implements WorkoutRepository {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
+    // TODO: Implement
     throw UnimplementedError();
   }
 
   @override
   Future<List<WorkoutSet>> getTodayWorkoutSets() async {
+    // TODO: Implement
     throw UnimplementedError();
   }
 
   @override
   Future<void> deleteWorkoutSet(String id) async {
+    // TODO: Implement
     throw UnimplementedError();
   }
 
   @override
   Future<int> getWorkoutCount({DateTime? startDate, DateTime? endDate}) async {
+    // TODO: Implement
     throw UnimplementedError();
   }
 }
