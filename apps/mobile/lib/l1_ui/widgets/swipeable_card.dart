@@ -1,8 +1,35 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
 import '../../l2_domain/card_model.dart';
+
+/// Card interaction states for gesture handling
+enum CardInteractionState {
+  idle, // Front side, no interaction
+  idleFlipped, // Back side, no interaction
+  flipping, // Flip animation in progress
+  draggingCard, // Swiping card left/right
+  draggingToken, // Dragging token from bottom 25%
+  animatingToken, // Token flying to counter
+}
+
+/// Extension methods for state validation
+extension CardInteractionStateValidation on CardInteractionState {
+  bool get allowsTap =>
+      this == CardInteractionState.idle ||
+      this == CardInteractionState.idleFlipped;
+  bool get allowsPanStart =>
+      this == CardInteractionState.idle ||
+      this == CardInteractionState.idleFlipped;
+  bool get isStable =>
+      this == CardInteractionState.idle ||
+      this == CardInteractionState.idleFlipped;
+  bool get isAnimating =>
+      this == CardInteractionState.flipping ||
+      this == CardInteractionState.animatingToken;
+}
 
 class SwipeableCard extends StatefulWidget {
   final CardModel card;
@@ -28,6 +55,9 @@ class SwipeableCard extends StatefulWidget {
 
 class _SwipeableCardState extends State<SwipeableCard>
     with SingleTickerProviderStateMixin {
+  // State Machine
+  CardInteractionState _currentState = CardInteractionState.idle;
+
   late AnimationController _flipController;
   Offset _dragOffset = Offset.zero;
   double _dragRotation = 0.0;
@@ -46,9 +76,31 @@ class _SwipeableCardState extends State<SwipeableCard>
   bool _isDraggingToken = false;
   Offset? _dragStartGlobal;
 
+  // State transition with logging
+  void _transitionState(CardInteractionState newState) {
+    if (kDebugMode) {
+      debugPrint(
+        '[CardState] ${widget.card.exerciseName}: $_currentState → $newState',
+      );
+    }
+    setState(() => _currentState = newState);
+  }
+
   @override
   void initState() {
     super.initState();
+
+    // Initialize state based on card's flip status
+    _currentState = widget.card.isFlipped
+        ? CardInteractionState.idleFlipped
+        : CardInteractionState.idle;
+
+    if (kDebugMode) {
+      debugPrint(
+        '[CardState] ${widget.card.exerciseName}: Initial state = $_currentState',
+      );
+    }
+
     _flipController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
@@ -81,17 +133,19 @@ class _SwipeableCardState extends State<SwipeableCard>
 
     _flipController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        // Animation finished - update card state and clear flipping flag
+        // Animation finished - update card state and transition to idleFlipped
         widget.onCardUpdate(widget.card.copyWith(isFlipped: true));
         setState(() {
           _isFlipping = false;
         });
+        _transitionState(CardInteractionState.idleFlipped);
       } else if (status == AnimationStatus.dismissed) {
-        // Animation reversed - update card state and clear flipping flag
+        // Animation reversed - update card state and transition to idle
         widget.onCardUpdate(widget.card.copyWith(isFlipped: false));
         setState(() {
           _isFlipping = false;
         });
+        _transitionState(CardInteractionState.idle);
       }
     });
   }
@@ -120,12 +174,28 @@ class _SwipeableCardState extends State<SwipeableCard>
       _repsController.text = '${widget.card.reps} reps';
     }
 
-    // Sync animation state with card flip state
-    if (oldWidget.card.isFlipped != widget.card.isFlipped) {
+    // Only sync flip state if we're in a stable state (not animating)
+    // This prevents the bug where card snaps during animation
+    if (_currentState.isStable &&
+        oldWidget.card.isFlipped != widget.card.isFlipped) {
+      if (kDebugMode) {
+        debugPrint(
+          '[CardState] ${widget.card.exerciseName}: didUpdateWidget syncing flip state: ${widget.card.isFlipped}',
+        );
+      }
+
       if (widget.card.isFlipped && _flipController.value == 0.0) {
         _flipController.value = 1.0;
+        _currentState = CardInteractionState.idleFlipped;
       } else if (!widget.card.isFlipped && _flipController.value == 1.0) {
         _flipController.value = 0.0;
+        _currentState = CardInteractionState.idle;
+      }
+    } else if (!_currentState.isStable) {
+      if (kDebugMode) {
+        debugPrint(
+          '[CardState] ${widget.card.exerciseName}: didUpdateWidget skipped - state is $_currentState',
+        );
       }
     }
   }
@@ -149,6 +219,25 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   void _handleTap() {
+    if (kDebugMode) {
+      debugPrint(
+        '[CardGesture] ${widget.card.exerciseName}: Tap detected, state: $_currentState',
+      );
+    }
+
+    // State machine guard: only allow tap in idle states
+    if (!_currentState.allowsTap) {
+      if (kDebugMode) {
+        debugPrint(
+          '[CardGesture] ${widget.card.exerciseName}: Tap rejected - wrong state',
+        );
+      }
+      return;
+    }
+
+    // Transition to flipping state
+    _transitionState(CardInteractionState.flipping);
+
     setState(() {
       _isFlipping = true;
     });
@@ -162,6 +251,22 @@ class _SwipeableCardState extends State<SwipeableCard>
   }
 
   void _handlePanStart(DragStartDetails details) {
+    if (kDebugMode) {
+      debugPrint(
+        '[CardGesture] ${widget.card.exerciseName}: Pan start detected, state: $_currentState',
+      );
+    }
+
+    // State machine guard: only allow pan in idle states
+    if (!_currentState.allowsPanStart) {
+      if (kDebugMode) {
+        debugPrint(
+          '[CardGesture] ${widget.card.exerciseName}: Pan start rejected - wrong state',
+        );
+      }
+      return;
+    }
+
     // Check if drag started in bottom 25% of card when flipped
     if (widget.card.isFlipped) {
       final RenderBox? cardBox = context.findRenderObject() as RenderBox?;
@@ -175,6 +280,8 @@ class _SwipeableCardState extends State<SwipeableCard>
 
         if (localPosition.dy >= bottomThreshold) {
           // Started drag in bottom 25% - token drag mode
+          _transitionState(CardInteractionState.draggingToken);
+
           setState(() {
             _isDraggingToken = true;
             _dragStartGlobal = details.globalPosition;
@@ -186,6 +293,8 @@ class _SwipeableCardState extends State<SwipeableCard>
     }
 
     // Normal card drag
+    _transitionState(CardInteractionState.draggingCard);
+
     setState(() {
       _isDragging = true;
     });
@@ -206,12 +315,15 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   void _handlePanEnd(DragEndDetails details) {
     if (_isDraggingToken) {
-      // End token drag
+      // End token drag - return to idleFlipped
       setState(() {
         _isDraggingToken = false;
         _dragStartGlobal = null;
       });
       widget.onTokenDrag?.call(details.globalPosition, false);
+
+      // Return to stable state (parent will handle token animation if needed)
+      _transitionState(CardInteractionState.idleFlipped);
       return;
     }
 
@@ -223,13 +335,20 @@ class _SwipeableCardState extends State<SwipeableCard>
     if (_dragOffset.dx.abs() > screenWidth * 0.3 || velocity.dx.abs() > 500) {
       _animateCardAwayWithMomentum(velocity);
     }
-    // Bounce back
+    // Bounce back to stable state
     else {
       setState(() {
         _dragOffset = Offset.zero;
         _dragRotation = 0.0;
         _isDragging = false;
       });
+
+      // Return to appropriate stable state
+      _transitionState(
+        widget.card.isFlipped
+            ? CardInteractionState.idleFlipped
+            : CardInteractionState.idle,
+      );
     }
   }
 

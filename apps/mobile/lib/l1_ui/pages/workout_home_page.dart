@@ -319,7 +319,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                               ),
                               child: i == 0
                                   ? SwipeableCard(
-                                      key: ValueKey('card_${_cardOrder[0]}_${_completedCards.length}'),
+                                      key: ValueKey(
+                                        'card_${_cardOrder[0]}_${_completedCards.length}',
+                                      ),
                                       card: _cards[_cardOrder[0]],
                                       onSwipedAway: _removeTopCard,
                                       onCompleted: _completeTopCard,
