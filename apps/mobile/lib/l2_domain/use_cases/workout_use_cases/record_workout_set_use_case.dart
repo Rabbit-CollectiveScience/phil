@@ -1,5 +1,5 @@
-import '../models/workout_set.dart';
-import '../models/exercise_type_enum.dart';
+import '../../models/workout_set.dart';
+import '../../models/exercise_type_enum.dart';
 
 // Use Case: Record a completed workout set
 //

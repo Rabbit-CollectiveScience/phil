@@ -1,4 +1,4 @@
-import '../models/exercise.dart';
+import '../../models/exercise.dart';
 
 // Use Case: Get exercise details and input fields for selected exercise
 //

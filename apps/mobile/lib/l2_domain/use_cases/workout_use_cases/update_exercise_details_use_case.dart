@@ -1,4 +1,4 @@
-import '../models/exercise.dart';
+import '../../models/exercise.dart';
 
 // Use Case: Update exercise configuration/details
 //

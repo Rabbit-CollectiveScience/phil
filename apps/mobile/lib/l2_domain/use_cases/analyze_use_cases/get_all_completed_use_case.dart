@@ -1,24 +1,24 @@
-import '../models/workout_set.dart';
+import '../../models/workout_set.dart';
 
-// Use Case: Get detailed list of completed workout sets
+// Use Case: View all completed workout sets (Analyze Mode)
 //
 // Responsibility:
-// - Retrieve completed workout sets from data store
-// - Filter by date range
+// - Retrieve all completed workout sets from data store
+// - No date filtering (returns all-time history)
 // - Include exercise details for each set
-// - Return full workout set details with exercise info
+// - Used for analyzing workout history, trends, and progress
 //
-// Used by: CompletedListPage to display workout history
+// Used by: Analyze mode pages for viewing complete workout history
 
-class GetCompletedWorkoutsListUseCase {
+class GetAllCompletedUseCase {
   Future<List<WorkoutSetWithDetails>> execute({
     DateTime? startDate,
     DateTime? endDate,
   }) async {
     // TODO: Implement
-    // - Query workout sets within date range
+    // - Query all workout sets (or filter by optional date range)
     // - Join with exercise data
-    // - Return list with full details
+    // - Return complete history with details
     throw UnimplementedError();
   }
 }

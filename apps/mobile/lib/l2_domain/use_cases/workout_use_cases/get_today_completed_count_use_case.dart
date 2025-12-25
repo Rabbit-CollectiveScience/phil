@@ -1,13 +1,13 @@
-// Use Case: Get count of completed workout sets
+// Use Case: Get count of completed workout sets for TODAY (Workout Mode)
 //
 // Responsibility:
 // - Retrieve completed workout sets from data store
-// - Filter by date range (e.g., today, this week)
-// - Return count only
+// - Filter by today's date (workout mode focuses on current session)
+// - Return count only for display in workout counter
 //
 // Used by: WorkoutHomePage to display completion counter
 
-class GetCompletedWorkoutsCountUseCase {
+class GetTodayCompletedCountUseCase {
   Future<int> execute({DateTime? startDate, DateTime? endDate}) async {
     // TODO: Implement
     // - Query workout sets within date range

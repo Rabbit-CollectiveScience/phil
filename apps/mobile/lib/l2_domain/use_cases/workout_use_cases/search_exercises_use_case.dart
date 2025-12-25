@@ -1,4 +1,4 @@
-import '../models/exercise.dart';
+import '../../models/exercise.dart';
 
 // Use Case: Search/filter exercises based on user query
 //

@@ -1,4 +1,4 @@
-import '../models/workout_set.dart';
+import '../../models/workout_set.dart';
 
 // Use Case: Remove a completed workout set
 //
