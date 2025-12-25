@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
-import '../../l2_domain/card_model.dart';
+import '../view_models/card_model.dart';
 import '../widgets/swipeable_card.dart';
 import '../widgets/expandable_search_bar.dart';
 import '../widgets/dashboard_icon_button.dart';

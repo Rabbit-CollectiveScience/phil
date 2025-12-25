@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
-import '../../l2_domain/card_model.dart';
+import '../view_models/card_model.dart';
 
 /// Card interaction states for gesture handling
 enum CardInteractionState {

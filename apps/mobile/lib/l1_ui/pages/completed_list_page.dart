@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../l2_domain/card_model.dart';
+import '../view_models/card_model.dart';
 
 class CompletedListPage extends StatelessWidget {
   final List<CardModel> completedCards;
