@@ -17,9 +17,7 @@ enum CardInteractionState {
 
 /// Extension methods for state validation
 extension CardInteractionStateValidation on CardInteractionState {
-  bool get allowsTap =>
-      this == CardInteractionState.idle ||
-      this == CardInteractionState.idleFlipped;
+  bool get allowsTap => this == CardInteractionState.idle;
   bool get allowsPanStart =>
       this == CardInteractionState.idle ||
       this == CardInteractionState.idleFlipped;
@@ -442,6 +440,7 @@ class _SwipeableCardState extends State<SwipeableCard>
       child: Container(
         width: 300,
         height: 400,
+        clipBehavior: Clip.none,
         decoration: BoxDecoration(
           color: widget.card.color,
           borderRadius: BorderRadius.circular(0),
@@ -504,247 +503,294 @@ class _SwipeableCardState extends State<SwipeableCard>
   Widget _buildBackCard() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 28.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          const SizedBox(height: 5),
           Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                widget.card.exerciseName.toUpperCase(),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  letterSpacing: 1.2,
-                  height: 1.15,
-                ),
-              ),
-              const SizedBox(height: 30),
-              TextField(
-                controller: _weightController,
-                focusNode: _weightFocusNode,
-                readOnly: true,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 32,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: 1.5,
-                ),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                  prefixIcon: ListenableBuilder(
-                    listenable: _weightFocusNode,
-                    builder: (context, child) => Opacity(
-                      opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
-                      child: IgnorePointer(
-                        ignoring: !_weightFocusNode.hasFocus,
-                        child: child!,
+              const SizedBox(height: 5),
+              Column(
+                children: [
+                  Text(
+                    widget.card.exerciseName.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      letterSpacing: 1.2,
+                      height: 1.15,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  TextField(
+                    controller: _weightController,
+                    focusNode: _weightFocusNode,
+                    readOnly: true,
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 32,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                      letterSpacing: 1.5,
+                    ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                      prefixIcon: ListenableBuilder(
+                        listenable: _weightFocusNode,
+                        builder: (context, child) => Opacity(
+                          opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
+                          child: IgnorePointer(
+                            ignoring: !_weightFocusNode.hasFocus,
+                            child: child!,
+                          ),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            _startWeightTimer(); // Reset timer on interaction
+                            String text = _weightController.text.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              '',
+                            );
+                            int current = int.tryParse(text) ?? 0;
+                            if (current > 2) {
+                              int newValue = current - 2;
+                              _weightController.text = '$newValue kg';
+                              widget.onCardUpdate(
+                                widget.card.copyWith(
+                                  weight: newValue.toString(),
+                                ),
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.chevron_left),
+                          color: const Color(0xFFB9E479), // Lime green accent
+                          iconSize: 28,
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(4),
+                          ),
+                        ),
+                      ),
+                      suffixIcon: ListenableBuilder(
+                        listenable: _weightFocusNode,
+                        builder: (context, child) => Opacity(
+                          opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
+                          child: IgnorePointer(
+                            ignoring: !_weightFocusNode.hasFocus,
+                            child: child!,
+                          ),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            _startWeightTimer(); // Reset timer on interaction
+                            String text = _weightController.text.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              '',
+                            );
+                            int current = int.tryParse(text) ?? 0;
+                            int newValue = current + 2;
+                            _weightController.text = '$newValue kg';
+                            widget.onCardUpdate(
+                              widget.card.copyWith(weight: newValue.toString()),
+                            );
+                          },
+                          icon: const Icon(Icons.chevron_right),
+                          color: const Color(0xFFB9E479), // Lime green accent
+                          iconSize: 28,
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(4),
+                          ),
+                        ),
                       ),
                     ),
-                    child: IconButton(
+                  ),
+                  const SizedBox(height: 15),
+                  TextField(
+                    controller: _repsController,
+                    focusNode: _repsFocusNode,
+                    readOnly: true,
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 32,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                      letterSpacing: 1.5,
+                    ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                      prefixIcon: ListenableBuilder(
+                        listenable: _repsFocusNode,
+                        builder: (context, child) => Opacity(
+                          opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
+                          child: IgnorePointer(
+                            ignoring: !_repsFocusNode.hasFocus,
+                            child: child!,
+                          ),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            _startRepsTimer(); // Reset timer on interaction
+                            String text = _repsController.text.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              '',
+                            );
+                            int current = int.tryParse(text) ?? 0;
+                            if (current > 1) {
+                              int newValue = current - 1;
+                              _repsController.text = '$newValue reps';
+                              widget.onCardUpdate(
+                                widget.card.copyWith(reps: newValue.toString()),
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.chevron_left),
+                          color: const Color(0xFFB9E479), // Lime green accent
+                          iconSize: 28,
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(4),
+                          ),
+                        ),
+                      ),
+                      suffixIcon: ListenableBuilder(
+                        listenable: _repsFocusNode,
+                        builder: (context, child) => Opacity(
+                          opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
+                          child: IgnorePointer(
+                            ignoring: !_repsFocusNode.hasFocus,
+                            child: child!,
+                          ),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            _startRepsTimer(); // Reset timer on interaction
+                            String text = _repsController.text.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              '',
+                            );
+                            int current = int.tryParse(text) ?? 0;
+                            int newValue = current + 1;
+                            _repsController.text = '$newValue reps';
+                            widget.onCardUpdate(
+                              widget.card.copyWith(reps: newValue.toString()),
+                            );
+                          },
+                          icon: const Icon(Icons.chevron_right),
+                          color: const Color(0xFFB9E479), // Lime green accent
+                          iconSize: 28,
+                          style: IconButton.styleFrom(
+                            padding: const EdgeInsets.all(4),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                key: _zetButtonKey,
+                width: double.infinity,
+                child: Builder(
+                  builder: (buttonContext) {
+                    return ElevatedButton(
                       onPressed: () {
-                        _startWeightTimer(); // Reset timer on interaction
-                        String text = _weightController.text.replaceAll(
-                          RegExp(r'[^0-9]'),
-                          '',
-                        );
-                        int current = int.tryParse(text) ?? 0;
-                        if (current > 2) {
-                          int newValue = current - 2;
-                          _weightController.text = '$newValue kg';
-                          widget.onCardUpdate(
-                            widget.card.copyWith(weight: newValue.toString()),
+                        // Get button position in global coordinates using button's own context
+                        final RenderBox? box =
+                            buttonContext.findRenderObject() as RenderBox?;
+                        if (box != null) {
+                          final Offset position = box.localToGlobal(
+                            Offset.zero,
                           );
+                          final Offset buttonCenter = Offset(
+                            position.dx + box.size.width / 2,
+                            position.dy + box.size.height / 2,
+                          );
+
+                          // Transition to animatingToken state to block interactions
+                          _transitionState(CardInteractionState.animatingToken);
+                          widget.onCompleted(buttonCenter, () {
+                            // Return to stable state after animation completes
+                            if (mounted) {
+                              if (kDebugMode) {
+                                debugPrint(
+                                  '[CardState] ${widget.card.exerciseName}: Token animation complete, returning to idleFlipped',
+                                );
+                              }
+                              _transitionState(
+                                CardInteractionState.idleFlipped,
+                              );
+                            }
+                          });
                         }
                       },
-                      icon: const Icon(Icons.chevron_left),
-                      color: const Color(0xFFB9E479), // Lime green accent
-                      iconSize: 28,
-                      style: IconButton.styleFrom(
-                        padding: const EdgeInsets.all(4),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(
+                          0xFFB9E479,
+                        ), // Lime green accent
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0),
+                        ),
                       ),
-                    ),
-                  ),
-                  suffixIcon: ListenableBuilder(
-                    listenable: _weightFocusNode,
-                    builder: (context, child) => Opacity(
-                      opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
-                      child: IgnorePointer(
-                        ignoring: !_weightFocusNode.hasFocus,
-                        child: child!,
+                      child: Text(
+                        'ZET ${widget.zetCount}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 2.0,
+                        ),
                       ),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        _startWeightTimer(); // Reset timer on interaction
-                        String text = _weightController.text.replaceAll(
-                          RegExp(r'[^0-9]'),
-                          '',
-                        );
-                        int current = int.tryParse(text) ?? 0;
-                        int newValue = current + 2;
-                        _weightController.text = '$newValue kg';
-                        widget.onCardUpdate(
-                          widget.card.copyWith(weight: newValue.toString()),
-                        );
-                      },
-                      icon: const Icon(Icons.chevron_right),
-                      color: const Color(0xFFB9E479), // Lime green accent
-                      iconSize: 28,
-                      style: IconButton.styleFrom(
-                        padding: const EdgeInsets.all(4),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              TextField(
-                controller: _repsController,
-                focusNode: _repsFocusNode,
-                readOnly: true,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 32,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: 1.5,
-                ),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                  prefixIcon: ListenableBuilder(
-                    listenable: _repsFocusNode,
-                    builder: (context, child) => Opacity(
-                      opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
-                      child: IgnorePointer(
-                        ignoring: !_repsFocusNode.hasFocus,
-                        child: child!,
-                      ),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        _startRepsTimer(); // Reset timer on interaction
-                        String text = _repsController.text.replaceAll(
-                          RegExp(r'[^0-9]'),
-                          '',
-                        );
-                        int current = int.tryParse(text) ?? 0;
-                        if (current > 1) {
-                          int newValue = current - 1;
-                          _repsController.text = '$newValue reps';
-                          widget.onCardUpdate(
-                            widget.card.copyWith(reps: newValue.toString()),
-                          );
-                        }
-                      },
-                      icon: const Icon(Icons.chevron_left),
-                      color: const Color(0xFFB9E479), // Lime green accent
-                      iconSize: 28,
-                      style: IconButton.styleFrom(
-                        padding: const EdgeInsets.all(4),
-                      ),
-                    ),
-                  ),
-                  suffixIcon: ListenableBuilder(
-                    listenable: _repsFocusNode,
-                    builder: (context, child) => Opacity(
-                      opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
-                      child: IgnorePointer(
-                        ignoring: !_repsFocusNode.hasFocus,
-                        child: child!,
-                      ),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        _startRepsTimer(); // Reset timer on interaction
-                        String text = _repsController.text.replaceAll(
-                          RegExp(r'[^0-9]'),
-                          '',
-                        );
-                        int current = int.tryParse(text) ?? 0;
-                        int newValue = current + 1;
-                        _repsController.text = '$newValue reps';
-                        widget.onCardUpdate(
-                          widget.card.copyWith(reps: newValue.toString()),
-                        );
-                      },
-                      icon: const Icon(Icons.chevron_right),
-                      color: const Color(0xFFB9E479), // Lime green accent
-                      iconSize: 28,
-                      style: IconButton.styleFrom(
-                        padding: const EdgeInsets.all(4),
-                      ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
             ],
           ),
-          SizedBox(
-            key: _zetButtonKey,
-            width: double.infinity,
-            child: Builder(
-              builder: (buttonContext) {
-                return ElevatedButton(
-                  onPressed: () {
-                    // Get button position in global coordinates using button's own context
-                    final RenderBox? box =
-                        buttonContext.findRenderObject() as RenderBox?;
-                    if (box != null) {
-                      final Offset position = box.localToGlobal(Offset.zero);
-                      final Offset buttonCenter = Offset(
-                        position.dx + box.size.width / 2,
-                        position.dy + box.size.height / 2,
-                      );
-
-                      // Transition to animatingToken state to block interactions
-                      _transitionState(CardInteractionState.animatingToken);
-                      widget.onCompleted(buttonCenter, () {
-                        // Return to stable state after animation completes
-                        if (mounted) {
-                          if (kDebugMode) {
-                            debugPrint(
-                              '[CardState] ${widget.card.exerciseName}: Token animation complete, returning to idleFlipped',
-                            );
-                          }
-                          _transitionState(CardInteractionState.idleFlipped);
-                        }
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(
-                      0xFFB9E479,
-                    ), // Lime green accent
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
-                    ),
-                  ),
-                  child: Text(
-                    'ZET ${widget.zetCount}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 2.0,
-                    ),
-                  ),
-                );
+          // X button at top right
+          Positioned(
+            top: -8,
+            right: -8,
+            child: GestureDetector(
+              onTap: () {
+                if (kDebugMode) {
+                  debugPrint(
+                    '[CardGesture] ${widget.card.exerciseName}: X button tapped, animating card away',
+                  );
+                }
+                // Animate card flying off to the right
+                setState(() {
+                  _isDragging =
+                      false; // Keep false so AnimatedContainer animates
+                  _dragOffset = const Offset(500, -100);
+                  _dragRotation = 0.3;
+                });
+                // Wait for animation to complete before removing card
+                Future.delayed(const Duration(milliseconds: 300), () {
+                  if (mounted) {
+                    widget.onSwipedAway();
+                  }
+                });
               },
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF2A2A2A),
+                ),
+                child: const Icon(Icons.close, color: Colors.white, size: 16),
+              ),
             ),
           ),
         ],
