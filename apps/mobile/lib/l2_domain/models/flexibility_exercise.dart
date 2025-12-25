@@ -2,13 +2,14 @@ import 'exercise.dart';
 import 'exercise_type_enum.dart';
 
 class FlexibilityExercise extends Exercise {
-  final int holdTime;
-  final int reps;
+  final int?
+  holdTimeInSeconds; // Hold duration in seconds (e.g., 30 = 30 seconds)
+  final int? reps; // Number of holds/repetitions
 
   FlexibilityExercise({
     required super.id,
     required super.name,
-    required this.holdTime,
-    required this.reps,
+    this.holdTimeInSeconds,
+    this.reps,
   }) : super(type: ExerciseTypeEnum.flexibility);
 }

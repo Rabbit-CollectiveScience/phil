@@ -15,12 +15,17 @@ class WorkoutSet {
     required this.values,
   });
 
-  // Convenience getters
-  int? get weight => values['weight'] as int?;
-  int? get reps => values['reps'] as int?;
-  int? get duration => values['duration'] as int?;
-  int? get level => values['level'] as int?;
-  int? get holdTime => values['holdTime'] as int?;
-  String? get unit => values['unit'] as String?;
-  String? get levelUnit => values['levelUnit'] as String?;
+  // Convenience getters for type-specific fields
+  int? get weight => values['weight'] as int?; // Strength: weight value
+  int? get reps => values['reps'] as int?; // Strength/Flexibility: repetitions
+  int? get durationInSeconds =>
+      values['durationInSeconds'] as int?; // Cardio: duration in seconds
+  int? get level => values['level'] as int?; // Cardio: intensity level
+  int? get holdTimeInSeconds =>
+      values['holdTimeInSeconds']
+          as int?; // Flexibility: hold duration in seconds
+  String? get unit =>
+      values['unit'] as String?; // Strength: weight unit (kg/lb)
+  String? get levelUnit =>
+      values['levelUnit'] as String?; // Cardio: unit for level
 }

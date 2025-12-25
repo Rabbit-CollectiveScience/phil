@@ -15,7 +15,10 @@ import '../../l2_domain/models/workout_set.dart';
 
 abstract class WorkoutRepository {
   Future<WorkoutSet> saveWorkoutSet(WorkoutSet workoutSet);
-  Future<List<WorkoutSet>> getWorkoutSets({DateTime? startDate, DateTime? endDate});
+  Future<List<WorkoutSet>> getWorkoutSets({
+    DateTime? startDate,
+    DateTime? endDate,
+  });
   Future<List<WorkoutSet>> getTodayWorkoutSets();
   Future<void> deleteWorkoutSet(String id);
   Future<int> getWorkoutCount({DateTime? startDate, DateTime? endDate});

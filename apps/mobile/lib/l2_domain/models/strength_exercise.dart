@@ -3,15 +3,15 @@ import 'exercise_type_enum.dart';
 import 'weight_unit_enum.dart';
 
 class StrengthExercise extends Exercise {
-  final int weight;
-  final WeightUnitEnum unit;
-  final int reps;
+  final int? weight; // Weight value (numeric only, unit specified separately)
+  final WeightUnitEnum? unit; // Weight unit (kg or lb)
+  final int? reps; // Number of repetitions
 
   StrengthExercise({
     required super.id,
     required super.name,
-    required this.weight,
-    required this.unit,
-    required this.reps,
+    this.weight,
+    this.unit,
+    this.reps,
   }) : super(type: ExerciseTypeEnum.strength);
 }
