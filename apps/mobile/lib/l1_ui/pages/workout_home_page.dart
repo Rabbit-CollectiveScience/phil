@@ -127,6 +127,14 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     // Vibrate when token starts moving to counter
     Vibration.vibrate(duration: 50);
 
+    // Increment counter immediately so button updates
+    setState(() {
+      if (_cardOrder.isNotEmpty) {
+        final topIndex = _cardOrder[0];
+        _completedCards.add(_cards[topIndex]);
+      }
+    });
+
     // Get counter's actual position
     final RenderBox? counterBox =
         _counterKey.currentContext?.findRenderObject() as RenderBox?;
@@ -153,12 +161,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     });
 
     _tokenController.forward(from: 0.0).then((_) {
-      // Animation complete, increment counter
+      // Animation complete
       setState(() {
-        if (_cardOrder.isNotEmpty) {
-          final topIndex = _cardOrder[0];
-          _completedCards.add(_cards[topIndex]);
-        }
         _isTokenAnimating = false;
       });
     });
@@ -315,11 +319,12 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                               ),
                               child: i == 0
                                   ? SwipeableCard(
-                                      key: ValueKey('card_${_cardOrder[0]}'),
+                                      key: ValueKey('card_${_cardOrder[0]}_${_completedCards.length}'),
                                       card: _cards[_cardOrder[0]],
                                       onSwipedAway: _removeTopCard,
                                       onCompleted: _completeTopCard,
                                       onTokenDrag: _handleTokenDrag,
+                                      zetCount: _completedCards.length + 1,
                                       onCardUpdate: (updatedCard) =>
                                           _updateCard(
                                             _cardOrder[0],
@@ -335,6 +340,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                           card: _cards[_cardOrder[i]],
                                           onSwipedAway: () {},
                                           onCompleted: (Offset _) {},
+                                          zetCount: _completedCards.length + 1,
                                           onCardUpdate: (updatedCard) =>
                                               _updateCard(
                                                 _cardOrder[i],

@@ -10,6 +10,7 @@ class SwipeableCard extends StatefulWidget {
   final void Function(Offset buttonPosition) onCompleted;
   final ValueChanged<CardModel> onCardUpdate;
   final void Function(Offset position, bool isDragging)? onTokenDrag;
+  final int zetCount;
 
   const SwipeableCard({
     super.key,
@@ -18,6 +19,7 @@ class SwipeableCard extends StatefulWidget {
     required this.onCompleted,
     required this.onCardUpdate,
     this.onTokenDrag,
+    required this.zetCount,
   });
 
   @override
@@ -536,9 +538,9 @@ class _SwipeableCardState extends State<SwipeableCard>
                       borderRadius: BorderRadius.circular(0),
                     ),
                   ),
-                  child: const Text(
-                    'ZET',
-                    style: TextStyle(
+                  child: Text(
+                    'ZET ${widget.zetCount}',
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2.0,
