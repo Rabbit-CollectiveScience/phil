@@ -759,8 +759,8 @@ class _SwipeableCardState extends State<SwipeableCard>
           ),
           // X button at top right
           Positioned(
-            top: -8,
-            right: -8,
+            top: -12,
+            right: -12,
             child: GestureDetector(
               onTap: () {
                 if (kDebugMode) {
