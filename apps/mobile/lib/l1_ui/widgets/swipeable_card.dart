@@ -34,7 +34,8 @@ extension CardInteractionStateValidation on CardInteractionState {
 class SwipeableCard extends StatefulWidget {
   final CardModel card;
   final VoidCallback onSwipedAway;
-  final void Function(Offset buttonPosition) onCompleted;
+  final void Function(Offset buttonPosition, VoidCallback onAnimationComplete)
+  onCompleted;
   final ValueChanged<CardModel> onCardUpdate;
   final void Function(Offset position, bool isDragging)? onTokenDrag;
   final int zetCount;
@@ -106,6 +107,17 @@ class _SwipeableCardState extends State<SwipeableCard>
       vsync: this,
     );
 
+    // Set initial flip controller value based on card state
+    if (widget.card.isFlipped) {
+      _flipController.value = 1.0;
+    }
+
+    if (kDebugMode) {
+      debugPrint(
+        '[CardState] ${widget.card.exerciseName}: FlipController initialized to ${_flipController.value}',
+      );
+    }
+
     _weightController = TextEditingController(text: '${widget.card.weight} kg');
     _repsController = TextEditingController(text: '${widget.card.reps} reps');
     _weightFocusNode = FocusNode();
@@ -133,19 +145,22 @@ class _SwipeableCardState extends State<SwipeableCard>
 
     _flipController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        // Animation finished - update card state and transition to idleFlipped
-        widget.onCardUpdate(widget.card.copyWith(isFlipped: true));
-        setState(() {
-          _isFlipping = false;
-        });
+        // Transition to stable state FIRST, before notifying parent
+        // This ensures didUpdateWidget sees stable state when it runs
         _transitionState(CardInteractionState.idleFlipped);
-      } else if (status == AnimationStatus.dismissed) {
-        // Animation reversed - update card state and transition to idle
-        widget.onCardUpdate(widget.card.copyWith(isFlipped: false));
         setState(() {
           _isFlipping = false;
         });
+        // Now notify parent - this may trigger didUpdateWidget
+        widget.onCardUpdate(widget.card.copyWith(isFlipped: true));
+      } else if (status == AnimationStatus.dismissed) {
+        // Transition to stable state FIRST, before notifying parent
         _transitionState(CardInteractionState.idle);
+        setState(() {
+          _isFlipping = false;
+        });
+        // Now notify parent - this may trigger didUpdateWidget
+        widget.onCardUpdate(widget.card.copyWith(isFlipped: false));
       }
     });
   }
@@ -174,13 +189,44 @@ class _SwipeableCardState extends State<SwipeableCard>
       _repsController.text = '${widget.card.reps} reps';
     }
 
+    // If card changed (different exercise), reset to stable state
+    // This fixes the bug where cards get stuck in flipping state when swiped away mid-animation
+    if (oldWidget.card.exerciseName != widget.card.exerciseName) {
+      if (kDebugMode) {
+        debugPrint(
+          '[CardState] ${widget.card.exerciseName}: Card changed, forcing reset from $_currentState',
+        );
+      }
+
+      // Cancel any ongoing animation
+      if (_flipController.isAnimating) {
+        _flipController.stop();
+      }
+
+      // Reset to stable state based on current flip value
+      final shouldBeFlipped = _flipController.value > 0.5;
+      _currentState = shouldBeFlipped
+          ? CardInteractionState.idleFlipped
+          : CardInteractionState.idle;
+      _isFlipping = false;
+      _isDragging = false;
+      _isDraggingToken = false;
+
+      if (kDebugMode) {
+        debugPrint(
+          '[CardState] ${widget.card.exerciseName}: Reset to $_currentState',
+        );
+      }
+      return;
+    }
+
     // Only sync flip state if we're in a stable state (not animating)
     // This prevents the bug where card snaps during animation
     if (_currentState.isStable &&
         oldWidget.card.isFlipped != widget.card.isFlipped) {
       if (kDebugMode) {
         debugPrint(
-          '[CardState] ${widget.card.exerciseName}: didUpdateWidget syncing flip state: ${widget.card.isFlipped}',
+          '[CardState] ${widget.card.exerciseName}: didUpdateWidget syncing flip state: ${widget.card.isFlipped} (flipController.value=${_flipController.value})',
         );
       }
 
@@ -194,7 +240,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     } else if (!_currentState.isStable) {
       if (kDebugMode) {
         debugPrint(
-          '[CardState] ${widget.card.exerciseName}: didUpdateWidget skipped - state is $_currentState',
+          '[CardState] ${widget.card.exerciseName}: didUpdateWidget skipped - state is $_currentState (isAnimating=${_flipController.isAnimating})',
         );
       }
     }
@@ -221,7 +267,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   void _handleTap() {
     if (kDebugMode) {
       debugPrint(
-        '[CardGesture] ${widget.card.exerciseName}: Tap detected, state: $_currentState',
+        '[CardGesture] ${widget.card.exerciseName}: Tap detected, state: $_currentState, controller.value=${_flipController.value}, card.isFlipped=${widget.card.isFlipped}',
       );
     }
 
@@ -242,9 +288,29 @@ class _SwipeableCardState extends State<SwipeableCard>
       _isFlipping = true;
     });
 
+    // Ensure animation is stopped before starting new one
+    if (_flipController.isAnimating) {
+      if (kDebugMode) {
+        debugPrint(
+          '[CardState] ${widget.card.exerciseName}: Stopping ongoing animation before starting flip',
+        );
+      }
+      _flipController.stop();
+    }
+
     if (widget.card.isFlipped) {
+      if (kDebugMode) {
+        debugPrint(
+          '[CardState] ${widget.card.exerciseName}: Starting reverse animation',
+        );
+      }
       _flipController.reverse();
     } else {
+      if (kDebugMode) {
+        debugPrint(
+          '[CardState] ${widget.card.exerciseName}: Starting forward animation',
+        );
+      }
       _flipController.forward();
     }
     // Don't update card state here - wait for animation to complete
@@ -644,7 +710,19 @@ class _SwipeableCardState extends State<SwipeableCard>
                         position.dy + box.size.height / 2,
                       );
 
-                      widget.onCompleted(buttonCenter);
+                      // Transition to animatingToken state to block interactions
+                      _transitionState(CardInteractionState.animatingToken);
+                      widget.onCompleted(buttonCenter, () {
+                        // Return to stable state after animation completes
+                        if (mounted) {
+                          if (kDebugMode) {
+                            debugPrint(
+                              '[CardState] ${widget.card.exerciseName}: Token animation complete, returning to idleFlipped',
+                            );
+                          }
+                          _transitionState(CardInteractionState.idleFlipped);
+                        }
+                      });
                     }
                   },
                   style: ElevatedButton.styleFrom(

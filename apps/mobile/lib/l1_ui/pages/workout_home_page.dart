@@ -121,7 +121,10 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     });
   }
 
-  void _completeTopCard(Offset buttonPosition) {
+  void _completeTopCard(
+    Offset buttonPosition,
+    VoidCallback onAnimationComplete,
+  ) {
     if (_isTokenAnimating) return; // Prevent multiple animations
 
     // Vibrate when token starts moving to counter
@@ -165,6 +168,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       setState(() {
         _isTokenAnimating = false;
       });
+      // Notify card that animation is complete
+      onAnimationComplete();
     });
   }
 
@@ -181,7 +186,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         // Registers one button width (60px) before visual contact
         if (position.dy >= counterTop - 90) {
           // Token reached counter zone, animate to it
-          _completeTopCard(position);
+          _completeTopCard(position, () {
+            // No callback needed for drag completion
+          });
         }
       }
 
@@ -341,7 +348,11 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                           ),
                                           card: _cards[_cardOrder[i]],
                                           onSwipedAway: () {},
-                                          onCompleted: (Offset _) {},
+                                          onCompleted:
+                                              (
+                                                Offset _,
+                                                VoidCallback callback,
+                                              ) {},
                                           zetCount: _completedCards.length + 1,
                                           onCardUpdate: (updatedCard) =>
                                               _updateCard(
