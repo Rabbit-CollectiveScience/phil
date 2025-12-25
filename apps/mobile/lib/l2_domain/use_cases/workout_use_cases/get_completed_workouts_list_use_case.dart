@@ -10,7 +10,7 @@ import '../../models/workout_set.dart';
 //
 // Used by: CompletedListPage to display today's workout history
 
-class GetTodayCompletedListUseCase {
+class GetCompletedWorkoutsListUseCase {
   Future<List<WorkoutSetWithDetails>> execute({
     DateTime? startDate,
     DateTime? endDate,

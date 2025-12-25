@@ -31,8 +31,5 @@ class WorkoutSetWithDetails {
   // - Exercise type
   // - Formatted display values
 
-  WorkoutSetWithDetails({
-    required this.workoutSet,
-    required this.exerciseName,
-  });
+  WorkoutSetWithDetails({required this.workoutSet, required this.exerciseName});
 }
