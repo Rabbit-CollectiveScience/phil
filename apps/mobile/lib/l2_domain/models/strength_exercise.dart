@@ -10,6 +10,7 @@ class StrengthExercise extends Exercise {
   StrengthExercise({
     required super.id,
     required super.name,
+    required super.description,
     this.weight,
     this.unit,
     this.reps,

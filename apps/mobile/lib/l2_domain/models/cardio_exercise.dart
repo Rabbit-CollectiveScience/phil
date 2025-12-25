@@ -9,6 +9,7 @@ class CardioExercise extends Exercise {
   CardioExercise({
     required super.id,
     required super.name,
+    required super.description,
     this.durationInSeconds,
     this.level,
     this.levelUnit,

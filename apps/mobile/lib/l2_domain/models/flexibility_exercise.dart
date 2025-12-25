@@ -9,6 +9,7 @@ class FlexibilityExercise extends Exercise {
   FlexibilityExercise({
     required super.id,
     required super.name,
+    required super.description,
     this.holdTimeInSeconds,
     this.reps,
   }) : super(type: ExerciseTypeEnum.flexibility);
