@@ -1,31 +1,25 @@
-import 'exercise_type_enum.dart';
+// Model: Recorded workout set data
+//
+// Purpose:
+// - Stores completed workout data for a specific exercise
+// - Values keys correspond to Exercise.fields[].name
+// - Always used with Exercise context to interpret values
+//
+// Examples:
+// - Squat set: {'weight': 100, 'reps': 10, 'unit': 'kg'}
+// - Run set: {'durationInSeconds': 1800, 'distance': 5.0, 'unit': 'km'}
+// - Stretch set: {'holdTimeInSeconds': 30, 'reps': 3}
 
 class WorkoutSet {
   final String id;
   final String exerciseId;
-  final ExerciseTypeEnum exerciseType;
   final DateTime completedAt;
-  final Map<String, dynamic> values;
+  final Map<String, dynamic> values; // Keys match Exercise.fields[].name
 
   WorkoutSet({
     required this.id,
     required this.exerciseId,
-    required this.exerciseType,
     required this.completedAt,
     required this.values,
   });
-
-  // Convenience getters for type-specific fields
-  int? get weight => values['weight'] as int?; // Strength: weight value
-  int? get reps => values['reps'] as int?; // Strength/Flexibility: repetitions
-  int? get durationInSeconds =>
-      values['durationInSeconds'] as int?; // Cardio: duration in seconds
-  int? get level => values['level'] as int?; // Cardio: intensity level
-  int? get holdTimeInSeconds =>
-      values['holdTimeInSeconds']
-          as int?; // Flexibility: hold duration in seconds
-  String? get unit =>
-      values['unit'] as String?; // Strength: weight unit (kg/lb)
-  String? get levelUnit =>
-      values['levelUnit'] as String?; // Cardio: unit for level
 }
