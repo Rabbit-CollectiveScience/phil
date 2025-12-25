@@ -5,9 +5,5 @@ abstract class Exercise {
   final String name;
   final ExerciseTypeEnum type;
 
-  Exercise({
-    required this.id,
-    required this.name,
-    required this.type,
-  });
+  Exercise({required this.id, required this.name, required this.type});
 }
