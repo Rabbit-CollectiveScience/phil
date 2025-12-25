@@ -1,1 +1,1 @@
-enum ExerciseTypeEnum { strength, cardio, flexibility, custom }
+enum ExerciseTypeEnum { strength, cardio, flexibility }
