@@ -1,0 +1,588 @@
+[
+  {
+    "id": "flex_1",
+    "name": "Neck Side Stretch",
+    "description": "Stand or sit upright with shoulders relaxed. Slowly tilt your head to one side, bringing your ear toward your shoulder without lifting the shoulder. Keep your gaze forward and avoid rotating your neck. You can place the hand on the same side as the tilt gently on top of your head for a deeper stretch. Hold this position and breathe deeply. You should feel a gentle stretch along the side of your neck from ear to shoulder.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 20},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_2",
+    "name": "Neck Rotation",
+    "description": "Sit or stand with your spine straight and shoulders down. Keeping your chin level, slowly turn your head to one side as if trying to look over your shoulder. Rotate as far as comfortable without forcing. Keep your shoulders square and facing forward throughout the movement. Hold the end position and feel the stretch along the side and back of your neck.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 20},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_3",
+    "name": "Neck Forward/Backward Tilt",
+    "description": "Start in a neutral seated or standing position. For forward tilt: slowly lower your chin toward your chest, feeling a stretch in the back of your neck. For backward tilt: gently tilt your head back, looking up toward the ceiling, feeling a stretch in the front of your neck and throat area. Move slowly and avoid forcing either position. Keep your shoulders relaxed throughout.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 20},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "flex_4",
+    "name": "Shoulder Cross-Body Stretch",
+    "description": "Stand or sit upright. Extend one arm straight across your chest at shoulder height. Use your opposite hand to gently pull the extended arm closer to your chest by pressing on the outside of the elbow or upper arm. Keep your extended arm straight and your shoulders relaxed. You should feel a stretch in the back of your shoulder and possibly your upper back.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_5",
+    "name": "Overhead Shoulder Stretch",
+    "description": "Raise one arm straight overhead, then bend your elbow so your hand reaches down behind your head toward your opposite shoulder blade. With your free hand, gently grasp the bent elbow and pull it toward the center of your head. Keep your torso upright and avoid leaning to the side. You should feel a stretch in your shoulder and down the back of your arm (tricep).",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_6",
+    "name": "Shoulder Circles",
+    "description": "Stand with your arms relaxed at your sides. Roll both shoulders up toward your ears, then back, down, and forward in a smooth circular motion. You can also reverse the direction, rolling shoulders forward, up, back, and down. Make the circles as large as possible while maintaining control. This movement warms up and mobilizes the shoulder joints.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number", "defaultValue": 10}
+    ]
+  },
+  {
+    "id": "flex_7",
+    "name": "Doorway Shoulder Stretch",
+    "description": "Stand in a doorway and place your forearm and palm against the door frame with your elbow at shoulder height and bent at 90 degrees. Step one foot forward through the doorway and gently lean your body forward, allowing your arm to stay in place on the frame. You should feel a stretch across your chest and the front of your shoulder. Keep your core engaged and avoid arching your lower back.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_8",
+    "name": "Triceps Stretch",
+    "description": "Raise one arm straight overhead. Bend the elbow so your hand drops behind your head, reaching down toward the center of your back between your shoulder blades. With your opposite hand, gently grasp the bent elbow and pull it toward your head and slightly behind. Keep your torso upright and avoid arching your back. You should feel a stretch along the back of your upper arm.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_9",
+    "name": "Wrist Flexor Stretch",
+    "description": "Extend one arm straight in front of you at shoulder height with your palm facing up toward the ceiling. Keep your arm straight. With your opposite hand, gently grasp your fingers and pull them back toward your body, bending your wrist so your fingers point toward the floor. You should feel a stretch along the underside (palm side) of your forearm.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 20},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_10",
+    "name": "Wrist Extensor Stretch",
+    "description": "Extend one arm straight in front of you at shoulder height with your palm facing down toward the floor. Keep your arm straight. With your opposite hand, grasp your fingers and gently pull them down and toward your body, flexing your wrist so your fingers point toward the floor. You should feel a stretch along the top side of your forearm.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 20},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_11",
+    "name": "Chest Doorway Stretch",
+    "description": "Stand inside a doorway and place both hands or forearms on the door frame at shoulder height, with elbows bent at about 90 degrees. Step one foot forward through the doorway and gently lean your torso forward, allowing your arms to remain on the frame behind you. Keep your chest up and core engaged. You should feel a stretch across your chest (pectoral muscles) and the front of your shoulders.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_12",
+    "name": "Chest Expansion Stretch",
+    "description": "Stand tall and reach both hands behind your back, interlacing your fingers together. Straighten your arms and gently lift your hands up away from your body while squeezing your shoulder blades together. Keep your chest lifted and avoid arching your lower back excessively. You should feel a stretch across your chest and the front of your shoulders.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_13",
+    "name": "Cat-Cow Stretch",
+    "description": "Start on your hands and knees in a tabletop position with wrists under shoulders and knees under hips. For cow pose: drop your belly toward the floor, lift your chest and chin, and arch your back. For cat pose: round your spine toward the ceiling, tuck your chin to your chest, and draw your belly button toward your spine. Alternate smoothly between these two positions, moving with your breath. This mobilizes the entire spine.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number", "defaultValue": 10}
+    ]
+  },
+  {
+    "id": "flex_14",
+    "name": "Thread the Needle",
+    "description": "Start on your hands and knees in tabletop position. Slide one arm underneath your body with the palm facing up, threading it between your opposite hand and knee. Allow your shoulder and temple to rest on the ground. Your hips should stay stacked over your knees. You should feel a stretch across your upper back, between your shoulder blades, and in your shoulder.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_15",
+    "name": "Upper Back Clasped Hands Stretch",
+    "description": "Stand or sit upright and extend both arms straight in front of you at shoulder height. Interlace your fingers with palms facing away from your body. Round your upper back and push your hands forward as far as comfortable, allowing your shoulder blades to spread apart. Drop your chin slightly toward your chest. You should feel a stretch across your upper back and between your shoulder blades.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_16",
+    "name": "Child's Pose",
+    "description": "Kneel on the floor with your knees hip-width apart or wider. Sit your hips back toward your heels and fold forward, extending your arms straight out in front of you on the ground with palms down. Rest your forehead on the floor or a cushion. Let your entire body relax into the stretch. You should feel a gentle stretch in your lower back, hips, thighs, and shoulders. This is a resting pose.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 60}
+    ]
+  },
+  {
+    "id": "flex_17",
+    "name": "Cobra Pose",
+    "description": "Lie face down on the floor with your legs extended and the tops of your feet on the ground. Place your palms flat on the floor directly under your shoulders. Press through your hands to lift your chest off the ground, keeping your elbows slightly bent and close to your body. Draw your shoulders back and down. Keep your hips and legs on the ground. Look forward or slightly upward. You should feel a stretch in your abdominals and the front of your hips.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_18",
+    "name": "Upward Dog",
+    "description": "Start in a plank position or lying face down. Place your hands flat on the floor beside your ribs. Press firmly through your palms to straighten your arms completely, lifting your chest and thighs off the ground. Only your hands and the tops of your feet should touch the floor. Roll your shoulders back, open your chest, and look slightly upward. This creates a deeper backbend than cobra. You should feel an intense stretch in your abs, hip flexors, and chest.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_19",
+    "name": "Side Bend Stretch",
+    "description": "Stand with feet hip-width apart or sit upright in a chair. Reach one arm straight overhead. Gently lean your torso to the opposite side, creating a C-curve with your body. Avoid leaning forward or backward - keep your body in a straight plane. Feel the stretch along the entire side of your body from your hip to your fingertips, including your obliques and intercostal muscles.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_20",
+    "name": "Seated Spinal Twist",
+    "description": "Sit on the floor with both legs extended straight in front of you. Bend your right knee and place your right foot flat on the floor on the outside of your left knee. Sit up tall and twist your torso to the right, placing your left elbow on the outside of your right knee and your right hand on the floor behind you for support. Look over your right shoulder. You should feel a stretch through your spine, hips, and outer thigh.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_21",
+    "name": "Supine Spinal Twist",
+    "description": "Lie flat on your back with arms extended out to the sides at shoulder height, forming a T-shape. Bend both knees with feet flat on the floor, then gently drop both knees to one side while keeping your shoulders flat on the ground. Turn your head to look in the opposite direction of your knees. You should feel a stretch through your spine, across your chest, and in the hip of the top leg. This releases tension in the lower back and improves spinal rotation.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_22",
+    "name": "Knee to Chest Stretch",
+    "description": "Lie flat on your back with both legs extended. Bend one or both knees and use your hands to gently pull your knee(s) toward your chest, clasping your hands around your shin or behind your thigh. Keep your back flat on the ground and relax your shoulders. You should feel a gentle stretch in your lower back, glutes, and possibly down the back of your leg. This is excellent for relieving lower back tension and tightness.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_23",
+    "name": "Supine Figure 4 Stretch",
+    "description": "Lie on your back with both knees bent and feet flat on the floor. Cross your right ankle over your left knee, creating a figure-4 shape with your legs. Thread your right hand through the opening between your legs and clasp both hands behind your left thigh. Gently pull your left leg toward your chest while keeping your head and shoulders relaxed on the ground. You should feel a deep stretch in your right glute, hip, and outer hip rotator muscles. This targets piriformis and external hip rotators.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_24",
+    "name": "Prayer Stretch",
+    "description": "Start on your hands and knees in a tabletop position. Walk your hands forward and lower your chest toward the ground while sitting your hips back toward your heels. Keep your arms extended straight in front of you with palms flat on the ground. Your forehead may rest on the floor or a cushion. Keep your knees apart if needed for comfort. You should feel a gentle stretch through your lower back, lats, and shoulders. This is a restorative position for the spine.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_25",
+    "name": "Seated Forward Bend",
+    "description": "Sit on the floor with both legs extended straight in front of you, feet flexed. Sit up tall to lengthen your spine, then hinge forward from your hips, reaching your hands toward your feet, ankles, or shins. Keep your back as straight as possible rather than rounding. Focus on bringing your chest toward your thighs rather than your head to your knees. You should feel a stretch along the back of your legs (hamstrings) and through your lower back. Breathe deeply to relax into the stretch.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_26",
+    "name": "Standing Forward Bend",
+    "description": "Stand with feet hip-width apart and knees slightly bent. Hinge forward from your hips, letting your torso hang down toward the ground. Let your arms dangle or grasp opposite elbows. Keep a slight bend in your knees to protect your lower back. Relax your head and neck completely. You should feel gravity gently stretching your hamstrings, calves, and entire back. This allows your spine to decompress and releases tension throughout the posterior chain.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_27",
+    "name": "Hip Flexor Lunge Stretch",
+    "description": "Start in a lunge position with your right foot forward, knee bent at 90 degrees. Lower your back (left) knee to the ground and rest it on a cushion if needed. Place your hands on your front thigh or hips for support. Keep your torso upright and gently push your hips forward while squeezing your glutes. Avoid arching your lower back excessively. You should feel a strong stretch in the front of your back hip (hip flexor) and possibly your quad. This counteracts sitting posture.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_28",
+    "name": "Pigeon Pose",
+    "description": "From hands and knees, bring your right knee forward and place it behind your right wrist, with your right ankle angled toward your left hip. Extend your left leg straight behind you with your knee and top of foot on the ground. Square your hips toward the front and walk your hands forward, lowering your torso over your front leg. You can rest on your forearms or fully fold forward. You should feel a deep stretch in your right glute, hip external rotators, and possibly your hip flexor on the extended leg. This is an intense hip opener.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 60},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_29",
+    "name": "Frog Stretch",
+    "description": "Start on your hands and knees, then gradually widen your knees apart as far as comfortable while keeping your ankles in line with your knees and feet flexed outward. Lower down to your forearms for support. Gently rock your hips back toward your heels or side to side to deepen the stretch. Keep your spine neutral and avoid letting your lower back sag. You should feel a deep, intense stretch in your inner thighs (adductors) and groin. This is an advanced stretch, so progress gradually.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 60}
+    ]
+  },
+  {
+    "id": "flex_30",
+    "name": "Butterfly Stretch",
+    "description": "Sit on the floor and bring the soles of your feet together, letting your knees fall out to the sides. Hold your feet or ankles with your hands and sit up tall, lengthening your spine. Gently press your knees down toward the floor using your elbows or let gravity do the work. You can also fold forward from your hips for a deeper stretch. You should feel a stretch in your inner thighs (adductors) and groin. Keep your back straight to focus the stretch in your hips.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_31",
+    "name": "Figure 4 Stretch (Standing)",
+    "description": "Stand on your left leg and cross your right ankle over your left thigh just above the knee, creating a figure-4 shape. Flex your right foot to protect the knee. Sit your hips back as if sitting into a chair, keeping your chest up and back straight. You can hold onto a wall or chair for balance. You should feel a stretch in your right glute and hip external rotators. This standing variation builds balance while stretching the hips.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_32",
+    "name": "90/90 Hip Stretch",
+    "description": "Sit on the floor with your right leg in front of you, bent at 90 degrees with your shin roughly parallel to the front edge of your mat. Position your left leg behind you, also bent at 90 degrees with your shin roughly parallel to the back edge. Both knees and ankles should be at right angles. Sit up tall and you can rotate your torso toward either leg to intensify the stretch. You should feel a stretch in the external rotators of your front hip and the internal rotators of your back hip. This addresses hip rotation mobility from multiple angles.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_33",
+    "name": "Hip Circles",
+    "description": "Stand on your left leg with hands on your hips or holding a wall for balance. Lift your right knee to hip height, then rotate your leg in large circles, moving from the hip joint. Start with small circles and gradually make them larger. Keep your standing leg slightly bent and your core engaged. Perform circles in both clockwise and counterclockwise directions. You should feel the movement mobilizing all ranges of motion in your hip joint. This warms up the hip and improves mobility in all planes.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number", "defaultValue": 10},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_34",
+    "name": "Reclined Pigeon",
+    "description": "Lie flat on your back with both knees bent. Cross your right ankle over your left thigh just above the knee, flexing your right foot. Thread your right arm through the space between your legs and clasp both hands behind your left thigh or on top of your left shin. Gently pull your left leg toward your chest while keeping your head and upper back on the ground. You should feel a deep stretch in your right glute and hip external rotators. This is a gentler alternative to traditional pigeon pose.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_35",
+    "name": "Standing Glute Stretch",
+    "description": "Stand tall with feet hip-width apart. Lift your right knee and use both hands to pull it toward your chest, hugging it close to your body. Keep your standing leg straight or slightly bent and your back upright. Hold onto a wall if needed for balance. You should feel a stretch in your right glute and possibly your lower back. This simple standing stretch targets the glutes while also improving balance.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_36",
+    "name": "Standing Hamstring Stretch",
+    "description": "Stand facing a bench, step, or elevated surface. Place your right heel on the elevated surface with your leg straight and toes pointing up toward the ceiling. Keep your standing leg straight or slightly bent. Hinge forward from your hips, reaching your hands toward your elevated foot while keeping your back straight. Avoid rounding your spine. You should feel a stretch along the back of your elevated leg (hamstring). The higher the surface, the more intense the stretch.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_37",
+    "name": "Lying Hamstring Stretch",
+    "description": "Lie flat on your back with both legs extended. Raise your right leg straight up toward the ceiling, keeping your knee as straight as possible. Use your hands, a towel, or a strap around your foot to gently pull your leg closer to your torso. Keep your left leg extended on the ground and both hips flat. Your head and shoulders should remain relaxed on the floor. You should feel a stretch along the back of your raised leg. This position isolates the hamstring effectively.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_38",
+    "name": "Downward Dog",
+    "description": "Start on your hands and knees. Place your hands shoulder-width apart with fingers spread wide. Tuck your toes and lift your hips up and back, straightening your legs to form an inverted V-shape. Press your chest toward your thighs and try to bring your heels toward the floor. Keep your arms straight and ears aligned with your upper arms. You should feel a stretch in your hamstrings, calves, shoulders, and back. Pedal your feet if needed to warm up the calves.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_39",
+    "name": "Standing Quad Stretch",
+    "description": "Stand on your left leg and bend your right knee, bringing your right heel toward your glute. Reach back with your right hand to grasp your right ankle or foot. Keep your knees close together and avoid arching your lower back. Gently pull your foot closer to your glute. Use a wall for balance if needed. You should feel a stretch along the front of your right thigh (quadriceps). Keep your standing leg slightly bent for better balance.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_40",
+    "name": "Lying Quad Stretch",
+    "description": "Lie on your left side with your legs extended and your head resting on your left arm. Bend your right knee and reach back with your right hand to grasp your right ankle or foot. Gently pull your heel toward your glute, keeping your knees together. Keep your hips stacked and avoid rotating your torso. You should feel a stretch along the front of your right thigh. This side-lying position is comfortable and effective for targeting the quadriceps.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_41",
+    "name": "Kneeling Quad Stretch",
+    "description": "Kneel on your right knee with your left foot flat on the ground in front of you in a lunge position. Bend your right knee to bring your right foot toward your glute, then reach back with your right hand to grasp your right foot or ankle. Gently pull your foot closer to your glute while keeping your torso upright. Squeeze your right glute to intensify the stretch. You should feel a stretch in your right quad and hip flexor. This combines a hip flexor stretch with a deeper quad stretch.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_42",
+    "name": "Wall Calf Stretch",
+    "description": "Stand facing a wall and place both hands on it at shoulder height. Step your right leg back, keeping it straight with your heel pressed firmly into the ground. Your left leg should be bent with your knee over your ankle. Lean into the wall, keeping your back leg straight and heel down. Keep your hips square and your back foot pointing forward. You should feel a stretch in the calf muscle of your back leg. Bend your back knee slightly to target the deeper soleus muscle.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_43",
+    "name": "Seated Calf Stretch",
+    "description": "Sit on the floor with both legs extended straight in front of you. Loop a towel, strap, or resistance band around the ball of one or both feet. Hold the ends of the strap and gently pull your toes toward your shins, keeping your legs straight. Keep your back upright and avoid rounding your spine. You should feel a stretch in your calf muscles and possibly your Achilles tendon. This seated position allows you to control the intensity of the stretch safely.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_44",
+    "name": "Step Calf Stretch",
+    "description": "Stand on the edge of a step, stair, or elevated surface with the balls of your feet on the edge and your heels hanging off. Hold onto a railing or wall for balance. Slowly lower your heels below the level of the step, letting gravity stretch your calves. Keep your knees straight or slightly bent. You should feel a deep stretch in your calf muscles and Achilles tendons. You can perform this with both feet together or one at a time for a more intense stretch.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_45",
+    "name": "Wide Leg Forward Fold",
+    "description": "Stand with your feet wide apart, about 3-4 feet depending on your height. Turn your toes slightly inward. Place your hands on your hips and hinge forward from your hips, keeping your back straight. Lower your hands to the ground, or hold onto your ankles or shins. Let your head hang and relax your neck. You should feel a stretch in your hamstrings and inner thighs (adductors). The wide stance emphasizes the inner thigh stretch more than a regular forward fold.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_46",
+    "name": "Side Lunge Stretch",
+    "description": "Stand with your feet wide apart, toes pointing forward. Shift your weight to your right side by bending your right knee and sitting your hips back, while keeping your left leg completely straight. Keep your chest up and your back flat. You can place your hands on your hips or on the ground for support. You should feel a stretch along the inner thigh (adductor) of your straight leg. Hold, then switch sides by shifting to the other leg.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_47",
+    "name": "Straddle Stretch",
+    "description": "Sit on the floor with your legs spread wide apart in a V-shape, keeping your knees pointing up toward the ceiling. Sit up tall, then hinge forward from your hips, walking your hands forward on the ground. You can also reach toward one foot at a time to emphasize one side. Keep your back straight rather than rounding. You should feel a stretch in your inner thighs (adductors) and hamstrings. This is an intense stretch, so be patient and never force it.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_48",
+    "name": "IT Band Standing Stretch",
+    "description": "Stand upright and cross your right leg behind your left leg. Extend your right arm overhead. Lean your torso to the left side while pushing your right hip out to the right. You should create a C-curve along the right side of your body. Hold onto a wall with your left hand if needed for balance. You should feel a stretch along the outside of your right hip and thigh (IT band). Keep your shoulders square and avoid rotating your torso.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_49",
+    "name": "IT Band Lying Stretch",
+    "description": "Lie on your left side with your legs extended. Bend your right knee and use your left hand to pull your right knee across your body toward the ground in front of you. Keep your right shoulder on the ground and look toward the right. Your right arm can extend out to the side. You should feel a stretch along the outside of your right hip and thigh (IT band). This cross-body position targets the lateral hip structures effectively.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_50",
+    "name": "World's Greatest Stretch",
+    "description": "Start in a push-up position. Step your right foot forward outside your right hand into a deep lunge. Place your left hand on the ground and rotate your torso to the right, reaching your right arm up toward the ceiling. Look up at your raised hand. Hold briefly, then lower your right hand back down, straighten your right leg, and sit your hips back to stretch the hamstring. Return to lunge and repeat. You should feel this dynamic stretch in your hip flexors, hamstrings, groin, and thoracic spine. This combines multiple movement patterns.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number", "defaultValue": 5},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_51",
+    "name": "Standing Side Reach",
+    "description": "Stand with your feet hip-width apart and extend your right arm straight overhead. Reach up and over to your left side, creating a long arc with your body. Let your left arm hang at your side or rest on your left thigh. Keep your hips stable and avoid leaning forward or backward. You should feel a stretch along the entire right side of your body, from your hip through your ribs and into your shoulder. This lengthens the obliques and intercostal muscles.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_52",
+    "name": "Ragdoll Pose",
+    "description": "Stand with feet hip-width apart. Fold forward from your hips, letting your torso hang down completely. Bend your knees generously. Cross your arms and hold opposite elbows, letting the weight of your arms gently traction your spine. Sway gently side to side if it feels good. Let your head and neck be completely relaxed. You should feel gravity decompressing your spine and stretching your back, shoulders, and hamstrings. This is a deeply relaxing pose.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_53",
+    "name": "Lizard Pose",
+    "description": "From a lunge position with your right foot forward, place both hands on the ground inside your right foot. Lower your back (left) knee to the ground if desired. Walk your right foot slightly to the right to create space. Lower down to your forearms if you have the flexibility. Keep your chest open and your back flat. You should feel a deep stretch in your right hip flexor, groin, and inner thigh. This is an intense hip opener that targets multiple muscle groups.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_54",
+    "name": "Low Lunge",
+    "description": "Step your right foot forward into a lunge position and lower your left knee to the ground. Your right knee should be directly over your right ankle. Place your hands on your right thigh or raise them overhead. Keep your torso upright and gently press your hips forward. Draw your shoulders back and engage your core. You should feel a stretch in the front of your left hip (hip flexor) and possibly your left quad. This is a fundamental hip flexor stretch.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_55",
+    "name": "Happy Baby Pose",
+    "description": "Lie flat on your back. Bend both knees and bring them toward your chest, then open them wider than your torso. Reach up and grab the outside edges of your feet, or hold your ankles or shins. Pull your knees down toward your armpits while keeping your lower back on the ground. You can gently rock side to side. You should feel a stretch in your hips, inner thighs (groin), and lower back. This calming pose opens the hips while releasing lower back tension.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_56",
+    "name": "Ankle to Knee Pose",
+    "description": "Sit on the floor with your right shin on the ground, knee bent at 90 degrees. Stack your left shin directly on top so your left ankle rests on your right knee and your left knee rests on your right ankle, creating parallel shins. Sit up tall with your hands on the ground behind you or on your thighs. For a deeper stretch, fold forward from your hips. You should feel a deep stretch in both hips, particularly the external rotators. This is an advanced hip flexibility pose.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 30}
+    ]
+  },
+  {
+    "id": "flex_57",
+    "name": "Arm Circles",
+    "description": "Stand with your feet hip-width apart and extend both arms straight out to the sides at shoulder height. Make large circular motions with your arms, moving from the shoulder joint. Start with small circles and gradually increase the size. Perform circles forward for half the reps, then reverse direction and circle backward. Keep your core engaged and avoid swaying your body. You should feel your shoulder muscles warming up and your range of motion improving. This mobilizes the shoulder joints.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number", "defaultValue": 10}
+    ]
+  },
+  {
+    "id": "flex_58",
+    "name": "Torso Twist",
+    "description": "Stand with your feet hip-width apart and knees slightly bent. Hold your arms bent at your sides or extended in front of you. Rotate your torso from side to side in a controlled, rhythmic motion. Let your arms swing naturally as you twist. Keep your hips facing forward and initiate the rotation from your spine. Your head and eyes can follow the movement. You should feel your spine mobilizing and your core muscles engaging. This warms up the entire torso.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number", "defaultValue": 20}
+    ]
+  },
+  {
+    "id": "flex_59",
+    "name": "Ankle Circles",
+    "description": "Stand on your left leg (hold a wall for balance if needed) or sit in a chair. Lift your right foot off the ground slightly. Rotate your right ankle, making circles with your foot. Move from the ankle joint, not the entire leg. Make the circles as large as possible. Perform circles in both clockwise and counterclockwise directions. You should feel the movement mobilizing your ankle joint in all directions. This improves ankle mobility and helps prevent injuries.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number", "defaultValue": 10},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_60",
+    "name": "Leg Swings Forward/Back",
+    "description": "Stand sideways next to a wall or pole and place your hand on it for support. Stand on your left leg with a slight bend in the knee. Swing your right leg forward and backward in a controlled, pendulum-like motion. Keep your torso upright and avoid leaning forward or back. Start with small swings and gradually increase the range of motion as your muscles warm up. You should feel a dynamic stretch in your hip flexors when swinging back and hamstrings when swinging forward. This prepares the hips for activity.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number", "defaultValue": 10},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  },
+  {
+    "id": "flex_61",
+    "name": "Leg Swings Side to Side",
+    "description": "Stand facing a wall or pole and place both hands on it for support. Stand on your left leg with a slight bend in the knee. Swing your right leg from side to side across the front of your body in a controlled, pendulum-like motion. Your leg should swing from the outside to the inside (crossing in front of your standing leg) and back. Keep your torso stable and facing forward. You should feel a dynamic stretch in your inner thighs (adductors) and outer hip. This mobilizes the hip in the frontal plane.",
+    "type": "flexibility",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number", "defaultValue": 10},
+      {"name": "side", "label": "Side", "unit": "", "type": "text"}
+    ]
+  }
+]
