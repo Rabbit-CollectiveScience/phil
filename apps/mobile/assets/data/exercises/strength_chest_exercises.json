@@ -192,5 +192,95 @@
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
+  },
+  {
+    "id": "chest_21",
+    "name": "Smith Machine Bench Press",
+    "description": "Position a flat bench centered under the Smith machine bar. Lie back with the bar aligned over your mid-chest and grip it slightly wider than shoulder-width. Unrack the bar by rotating it and lower it to your chest in a controlled manner, keeping elbows at 45 degrees. Press the bar back up along the fixed vertical path until arms are extended. The Smith machine provides a stable, guided bar path making it ideal for training without a spotter, pushing to failure safely, or focusing purely on chest contraction without worrying about balance.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "chest_22",
+    "name": "Smith Machine Incline Press",
+    "description": "Set an adjustable bench to 30-45 degrees under the Smith machine bar, positioning it so the bar aligns with your upper chest. Lie back and grip the bar slightly wider than shoulders, unrack by rotating, then lower to your upper chest with controlled tempo. Press back up along the guided path, focusing on upper pec contraction. The fixed bar path allows you to safely overload your upper chest without needing balance or stabilization, perfect for isolating the target muscles and training to muscular failure.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "chest_23",
+    "name": "Smith Machine Decline Press",
+    "description": "Position a decline bench under the Smith machine with the bar aligned over your lower chest. Secure your legs and lie back, gripping the bar slightly wider than shoulder-width. Unrack the bar and lower it to your lower sternum with elbows tucked at 45 degrees. Press back up along the machine's fixed path, squeezing your lower pecs. The Smith machine's stability is particularly useful for decline pressing where the inverted position can make balance more challenging with free weights.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "chest_24",
+    "name": "Dumbbell Pullover",
+    "description": "Lie perpendicular across a flat bench with only your upper back and shoulders supported, feet planted firmly on the floor with hips slightly lower than shoulders. Hold a single dumbbell with both hands above your chest, arms slightly bent at the elbows. Lower the dumbbell in an arc behind your head until you feel a deep stretch in your chest and lats, keeping the elbow angle constant. Pull the weight back over your chest using your lats and chest muscles. This classic exercise uniquely targets both the chest and lats while expanding the rib cage.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "chest_25",
+    "name": "Barbell Floor Press",
+    "description": "Lie on the floor with knees bent and feet flat, positioning yourself under a barbell in a rack or having it handed to you. Grip the bar slightly wider than shoulder-width and hold it above your chest. Lower the bar until your triceps and elbows touch the floor, then pause briefly. Press the bar back up explosively to full extension. The limited range of motion makes this excellent for building lockout strength, overloading the top portion of the press, and is more shoulder-friendly than full ROM bench pressing.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "chest_26",
+    "name": "Dumbbell Floor Press",
+    "description": "Lie on the floor with knees bent and dumbbells held at chest level, elbows resting on the ground. Press the dumbbells up until arms are fully extended, bringing them slightly together at the top. Lower with control until your elbows and triceps touch the floor, then pause. The floor acts as a natural stopping point, preventing excessive shoulder extension and making this variation safer for those with shoulder issues. It emphasizes the lockout portion of the press while still effectively working the chest.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "chest_27",
+    "name": "Svend Press",
+    "description": "Stand upright holding a weight plate (or two plates together) at chest level between both palms, squeezing it hard. Keep your arms bent at about 90 degrees with elbows at chest height. Press the plate straight out in front of you until arms are extended, maintaining constant inward pressure to squeeze the plates together. Bring the plate back to your chest with control. This unique exercise intensely targets the inner chest and creates a strong mind-muscle connection through the squeezing action throughout the movement.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "chest_28",
+    "name": "Landmine Press",
+    "description": "Position a barbell in a landmine attachment or corner with weight loaded on one end. Grab the loaded end with one hand at shoulder height, standing in a staggered stance. Press the bar up and forward at a diagonal angle until your arm is fully extended overhead. Lower with control back to shoulder level. The angled pressing path creates unique tension on the chest and shoulders while the unilateral nature challenges core stability. This variation is excellent for athletes and those wanting a more functional pressing pattern.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "chest_29",
+    "name": "Close-Grip Bench Press",
+    "description": "Lie on a flat bench with feet planted firmly and grip the barbell with hands positioned at shoulder-width or slightly narrower, inside your normal bench press grip. Unrack the bar and position it over your chest. Lower the bar to your lower chest or upper abdomen with elbows tucked tightly to your sides throughout. Press back up explosively, maintaining the narrow grip and close elbow position. While primarily a tricep exercise, this variation still effectively works the chest, particularly the inner pecs, while reducing shoulder strain.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
   }
 ]
