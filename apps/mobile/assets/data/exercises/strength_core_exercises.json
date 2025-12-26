@@ -1,1 +1,537 @@
-[]
+[
+  {
+    "id": "core_1",
+    "name": "Plank",
+    "description": "Start in a forearm plank position with elbows directly under shoulders, forearms on the ground, and body in a straight line from head to heels. Engage your core by pulling your belly button toward your spine, squeeze your glutes, and keep your hips level without sagging or piking up. Maintain neutral head position by looking at the floor about a foot in front of you. Breathe steadily throughout the hold. This fundamental isometric exercise builds total core endurance, teaching your abs to stabilize your spine while working the rectus abdominis, transverse abdominis, and obliques.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Time (seconds)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_2",
+    "name": "Side Plank",
+    "description": "Lie on your side and prop yourself up on one forearm with elbow directly under shoulder. Stack your feet or place the top foot in front of the bottom foot for more stability. Lift your hips off the ground, creating a straight line from head to feet, and extend your top arm toward the ceiling or rest it on your hip. Keep your core tight and avoid letting your hips sag. This anti-lateral flexion exercise targets the obliques, quadratus lumborum, and hip abductors, crucial for rotational stability and injury prevention.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Time (seconds)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_3",
+    "name": "Crunch",
+    "description": "Lie on your back with knees bent and feet flat on the floor, hands behind your head with elbows wide or crossed over your chest. Press your lower back into the floor and curl your upper back off the ground by contracting your abs, lifting your shoulder blades a few inches. Focus on bringing your ribs toward your hips rather than pulling on your neck. Lower back down with control without completely relaxing. This classic isolation movement targets the rectus abdominis (six-pack muscles) through spinal flexion, making it foundational for ab development.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_4",
+    "name": "Bicycle Crunch",
+    "description": "Lie on your back with hands behind your head and legs lifted with knees bent at 90 degrees. Simultaneously curl your upper body and bring your right elbow toward your left knee while extending your right leg straight out. Alternate sides in a pedaling motion, bringing your left elbow to your right knee while extending your left leg. Keep your lower back pressed to the floor and focus on rotating your torso rather than just moving your elbows. This dynamic movement works both the rectus abdominis and obliques, particularly effective for rotational core strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_5",
+    "name": "Russian Twist",
+    "description": "Sit on the floor with knees bent and feet lifted slightly off the ground, leaning back to about 45 degrees with your torso. Hold your hands together in front of your chest or hold a weight. Rotate your torso to one side, bringing your hands toward the floor beside your hip, then rotate to the other side. Keep your chest up and core engaged throughout, moving in a controlled manner. This rotational exercise targets the obliques and transverse abdominis, building rotational strength and stability crucial for athletic movements.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_6",
+    "name": "Dead Bug",
+    "description": "Lie on your back with arms extended straight up toward the ceiling and legs lifted with knees bent at 90 degrees. Press your lower back firmly into the floor and maintain this contact throughout. Slowly extend your right arm overhead while simultaneously straightening your left leg, lowering both toward the floor without touching. Return to starting position and repeat on the opposite side. This anti-extension exercise teaches core stability while moving your limbs, crucial for maintaining a neutral spine under load.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_7",
+    "name": "Bird Dog",
+    "description": "Start on all fours with hands under shoulders and knees under hips. Simultaneously extend your right arm forward and left leg backward until both are parallel to the ground, forming a straight line. Keep your hips level and core engaged, avoiding any rotation in your torso. Hold briefly, then return to starting position and repeat on the opposite side. This anti-rotation exercise builds core stability, improves balance, and strengthens the entire posterior chain while teaching proper hip and shoulder dissociation.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_8",
+    "name": "Hanging Leg Raise",
+    "description": "Hang from a pull-up bar with straight arms and engaged shoulders, avoiding swinging. Keeping your legs as straight as possible, raise them up in front of you by contracting your abs until they're parallel to the ground or higher. Lower with control back to the starting position. Avoid using momentum and keep the movement deliberate. This advanced movement intensely works the entire rectus abdominis, hip flexors, and grip strength, with particular emphasis on the lower abs through hip flexion.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_9",
+    "name": "Lying Leg Raise",
+    "description": "Lie flat on your back with legs straight and hands under your glutes or beside your hips for support. Press your lower back into the floor and raise both legs together, keeping them straight, until they're perpendicular to the ground. Lower them back down with control, stopping just before they touch the floor to maintain tension. Avoid arching your lower back by keeping your core engaged throughout. This floor variation of leg raises targets the lower portion of the rectus abdominis and hip flexors while being more accessible than hanging variations.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_10",
+    "name": "Reverse Crunch",
+    "description": "Lie on your back with knees bent and feet lifted off the floor, thighs perpendicular to the ground. Place your hands beside your hips or under your glutes. Curl your hips off the floor by contracting your lower abs, bringing your knees toward your chest. Lift your tailbone and lower back off the ground, then lower back down with control. Focus on using your abs to move rather than momentum. This exercise specifically targets the lower portion of the rectus abdominis through reverse spinal flexion.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_11",
+    "name": "Mountain Climber",
+    "description": "Start in a high plank position with hands under shoulders and body in a straight line. Drive one knee toward your chest, then quickly switch legs, extending the first leg back while bringing the other knee forward. Continue alternating legs in a running motion while keeping your hips low and core engaged. Maintain a steady rhythm without letting your hips pike up or sag. This dynamic exercise combines core stability with cardiovascular conditioning, working the entire core while elevating heart rate.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_12",
+    "name": "Ab Wheel Rollout",
+    "description": "Kneel on the floor holding an ab wheel with both hands directly under your shoulders. Slowly roll the wheel forward, extending your arms and body while keeping your core tight and hips extended. Roll out as far as you can while maintaining a straight line from knees to shoulders, avoiding sagging in your lower back. Pull the wheel back to the starting position by contracting your abs. This advanced anti-extension exercise intensely challenges the rectus abdominis, transverse abdominis, and hip flexors while building core strength and stability.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_13",
+    "name": "Pallof Press",
+    "description": "Stand perpendicular to a cable machine with the cable at chest height. Hold the handle with both hands at your chest and step away to create tension. Press the handle straight out in front of you, fully extending your arms while resisting the rotational pull of the cable. Hold briefly, then return to your chest with control. Keep your hips and shoulders square throughout. This anti-rotation exercise builds rotational stability and strengthens the obliques and transverse abdominis, crucial for athletic performance and spine protection.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_14",
+    "name": "Cable Crunch",
+    "description": "Kneel in front of a cable machine with a rope attachment set at a high pulley. Hold the rope beside your head with elbows bent. Crunch downward by contracting your abs, bringing your elbows toward your knees while keeping your hips stationary. Focus on spinal flexion rather than hip flexion. Return to the starting position with control, maintaining constant tension on the cable. This weighted variation allows for progressive overload of the rectus abdominis, making it excellent for building ab thickness and strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_15",
+    "name": "Cable Woodchop",
+    "description": "Stand perpendicular to a cable machine with the cable set high. Grab the handle with both hands and step away to create tension. In one fluid motion, pull the cable down and across your body, rotating your torso while pivoting your back foot. Finish with your hands outside your opposite hip in a chopping motion. Return with control and repeat. This rotational exercise targets the obliques and transverse abdominis while mimicking functional movement patterns, building power through rotation.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_16",
+    "name": "V-Up",
+    "description": "Lie flat on your back with arms extended overhead and legs straight. Simultaneously lift your legs and upper body, reaching your hands toward your toes, forming a V-shape with your body. Balance briefly on your tailbone at the top, then lower back down with control without letting your shoulders or feet touch the ground. Keep your legs and arms straight throughout. This advanced full-range movement targets the entire rectus abdominis, hip flexors, and develops impressive core strength and control.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_17",
+    "name": "Sit-Up",
+    "description": "Lie on your back with knees bent and feet flat on the floor, secured under something stable or held down by a partner. Place your hands behind your head or crossed over your chest. Engage your core and curl your entire torso up off the floor until your chest nearly touches your thighs. Lower back down with control until your shoulder blades touch the ground. Unlike crunches, this full range-of-motion exercise involves the hip flexors along with the entire rectus abdominis, making it more functional but requiring proper form to protect the lower back.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_18",
+    "name": "Plank to Downward Dog",
+    "description": "Start in a high plank position with hands under shoulders. Push your hips up and back into a downward dog position, forming an inverted V with your body while keeping your arms and legs straight. Hold briefly, then return to plank position with control. Keep your core engaged throughout both positions. This dynamic movement combines anti-extension work with active stretching, targeting the entire core while improving shoulder and hamstring flexibility.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_19",
+    "name": "Hollow Body Hold",
+    "description": "Lie on your back and press your lower back firmly into the floor. Lift your shoulders, arms, and legs off the ground, creating a banana or hollow shape with your body. Extend your arms overhead beside your ears and keep your legs straight and together, lifted at about 45 degrees. Hold this position while maintaining pressure in your lower back against the floor. This gymnastics-based exercise builds incredible core strength and body tension, working the entire anterior core chain and teaching proper hollow body positioning.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Time (seconds)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_20",
+    "name": "Oblique Crunch",
+    "description": "Lie on your back with knees bent and feet flat. Place one hand behind your head and extend the other arm along your side. Crunch up and to the side, bringing your elbow toward the same-side knee by contracting your obliques. Focus on side-bending your spine rather than just rotating. Lower back down with control and repeat. This isolation movement specifically targets the internal and external obliques, building definition along the sides of your waist.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_21",
+    "name": "Stability Ball Crunch",
+    "description": "Sit on a stability ball and walk your feet forward until your lower back is supported by the ball. Place your hands behind your head with elbows wide. Crunch up by contracting your abs, lifting your shoulder blades while the ball allows your spine to extend. Lower back down, allowing a slight stretch over the ball. The unstable surface and increased range of motion make this variation more challenging than floor crunches while also engaging stabilizer muscles.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_22",
+    "name": "Stability Ball Pike",
+    "description": "Start in a plank position with your shins on a stability ball and hands on the floor under your shoulders. Keeping your legs straight, use your core to pull the ball toward your hands by lifting your hips up toward the ceiling, forming an inverted V. Hold briefly at the top, then lower back to plank position with control. This advanced movement intensely works the rectus abdominis, hip flexors, and shoulders while challenging balance and coordination.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_23",
+    "name": "Stability Ball Rollout",
+    "description": "Kneel on the floor with a stability ball in front of you. Place your forearms on the ball with hands clasped together. Roll the ball forward by extending your arms, lowering your torso toward the floor while keeping your core tight and hips extended. Roll out as far as you can while maintaining control and avoiding lower back sag. Pull the ball back by contracting your abs. This variation provides a more forgiving progression than the ab wheel while still delivering intense anti-extension core work.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_24",
+    "name": "Plank Jack",
+    "description": "Start in a high plank position with feet together. Jump or step your feet wide apart, then back together, similar to a jumping jack motion. Keep your core tight and hips stable throughout, avoiding excessive bouncing or hip movement. Maintain a straight line from head to heels. This dynamic plank variation adds a cardiovascular element while challenging core stability, working the rectus abdominis, transverse abdominis, and hip abductors.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_25",
+    "name": "Plank Shoulder Tap",
+    "description": "Start in a high plank position with hands slightly wider than shoulder-width for stability. Keeping your hips square and stable, lift one hand to tap the opposite shoulder, then return it to the floor. Alternate sides, maintaining a strong plank throughout without rotating your hips. The key is minimizing movement in your torso while your arms move. This anti-rotation exercise builds core stability while challenging balance and proprioception.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_26",
+    "name": "Copenhagen Plank",
+    "description": "Lie on your side and place your top foot on a bench or elevated surface with your bottom leg hanging freely. Prop yourself up on your bottom forearm and lift your hips off the ground, supporting your weight on your forearm and top foot. Keep your body in a straight line and hold. For added difficulty, lift your bottom leg to meet your top leg. This advanced side plank variation intensely targets the adductors of your top leg along with the obliques and hip stabilizers.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Time (seconds)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_27",
+    "name": "RKC Plank",
+    "description": "Assume a forearm plank position with your elbows slightly forward of your shoulders and hands clasped together. Actively push your forearms into the ground while pulling them down toward your feet (without moving them). Squeeze your glutes hard, tilt your pelvis posteriorly, and pull your elbows toward your toes to create maximum full-body tension. Breathe shallowly through the tension. This high-tension plank variation, developed by the Russian Kettlebell Challenge, generates significantly more core activation than a standard plank by maximizing muscle recruitment.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Time (seconds)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_28",
+    "name": "Dragon Flag",
+    "description": "Lie on a bench and grab the bench behind your head for support. Lift your entire body off the bench, keeping it rigid and straight, until only your upper back and shoulders remain in contact. Lower your body down with control by leaning back, keeping your body perfectly straight like a flag in the wind. Stop just before touching the bench and repeat. This extremely advanced exercise, made famous by Bruce Lee, requires tremendous core strength and full-body tension, working the entire anterior core chain.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_29",
+    "name": "L-Sit",
+    "description": "Sit on the floor with legs extended straight in front of you. Place your hands on the floor beside your hips or on parallettes. Press down through your hands to lift your entire body off the floor, keeping your legs straight and parallel to the ground, forming an L-shape. Hold this position while maintaining straight legs and engaged core. This gymnastics staple builds incredible core and hip flexor strength while developing straight-arm pressing strength in the shoulders.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Time (seconds)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_30",
+    "name": "Windshield Wiper",
+    "description": "Hang from a pull-up bar or lie on the floor holding onto something heavy behind your head. Raise your legs until they're perpendicular to your body (or the floor). Keeping your legs together and straight, rotate them to one side, lowering them as far as comfortable, then rotate to the other side in a windshield wiper motion. Control the movement throughout and avoid using momentum. This advanced rotational exercise intensely works the obliques and rectus abdominis while challenging grip strength in the hanging variation.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_31",
+    "name": "Toes to Bar",
+    "description": "Hang from a pull-up bar with straight arms and engaged shoulders. Generate a small kip or use pure core strength to bring your toes up to touch the bar between your hands. Lower back down with control to a dead hang. Avoid excessive swinging and focus on using your core to generate the movement. This advanced gymnastics movement works the entire core with emphasis on the rectus abdominis and hip flexors, also building significant grip strength and lat involvement.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_32",
+    "name": "Hanging Knee Raise",
+    "description": "Hang from a pull-up bar with straight arms and engaged shoulders. Bend your knees and raise them toward your chest by contracting your abs, lifting until your thighs are at least parallel to the ground. Lower back down with control. Avoid swinging and keep the movement deliberate. This more accessible variation of hanging leg raises still effectively works the rectus abdominis and hip flexors while being suitable for intermediate lifters building toward straight-leg variations.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_33",
+    "name": "Captain's Chair Leg Raise",
+    "description": "Position yourself in a captain's chair station with your forearms on the pads and back against the backrest. Grip the handles and lift your body slightly off the footrest. Raise your legs by contracting your abs, either keeping them straight or bending at the knees, until your thighs are at least parallel to the ground. Lower with control without letting your feet touch the ground between reps. This supported variation allows you to focus purely on the core work without grip strength being a limiting factor.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_34",
+    "name": "Dumbbell Side Bend",
+    "description": "Stand with feet shoulder-width apart holding a dumbbell in one hand, the other hand behind your head or on your hip. Keeping your hips and shoulders facing forward, bend laterally to the weighted side, lowering the dumbbell down your thigh. Return to starting position by contracting your obliques on the opposite side. Avoid leaning forward or back. This isolation exercise specifically targets the obliques and quadratus lumborum through lateral flexion, building strength and definition along the sides of the torso.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_35",
+    "name": "Landmine Rotation",
+    "description": "Place a barbell in a landmine attachment or corner and load one end with weight. Stand perpendicular to the bar holding the weighted end with both hands at chest height. Rotate your torso, bringing the weighted end across your body to the opposite side in a sweeping arc, then rotate back. Keep your arms relatively straight and generate power from your core rotation. This explosive rotational movement builds oblique strength and power, mimicking athletic rotational movements.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_36",
+    "name": "Turkish Get-Up",
+    "description": "Lie on your back holding a kettlebell or dumbbell in one hand, arm extended straight up. Keep your eyes on the weight throughout. Roll onto your elbow on the same side, then to your hand, posting up. Sweep your opposite leg back to come to a kneeling position, then stand up fully while keeping the weight overhead. Reverse the entire sequence to return to lying down. This complex full-body movement develops core stability, shoulder stability, and proprioception through multiple planes of motion.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_37",
+    "name": "Flutter Kick",
+    "description": "Lie flat on your back with hands under your glutes for support and head lifted slightly off the floor. Lift both legs a few inches off the ground. Alternate kicking your legs up and down in small, quick, scissor-like movements. Keep your legs straight and core engaged, maintaining constant tension. Your lower back should remain pressed to the floor. This dynamic exercise targets the lower rectus abdominis and hip flexors while building muscular endurance.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_38",
+    "name": "Scissor Kick",
+    "description": "Lie on your back with hands under your glutes and legs extended straight. Lift both legs a few inches off the floor. Raise one leg up toward the ceiling while keeping the other low, then switch legs in a scissoring motion, crossing them as they pass each other. Keep your lower back pressed to the floor and maintain a steady rhythm. This variation combines vertical leg movement with crossing patterns, intensely working the lower abs and hip flexors.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_39",
+    "name": "Decline Sit-Up",
+    "description": "Secure your feet at the top of a decline bench and lie back with the bench angled downward. Place your hands behind your head or crossed over your chest. Perform a sit-up by contracting your core and curling your torso up until your chest approaches your thighs. Lower back down with control. The decline angle increases the resistance and range of motion, making this significantly more challenging than flat sit-ups and intensely working the entire rectus abdominis.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_40",
+    "name": "Weighted Sit-Up",
+    "description": "Lie on your back with knees bent and feet secured or flat on the floor. Hold a weight plate, dumbbell, or medicine ball at your chest. Engage your core and perform a full sit-up, curling your torso up until your chest nearly touches your thighs, keeping the weight at your chest throughout. Lower back down with control. Adding weight provides progressive overload for the rectus abdominis and hip flexors, building ab strength and thickness.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_41",
+    "name": "Medicine Ball Slam",
+    "description": "Stand with feet shoulder-width apart holding a medicine ball overhead. Engage your core and explosively slam the ball down to the ground in front of you with maximum force, using your entire body. Squat down to catch the ball on the bounce or pick it up, then immediately raise it overhead for the next rep. This explosive total-body movement works the entire core, particularly the rectus abdominis, while providing cardiovascular conditioning and power development.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_42",
+    "name": "Medicine Ball Russian Twist",
+    "description": "Sit on the floor with knees bent and feet lifted, holding a medicine ball at your chest. Lean back to about 45 degrees and rotate your torso to one side, bringing the medicine ball toward the floor beside your hip. Quickly rotate to the other side in a controlled but dynamic manner. The added weight increases resistance on the obliques. This weighted variation builds rotational power and oblique strength more effectively than bodyweight Russian twists.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_43",
+    "name": "Body Saw",
+    "description": "Start in a forearm plank position with your feet on sliders, towels on a smooth floor, or in TRX straps. Maintaining a rigid plank position, push your body backward by extending through your shoulders, moving your elbows forward past your shoulders. Pull yourself back to the starting position using your core and lats. Keep your hips level throughout and avoid any sagging. This anti-extension exercise intensely challenges core stability while adding dynamic movement and lat involvement.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_44",
+    "name": "Bear Crawl",
+    "description": "Start on all fours with hands under shoulders and knees under hips, lifted a few inches off the ground. Keeping your back flat and core tight, crawl forward by moving your right hand and left foot simultaneously, then your left hand and right foot. Keep your hips low and level, avoiding excessive swaying. Continue for distance or time. This loaded locomotion pattern challenges the entire core in a functional way while building shoulder stability and coordination.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Distance (meters)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_45",
+    "name": "Farmer's Carry",
+    "description": "Hold a heavy weight in each hand (dumbbells, kettlebells, or farmer's walk handles) at your sides. Stand tall with shoulders back and core engaged. Walk forward with controlled steps, maintaining perfect posture without leaning to either side. Keep your shoulders level and avoid shrugging. Walk for a set distance or time. This loaded carry exercise builds anti-lateral flexion core strength, grip strength, and full-body stability while developing functional strength for real-world tasks.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Distance (meters)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_46",
+    "name": "Suitcase Carry",
+    "description": "Hold a heavy weight in one hand at your side, like carrying a suitcase. Stand tall with shoulders level, core braced, and avoid leaning toward or away from the weight. Walk forward with controlled steps for a set distance or time, then switch sides. The unilateral load creates an anti-lateral flexion challenge, forcing your obliques and quadratus lumborum to work intensely to keep your torso upright. This functional exercise builds real-world core stability and corrects imbalances.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Distance (meters)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_47",
+    "name": "Overhead Carry",
+    "description": "Press a weight overhead with one or both arms, achieving full lockout with biceps by your ears. Stand tall with core braced and walk forward with controlled steps. Keep the weight directly overhead, shoulders packed and stable, avoiding any leaning or arching in your lower back. Walk for a set distance or time. This anti-extension and stability exercise challenges shoulder stability and core strength simultaneously, building overhead strength and body control.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Distance (meters)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_48",
+    "name": "GHD Sit-Up",
+    "description": "Sit on a Glute-Ham Developer (GHD) with your feet secured under the foot pads and your hips on the pad. Lower yourself backward, extending fully until your torso is below parallel and your hands touch the floor behind you. Explosively sit up, using your abs to curl your torso forward until upright. The extreme range of motion and hyperextension makes this significantly more challenging than regular sit-ups, intensely working the entire anterior core chain.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_49",
+    "name": "Oblique V-Up",
+    "description": "Lie on your side with your bottom arm extended on the floor above your head or across your chest, and your legs stacked. Simultaneously lift your legs and upper body, bringing your top hand toward your feet, creating a side V-shape. Balance on your hip at the top, then lower with control. This challenging variation specifically targets the obliques through lateral flexion combined with hip and torso lifting, building side ab strength and definition.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_50",
+    "name": "Barbell Rollout",
+    "description": "Load a barbell with plates and kneel on the floor holding the barbell on the ground in front of you. Keeping your core tight and hips extended, roll the barbell forward by extending your arms and body. Roll out as far as possible while maintaining a straight line from knees to shoulders, then pull the barbell back by contracting your abs. This variation of the rollout uses a barbell instead of an ab wheel, offering a slightly different challenge while still providing intense anti-extension core work.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_51",
+    "name": "TRX Fallout",
+    "description": "Hold TRX straps with arms extended at chest height, leaning forward so your body is at an angle. Maintaining straight arms, lean forward by letting your arms extend overhead, lowering your body toward the ground. Keep your core tight and body in a straight line, avoiding hip sag. Pull yourself back to the starting position by bringing your arms back down. This suspension training variation provides an intense anti-extension challenge while requiring significant shoulder stability.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_52",
+    "name": "TRX Pike",
+    "description": "Place your feet in TRX straps and assume a plank position with hands on the ground. Keeping your legs straight, pike your hips up toward the ceiling, pulling your feet toward your hands. Lift your hips as high as possible, forming an inverted V, then lower back to plank with control. This unstable variation increases the challenge compared to stability ball pikes, intensely working the rectus abdominis, hip flexors, and shoulders while demanding significant balance.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_53",
+    "name": "Decline Crunch",
+    "description": "Lie on a decline bench with your head at the lower end and feet secured at the top. Place your hands behind your head or crossed over your chest. Crunch up by contracting your abs, lifting your shoulder blades off the bench. Focus on spinal flexion rather than sitting all the way up. Lower back down with control. The decline angle increases resistance on the abs throughout the movement, making this more challenging than flat crunches.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_54",
+    "name": "Cross-Body Mountain Climber",
+    "description": "Start in a high plank position. Drive one knee toward the opposite elbow, crossing your body diagonally. Return to plank and immediately switch sides, bringing the other knee to the opposite elbow. Continue alternating in a controlled but dynamic rhythm. Keep your hips low and core engaged. This rotational variation of mountain climbers adds oblique work to the standard movement, building rotational core strength while providing cardiovascular conditioning.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_55",
+    "name": "Inchworm",
+    "description": "Stand with feet together, then bend at the hips to place your hands on the floor in front of your feet. Walk your hands forward into a plank position while keeping your legs as straight as possible. From plank, walk your feet forward toward your hands, keeping legs straight and hips high. Stand up and repeat. This dynamic movement pattern combines hamstring flexibility with anti-extension core work, serving as an excellent warm-up or conditioning exercise.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_56",
+    "name": "Heel Tap",
+    "description": "Lie on your back with knees bent and feet flat on the floor. Lift your shoulders slightly off the ground in a crunch position and keep them elevated throughout. Reach your right hand down to tap your right heel, then immediately reach your left hand to your left heel, crunching slightly to the side each time. Continue alternating in a dynamic rhythm without lowering your shoulders. This constant-tension exercise targets the obliques and rectus abdominis while building muscular endurance.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_57",
+    "name": "Superman",
+    "description": "Lie face down on the floor with arms extended overhead and legs straight. Simultaneously lift your arms, chest, and legs off the ground by contracting your entire posterior chain. Hold briefly at the top, squeezing your glutes and lower back. Lower back down with control without completely relaxing. While primarily targeting the erector spinae and glutes, this exercise is essential for balanced core development, strengthening the often-neglected posterior core.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "core_58",
+    "name": "Starfish Crunch",
+    "description": "Lie on your back with arms and legs spread wide in an X-shape. Simultaneously crunch up, bringing your right hand toward your left foot while lifting your left leg, crunching diagonally across your body. Return to the starting position and repeat on the other side, bringing your left hand to your right foot. Continue alternating sides. This dynamic cross-body movement works the entire core with emphasis on the obliques and builds coordination.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  }
+]
