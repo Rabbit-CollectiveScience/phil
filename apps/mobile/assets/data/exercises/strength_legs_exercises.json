@@ -1,1 +1,606 @@
-[]
+[
+  {
+    "id": "legs_1",
+    "name": "Barbell Back Squat",
+    "description": "Position a barbell on your upper traps and rear delts in a squat rack, feet shoulder-width apart with toes slightly pointed out. Unrack the bar and step back, maintaining a proud chest and tight core. Descend by pushing your hips back and bending your knees, keeping your chest up and weight on your midfoot. Lower until your thighs are at least parallel to the ground or deeper if mobility allows. Drive through your heels to return to standing, keeping your knees tracking over your toes throughout. This is the king of leg exercises for building overall lower body mass and strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_2",
+    "name": "Front Squat",
+    "description": "Rest a barbell across the front of your shoulders in a front rack position with elbows up high and feet shoulder-width apart. Keep your torso as upright as possible with core braced and chest proud. Descend by bending your knees and hips simultaneously, keeping your elbows elevated to prevent the bar from rolling forward. Drop into a deep squat while maintaining an upright torso position. Drive through your whole foot to stand back up, squeezing your glutes at the top. The front-loaded position emphasizes the quads more than back squats while being easier on the lower back.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_3",
+    "name": "Goblet Squat",
+    "description": "Hold a dumbbell or kettlebell vertically at chest level with both hands cupping the top end, elbows pointing down. Stand with feet slightly wider than shoulder-width and toes pointed slightly outward. Squat down by pushing your hips back and bending your knees, using your elbows to push your knees out as you descend. Lower until your elbows brush the inside of your knees or deeper if mobility allows. Drive through your heels to stand back up, squeezing your glutes at the top. This beginner-friendly squat variation teaches proper form and builds leg strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_4",
+    "name": "Box Squat",
+    "description": "Set up a box or bench behind you at a height that puts your thighs parallel to the ground when seated. Position a barbell on your upper back in a squat rack with feet shoulder-width apart. Squat down under control until your glutes touch the box, maintaining a proud chest and tight core throughout. Pause briefly on the box without relaxing, keeping your muscles engaged. Explosively drive through your heels to stand back up, focusing on pushing your hips forward and squeezing your glutes at the top. This variation teaches proper squat mechanics and builds explosive power.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_5",
+    "name": "Overhead Squat",
+    "description": "Hold a barbell overhead with a wide snatch grip, arms fully extended and locked out. Stand with feet shoulder-width apart and maintain an upright torso. Descend into a squat while keeping the bar directly over your midfoot, maintaining shoulder mobility and stability throughout. Drop as low as your mobility allows while keeping the bar overhead and torso upright. Drive back up to standing. This advanced movement requires exceptional mobility, stability, and balance while building total body strength and coordination.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_6",
+    "name": "Safety Bar Squat",
+    "description": "Position a safety squat bar on your upper back with the padded yoke resting on your shoulders and grip the handles in front. The cambered design shifts the load forward slightly. Stand with feet shoulder-width apart and descend into a squat, maintaining an upright torso. The handles and pad make this variation more comfortable and accessible than traditional back squats, especially for those with shoulder mobility issues, while still providing excellent quad and glute development.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_7",
+    "name": "Zercher Squat",
+    "description": "Hold a barbell in the crooks of your elbows, clasping your hands together in front of your chest. Stand with feet shoulder-width apart and maintain an upright torso. Descend into a squat while keeping your elbows up and the bar secure in your arm crooks. The front-loaded position forces an upright torso and heavily emphasizes the quads and upper back while building core strength. This unique variation also improves grip strength and mental toughness due to the uncomfortable bar position.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_8",
+    "name": "Smith Machine Squat",
+    "description": "Position yourself under a Smith machine bar set at shoulder height, placing it on your upper traps. Set your feet slightly in front of the bar's path, shoulder-width apart. Unrack by rotating the bar and descend into a squat, keeping your back against the vertical bar path. The fixed path allows you to position your feet further forward and lean back into the bar, creating unique quad emphasis. This stable setup is ideal for training to failure safely or focusing purely on leg contraction without balance concerns.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_9",
+    "name": "Hack Squat",
+    "description": "Position yourself in a hack squat machine with your back against the pad and shoulders under the supports, feet shoulder-width apart on the platform. Release the safety handles and lower yourself by bending your knees, keeping your back flat against the pad throughout. Descend until your thighs are parallel to the platform or deeper, maintaining control and tension in your quads. Push through your heels and midfoot to extend your legs back to the starting position, stopping just short of full lockout. The angled machine path heavily emphasizes quad development.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_10",
+    "name": "Leg Press",
+    "description": "Sit in a leg press machine with your back and head resting against the padded support, feet shoulder-width apart on the platform at mid-level. Release the safety handles and lower the platform by bending your knees, bringing them toward your chest while keeping your lower back pressed against the pad. Descend until your knees are at about 90 degrees or slightly deeper. Press through your whole foot to extend your legs back to starting position, avoiding locking out your knees completely at the top. This machine allows for heavy loading with reduced spinal compression.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_11",
+    "name": "Single-Leg Press",
+    "description": "Sit in a leg press machine and position one foot in the center of the platform at mid-level, with your other leg resting off to the side. Keep your working leg's entire foot on the platform and back pressed firmly against the pad. Release the safety handles and lower the platform by bending your knee, bringing it toward your chest while maintaining lower back contact. Press through your whole foot to extend your leg back up, focusing on controlled movement. This unilateral variation addresses strength imbalances and builds single-leg stability.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_12",
+    "name": "Narrow Stance Leg Press",
+    "description": "Sit in a leg press machine but place your feet closer together than shoulder-width, positioned in the center of the platform. Follow standard leg press form, lowering until knees reach 90 degrees or deeper, then pressing back up. The narrow stance shifts more emphasis to the outer quads (vastus lateralis) and requires greater quad strength and stability compared to wider stances, providing a different stimulus for leg development.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_13",
+    "name": "Wide Stance Leg Press",
+    "description": "Sit in a leg press machine and place your feet significantly wider than shoulder-width on the platform, with toes pointed outward at 30-45 degrees. Lower the platform until your knees track over your toes at about 90 degrees or deeper. Press back up through your whole foot. The wide stance increases adductor (inner thigh) involvement and glute activation while reducing the range of motion compared to standard stance, allowing for potentially heavier loads.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_14",
+    "name": "Leg Extension",
+    "description": "Sit in a leg extension machine with your back against the pad and ankles secured behind the lower leg roller. Grip the handles on the sides of the seat for stability and position your knees at the edge of the seat. Extend your legs by contracting your quadriceps, lifting the weight until your legs are nearly straight but not locked. Squeeze your quads hard at the top position, then lower the weight with control back to the starting position, maintaining tension throughout. This isolation movement directly targets all four quadriceps muscles.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_15",
+    "name": "Bulgarian Split Squat",
+    "description": "Stand a few feet in front of a bench with one foot elevated on the bench behind you, hands at your sides or holding dumbbells. Keep your torso upright and core engaged as you lower your back knee toward the ground. Descend until your front thigh is parallel to the ground, ensuring your front knee stays in line with your toes. Push through your front heel to return to the starting position, focusing on keeping your balance and feeling the burn in your front leg quad and glute. This unilateral movement builds single-leg strength and stability.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_16",
+    "name": "Walking Lunges",
+    "description": "Stand tall with feet together, holding dumbbells at your sides or a barbell across your upper back. Step forward with one leg and lower your body until both knees are bent at 90 degrees, with your back knee hovering just above the ground. Keep your torso upright and front knee aligned with your ankle. Push through your front heel to bring your back leg forward into the next lunge step. Continue alternating legs as you walk forward, maintaining controlled rhythm and balance. This dynamic movement builds leg strength, balance, and muscular endurance.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_17",
+    "name": "Reverse Lunges",
+    "description": "Stand with feet hip-width apart, holding dumbbells or with a barbell on your back. Step backward with one leg and lower your body until both knees are at 90 degrees, back knee hovering above the ground. Keep your torso upright and front knee over your ankle. Push through your front heel to return to standing, bringing your back foot forward. Alternate legs or complete all reps on one side. Reverse lunges are often easier on the knees than forward lunges while still effectively targeting quads, glutes, and hamstrings.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_18",
+    "name": "Stationary Lunges",
+    "description": "Stand in a split stance with one foot forward and one back, about 2-3 feet apart, holding dumbbells or bodyweight. Lower your body straight down by bending both knees until your back knee nearly touches the ground and front thigh is parallel to the floor. Keep your torso upright throughout. Push through your front heel to rise back up to the starting split stance position. Complete all reps on one leg before switching. This static variation allows you to focus purely on the up-down movement without balance challenges.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_19",
+    "name": "Lateral Lunges",
+    "description": "Stand with feet together, holding dumbbells at your sides or hands at chest level. Take a wide step directly to one side, keeping your other leg straight. Sit back into the lunging leg by pushing your hips back and bending that knee while keeping your chest up and foot flat. Push off through your lunging foot to return to the starting position. The lateral movement pattern targets the adductors, abductors, and glutes from a different angle while improving hip mobility and lateral stability.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_20",
+    "name": "Curtsy Lunges",
+    "description": "Stand with feet hip-width apart, holding dumbbells or bodyweight. Step one leg diagonally backward behind your other leg, as if performing a curtsy. Lower your body until your front thigh is parallel to the ground and back knee hovers above the floor. Keep your torso upright and front knee tracking over your toes. Push through your front heel to return to standing. This unique lunge variation emphasizes the glutes, particularly the gluteus medius, while also working the quads and inner thighs.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_21",
+    "name": "Step-Ups",
+    "description": "Stand facing a box or bench at knee height or slightly lower, holding dumbbells at your sides or a barbell on your back. Place your entire right foot on the box and drive through that heel to lift your body up onto the box, bringing your left foot up to meet it. Stand fully upright at the top with both feet on the box. Step back down with control, leading with the same leg. Complete all reps on one side before switching, maintaining an upright posture throughout. This functional movement builds single-leg strength and power.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_22",
+    "name": "Sissy Squat",
+    "description": "Stand with feet shoulder-width apart, holding onto a pole or stable surface for balance. Lean back while bending your knees and allowing them to travel forward, keeping your hips and shoulders in line. Lower yourself down while staying on your toes, feeling an intense stretch and contraction in your quads. Descend as far as your mobility and strength allow, keeping your body in a straight line from knees to shoulders. Contract your quads to pull yourself back up to the starting position. This advanced bodyweight quad exercise provides unique tension on the quadriceps.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_23",
+    "name": "Lying Leg Curl",
+    "description": "Lie face down on a leg curl machine with your ankles secured under the padded lever and knees just off the edge of the bench. Grip the handles for stability and keep your hips pressed down throughout the movement. Curl your legs up by contracting your hamstrings, bringing your heels toward your glutes. Squeeze your hamstrings hard at the top of the movement. Lower the weight with control back to the starting position, fully extending your legs while maintaining tension. This isolation movement directly targets the hamstrings.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_24",
+    "name": "Seated Leg Curl",
+    "description": "Sit in a seated leg curl machine with your back against the pad and ankles positioned on top of the lower leg pad. Adjust the thigh pad to rest comfortably on your lower thighs, securing your legs in place. Curl your legs down by contracting your hamstrings, bringing the lower leg pad toward the back of the machine. Squeeze your hamstrings hard at the bottom of the movement. Control the weight back to the starting position with your legs extended. The seated position provides a different angle of pull on the hamstrings compared to lying variations.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_25",
+    "name": "Standing Leg Curl",
+    "description": "Stand at a standing leg curl machine and secure one ankle behind the padded lever. Hold the handles for stability and keep your standing leg slightly bent. Curl your working leg up by contracting your hamstring, bringing your heel toward your glute. Squeeze hard at the top, then lower with control back to the starting position. The unilateral nature helps identify and correct strength imbalances while the standing position engages your core and stabilizers more than seated or lying variations.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_26",
+    "name": "Nordic Hamstring Curl",
+    "description": "Kneel on a pad with ankles secured under a stable surface or held by a partner, body upright with core braced and hands ready to catch yourself. Slowly lower your torso toward the ground by resisting with your hamstrings, keeping your body in a straight line from knees to head. Lower as far as possible while maintaining control, typically until you must catch yourself with your hands. Use your hands minimally to push back up to the starting position, or explosively if needed. This eccentric-focused movement builds incredible hamstring strength and resilience.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_27",
+    "name": "Romanian Deadlift",
+    "description": "Stand with feet hip-width apart, holding a barbell at thigh level with an overhand grip and arms straight. Keep a slight bend in your knees and push your hips back as you hinge forward, lowering the bar along your thighs and shins. Maintain a flat back and proud chest throughout, feeling a deep stretch in your hamstrings and glutes. Lower until you feel your hamstrings fully stretched, typically mid-shin level. Drive your hips forward to return to standing, squeezing your glutes hard at the top. This hip-hinge movement emphasizes the posterior chain with constant tension on the hamstrings.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_28",
+    "name": "Stiff-Legged Deadlift",
+    "description": "Stand with feet hip-width apart holding a barbell or dumbbells in front of your thighs. Keep your legs nearly straight with just a slight bend in the knees throughout. Hinge at the hips to lower the weight toward the floor, maintaining a flat back and pushing your hips back. Lower until you feel a deep stretch in your hamstrings, then drive your hips forward to return to standing. The straighter leg position compared to RDLs places even more emphasis on hamstring flexibility and strength while reducing glute involvement.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_29",
+    "name": "Good Morning",
+    "description": "Stand with feet shoulder-width apart and a barbell resting across your upper traps, hands gripping the bar wider than shoulder-width. Keep a slight bend in your knees and brace your core. Hinge forward at the hips, pushing them back while maintaining a neutral spine and proud chest. Lower your torso until it's nearly parallel to the ground, feeling a deep stretch in your hamstrings and glutes. Drive your hips forward to return to the starting position, squeezing your glutes at the top. This exercise strengthens the entire posterior chain while improving hip hinge mechanics.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_30",
+    "name": "Glute-Ham Raise",
+    "description": "Position yourself in a glute-ham developer with ankles secured and thighs resting on the pad. Start with your body forming a straight line from knees to head. Lower your torso toward the floor by bending at the knees, maintaining a neutral spine throughout. Use your hamstrings to pull yourself back up to the starting position, contracting them forcefully. This advanced movement provides intense hamstring and glute activation while building strength through a full range of motion, though it may require assistance or band support for beginners.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_31",
+    "name": "Single-Leg Deadlift",
+    "description": "Stand on one leg holding a dumbbell or kettlebell in the opposite hand, with a slight bend in your standing knee. Hinge forward at the hip while extending your free leg straight behind you for balance, lowering the weight toward the ground. Keep your back flat and core engaged throughout, forming a straight line from your head to your extended heel. Lower until your torso is parallel to the ground or as far as balance and flexibility allow. Drive through your standing heel to return to upright, squeezing your glute at the top. This unilateral movement builds hamstring and glute strength while challenging balance and stability.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_32",
+    "name": "Barbell Hip Thrust",
+    "description": "Sit on the ground with your upper back against a bench, feet flat on the floor shoulder-width apart, and a barbell resting across your hips (use a pad for comfort). Drive through your heels to lift the barbell by extending your hips upward, keeping your chin tucked and core braced. Raise your hips until your thighs and torso form a straight line, squeezing your glutes maximally at the top. Lower the weight with control back down until your glutes nearly touch the floor. This is the premier exercise for glute development, allowing for heavy loading in the fully shortened position.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_33",
+    "name": "Single-Leg Hip Thrust",
+    "description": "Set up like a barbell hip thrust but extend one leg out in front of you. Drive through your planted heel to lift your hips while keeping your extended leg straight and off the ground. Squeeze your working glute hard at the top, then lower with control. This unilateral variation addresses strength imbalances and requires greater stability and glute activation per leg, though you'll use significantly less weight than bilateral hip thrusts.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_34",
+    "name": "Barbell Glute Bridge",
+    "description": "Lie on your back with knees bent and feet flat on the floor about hip-width apart. Position a barbell across your hips (use padding) and grip it for stability. Drive through your heels to lift your hips off the ground, squeezing your glutes as you raise up. Continue until your body forms a straight line from knees to shoulders, avoiding hyperextending your lower back. Hold the top position briefly with glutes fully contracted. Lower your hips back down with control, stopping just before touching the ground. Similar to hip thrusts but performed on the floor with a smaller range of motion.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_35",
+    "name": "Single-Leg Glute Bridge",
+    "description": "Lie on your back with one knee bent and foot flat on the floor, extending your other leg straight out. Keep your arms at your sides for support. Drive through your planted heel to lift your hips off the ground, keeping your extended leg straight and in line with your body. Squeeze your working glute hard at the top, maintaining level hips throughout. Lower with control back down. This bodyweight variation is excellent for addressing glute imbalances and can be progressed by holding a weight on your hips.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_36",
+    "name": "Cable Pull-Through",
+    "description": "Face away from a cable machine with a rope attachment set at the lowest position, straddling the cable with feet wider than shoulder-width. Grab the rope between your legs with both hands and walk forward to create tension. Hinge at the hips to allow the weight to pull your hands back between your legs, maintaining a slight knee bend and flat back. Drive your hips forward explosively, squeezing your glutes hard to pull the rope forward until you're standing upright. This hip-hinge movement teaches proper deadlift mechanics while heavily loading the glutes and hamstrings.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_37",
+    "name": "Cable Kickback",
+    "description": "Attach an ankle cuff to one leg and connect it to a low cable pulley. Stand facing the machine holding the frame for support. Keeping your leg straight or slightly bent, kick your cuffed leg back by squeezing your glute, extending your hip as far as comfortable. Hold the peak contraction briefly, then return to the starting position with control. This isolation movement specifically targets the glutes with constant cable tension throughout the movement, perfect for finishing work and glute activation.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_38",
+    "name": "Machine Glute Kickback",
+    "description": "Position yourself on a glute kickback machine with one shin/ankle secured on the padded lever and other leg planted for support. Hold the handles for stability and keep your torso at the prescribed angle. Push the lever back by extending your hip and squeezing your glute, driving your leg as far back as the machine allows. Contract your glute hard at the back of the movement, then control the weight forward. Machines provide consistent resistance and often allow for heavier loads than cable variations.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_39",
+    "name": "Donkey Kicks",
+    "description": "Start on all fours with hands under shoulders and knees under hips. Keeping your right knee bent at 90 degrees, lift that leg up by squeezing your glute, driving your heel toward the ceiling. Raise your thigh until it's parallel to the ground or slightly higher, focusing on glute contraction rather than hyperextending your lower back. Lower back down with control, keeping tension on the glute throughout. This bodyweight exercise is excellent for glute activation and can be progressed with ankle weights or resistance bands.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_40",
+    "name": "Frog Pumps",
+    "description": "Lie on your back and bring the soles of your feet together, letting your knees fall out to the sides in a frog-leg position. Place your feet close to your glutes. Drive through the outsides of your feet to lift your hips off the ground, squeezing your glutes hard at the top. Lower with control and repeat for high reps. This bodyweight movement provides unique glute activation due to the hip abduction component and is perfect for pre-workout activation or high-rep burnout sets.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_41",
+    "name": "Standing Calf Raise",
+    "description": "Stand on a raised platform or step with the balls of your feet on the edge and heels hanging off, holding a barbell on your shoulders or dumbbells at your sides. Rise up onto your toes by contracting your calves, lifting your heels as high as possible. Squeeze your calves hard at the top position, holding briefly. Lower your heels below the level of the platform, feeling a full stretch in your calves before pressing back up. The standing position emphasizes the gastrocnemius, the larger outer calf muscle.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_42",
+    "name": "Seated Calf Raise",
+    "description": "Sit on a seated calf raise machine or bench with the balls of your feet on a raised platform and knees bent at 90 degrees. Position a weighted pad across your lower thighs just above your knees, or hold dumbbells on your thighs. Lower your heels as far as possible below the platform, feeling a deep stretch in your calves. Press through the balls of your feet to raise your heels as high as possible, contracting your calves maximally at the top. The seated position with bent knees emphasizes the soleus, the inner calf muscle.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_43",
+    "name": "Single-Leg Calf Raise",
+    "description": "Stand on one leg on a raised platform or step with the ball of your foot on the edge and heel hanging off. Hold a dumbbell in the hand on the same side or use a wall/pole for balance. Rise up onto your toes as high as possible, contracting your calf. Lower your heel below the platform level for a full stretch. Working one calf at a time allows you to address imbalances and achieve a greater stretch and contraction range, though you'll use less total weight than bilateral variations.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_44",
+    "name": "Donkey Calf Raise",
+    "description": "Lean forward at the hips with your hands supporting yourself on a bench or elevated surface, keeping your legs straight and heels hanging off a raised platform. Have a partner sit on your lower back for added resistance, or use a donkey calf raise machine if available. Rise up onto your toes by contracting your calves, lifting as high as possible. Squeeze hard at the top, then lower your heels below the platform level for a full stretch. The bent-over position provides unique loading that many find superior for calf development.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_45",
+    "name": "Calf Press on Leg Press",
+    "description": "Sit in a leg press machine with just the balls of your feet on the bottom edge of the platform, heels hanging off. Keep your legs fully extended (or with slight bend) throughout. Press the platform up by extending your ankles and contracting your calves, pushing through the balls of your feet. Raise as high as possible, then lower by allowing your heels to drop below the platform level for a deep stretch. The leg press angle and heavy loading capability make this excellent for calf development.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_46",
+    "name": "Adductor Machine",
+    "description": "Sit in an adductor (inner thigh) machine with your back against the pad and legs positioned against the outside pads. Adjust the machine so your legs start in a wide, open position. Squeeze your legs together by contracting your inner thighs (adductors), bringing the pads toward each other. Hold the peak contraction briefly, then control the pads back out to the starting position. This isolation movement directly targets the often-neglected adductor muscles, important for hip stability and injury prevention.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_47",
+    "name": "Abductor Machine",
+    "description": "Sit in an abductor (outer thigh) machine with your back against the pad and legs positioned against the inside pads. Start with your legs together or nearly together. Push your legs apart by contracting your outer thighs and glutes (abductors), pressing the pads as far outward as comfortable. Hold the peak contraction briefly, then control the pads back together. This exercise strengthens the gluteus medius and minimus, crucial for hip stability, lateral movement, and preventing knee valgus.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_48",
+    "name": "Cossack Squats",
+    "description": "Stand with feet wider than shoulder-width apart. Shift your weight to one side, bending that knee and pushing your hips back while keeping the other leg straight with foot flat or heel up. Squat down on one side as low as possible while maintaining balance and an upright chest. Push through the working leg to return to center, then repeat on the other side. This dynamic lateral squat variation builds hip mobility, adductor strength, and leg flexibility while working the quads and glutes from unique angles.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_49",
+    "name": "Sumo Squat",
+    "description": "Stand with feet significantly wider than shoulder-width, toes pointed out at 30-45 degrees. Hold a dumbbell or kettlebell in both hands between your legs, or place a barbell on your back. Squat down by bending your knees and pushing your hips back, keeping your knees tracking over your toes and chest upright. Descend until your thighs are parallel to the ground or deeper. Drive through your whole foot to stand back up. The wide stance heavily emphasizes the inner thighs (adductors), glutes, and quads while being more upright and often easier on the lower back.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_50",
+    "name": "Box Jumps",
+    "description": "Stand facing a sturdy box or platform at an appropriate height with feet shoulder-width apart. Dip into a quarter squat and swing your arms back. Explosively jump onto the box by extending your hips, knees, and ankles while swinging your arms forward for momentum. Land softly on the box with feet flat and knees slightly bent, standing to full extension. Step back down carefully. This plyometric exercise builds explosive leg power, athletic performance, and fast-twitch muscle fiber recruitment.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_51",
+    "name": "Kettlebell Swing",
+    "description": "Stand with feet shoulder-width apart, holding a kettlebell with both hands between your legs. Hinge at the hips to swing the kettlebell back between your legs, maintaining a flat back. Explosively drive your hips forward and squeeze your glutes to propel the kettlebell up to shoulder height or overhead, depending on the variation. Let the kettlebell swing back down between your legs as you hinge again, using the momentum to flow into the next rep. This ballistic hip-hinge movement builds explosive power, cardiovascular endurance, and posterior chain strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_52",
+    "name": "Wall Sit",
+    "description": "Stand with your back against a wall and slide down until your thighs are parallel to the ground, as if sitting in an invisible chair. Keep your knees at 90 degrees directly above your ankles, back flat against the wall, and feet shoulder-width apart. Hold this static position for time, maintaining tension in your quads throughout. This isometric exercise builds muscular endurance in the quadriceps and mental toughness, often used for rehabilitation or as a finisher to completely exhaust the legs.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_53",
+    "name": "Bodyweight Squat",
+    "description": "Stand with feet shoulder-width apart and toes slightly pointed outward, hands at your sides, crossed at your chest, or extended forward for balance. Initiate the movement by pushing your hips back and bending your knees, keeping your chest up and weight on your midfoot. Descend until your thighs are at least parallel to the ground, maintaining an upright torso and avoiding your knees caving inward. Drive through your heels to return to standing, squeezing your glutes at the top. This fundamental bodyweight movement is the foundation for all squat variations, perfect for beginners, warm-ups, or high-rep conditioning work.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_54",
+    "name": "Jump Squats",
+    "description": "Stand with feet shoulder-width apart and perform a squat by pushing your hips back and bending your knees until thighs are about parallel to the ground. Explosively drive through your feet to jump as high as possible, fully extending your hips, knees, and ankles. Swing your arms upward to generate momentum. Land softly with knees slightly bent, immediately descending into the next squat. This plyometric variation builds explosive leg power, improves vertical jump, and develops fast-twitch muscle fibers while providing cardiovascular conditioning.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_55",
+    "name": "Pistol Squat",
+    "description": "Stand on one leg with your other leg extended straight out in front of you, arms extended forward for balance. Squat down on your standing leg by pushing your hips back and bending your knee, keeping your extended leg off the ground throughout. Descend as low as possible, ideally until your hamstring touches your calf, while maintaining balance and keeping your chest up. Drive through your standing heel to return to the starting position. This advanced single-leg movement requires exceptional strength, balance, and mobility, making it one of the most challenging bodyweight leg exercises.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_56",
+    "name": "Forward Lunges",
+    "description": "Stand with feet together and hands on your hips or at your sides. Take a large step forward with one leg and lower your body until both knees are bent at 90 degrees, back knee hovering just above the ground. Keep your torso upright and front knee aligned with your ankle, not extending past your toes. Push through your front heel to return to the starting position, bringing your front foot back to meet your back foot. This bodyweight lunge variation is perfect for learning proper lunge mechanics, warm-ups, or high-rep leg endurance work.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_57",
+    "name": "Fire Hydrants",
+    "description": "Start on all fours with hands under shoulders and knees under hips. Keeping your knee bent at 90 degrees, lift one leg out to the side, raising your thigh until it's parallel to the ground or as high as comfortable. Your knee should move away from your body like a dog at a fire hydrant. Hold briefly at the top, squeezing your glute and outer hip, then lower back down with control. This exercise targets the gluteus medius and hip abductors, crucial for hip stability, injury prevention, and building well-rounded glute development.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_58",
+    "name": "Clamshells",
+    "description": "Lie on your side with hips and knees bent at about 45 degrees, feet together and stacked on top of each other. Rest your head on your lower arm and place your top hand on your hip or floor for stability. Keeping your feet touching, rotate your top knee upward as far as possible by contracting your outer hip and glute, opening like a clamshell. Hold the top position briefly, then lower with control. This activation exercise specifically targets the gluteus medius, essential for hip stability, proper gait mechanics, and preventing knee valgus during squats.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_59",
+    "name": "Side-Lying Leg Raises",
+    "description": "Lie on your side with your body in a straight line, bottom leg slightly bent for stability and top leg straight. Rest your head on your lower arm and place your top hand on the floor in front of you for balance. Keeping your top leg straight and foot flexed or neutral, raise it up toward the ceiling by contracting your hip abductors and outer glute. Lift as high as comfortable without rotating your hip forward, then lower with control without letting your legs touch. This isolation movement targets the gluteus medius, hip abductors, and tensor fasciae latae, important for hip stability and lateral strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_60",
+    "name": "Split Squat",
+    "description": "Stand in a staggered stance with one foot forward and one foot back, about 2-3 feet apart, back heel off the ground with weight on the ball of your foot. Hold dumbbells at your sides or keep hands on hips for bodyweight. Lower straight down by bending both knees until your back knee nearly touches the ground and front thigh is parallel to the floor. Keep your torso upright and most of your weight on your front leg. Push through your front heel to return to the starting position. Unlike Bulgarian split squats, both feet stay on the ground, making this more accessible while still providing excellent single-leg quad and glute development.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_61",
+    "name": "Banded Lateral Walk",
+    "description": "Place a resistance band around your legs, either just above your knees or around your ankles. Stand with feet hip-width apart in a quarter squat position, creating tension in the band. Step laterally to one side while maintaining the squat position and keeping tension on the band throughout. Bring your other foot in to return to hip-width stance, then continue stepping in the same direction. Keep your chest up, core engaged, and avoid letting your knees cave inward. This activation exercise strengthens the gluteus medius and hip abductors, essential for knee health, athletic performance, and injury prevention.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "legs_62",
+    "name": "Reverse Sled Drag",
+    "description": "Attach a harness or rope to a weighted sled and walk backward, pulling the sled behind you. Keep your torso upright, core engaged, and take deliberate steps backward, driving through your heels with each step. Maintain constant tension on the sled, avoiding jerky movements. Control your speed and focus on using your quads and glutes to pull the load. This functional exercise builds quad strength, eccentric control, and knee resilience while being low-impact and joint-friendly. The backward motion specifically targets the quads while improving deceleration strength and injury prevention.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  }
+]
