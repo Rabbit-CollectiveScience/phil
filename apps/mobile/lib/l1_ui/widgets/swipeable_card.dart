@@ -119,7 +119,7 @@ class _SwipeableCardState extends State<SwipeableCard>
           field.defaultValue?.toString() ??
           '';
       final displayValue = value.isEmpty
-          ? '- ${field.unit}'
+          ? '∅ ${field.unit}'
           : '$value ${field.unit}';
       _fieldControllers[field.name] = TextEditingController(text: displayValue);
       _fieldFocusNodes[field.name] = FocusNode();
@@ -185,7 +185,7 @@ class _SwipeableCardState extends State<SwipeableCard>
       final newValue = widget.card.fieldValues[field.name];
       if (oldValue != newValue && _fieldControllers.containsKey(field.name)) {
         final displayValue = newValue == null || newValue.isEmpty
-            ? '- ${field.unit}'
+            ? '∅ ${field.unit}'
             : '$newValue ${field.unit}';
         _fieldControllers[field.name]!.text = displayValue;
       }
@@ -527,7 +527,7 @@ class _SwipeableCardState extends State<SwipeableCard>
         prefixIcon: ListenableBuilder(
           listenable: Listenable.merge([focusNode, controller]),
           builder: (context, child) {
-            final isEmpty = controller.text == '- ${field.unit}';
+            final isEmpty = controller.text == '∅ ${field.unit}';
             return Opacity(
               opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
               child: IgnorePointer(
@@ -564,7 +564,7 @@ class _SwipeableCardState extends State<SwipeableCard>
         suffixIcon: ListenableBuilder(
           listenable: Listenable.merge([focusNode, controller]),
           builder: (context, child) {
-            final isEmpty = controller.text == '- ${field.unit}';
+            final isEmpty = controller.text == '∅ ${field.unit}';
             return Opacity(
               opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
               child: IgnorePointer(
