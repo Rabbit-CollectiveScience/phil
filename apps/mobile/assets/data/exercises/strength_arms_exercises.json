@@ -1,1 +1,497 @@
-[]
+[
+  {
+    "id": "arms_1",
+    "name": "Barbell Curl",
+    "description": "Stand with feet shoulder-width apart holding a barbell with an underhand grip at shoulder-width. Keep your elbows close to your sides and curl the bar up by contracting your biceps until your forearms are vertical or the bar is at shoulder height. Squeeze at the top, then lower the bar back down with control until your arms are fully extended. Avoid swinging or using momentum. This classic compound movement is the gold standard for building bicep mass and strength, working both heads of the biceps along with the brachialis.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_2",
+    "name": "EZ-Bar Curl",
+    "description": "Stand holding an EZ-bar with an underhand grip on the angled portions. Keep your elbows close to your sides and curl the bar up until your forearms are vertical. Squeeze your biceps at the top, then lower back down with control. The angled grip of the EZ-bar reduces stress on the wrists and forearms compared to a straight bar, making it more comfortable for many lifters while still effectively building bicep mass.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_3",
+    "name": "Dumbbell Curl",
+    "description": "Stand with feet shoulder-width apart holding dumbbells at your sides with palms facing forward or toward your body. Keep your elbows close to your sides and curl both dumbbells up simultaneously, rotating your wrists outward if starting with palms facing in (supination). Squeeze at the top, then lower back down with control. Using dumbbells allows for independent arm movement, helping identify and correct strength imbalances while providing a full range of motion.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_4",
+    "name": "Alternating Dumbbell Curl",
+    "description": "Stand holding dumbbells at your sides. Curl one dumbbell up while keeping the other at your side, then lower it back down and immediately curl the other arm. Continue alternating arms. This variation allows you to focus on each bicep individually, lift slightly heavier weights, and maintain better form throughout the set by giving each arm brief rest periods.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_5",
+    "name": "Hammer Curl",
+    "description": "Stand holding dumbbells at your sides with palms facing your body (neutral grip). Keep your elbows close to your sides and curl both dumbbells up simultaneously without rotating your wrists, maintaining the neutral grip throughout. Squeeze at the top, then lower with control. This variation emphasizes the brachialis and brachioradialis along with the biceps, building arm thickness and forearm strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_6",
+    "name": "Incline Dumbbell Curl",
+    "description": "Lie back on an incline bench set to 45-60 degrees holding dumbbells with arms hanging straight down and palms facing forward. Without moving your upper arms, curl the dumbbells up toward your shoulders. Squeeze at the top, then lower back to full extension with control. The incline position stretches the long head of the biceps, providing a unique stimulus and increased range of motion compared to standing curls.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_7",
+    "name": "Concentration Curl",
+    "description": "Sit on a bench with legs spread, holding a dumbbell in one hand. Brace the back of your upper arm against your inner thigh and let the weight hang down. Curl the dumbbell up by contracting your bicep until it reaches shoulder height. Squeeze hard at the top, then lower with control. This isolation exercise maximizes bicep contraction by eliminating momentum and focusing purely on the bicep peak, particularly effective for the biceps brachii.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_8",
+    "name": "Preacher Curl",
+    "description": "Sit at a preacher bench with your upper arms resting on the angled pad and hold a barbell or dumbbells with an underhand grip. Curl the weight up toward your shoulders until your forearms are nearly vertical. Squeeze at the top, then lower back down with control until your arms are fully extended. The preacher bench prevents momentum and body English, isolating the biceps and emphasizing the lower portion of the muscle.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_9",
+    "name": "Cable Curl",
+    "description": "Stand facing a cable machine with a straight bar attached to the low pulley. Grab the bar with an underhand grip at shoulder-width. Keep your elbows close to your sides and curl the bar up toward your shoulders. Squeeze at the top, then lower with control. The constant tension from the cable provides a different stimulus than free weights, keeping the biceps under load throughout the entire range of motion.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_10",
+    "name": "Cable Rope Hammer Curl",
+    "description": "Attach a rope to a low cable pulley and grab both ends with a neutral grip (palms facing each other). Keep your elbows at your sides and curl the rope up toward your shoulders, maintaining the neutral grip throughout. Squeeze at the top, then lower with control. The rope allows for natural wrist positioning while the cable provides constant tension, effectively targeting the brachialis, brachioradialis, and biceps.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_11",
+    "name": "Spider Curl",
+    "description": "Lie face-down on an incline bench set to 45 degrees, holding a barbell or dumbbells with arms hanging straight down in front of the bench. Curl the weight up until your forearms are nearly vertical, keeping your upper arms perpendicular to the floor throughout. Lower back down with control. This variation provides constant tension throughout the movement and completely eliminates momentum, intensely isolating the biceps.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_12",
+    "name": "Zottman Curl",
+    "description": "Stand holding dumbbells with palms facing forward. Curl the dumbbells up with a supinated grip (palms up). At the top, rotate your wrists so your palms face down (pronated grip), then lower the dumbbells with this reverse grip. At the bottom, rotate back to palms up and repeat. This unique variation works the biceps during the concentric phase and the brachioradialis and forearm extensors during the eccentric phase, providing comprehensive arm development.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_13",
+    "name": "Barbell Curl 21s",
+    "description": "Perform 7 partial reps from the bottom to the midpoint, then immediately perform 7 partial reps from the midpoint to the top, then finish with 7 full range-of-motion reps. This constitutes one set of 21 total reps. This high-volume technique thoroughly exhausts the biceps by emphasizing different portions of the range of motion, creating an intense pump and muscular fatigue.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_14",
+    "name": "Reverse Curl",
+    "description": "Stand holding a barbell or dumbbells with an overhand grip (palms facing down) at shoulder-width. Keep your elbows close to your sides and curl the weight up toward your shoulders. Lower back down with control. This variation shifts emphasis to the brachioradialis, brachialis, and forearm extensors, building forearm size and grip strength while still working the biceps.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_15",
+    "name": "Cross-Body Hammer Curl",
+    "description": "Stand holding dumbbells at your sides with a neutral grip. Curl one dumbbell across your body toward the opposite shoulder while keeping a neutral grip. Lower with control and repeat on the other side. This angled variation targets the brachialis and long head of the biceps more intensely than standard hammer curls while also engaging the anterior deltoid.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_16",
+    "name": "Close-Grip Bench Press",
+    "description": "Lie on a flat bench and grab the barbell with hands about 8-12 inches apart (narrower than shoulder-width). Lower the bar to your lower chest or upper abs, keeping your elbows close to your sides. Press the bar back up to full extension. This compound movement is one of the best mass-builders for the triceps while also engaging the chest and shoulders, allowing you to lift heavy weight for overall tricep development.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_17",
+    "name": "Tricep Dip",
+    "description": "Position yourself on parallel bars supporting your body weight with straight arms. Lower your body by bending your elbows until your upper arms are roughly parallel to the ground, keeping your elbows close to your body and leaning slightly forward. Press back up to full extension. This compound bodyweight exercise is excellent for building tricep mass and strength, also engaging the chest and shoulders. Add weight with a dip belt for progressive overload.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_18",
+    "name": "Bench Dip",
+    "description": "Place your hands on the edge of a bench behind you with fingers pointing forward and feet extended in front (on the floor or elevated on another bench). Lower your body by bending your elbows until your upper arms are parallel to the ground. Press back up to full extension. This bodyweight variation is more accessible than parallel bar dips and places greater emphasis on the triceps with less chest involvement.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_19",
+    "name": "Overhead Tricep Extension",
+    "description": "Stand or sit holding a dumbbell, cable, or barbell overhead with arms fully extended. Lower the weight behind your head by bending your elbows, keeping your upper arms stationary and close to your head. Stretch the triceps at the bottom, then extend your arms back to the starting position. This exercise emphasizes the long head of the triceps, which is the largest of the three tricep heads, building overall tricep mass.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_20",
+    "name": "Lying Tricep Extension (Skull Crusher)",
+    "description": "Lie on a flat bench holding a barbell or EZ-bar with arms extended above your chest. Lower the weight toward your forehead by bending only at the elbows, keeping your upper arms stationary. Stop just before the bar reaches your forehead, then extend your arms back to the starting position. This isolation exercise intensely targets all three tricep heads, particularly effective for building the horseshoe shape on the back of the arm.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_21",
+    "name": "Dumbbell Lying Tricep Extension",
+    "description": "Lie on a flat bench holding dumbbells with arms extended above your chest, palms facing each other. Lower the dumbbells to the sides of your head by bending your elbows, keeping your upper arms stationary. Extend your arms back to the starting position. Using dumbbells allows for a more natural wrist position and independent arm movement, helping identify strength imbalances.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_22",
+    "name": "Cable Pushdown",
+    "description": "Stand facing a cable machine with a straight bar attached to a high pulley. Grab the bar with an overhand grip, elbows at your sides and bent at about 90 degrees. Push the bar down by extending your elbows until your arms are fully straight. Squeeze your triceps at the bottom, then return to the starting position with control. The constant cable tension and ability to use various attachments make this a staple tricep exercise.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_23",
+    "name": "Cable Rope Pushdown",
+    "description": "Attach a rope to a high cable pulley and grab both ends. Keep your elbows at your sides and push the rope down by extending your elbows. At the bottom, split the rope ends apart and rotate your palms toward the floor, maximizing tricep contraction. Return to the starting position with control. The rope allows for natural wrist movement and provides an intense peak contraction when you split the rope at the bottom.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_24",
+    "name": "Single-Arm Cable Pushdown",
+    "description": "Stand beside a cable machine with a single handle attached to a high pulley. Grab the handle with one hand, elbow at your side and bent at 90 degrees. Push the handle down by extending your elbow until your arm is fully straight. Return with control. This unilateral variation allows you to focus on each tricep individually, correct imbalances, and achieve a strong mind-muscle connection.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_25",
+    "name": "Reverse-Grip Cable Pushdown",
+    "description": "Stand facing a cable machine with a straight bar attached to a high pulley. Grab the bar with an underhand grip (palms facing up), elbows at your sides. Push the bar down by extending your elbows until your arms are fully straight. Return to the starting position with control. The reverse grip shifts more emphasis to the medial head of the triceps, providing a different stimulus than the standard overhand variation.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_26",
+    "name": "Overhead Cable Tricep Extension",
+    "description": "Stand facing away from a cable machine with a rope attached to a high pulley. Grab the rope and position it behind your head with elbows bent and upper arms pointing forward. Extend your arms forward and up by straightening your elbows. Return to the starting position with control. The overhead position and constant cable tension intensely target the long head of the triceps.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_27",
+    "name": "Tricep Kickback",
+    "description": "Stand with one knee and hand on a bench for support, holding a dumbbell in your other hand. Position your upper arm parallel to the ground and bent at 90 degrees. Extend your arm backward by straightening your elbow until your arm is fully extended. Squeeze your tricep at the top, then return to the starting position with control. This isolation exercise targets the lateral and long heads of the triceps, particularly effective for building definition.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_28",
+    "name": "Diamond Push-Up",
+    "description": "Assume a push-up position but place your hands close together under your chest with thumbs and index fingers touching, forming a diamond shape. Lower your body until your chest nearly touches your hands, keeping your elbows close to your sides. Press back up to full extension. This bodyweight variation places significantly more emphasis on the triceps than standard push-ups while also engaging the chest and shoulders.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_29",
+    "name": "JM Press",
+    "description": "Lie on a flat bench holding a barbell with a close grip (8-12 inches apart) at arm's length above your chest. Lower the bar to your upper chest or neck by bending your elbows, allowing them to flare out slightly more than a skull crusher but keeping them closer than a bench press. Press the bar back up by extending your elbows. This hybrid movement combines elements of close-grip bench press and lying tricep extensions, effectively overloading the triceps.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_30",
+    "name": "Tate Press",
+    "description": "Lie on a flat bench holding dumbbells directly above your chest with palms facing your feet and elbows pointed out to the sides. Lower the dumbbells by bringing them toward the center of your chest in an arc motion, keeping your elbows flared. Press back up by extending your elbows, returning the dumbbells to the starting position. This unique movement pattern provides constant tension on the triceps throughout the range of motion, particularly targeting the lateral head.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_31",
+    "name": "Single-Arm Overhead Dumbbell Extension",
+    "description": "Stand or sit holding a dumbbell overhead in one hand with your arm fully extended. Lower the dumbbell behind your head by bending your elbow, keeping your upper arm stationary and close to your head. Extend your arm back to the starting position. This unilateral variation allows you to focus on each tricep individually and use your free hand to stabilize or assist if needed, ideal for addressing imbalances.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_32",
+    "name": "Incline Dumbbell Tricep Extension",
+    "description": "Lie back on an incline bench set to 30-45 degrees holding dumbbells overhead with arms extended. Lower the dumbbells behind your head by bending your elbows, keeping your upper arms stationary. Extend your arms back to the starting position. The incline angle provides a unique stretch on the long head of the triceps and constant tension throughout the movement.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_33",
+    "name": "Wrist Curl",
+    "description": "Sit on a bench with your forearms resting on your thighs or on a flat surface, holding a barbell or dumbbells with an underhand grip. Let the weight roll down to your fingertips by extending your wrists. Curl the weight back up by flexing your wrists, bringing your knuckles toward your forearms. This isolation exercise targets the wrist flexors and forearm muscles, building grip strength and forearm size.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_34",
+    "name": "Reverse Wrist Curl",
+    "description": "Sit on a bench with your forearms resting on your thighs or on a flat surface, holding a barbell or dumbbells with an overhand grip. Let the weight hang down by flexing your wrists. Extend your wrists to raise the weight up, bringing your knuckles toward your forearms. This exercise targets the wrist extensors on the top of the forearms, balancing forearm development and improving grip strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_35",
+    "name": "Wrist Roller",
+    "description": "Hold a wrist roller device (a bar with a rope and weight attached) with arms extended straight out in front of you at shoulder height. Roll the rope up by alternating wrist rotations until the weight reaches the bar, then reverse the motion to lower it back down. This intense exercise works the entire forearm musculature, building grip strength, forearm endurance, and mental toughness.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_36",
+    "name": "Dead Hang",
+    "description": "Hang from a pull-up bar with straight arms, full grip on the bar, and shoulders engaged (not completely relaxed). Hold this position for time without letting go. Keep your body still and breathe normally. This simple exercise builds tremendous grip strength and forearm endurance while also improving shoulder stability and decompressing the spine. It's foundational for advanced pulling exercises.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Time (seconds)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_37",
+    "name": "Cable Overhead Curl",
+    "description": "Stand between a cable crossover station with cables set at the highest position. Grab the handles with an underhand grip and raise your arms out to the sides at shoulder height, forming a T-position. Curl both handles toward your head by contracting your biceps, keeping your upper arms stationary. Return to the starting position with control. This unique angle provides constant tension and a different stimulus than standard curls, emphasizing the bicep peaks.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_38",
+    "name": "Drag Curl",
+    "description": "Stand holding a barbell with an underhand grip at arm's length. Instead of curling the bar forward, drag it up your body by pulling your elbows back behind your torso while curling. The bar should stay in contact with or very close to your body throughout. Lower back down the same path. This variation emphasizes the long head of the biceps and minimizes front deltoid involvement.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_39",
+    "name": "Reverse Cable Curl",
+    "description": "Stand facing a cable machine with a straight bar attached to a low pulley. Grab the bar with an overhand grip (palms facing down). Keep your elbows at your sides and curl the bar up toward your shoulders. Lower back down with control. The cable provides constant tension while the reverse grip emphasizes the brachioradialis and forearm extensors, building forearm size and grip strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_40",
+    "name": "Machine Bicep Curl",
+    "description": "Sit at a bicep curl machine and position your arms on the pad with your elbows aligned with the machine's pivot point. Grab the handles and curl them toward your shoulders by contracting your biceps. Squeeze at the top, then lower back down with control. The fixed path and support from the machine allow for strict isolation of the biceps, making it excellent for beginners or for pushing to failure safely.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_41",
+    "name": "Machine Tricep Extension",
+    "description": "Sit at a tricep extension machine and position your elbows on the pad aligned with the machine's pivot point. Grab the handles and extend your arms by pushing down until your arms are fully straight. Return to the starting position with control. The machine's fixed path provides stability and allows you to focus purely on tricep contraction, making it effective for isolation work or training to failure.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_42",
+    "name": "Chin-Up",
+    "description": "Hang from a pull-up bar with an underhand grip (palms facing you) at shoulder-width or slightly closer. Pull yourself up by driving your elbows down and back until your chin clears the bar. Lower yourself back down with control to a full hang. While primarily a back exercise, chin-ups heavily involve the biceps due to the underhand grip, making them an excellent compound movement for arm development.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_43",
+    "name": "Close-Grip Push-Up",
+    "description": "Assume a push-up position but place your hands closer together than shoulder-width, with hands directly under your chest. Lower your body until your chest nearly touches the ground, keeping your elbows close to your sides. Press back up to full extension. This bodyweight variation emphasizes the triceps more than standard push-ups while also engaging the chest and shoulders, making it excellent for building tricep endurance and strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_44",
+    "name": "Band Curl",
+    "description": "Stand on the center of a resistance band holding the handles with an underhand grip at your sides. Keep your elbows close to your sides and curl the handles up toward your shoulders. Squeeze at the top, then lower back down with control. The progressive resistance of the band (increasing tension as you stretch it) provides a unique stimulus and peak contraction at the top of the movement.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_45",
+    "name": "Band Tricep Pushdown",
+    "description": "Attach a resistance band to a high anchor point and grab the band or handles with an overhand grip. Keep your elbows at your sides and push the band down by extending your elbows until your arms are fully straight. Return to the starting position with control. Bands provide variable resistance and are excellent for home workouts or as a finisher to completely exhaust the triceps.",
+    "type": "strength",
+    "fields": [
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_46",
+    "name": "Plate Pinch Hold",
+    "description": "Pinch two weight plates together (smooth sides out) with one hand using just your fingers and thumb. Hold them at your side for time without letting them slip. Stand with good posture and breathe normally. This static exercise builds crushing grip strength, thumb strength, and forearm endurance, important for lifts like deadlifts and farmer's carries.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Time (seconds)", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_47",
+    "name": "Towel Curl",
+    "description": "Thread a towel through the handle of a kettlebell or dumbbell and hold both ends of the towel. Perform a curl by gripping the towel tightly and curling the weight up toward your shoulder. The thick grip from the towel significantly increases forearm and grip involvement while still working the biceps, making this an excellent variation for building functional arm strength.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_48",
+    "name": "Decline Close-Grip Bench Press",
+    "description": "Lie on a decline bench (head lower than hips) and grab the barbell with a close grip (8-12 inches apart). Lower the bar to your lower chest, keeping your elbows close to your sides. Press the bar back up to full extension. The decline angle allows you to lift heavier weight while placing greater emphasis on the lower portion of the triceps, making it an excellent mass-builder.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_49",
+    "name": "Cable Kickback",
+    "description": "Attach a single handle to a low cable pulley. Face the machine and grab the handle with one hand. Step back and position your upper arm parallel to the ground at your side. Extend your arm backward by straightening your elbow against the cable resistance. Return to the starting position with control. The cable provides constant tension throughout the movement, making it more effective than dumbbell kickbacks.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  },
+  {
+    "id": "arms_50",
+    "name": "Seated Dumbbell Curl",
+    "description": "Sit on a bench with back support holding dumbbells at your sides with palms facing forward or inward. Keep your back against the pad and curl both dumbbells up simultaneously, maintaining control and avoiding momentum. Squeeze at the top, then lower back down. The seated position eliminates body English and hip drive, forcing strict form and maximum bicep isolation.",
+    "type": "strength",
+    "fields": [
+      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+    ]
+  }
+]
