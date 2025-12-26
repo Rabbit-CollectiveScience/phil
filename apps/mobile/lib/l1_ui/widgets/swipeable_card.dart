@@ -62,6 +62,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   bool _isDragging = false;
   bool _isFlipping = false;
   bool _isCompleting = false;
+  bool _isDismissing = false;
   final Map<String, TextEditingController> _fieldControllers = {};
   final Map<String, FocusNode> _fieldFocusNodes = {};
   late final Widget _frontCard;
@@ -695,10 +696,58 @@ class _SwipeableCardState extends State<SwipeableCard>
               ),
             ],
           ),
-          // X button at top right
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        GestureDetector(
+          onTap: _handleTap,
+          onPanStart: _handlePanStart,
+          onPanUpdate: _handlePanUpdate,
+          onPanEnd: _handlePanEnd,
+          child: AnimatedContainer(
+            duration: _isDragging
+                ? Duration.zero
+                : const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            transform: Matrix4.identity()
+              ..translate(_dragOffset.dx, _dragOffset.dy)
+              ..rotateZ(_dragRotation)
+              ..scale(_isCompleting ? 0.6 : 1.0),
+            child: _isFlipping
+                ? AnimatedBuilder(
+                    animation: _flipController,
+                    builder: (context, child) {
+                      final angle = _flipController.value * pi;
+                      final isFrontVisible = angle < pi / 2;
+
+                      return Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, 0.001)
+                          ..rotateY(angle),
+                        child: Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.rotationY(isFrontVisible ? 0 : pi),
+                          child: _buildCardContent(isFrontVisible),
+                        ),
+                      );
+                    },
+                  )
+                : _buildCardContent(!widget.card.isFlipped),
+          ),
+        ),
+        // X button at top right - positioned at card level, only visible when flipped
+        if (widget.card.isFlipped && !_isDismissing)
           Positioned(
-            top: -12,
-            right: -12,
+            top: 2,
+            right: 2,
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
@@ -707,8 +756,9 @@ class _SwipeableCardState extends State<SwipeableCard>
                     '[CardGesture] ${widget.card.exerciseName}: X button tapped, animating card away',
                   );
                 }
-                // Animate card flying off to the right
+                // Hide button immediately and animate card flying off to the right
                 setState(() {
+                  _isDismissing = true;
                   _isDragging =
                       false; // Keep false so AnimatedContainer animates
                   _dragOffset = const Offset(500, -100);
@@ -722,63 +772,23 @@ class _SwipeableCardState extends State<SwipeableCard>
                 });
               },
               child: Container(
-                width: 48,
-                height: 48,
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(shape: BoxShape.circle),
+                width: 40,
+                height: 40,
+                color: Colors.transparent,
+                alignment: Alignment.center,
                 child: Container(
+                  width: 28,
+                  height: 28,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Color(0xFF2A2A2A),
                   ),
-                  child: const Icon(Icons.close, color: Colors.white, size: 16),
+                  child: const Icon(Icons.close, color: Colors.white, size: 14),
                 ),
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _handleTap,
-      onPanStart: _handlePanStart,
-      onPanUpdate: _handlePanUpdate,
-      onPanEnd: _handlePanEnd,
-      child: AnimatedContainer(
-        duration: _isDragging
-            ? Duration.zero
-            : const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-        transform: Matrix4.identity()
-          ..translate(_dragOffset.dx, _dragOffset.dy)
-          ..rotateZ(_dragRotation)
-          ..scale(_isCompleting ? 0.6 : 1.0),
-        child: _isFlipping
-            ? AnimatedBuilder(
-                animation: _flipController,
-                builder: (context, child) {
-                  final angle = _flipController.value * pi;
-                  final isFrontVisible = angle < pi / 2;
-
-                  return Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.identity()
-                      ..setEntry(3, 2, 0.001)
-                      ..rotateY(angle),
-                    child: Transform(
-                      alignment: Alignment.center,
-                      transform: Matrix4.rotationY(isFrontVisible ? 0 : pi),
-                      child: _buildCardContent(isFrontVisible),
-                    ),
-                  );
-                },
-              )
-            : _buildCardContent(!widget.card.isFlipped),
-      ),
+      ],
     );
   }
 }
