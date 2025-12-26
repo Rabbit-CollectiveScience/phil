@@ -1,33 +1,46 @@
 import 'package:flutter/material.dart';
+import '../../l2_domain/models/exercise.dart';
 
 class CardModel {
-  final String exerciseName;
+  final Exercise exercise;
   final Color color;
   final bool isFlipped;
-  final String weight;
-  final String reps;
+  final Map<String, String> fieldValues;
 
   CardModel({
-    required this.exerciseName,
+    required this.exercise,
     required this.color,
     this.isFlipped = false,
-    this.weight = '',
-    this.reps = '',
-  });
+    Map<String, String>? fieldValues,
+  }) : fieldValues = fieldValues ?? _initializeFieldValues(exercise);
+
+  // Convenience getters
+  String get exerciseName => exercise.name;
+  String get description => exercise.description;
+
+  // Initialize empty values for all fields
+  static Map<String, String> _initializeFieldValues(Exercise exercise) {
+    return {for (var field in exercise.fields) field.name: ''};
+  }
 
   CardModel copyWith({
-    String? exerciseName,
+    Exercise? exercise,
     Color? color,
     bool? isFlipped,
-    String? weight,
-    String? reps,
+    Map<String, String>? fieldValues,
   }) {
     return CardModel(
-      exerciseName: exerciseName ?? this.exerciseName,
+      exercise: exercise ?? this.exercise,
       color: color ?? this.color,
       isFlipped: isFlipped ?? this.isFlipped,
-      weight: weight ?? this.weight,
-      reps: reps ?? this.reps,
+      fieldValues: fieldValues ?? Map<String, String>.from(this.fieldValues),
     );
+  }
+
+  // Helper method to update a single field value
+  CardModel updateFieldValue(String fieldName, String value) {
+    final updatedValues = Map<String, String>.from(fieldValues);
+    updatedValues[fieldName] = value;
+    return copyWith(fieldValues: updatedValues);
   }
 }

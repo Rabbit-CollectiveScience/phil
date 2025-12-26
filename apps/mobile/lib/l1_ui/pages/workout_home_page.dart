@@ -8,6 +8,8 @@ import '../widgets/dashboard_icon_button.dart';
 import '../widgets/completion_counter.dart';
 import 'completed_list_page.dart';
 import 'stats_page.dart';
+import '../../l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
+import '../../l3_data/repositories/stub_exercise_repository.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   const WorkoutHomePage({super.key});
@@ -43,10 +45,13 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   bool _isTokenDragging = false;
   Offset _tokenDragPosition = Offset.zero;
 
+  // Loading state
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    _initializeCards();
+    _loadExercises();
     _tokenController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -68,47 +73,36 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     return screenWidth - (_iconPadding * 2) - _iconSize - _dashboardSpacing;
   }
 
+  Future<void> _loadExercises() async {
+    try {
+      final repository = StubExerciseRepository();
+      final useCase = GetRecommendedExercisesUseCase(repository);
+      final exercises = await useCase.execute();
+
+      // Bold Studio theme - pronounced grey cards on deep charcoal background
+      const cardColor = Color(0xFF4A4A4A);
+
+      setState(() {
+        _cards = exercises
+            .map((exercise) => CardModel(exercise: exercise, color: cardColor))
+            .toList();
+        _cardOrder = List.generate(_cards.length, (index) => index);
+        _isLoading = false;
+      });
+    } catch (e) {
+      // Handle error - could show error UI
+      debugPrint('Error loading exercises: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   void _initializeCards() {
-    // Bold Studio theme - pronounced grey cards on deep charcoal background
-    const cardColor = Color(0xFF4A4A4A);
-
-    final exercises = [
-      // Compound exercises
-      'Squat',
-      'Deadlift',
-      'Bench Press',
-      'Overhead Press',
-      'Barbell Row',
-      'Pull Up',
-      'Dip',
-      'Lunge',
-      'Romanian Deadlift',
-      'Front Squat',
-      // Isolation exercises
-      'Bicep Curl',
-      'Tricep Extension',
-      'Lateral Raise',
-      'Leg Curl',
-      'Leg Extension',
-      'Calf Raise',
-      'Face Pull',
-      'Cable Fly',
-      'Preacher Curl',
-      'Skull Crusher',
-    ];
-
-    _cards = List.generate(
-      exercises.length,
-      (index) => CardModel(
-        exerciseName: exercises[index],
-        color: cardColor,
-        weight: '10',
-        reps: '10',
-      ),
-    );
-
-    // Initialize card order (0 is front, 1 is second, etc.)
-    _cardOrder = List.generate(_cards.length, (index) => index);
+    // Deprecated - now using _loadExercises()
+    // Keeping method for potential fallback
+    _cards = [];
+    _cardOrder = [];
   }
 
   void _removeTopCard() {
@@ -287,7 +281,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
-        child: _cards.isEmpty
+        child: _isLoading
+            ? const CircularProgressIndicator()
+            : _cards.isEmpty
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

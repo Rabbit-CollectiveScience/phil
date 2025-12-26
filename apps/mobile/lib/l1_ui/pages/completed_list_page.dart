@@ -82,23 +82,23 @@ class CompletedListPage extends StatelessWidget {
                               ),
                               Row(
                                 children: [
-                                  Text(
-                                    '${card.weight} kg',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w300,
-                                      color: Color(0xFFB9E479),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Text(
-                                    '${card.reps} reps',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w300,
-                                      color: Color(0xFFB9E479),
-                                    ),
-                                  ),
+                                  ...card.exercise.fields.map((field) {
+                                    final value =
+                                        card.fieldValues[field.name] ?? '';
+                                    if (value.isEmpty)
+                                      return const SizedBox.shrink();
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 16),
+                                      child: Text(
+                                        '$value ${field.unit}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w300,
+                                          color: Color(0xFFB9E479),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ],
                               ),
                             ],

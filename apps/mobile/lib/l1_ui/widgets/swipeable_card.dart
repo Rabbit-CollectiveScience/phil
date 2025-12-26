@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:vibration/vibration.dart';
 import '../view_models/card_model.dart';
 
 /// Card interaction states for gesture handling
@@ -63,14 +62,11 @@ class _SwipeableCardState extends State<SwipeableCard>
   bool _isDragging = false;
   bool _isFlipping = false;
   bool _isCompleting = false;
-  late TextEditingController _weightController;
-  late TextEditingController _repsController;
-  late FocusNode _weightFocusNode;
-  late FocusNode _repsFocusNode;
+  final Map<String, TextEditingController> _fieldControllers = {};
+  final Map<String, FocusNode> _fieldFocusNodes = {};
   late final Widget _frontCard;
   late final Widget _backCard;
-  Timer? _weightTimer;
-  Timer? _repsTimer;
+  final Map<String, Timer?> _fieldTimers = {};
   final GlobalKey _zetButtonKey = GlobalKey();
   bool _isDraggingToken = false;
   Offset? _dragStartGlobal;
@@ -116,26 +112,25 @@ class _SwipeableCardState extends State<SwipeableCard>
       );
     }
 
-    _weightController = TextEditingController(text: '${widget.card.weight} kg');
-    _repsController = TextEditingController(text: '${widget.card.reps} reps');
-    _weightFocusNode = FocusNode();
-    _repsFocusNode = FocusNode();
+    // Initialize controllers and focus nodes for each field
+    for (var field in widget.card.exercise.fields) {
+      final value =
+          widget.card.fieldValues[field.name] ??
+          field.defaultValue?.toString() ??
+          '';
+      final displayValue = value.isEmpty ? '' : '$value ${field.unit}';
+      _fieldControllers[field.name] = TextEditingController(text: displayValue);
+      _fieldFocusNodes[field.name] = FocusNode();
 
-    // Add listeners to start auto-hide timer when focused
-    _weightFocusNode.addListener(() {
-      if (_weightFocusNode.hasFocus) {
-        _startWeightTimer();
-      } else {
-        _weightTimer?.cancel();
-      }
-    });
-    _repsFocusNode.addListener(() {
-      if (_repsFocusNode.hasFocus) {
-        _startRepsTimer();
-      } else {
-        _repsTimer?.cancel();
-      }
-    });
+      // Add listener to start auto-hide timer when focused
+      _fieldFocusNodes[field.name]!.addListener(() {
+        if (_fieldFocusNodes[field.name]!.hasFocus) {
+          _startFieldTimer(field.name);
+        } else {
+          _fieldTimers[field.name]?.cancel();
+        }
+      });
+    }
 
     // Cache both front and back cards - ListenableBuilder handles focus reactivity
     _frontCard = _buildFrontCard();
@@ -165,13 +160,16 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   @override
   void dispose() {
-    _weightTimer?.cancel();
-    _repsTimer?.cancel();
+    for (var timer in _fieldTimers.values) {
+      timer?.cancel();
+    }
     _flipController.dispose();
-    _weightController.dispose();
-    _repsController.dispose();
-    _weightFocusNode.dispose();
-    _repsFocusNode.dispose();
+    for (var controller in _fieldControllers.values) {
+      controller.dispose();
+    }
+    for (var focusNode in _fieldFocusNodes.values) {
+      focusNode.dispose();
+    }
     super.dispose();
   }
 
@@ -179,12 +177,16 @@ class _SwipeableCardState extends State<SwipeableCard>
   void didUpdateWidget(SwipeableCard oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Update controllers when card data changes
-    if (oldWidget.card.weight != widget.card.weight) {
-      _weightController.text = '${widget.card.weight} kg';
-    }
-    if (oldWidget.card.reps != widget.card.reps) {
-      _repsController.text = '${widget.card.reps} reps';
+    // Update controllers when card field values change
+    for (var field in widget.card.exercise.fields) {
+      final oldValue = oldWidget.card.fieldValues[field.name];
+      final newValue = widget.card.fieldValues[field.name];
+      if (oldValue != newValue && _fieldControllers.containsKey(field.name)) {
+        final displayValue = newValue == null || newValue.isEmpty
+            ? ''
+            : '$newValue ${field.unit}';
+        _fieldControllers[field.name]!.text = displayValue;
+      }
     }
 
     // If card changed (different exercise), reset to stable state
@@ -244,20 +246,11 @@ class _SwipeableCardState extends State<SwipeableCard>
     }
   }
 
-  void _startWeightTimer() {
-    _weightTimer?.cancel();
-    _weightTimer = Timer(const Duration(seconds: 2), () {
-      if (mounted && _weightFocusNode.hasFocus) {
-        _weightFocusNode.unfocus();
-      }
-    });
-  }
-
-  void _startRepsTimer() {
-    _repsTimer?.cancel();
-    _repsTimer = Timer(const Duration(seconds: 2), () {
-      if (mounted && _repsFocusNode.hasFocus) {
-        _repsFocusNode.unfocus();
+  void _startFieldTimer(String fieldName) {
+    _fieldTimers[fieldName]?.cancel();
+    _fieldTimers[fieldName] = Timer(const Duration(seconds: 2), () {
+      if (mounted && (_fieldFocusNodes[fieldName]?.hasFocus ?? false)) {
+        _fieldFocusNodes[fieldName]?.unfocus();
       }
     });
   }
@@ -500,6 +493,99 @@ class _SwipeableCardState extends State<SwipeableCard>
     );
   }
 
+  Widget _buildFieldInput(dynamic field) {
+    final controller = _fieldControllers[field.name];
+    final focusNode = _fieldFocusNodes[field.name];
+
+    if (controller == null || focusNode == null) {
+      return const SizedBox.shrink();
+    }
+
+    // Determine increment/decrement step based on field name
+    final int step = field.name == 'weight' ? 2 : 1;
+    final int minValue = field.name == 'weight' ? step : 1;
+
+    return TextField(
+      controller: controller,
+      focusNode: focusNode,
+      readOnly: true,
+      keyboardType: TextInputType.number,
+      textAlign: TextAlign.center,
+      style: const TextStyle(
+        fontSize: 32,
+        color: Colors.white,
+        fontWeight: FontWeight.w300,
+        letterSpacing: 1.5,
+      ),
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+        prefixIcon: ListenableBuilder(
+          listenable: focusNode,
+          builder: (context, child) => Opacity(
+            opacity: focusNode.hasFocus ? 1.0 : 0.0,
+            child: IgnorePointer(ignoring: !focusNode.hasFocus, child: child!),
+          ),
+          child: IconButton(
+            onPressed: () {
+              _startFieldTimer(field.name);
+              String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
+              int current = int.tryParse(text) ?? 0;
+              if (current >= minValue) {
+                int newValue = current - step;
+                controller.text = '$newValue ${field.unit}';
+
+                // Update field value in card model
+                final updatedValues = Map<String, String>.from(
+                  widget.card.fieldValues,
+                );
+                updatedValues[field.name] = newValue.toString();
+                widget.onCardUpdate(
+                  widget.card.copyWith(fieldValues: updatedValues),
+                );
+              }
+            },
+            icon: const Icon(Icons.chevron_left),
+            color: const Color(0xFFB9E479),
+            iconSize: 28,
+            style: IconButton.styleFrom(padding: const EdgeInsets.all(4)),
+          ),
+        ),
+        suffixIcon: ListenableBuilder(
+          listenable: focusNode,
+          builder: (context, child) => Opacity(
+            opacity: focusNode.hasFocus ? 1.0 : 0.0,
+            child: IgnorePointer(ignoring: !focusNode.hasFocus, child: child!),
+          ),
+          child: IconButton(
+            onPressed: () {
+              _startFieldTimer(field.name);
+              String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
+              int current = int.tryParse(text) ?? 0;
+              int newValue = current + step;
+              controller.text = '$newValue ${field.unit}';
+
+              // Update field value in card model
+              final updatedValues = Map<String, String>.from(
+                widget.card.fieldValues,
+              );
+              updatedValues[field.name] = newValue.toString();
+              widget.onCardUpdate(
+                widget.card.copyWith(fieldValues: updatedValues),
+              );
+            },
+            icon: const Icon(Icons.chevron_right),
+            color: const Color(0xFFB9E479),
+            iconSize: 28,
+            style: IconButton.styleFrom(padding: const EdgeInsets.all(4)),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildBackCard() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 28.0),
@@ -526,175 +612,13 @@ class _SwipeableCardState extends State<SwipeableCard>
                     ),
                   ),
                   const SizedBox(height: 30),
-                  TextField(
-                    controller: _weightController,
-                    focusNode: _weightFocusNode,
-                    readOnly: true,
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 32,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w300,
-                      letterSpacing: 1.5,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                      prefixIcon: ListenableBuilder(
-                        listenable: _weightFocusNode,
-                        builder: (context, child) => Opacity(
-                          opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
-                          child: IgnorePointer(
-                            ignoring: !_weightFocusNode.hasFocus,
-                            child: child!,
-                          ),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            _startWeightTimer(); // Reset timer on interaction
-                            String text = _weightController.text.replaceAll(
-                              RegExp(r'[^0-9]'),
-                              '',
-                            );
-                            int current = int.tryParse(text) ?? 0;
-                            if (current > 2) {
-                              int newValue = current - 2;
-                              _weightController.text = '$newValue kg';
-                              widget.onCardUpdate(
-                                widget.card.copyWith(
-                                  weight: newValue.toString(),
-                                ),
-                              );
-                            }
-                          },
-                          icon: const Icon(Icons.chevron_left),
-                          color: const Color(0xFFB9E479), // Lime green accent
-                          iconSize: 28,
-                          style: IconButton.styleFrom(
-                            padding: const EdgeInsets.all(4),
-                          ),
-                        ),
-                      ),
-                      suffixIcon: ListenableBuilder(
-                        listenable: _weightFocusNode,
-                        builder: (context, child) => Opacity(
-                          opacity: _weightFocusNode.hasFocus ? 1.0 : 0.0,
-                          child: IgnorePointer(
-                            ignoring: !_weightFocusNode.hasFocus,
-                            child: child!,
-                          ),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            _startWeightTimer(); // Reset timer on interaction
-                            String text = _weightController.text.replaceAll(
-                              RegExp(r'[^0-9]'),
-                              '',
-                            );
-                            int current = int.tryParse(text) ?? 0;
-                            int newValue = current + 2;
-                            _weightController.text = '$newValue kg';
-                            widget.onCardUpdate(
-                              widget.card.copyWith(weight: newValue.toString()),
-                            );
-                          },
-                          icon: const Icon(Icons.chevron_right),
-                          color: const Color(0xFFB9E479), // Lime green accent
-                          iconSize: 28,
-                          style: IconButton.styleFrom(
-                            padding: const EdgeInsets.all(4),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  TextField(
-                    controller: _repsController,
-                    focusNode: _repsFocusNode,
-                    readOnly: true,
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 32,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w300,
-                      letterSpacing: 1.5,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                      prefixIcon: ListenableBuilder(
-                        listenable: _repsFocusNode,
-                        builder: (context, child) => Opacity(
-                          opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
-                          child: IgnorePointer(
-                            ignoring: !_repsFocusNode.hasFocus,
-                            child: child!,
-                          ),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            _startRepsTimer(); // Reset timer on interaction
-                            String text = _repsController.text.replaceAll(
-                              RegExp(r'[^0-9]'),
-                              '',
-                            );
-                            int current = int.tryParse(text) ?? 0;
-                            if (current > 1) {
-                              int newValue = current - 1;
-                              _repsController.text = '$newValue reps';
-                              widget.onCardUpdate(
-                                widget.card.copyWith(reps: newValue.toString()),
-                              );
-                            }
-                          },
-                          icon: const Icon(Icons.chevron_left),
-                          color: const Color(0xFFB9E479), // Lime green accent
-                          iconSize: 28,
-                          style: IconButton.styleFrom(
-                            padding: const EdgeInsets.all(4),
-                          ),
-                        ),
-                      ),
-                      suffixIcon: ListenableBuilder(
-                        listenable: _repsFocusNode,
-                        builder: (context, child) => Opacity(
-                          opacity: _repsFocusNode.hasFocus ? 1.0 : 0.0,
-                          child: IgnorePointer(
-                            ignoring: !_repsFocusNode.hasFocus,
-                            child: child!,
-                          ),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            _startRepsTimer(); // Reset timer on interaction
-                            String text = _repsController.text.replaceAll(
-                              RegExp(r'[^0-9]'),
-                              '',
-                            );
-                            int current = int.tryParse(text) ?? 0;
-                            int newValue = current + 1;
-                            _repsController.text = '$newValue reps';
-                            widget.onCardUpdate(
-                              widget.card.copyWith(reps: newValue.toString()),
-                            );
-                          },
-                          icon: const Icon(Icons.chevron_right),
-                          color: const Color(0xFFB9E479), // Lime green accent
-                          iconSize: 28,
-                          style: IconButton.styleFrom(
-                            padding: const EdgeInsets.all(4),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Dynamic field rendering
+                  ...widget.card.exercise.fields.map((field) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: _buildFieldInput(field),
+                    );
+                  }).toList(),
                 ],
               ),
               SizedBox(
