@@ -700,6 +700,7 @@ class _SwipeableCardState extends State<SwipeableCard>
             top: -12,
             right: -12,
             child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
               onTap: () {
                 if (kDebugMode) {
                   debugPrint(
@@ -721,13 +722,17 @@ class _SwipeableCardState extends State<SwipeableCard>
                 });
               },
               child: Container(
-                width: 32,
-                height: 32,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFF2A2A2A),
+                width: 48,
+                height: 48,
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(shape: BoxShape.circle),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFF2A2A2A),
+                  ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 16),
                 ),
-                child: const Icon(Icons.close, color: Colors.white, size: 16),
               ),
             ),
           ),
