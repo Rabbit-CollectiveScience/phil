@@ -71,6 +71,7 @@ class _SwipeableCardState extends State<SwipeableCard>
   final GlobalKey _zetButtonKey = GlobalKey();
   bool _isDraggingToken = false;
   Offset? _dragStartGlobal;
+  Offset? _lastTapPosition;
 
   // State transition with logging
   void _transitionState(CardInteractionState newState) {
@@ -265,14 +266,40 @@ class _SwipeableCardState extends State<SwipeableCard>
       );
     }
 
-    // State machine guard: only allow tap in idle states
-    if (!_currentState.allowsTap) {
+    // State machine guard: only allow tap in idle (front) or idleFlipped (back)
+    if (!_currentState.allowsTap &&
+        _currentState != CardInteractionState.idleFlipped) {
       if (kDebugMode) {
         debugPrint(
           '[CardGesture] ${widget.card.exerciseName}: Tap rejected - wrong state',
         );
       }
       return;
+    }
+
+    // If card is flipped, only allow tap in top 25% to flip back
+    if (widget.card.isFlipped && _lastTapPosition != null) {
+      final RenderBox? cardBox = context.findRenderObject() as RenderBox?;
+      if (cardBox != null) {
+        final double cardHeight = cardBox.size.height;
+        final double topThreshold = cardHeight * 0.25; // Top 25%
+
+        if (_lastTapPosition!.dy > topThreshold) {
+          // Tap was below top 25% - ignore it
+          if (kDebugMode) {
+            debugPrint(
+              '[CardGesture] ${widget.card.exerciseName}: Tap on flipped card outside top zone (y=${_lastTapPosition!.dy}, threshold=$topThreshold) - ignoring',
+            );
+          }
+          return;
+        }
+
+        if (kDebugMode) {
+          debugPrint(
+            '[CardGesture] ${widget.card.exerciseName}: Tap on flipped card in top zone - flipping back to front',
+          );
+        }
+      }
     }
 
     // Transition to flipping state
@@ -707,6 +734,7 @@ class _SwipeableCardState extends State<SwipeableCard>
       clipBehavior: Clip.none,
       children: [
         GestureDetector(
+          onTapDown: (details) => _lastTapPosition = details.localPosition,
           onTap: _handleTap,
           onPanStart: _handlePanStart,
           onPanUpdate: _handlePanUpdate,
