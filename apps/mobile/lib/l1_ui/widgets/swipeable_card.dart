@@ -118,7 +118,7 @@ class _SwipeableCardState extends State<SwipeableCard>
           widget.card.fieldValues[field.name] ??
           field.defaultValue?.toString() ??
           '';
-      final displayValue = value.isEmpty ? '' : '$value ${field.unit}';
+      final displayValue = value.isEmpty ? '-' : '$value ${field.unit}';
       _fieldControllers[field.name] = TextEditingController(text: displayValue);
       _fieldFocusNodes[field.name] = FocusNode();
 
@@ -183,7 +183,7 @@ class _SwipeableCardState extends State<SwipeableCard>
       final newValue = widget.card.fieldValues[field.name];
       if (oldValue != newValue && _fieldControllers.containsKey(field.name)) {
         final displayValue = newValue == null || newValue.isEmpty
-            ? ''
+            ? '-'
             : '$newValue ${field.unit}';
         _fieldControllers[field.name]!.text = displayValue;
       }
@@ -523,11 +523,17 @@ class _SwipeableCardState extends State<SwipeableCard>
         focusedBorder: InputBorder.none,
         contentPadding: const EdgeInsets.symmetric(vertical: 12),
         prefixIcon: ListenableBuilder(
-          listenable: focusNode,
-          builder: (context, child) => Opacity(
-            opacity: focusNode.hasFocus ? 1.0 : 0.0,
-            child: IgnorePointer(ignoring: !focusNode.hasFocus, child: child!),
-          ),
+          listenable: Listenable.merge([focusNode, controller]),
+          builder: (context, child) {
+            final isEmpty = controller.text == '-';
+            return Opacity(
+              opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
+              child: IgnorePointer(
+                ignoring: !(isEmpty || focusNode.hasFocus),
+                child: child!,
+              ),
+            );
+          },
           child: IconButton(
             onPressed: () {
               _startFieldTimer(field.name);
@@ -554,11 +560,17 @@ class _SwipeableCardState extends State<SwipeableCard>
           ),
         ),
         suffixIcon: ListenableBuilder(
-          listenable: focusNode,
-          builder: (context, child) => Opacity(
-            opacity: focusNode.hasFocus ? 1.0 : 0.0,
-            child: IgnorePointer(ignoring: !focusNode.hasFocus, child: child!),
-          ),
+          listenable: Listenable.merge([focusNode, controller]),
+          builder: (context, child) {
+            final isEmpty = controller.text == '-';
+            return Opacity(
+              opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
+              child: IgnorePointer(
+                ignoring: !(isEmpty || focusNode.hasFocus),
+                child: child!,
+              ),
+            );
+          },
           child: IconButton(
             onPressed: () {
               _startFieldTimer(field.name);
