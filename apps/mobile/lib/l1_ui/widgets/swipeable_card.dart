@@ -434,7 +434,7 @@ class _SwipeableCardState extends State<SwipeableCard>
     return RepaintBoundary(
       child: Container(
         width: 300,
-        height: 400,
+        height: 440,
         clipBehavior: Clip.none,
         decoration: BoxDecoration(
           color: widget.card.color,
