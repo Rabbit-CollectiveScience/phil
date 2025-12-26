@@ -47,7 +47,7 @@ flutter:
 
   # Exercise database assets
   assets:
-    - assets/data/exercises/index.json
+    - assets/data/exercises/
     - assets/data/exercises/schemas/chest/
     - assets/data/exercises/schemas/back/
     - assets/data/exercises/schemas/shoulders/

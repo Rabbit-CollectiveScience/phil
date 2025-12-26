@@ -29,4 +29,32 @@ class Exercise {
     required this.type,
     required this.fields,
   });
+
+  factory Exercise.fromJson(Map<String, dynamic> json) {
+    return Exercise(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      type: _parseExerciseType(json['type'] as String),
+      fields: (json['fields'] as List<dynamic>)
+          .map(
+            (fieldJson) =>
+                ExerciseField.fromJson(fieldJson as Map<String, dynamic>),
+          )
+          .toList(),
+    );
+  }
+
+  static ExerciseTypeEnum _parseExerciseType(String typeString) {
+    switch (typeString.toLowerCase()) {
+      case 'strength':
+        return ExerciseTypeEnum.strength;
+      case 'cardio':
+        return ExerciseTypeEnum.cardio;
+      case 'flexibility':
+        return ExerciseTypeEnum.flexibility;
+      default:
+        return ExerciseTypeEnum.strength; // Default fallback
+    }
+  }
 }

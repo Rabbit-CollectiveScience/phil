@@ -28,4 +28,29 @@ class ExerciseField {
     required this.type,
     this.defaultValue,
   });
+
+  factory ExerciseField.fromJson(Map<String, dynamic> json) {
+    return ExerciseField(
+      name: json['name'] as String,
+      label: json['label'] as String,
+      unit: json['unit'] as String,
+      type: _parseFieldType(json['type'] as String),
+      defaultValue: json['defaultValue'],
+    );
+  }
+
+  static FieldTypeEnum _parseFieldType(String typeString) {
+    switch (typeString.toLowerCase()) {
+      case 'number':
+        return FieldTypeEnum.number;
+      case 'duration':
+        return FieldTypeEnum.duration;
+      case 'text':
+        return FieldTypeEnum.text;
+      case 'boolean':
+        return FieldTypeEnum.boolean;
+      default:
+        return FieldTypeEnum.number; // Default fallback
+    }
+  }
 }
