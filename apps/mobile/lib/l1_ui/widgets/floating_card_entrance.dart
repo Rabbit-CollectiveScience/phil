@@ -1,16 +1,23 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+enum CardEntranceType {
+  flip,
+  stackGrowth,
+}
+
 class FloatingCardEntrance extends StatefulWidget {
   final Widget child;
   final int index;
   final bool shouldAnimate;
+  final CardEntranceType animationType;
 
   const FloatingCardEntrance({
     super.key,
     required this.child,
     required this.index,
     this.shouldAnimate = true,
+    this.animationType = CardEntranceType.stackGrowth, // Change this to switch animations
   });
 
   @override
@@ -21,11 +28,21 @@ class _FloatingCardEntranceState extends State<FloatingCardEntrance>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _flipAnimation;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _opacityAnimation;
 
   @override
   void initState() {
     super.initState();
 
+    if (widget.animationType == CardEntranceType.flip) {
+      _initFlipAnimation();
+    } else {
+      _initStackGrowthAnimation();
+    }
+  }
+
+  void _initFlipAnimation() {
     _controller = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
@@ -38,7 +55,33 @@ class _FloatingCardEntranceState extends State<FloatingCardEntrance>
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     if (widget.shouldAnimate) {
-      _controller.forward();
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        if (mounted) {
+          _controller.forward();
+        }
+      });
+    } else {
+      _controller.value = 1.0;
+    }
+  }
+
+  void _initStackGrowthAnimation() {
+    _controller = AnimationController(
+      duration: Duration.zero,
+      vsync: this,
+    );
+
+    // Base delay of 0.5 second before starting any cards
+    final baseDelay = 500;
+    // Cards appear sequentially: index 0 at 500ms, index 1 at 620ms, index 2 at 740ms
+    final delay = baseDelay + (widget.index * 120);
+
+    if (widget.shouldAnimate) {
+      Future.delayed(Duration(milliseconds: delay), () {
+        if (mounted) {
+          _controller.value = 1.0;
+        }
+      });
     } else {
       _controller.value = 1.0;
     }
@@ -56,6 +99,14 @@ class _FloatingCardEntranceState extends State<FloatingCardEntrance>
       return widget.child;
     }
 
+    if (widget.animationType == CardEntranceType.flip) {
+      return _buildFlipAnimation();
+    } else {
+      return _buildStackGrowthAnimation();
+    }
+  }
+
+  Widget _buildFlipAnimation() {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -78,6 +129,23 @@ class _FloatingCardEntranceState extends State<FloatingCardEntrance>
                   ),
                 ),
         );
+      },
+    );
+  }
+
+  Widget _buildStackGrowthAnimation() {
+    // First card appears immediately without animation
+    if (widget.index == 0) {
+      return widget.child;
+    }
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        // Just pop into existence when controller reaches 1.0
+        return _controller.value == 1.0
+            ? widget.child
+            : const SizedBox.shrink();
       },
     );
   }
