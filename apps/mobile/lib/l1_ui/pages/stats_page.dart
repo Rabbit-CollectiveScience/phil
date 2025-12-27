@@ -26,7 +26,7 @@ class StatsPage extends StatelessWidget {
                       ),
                       child: const Icon(
                         Icons.arrow_back,
-                        color: Colors.white,
+                        color: Color(0xFFF2F2F2),
                         size: 24,
                       ),
                     ),

@@ -75,7 +75,7 @@ class CompletedListPage extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w900,
-                                    color: Colors.white,
+                                    color: Color(0xFFF2F2F2),
                                     letterSpacing: 0.5,
                                   ),
                                 ),

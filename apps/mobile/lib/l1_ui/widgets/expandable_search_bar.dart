@@ -117,7 +117,7 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
                 onChanged: widget.onSearchChanged,
                 enableInteractiveSelection: false,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFFF2F2F2),
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -156,7 +156,7 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
                 child: Container(
                   width: 48,
                   alignment: Alignment.center,
-                  child: const Icon(Icons.close, color: Colors.white, size: 24),
+                  child: const Icon(Icons.close, color: Color(0xFFF2F2F2), size: 24),
                 ),
               );
             },

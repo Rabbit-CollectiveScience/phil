@@ -186,7 +186,8 @@ class _SwipeableCardState extends State<SwipeableCard>
       final oldValue = oldWidget.card.fieldValues[field.name];
       final newValue = widget.card.fieldValues[field.name];
       if (oldValue != newValue && _fieldControllers.containsKey(field.name)) {
-        final displayValue = newValue == null || newValue.isEmpty || newValue == 'null'
+        final displayValue =
+            newValue == null || newValue.isEmpty || newValue == 'null'
             ? '- ${field.unit}'
             : '$newValue ${field.unit}';
         _fieldControllers[field.name]!.text = displayValue;
@@ -493,7 +494,7 @@ class _SwipeableCardState extends State<SwipeableCard>
             style: const TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.w900,
-              color: Colors.white,
+              color: Color(0xFFF2F2F2),
               letterSpacing: 0.5,
               height: 1.2,
             ),
@@ -543,7 +544,7 @@ class _SwipeableCardState extends State<SwipeableCard>
       textAlign: TextAlign.center,
       style: const TextStyle(
         fontSize: 32,
-        color: Colors.white,
+        color: Color(0xFFF2F2F2),
         fontWeight: FontWeight.w300,
         letterSpacing: 1.5,
       ),
@@ -653,7 +654,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w900,
-                      color: Colors.white,
+                      color: Color(0xFFF2F2F2),
                       letterSpacing: 1.2,
                       height: 1.15,
                     ),
@@ -770,7 +771,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                     ),
                     child: const Icon(
                       Icons.close,
-                      color: Colors.white,
+                      color: Color(0xFFF2F2F2),
                       size: 14,
                     ),
                   ),
