@@ -49,6 +49,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
 
   // Loading state
   bool _isLoading = true;
+  
+  // Card transition animation
+  bool _isTransitioningCards = false;
 
   @override
   void initState() {
@@ -108,11 +111,22 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   }
 
   void _removeTopCard() {
+    // Start transition animation
     setState(() {
-      if (_cardOrder.isNotEmpty) {
-        // Rotate the order: move first card to back
-        final topIndex = _cardOrder.removeAt(0);
-        _cardOrder.add(topIndex);
+      _isTransitioningCards = true;
+    });
+
+    // After animation completes, reorder cards
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        setState(() {
+          if (_cardOrder.isNotEmpty) {
+            // Rotate the order: move first card to back
+            final topIndex = _cardOrder.removeAt(0);
+            _cardOrder.add(topIndex);
+          }
+          _isTransitioningCards = false;
+        });
       }
     });
   }
@@ -323,10 +337,16 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                           )
                             FloatingCardEntrance(
                               index: i,
-                              child: Padding(
+                              child: AnimatedPadding(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOut,
                                 padding: EdgeInsets.only(
-                                  top: i * 10.0,
-                                  right: i * 5.0,
+                                  top: (_isTransitioningCards && i > 0)
+                                      ? (i - 1) * 10.0
+                                      : i * 10.0,
+                                  right: (_isTransitioningCards && i > 0)
+                                      ? (i - 1) * 5.0
+                                      : i * 5.0,
                                 ),
                                 child: i == 0
                                     ? SwipeableCard(

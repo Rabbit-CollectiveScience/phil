@@ -27,10 +27,7 @@ class _FloatingCardEntranceState extends State<FloatingCardEntrance>
   }
 
   void _initStackGrowthAnimation() {
-    _controller = AnimationController(
-      duration: Duration.zero,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: Duration.zero, vsync: this);
 
     // Base delay of 0.5 second before starting any cards
     final baseDelay = 500;
