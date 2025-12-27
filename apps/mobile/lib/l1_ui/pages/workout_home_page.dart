@@ -49,7 +49,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
 
   // Loading state
   bool _isLoading = true;
-  
+
   // Card transition animation
   bool _isTransitioningCards = false;
 
@@ -111,23 +111,14 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   }
 
   void _removeTopCard() {
-    // Start transition animation
+    // Reorder cards and end transition
     setState(() {
-      _isTransitioningCards = true;
-    });
-
-    // After animation completes, reorder cards
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (mounted) {
-        setState(() {
-          if (_cardOrder.isNotEmpty) {
-            // Rotate the order: move first card to back
-            final topIndex = _cardOrder.removeAt(0);
-            _cardOrder.add(topIndex);
-          }
-          _isTransitioningCards = false;
-        });
+      if (_cardOrder.isNotEmpty) {
+        // Rotate the order: move first card to back
+        final topIndex = _cardOrder.removeAt(0);
+        _cardOrder.add(topIndex);
       }
+      _isTransitioningCards = false;
     });
   }
 
@@ -355,6 +346,11 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                         ),
                                         card: _cards[_cardOrder[0]],
                                         onSwipedAway: _removeTopCard,
+                                        onStartSwipeAway: () {
+                                          setState(() {
+                                            _isTransitioningCards = true;
+                                          });
+                                        },
                                         onCompleted: _completeTopCard,
                                         onTokenDrag: _handleTokenDrag,
                                         zetCount: _completedCards.length + 1,

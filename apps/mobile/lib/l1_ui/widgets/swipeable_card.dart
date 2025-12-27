@@ -31,6 +31,7 @@ extension CardInteractionStateValidation on CardInteractionState {
 class SwipeableCard extends StatefulWidget {
   final CardModel card;
   final VoidCallback onSwipedAway;
+  final VoidCallback? onStartSwipeAway;
   final void Function(Offset buttonPosition, VoidCallback onAnimationComplete)
   onCompleted;
   final ValueChanged<CardModel> onCardUpdate;
@@ -41,6 +42,7 @@ class SwipeableCard extends StatefulWidget {
     super.key,
     required this.card,
     required this.onSwipedAway,
+    this.onStartSwipeAway,
     required this.onCompleted,
     required this.onCardUpdate,
     this.onTokenDrag,
@@ -447,6 +449,9 @@ class _SwipeableCardState extends State<SwipeableCard>
     // Calculate momentum-based exit with velocity continuation
     final momentumY = _dragOffset.dy + (velocity.dy * 0.3);
     final exitDistance = screenWidth * 1.5 * direction;
+
+    // Notify parent immediately that card is starting to fly away
+    widget.onStartSwipeAway?.call();
 
     setState(() {
       _dragOffset = Offset(exitDistance, momentumY);
