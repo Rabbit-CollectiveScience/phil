@@ -6,6 +6,7 @@ import '../widgets/swipeable_card.dart';
 import '../widgets/expandable_search_bar.dart';
 import '../widgets/dashboard_icon_button.dart';
 import '../widgets/completion_counter.dart';
+import '../widgets/floating_card_entrance.dart';
 import 'completed_list_page.dart';
 import 'stats_page.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
@@ -320,49 +321,53 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                             i >= 0;
                             i--
                           )
-                            Padding(
-                              padding: EdgeInsets.only(
-                                top: i * 10.0,
-                                right: i * 5.0,
-                              ),
-                              child: i == 0
-                                  ? SwipeableCard(
-                                      key: ValueKey(
-                                        'card_${_cardOrder[0]}_${_completedCards.length}',
-                                      ),
-                                      card: _cards[_cardOrder[0]],
-                                      onSwipedAway: _removeTopCard,
-                                      onCompleted: _completeTopCard,
-                                      onTokenDrag: _handleTokenDrag,
-                                      zetCount: _completedCards.length + 1,
-                                      onCardUpdate: (updatedCard) =>
-                                          _updateCard(
-                                            _cardOrder[0],
-                                            updatedCard,
+                            FloatingCardEntrance(
+                              index: i,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  top: i * 10.0,
+                                  right: i * 5.0,
+                                ),
+                                child: i == 0
+                                    ? SwipeableCard(
+                                        key: ValueKey(
+                                          'card_${_cardOrder[0]}_${_completedCards.length}',
+                                        ),
+                                        card: _cards[_cardOrder[0]],
+                                        onSwipedAway: _removeTopCard,
+                                        onCompleted: _completeTopCard,
+                                        onTokenDrag: _handleTokenDrag,
+                                        zetCount: _completedCards.length + 1,
+                                        onCardUpdate: (updatedCard) =>
+                                            _updateCard(
+                                              _cardOrder[0],
+                                              updatedCard,
+                                            ),
+                                      )
+                                    : IgnorePointer(
+                                        child: RepaintBoundary(
+                                          child: SwipeableCard(
+                                            key: ValueKey(
+                                              'card_${_cardOrder[i]}',
+                                            ),
+                                            card: _cards[_cardOrder[i]],
+                                            onSwipedAway: () {},
+                                            onCompleted:
+                                                (
+                                                  Offset _,
+                                                  VoidCallback callback,
+                                                ) {},
+                                            zetCount:
+                                                _completedCards.length + 1,
+                                            onCardUpdate: (updatedCard) =>
+                                                _updateCard(
+                                                  _cardOrder[i],
+                                                  updatedCard,
+                                                ),
                                           ),
-                                    )
-                                  : IgnorePointer(
-                                      child: RepaintBoundary(
-                                        child: SwipeableCard(
-                                          key: ValueKey(
-                                            'card_${_cardOrder[i]}',
-                                          ),
-                                          card: _cards[_cardOrder[i]],
-                                          onSwipedAway: () {},
-                                          onCompleted:
-                                              (
-                                                Offset _,
-                                                VoidCallback callback,
-                                              ) {},
-                                          zetCount: _completedCards.length + 1,
-                                          onCardUpdate: (updatedCard) =>
-                                              _updateCard(
-                                                _cardOrder[i],
-                                                updatedCard,
-                                              ),
                                         ),
                                       ),
-                                    ),
+                              ),
                             ),
                         ],
                       ),
