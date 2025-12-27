@@ -630,7 +630,12 @@ class _SwipeableCardState extends State<SwipeableCard>
 
   Widget _buildBackCard() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 28.0),
+      padding: const EdgeInsets.only(
+        left: 12.0,
+        right: 12.0,
+        top: 12.0,
+        bottom: 28.0,
+      ),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -726,8 +731,8 @@ class _SwipeableCardState extends State<SwipeableCard>
           // X button at top right
           if (!_isDismissing)
             Positioned(
-              top: -26,
-              right: -30,
+              top: 0,
+              right: 0,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
@@ -755,7 +760,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                   width: 40,
                   height: 40,
                   color: Colors.transparent,
-                  alignment: Alignment.center,
+                  alignment: Alignment.topRight,
                   child: Container(
                     width: 28,
                     height: 28,

@@ -318,7 +318,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                             Padding(
                               padding: EdgeInsets.only(
                                 top: i * 10.0,
-                                left: i * 5.0,
+                                right: i * 5.0,
                               ),
                               child: i == 0
                                   ? SwipeableCard(
