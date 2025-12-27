@@ -33,6 +33,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   final List<CardModel> _completedCards = [];
   final GlobalKey<ExpandableSearchBarState> _searchBarKey = GlobalKey();
   final GlobalKey _counterKey = GlobalKey();
+  int _visualCounterValue = 0;
 
   // Token animation
   bool _isTokenAnimating = false;
@@ -158,9 +159,10 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     });
 
     _tokenController.forward(from: 0.0).then((_) {
-      // Animation complete
+      // Animation complete - update visual counter now
       setState(() {
         _isTokenAnimating = false;
+        _visualCounterValue = _completedCards.length;
       });
       // Notify card that animation is complete
       onAnimationComplete();
@@ -179,7 +181,10 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         // Token center position >= counter top - 90px (30px half token + 60px buffer)
         // Registers one button width (60px) before visual contact
         if (position.dy >= counterTop - 90) {
-          // Token reached counter zone, animate to it
+          // Token reached counter zone, update visual counter
+          setState(() {
+            _visualCounterValue = _completedCards.length;
+          });
           _completeTopCard(position, () {
             // No callback needed for drag completion
           });
@@ -398,7 +403,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                       child: Center(
                         child: CompletionCounter(
                           key: _counterKey,
-                          count: _completedCards.length,
+                          count: _visualCounterValue,
                           size: _counterSize,
                           onTap: _navigateToViewCards,
                           onSwipeUp: _navigateToViewCards,
