@@ -723,6 +723,55 @@ class _SwipeableCardState extends State<SwipeableCard>
               ),
             ],
           ),
+          // X button at top right
+          if (!_isDismissing)
+            Positioned(
+              top: -26,
+              right: -30,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  if (kDebugMode) {
+                    debugPrint(
+                      '[CardGesture] ${widget.card.exerciseName}: X button tapped, animating card away',
+                    );
+                  }
+                  // Hide button immediately and animate card flying off to the right
+                  setState(() {
+                    _isDismissing = true;
+                    _isDragging =
+                        false; // Keep false so AnimatedContainer animates
+                    _dragOffset = const Offset(500, -100);
+                    _dragRotation = 0.3;
+                  });
+                  // Wait for animation to complete before removing card
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    if (mounted) {
+                      widget.onSwipedAway();
+                    }
+                  });
+                },
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  color: Colors.transparent,
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF2A2A2A),
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 14,
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -771,51 +820,6 @@ class _SwipeableCardState extends State<SwipeableCard>
                 : _buildCardContent(!widget.card.isFlipped),
           ),
         ),
-        // X button at top right - positioned at card level, only visible when flipped
-        if (widget.card.isFlipped && !_isDismissing)
-          Positioned(
-            top: 2,
-            right: 2,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                if (kDebugMode) {
-                  debugPrint(
-                    '[CardGesture] ${widget.card.exerciseName}: X button tapped, animating card away',
-                  );
-                }
-                // Hide button immediately and animate card flying off to the right
-                setState(() {
-                  _isDismissing = true;
-                  _isDragging =
-                      false; // Keep false so AnimatedContainer animates
-                  _dragOffset = const Offset(500, -100);
-                  _dragRotation = 0.3;
-                });
-                // Wait for animation to complete before removing card
-                Future.delayed(const Duration(milliseconds: 300), () {
-                  if (mounted) {
-                    widget.onSwipedAway();
-                  }
-                });
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                color: Colors.transparent,
-                alignment: Alignment.center,
-                child: Container(
-                  width: 28,
-                  height: 28,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFF2A2A2A),
-                  ),
-                  child: const Icon(Icons.close, color: Colors.white, size: 14),
-                ),
-              ),
-            ),
-          ),
       ],
     );
   }
