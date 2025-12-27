@@ -116,6 +116,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       if (_cardOrder.isNotEmpty) {
         // Rotate the order: move first card to back
         final topIndex = _cardOrder.removeAt(0);
+        // Reset flip state before adding to back
+        _cards[topIndex] = _cards[topIndex].copyWith(isFlipped: false);
         _cardOrder.add(topIndex);
       }
       _isTransitioningCards = false;
