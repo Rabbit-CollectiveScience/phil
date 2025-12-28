@@ -10,16 +10,36 @@ class CompletedListPage extends StatefulWidget {
   State<CompletedListPage> createState() => _CompletedListPageState();
 }
 
-class _CompletedListPageState extends State<CompletedListPage> {
+class _CompletedListPageState extends State<CompletedListPage>
+    with TickerProviderStateMixin {
   bool _isLoading = true;
   List<WorkoutSetWithDetails> _completedWorkouts = [];
   List<WorkoutGroup> _workoutGroups = [];
   final Set<int> _expandedGroups = {};
+  final Map<int, AnimationController> _controllers = {};
 
   @override
   void initState() {
     super.initState();
     _loadCompletedWorkouts();
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  AnimationController _getController(int index) {
+    return _controllers.putIfAbsent(
+      index,
+      () => AnimationController(
+        duration: const Duration(milliseconds: 300),
+        vsync: this,
+      ),
+    );
   }
 
   Future<void> _loadCompletedWorkouts() async {
@@ -48,11 +68,14 @@ class _CompletedListPageState extends State<CompletedListPage> {
   }
 
   void _toggleGroup(int index) {
+    final controller = _getController(index);
     setState(() {
       if (_expandedGroups.contains(index)) {
         _expandedGroups.remove(index);
+        controller.reverse();
       } else {
         _expandedGroups.add(index);
+        controller.forward();
       }
     });
   }
@@ -215,14 +238,22 @@ class _CompletedListPageState extends State<CompletedListPage> {
                               ),
                             ),
 
-                            // Expanded Set Details
-                            if (isExpanded)
-                              ...group.sets.asMap().entries.map((entry) {
-                                final setIndex = entry.key;
-                                final set = entry.value;
-                                final isLastSet = setIndex == group.sets.length - 1;
+                            // Expanded Set Details with Size Animation
+                            SizeTransition(
+                              sizeFactor: CurvedAnimation(
+                                parent: _getController(index),
+                                curve: Curves.easeInOut,
+                              ),
+                              axisAlignment: -1.0,
+                              child: Column(
+                                children:
+                                    group.sets.asMap().entries.map((entry) {
+                                  final setIndex = entry.key;
+                                      final set = entry.value;
+                                      final isLastSet =
+                                          setIndex == group.sets.length - 1;
 
-                                return Container(
+                                      return Container(
                                   margin: EdgeInsets.only(
                                     bottom: isLastSet ? 20 : 4,
                                   ),
@@ -275,6 +306,8 @@ class _CompletedListPageState extends State<CompletedListPage> {
                                   ),
                                 );
                               }).toList(),
+                              ),
+                            ),
                           ],
                         );
                       },
