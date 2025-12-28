@@ -37,10 +37,7 @@ void main() {
         values: {'reps': 10},
       );
 
-      await recordUseCase.execute(
-        exerciseId: 'exercise_2',
-        values: null,
-      );
+      await recordUseCase.execute(exerciseId: 'exercise_2', values: null);
 
       await recordUseCase.execute(
         exerciseId: 'exercise_3',
@@ -82,10 +79,7 @@ void main() {
     test('should handle multiple workouts throughout the day', () async {
       // Arrange - Simulate multiple workout sessions
       for (int i = 0; i < 5; i++) {
-        await recordUseCase.execute(
-          exerciseId: 'exercise_$i',
-          values: null,
-        );
+        await recordUseCase.execute(exerciseId: 'exercise_$i', values: null);
       }
 
       // Act
@@ -107,10 +101,7 @@ void main() {
       expect(initialCount, 1);
 
       // Arrange - Record more workouts
-      await recordUseCase.execute(
-        exerciseId: 'exercise_2',
-        values: null,
-      );
+      await recordUseCase.execute(exerciseId: 'exercise_2', values: null);
 
       await recordUseCase.execute(
         exerciseId: 'exercise_3',

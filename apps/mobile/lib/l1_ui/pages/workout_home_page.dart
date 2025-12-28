@@ -167,7 +167,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       try {
         // Extract field values from card
         final fieldValues = _topCardKey?.currentState?.getFieldValues();
-        
+
         // Get use case from dependency injection
         final recordUseCase = GetIt.instance<RecordWorkoutSetUseCase>();
 
@@ -177,7 +177,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
           values: fieldValues?.isNotEmpty == true ? fieldValues : null,
         );
 
-        debugPrint('✓ Workout set recorded: ${completedCard.exercise.name} with values: $fieldValues');
+        debugPrint(
+          '✓ Workout set recorded: ${completedCard.exercise.name} with values: $fieldValues',
+        );
       } catch (e) {
         debugPrint('Error recording workout set: $e');
         // Continue with UI update even if save fails

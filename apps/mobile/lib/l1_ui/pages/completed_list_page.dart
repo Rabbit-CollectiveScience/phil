@@ -82,15 +82,18 @@ class _CompletedListPageState extends State<CompletedListPage>
   }
 
   String _formatSetValues(Map<String, dynamic>? values, Exercise? exercise) {
-    if (values == null || values.isEmpty || exercise == null) {
+    if (exercise == null) {
       return 'No data recorded';
     }
 
     // Dynamically format based on exercise fields
-    return exercise.fields.map((field) {
-      final value = values[field.name]?.toString() ?? '-';
-      return '$value ${field.unit}'.trim();
-    }).join(' · ');
+    // Show structure even if values are missing (use '-' placeholders)
+    return exercise.fields
+        .map((field) {
+          final value = values?[field.name]?.toString() ?? '-';
+          return '$value ${field.unit}'.trim();
+        })
+        .join(' · ');
   }
 
   @override

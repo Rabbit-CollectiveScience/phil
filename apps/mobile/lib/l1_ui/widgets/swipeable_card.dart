@@ -169,19 +169,19 @@ class SwipeableCardState extends State<SwipeableCard>
   /// Parses text, removes units, converts to proper types based on field.type
   Map<String, dynamic> getFieldValues() {
     final values = <String, dynamic>{};
-    
+
     for (var field in widget.card.exercise.fields) {
       final controller = _fieldControllers[field.name];
       if (controller == null) continue;
-      
+
       // Extract raw text and remove units
       String text = controller.text.replaceAll(field.unit, '').trim();
-      
+
       // Handle placeholder "- unit" → skip this field
       if (text == '-' || text.isEmpty) {
         continue;
       }
-      
+
       // Convert to proper type based on field type
       switch (field.type) {
         case FieldTypeEnum.number:
@@ -189,8 +189,8 @@ class SwipeableCardState extends State<SwipeableCard>
           final doubleValue = double.tryParse(text);
           if (doubleValue != null) {
             // Store as int if no decimal part, otherwise double
-            values[field.name] = doubleValue == doubleValue.toInt() 
-                ? doubleValue.toInt() 
+            values[field.name] = doubleValue == doubleValue.toInt()
+                ? doubleValue.toInt()
                 : doubleValue;
           }
         case FieldTypeEnum.duration:
@@ -207,7 +207,7 @@ class SwipeableCardState extends State<SwipeableCard>
           values[field.name] = text.toLowerCase() == 'true' || text == '1';
       }
     }
-    
+
     return values;
   }
 

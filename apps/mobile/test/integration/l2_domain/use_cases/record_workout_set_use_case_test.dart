@@ -122,10 +122,7 @@ void main() {
       expect(repository.count, 0);
 
       // Act
-      await useCase.execute(
-        exerciseId: 'exercise_1',
-        values: {'reps': 10},
-      );
+      await useCase.execute(exerciseId: 'exercise_1', values: {'reps': 10});
 
       // Assert
       expect(repository.count, 1);
@@ -137,20 +134,11 @@ void main() {
 
     test('should handle multiple workout sets correctly', () async {
       // Act
-      await useCase.execute(
-        exerciseId: 'exercise_1',
-        values: {'reps': 10},
-      );
+      await useCase.execute(exerciseId: 'exercise_1', values: {'reps': 10});
 
-      await useCase.execute(
-        exerciseId: 'exercise_2',
-        values: null,
-      );
+      await useCase.execute(exerciseId: 'exercise_2', values: null);
 
-      await useCase.execute(
-        exerciseId: 'exercise_3',
-        values: {'duration': 30},
-      );
+      await useCase.execute(exerciseId: 'exercise_3', values: {'duration': 30});
 
       // Assert
       expect(repository.count, 3);
@@ -198,7 +186,10 @@ void main() {
         values: {'durationInSeconds': 1800, 'distance': 5.0},
       );
       expect(cardioSet, isNotNull);
-      expect(cardioSet.values, equals({'durationInSeconds': 1800, 'distance': 5.0}));
+      expect(
+        cardioSet.values,
+        equals({'durationInSeconds': 1800, 'distance': 5.0}),
+      );
 
       // Act & Assert for 3 fields (cardio with height)
       final threeFieldSet = await useCase.execute(
@@ -206,7 +197,10 @@ void main() {
         values: {'durationInSeconds': 600, 'reps': 15, 'height': 45},
       );
       expect(threeFieldSet, isNotNull);
-      expect(threeFieldSet.values, equals({'durationInSeconds': 600, 'reps': 15, 'height': 45}));
+      expect(
+        threeFieldSet.values,
+        equals({'durationInSeconds': 600, 'reps': 15, 'height': 45}),
+      );
 
       // Act & Assert for 1 field (flexibility)
       final oneFieldSet = await useCase.execute(

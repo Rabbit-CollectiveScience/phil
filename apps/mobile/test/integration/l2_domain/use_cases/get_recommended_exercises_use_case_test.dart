@@ -18,30 +18,33 @@ void main() {
       useCase = GetRecommendedExercisesUseCase(repository);
     });
 
-    test('should return 10 exercises with cardio_17 (3-field exercise) first', () async {
-      // Act
-      final result = await useCase.execute();
+    test(
+      'should return 10 exercises with cardio_17 (3-field exercise) first',
+      () async {
+        // Act
+        final result = await useCase.execute();
 
-      // Assert
-      expect(result, isNotEmpty);
-      expect(result.length, 10);
+        // Assert
+        expect(result, isNotEmpty);
+        expect(result.length, 10);
 
-      // Verify first exercise is cardio_17 with 3 fields
-      final firstExercise = result.first;
-      expect(firstExercise.id, 'cardio_17');
-      expect(firstExercise.name, isNotEmpty);
-      expect(firstExercise.description, isNotEmpty);
-      expect(firstExercise.type, ExerciseTypeEnum.cardio);
-      expect(firstExercise.fields.length, 3);
+        // Verify first exercise is cardio_17 with 3 fields
+        final firstExercise = result.first;
+        expect(firstExercise.id, 'cardio_17');
+        expect(firstExercise.name, isNotEmpty);
+        expect(firstExercise.description, isNotEmpty);
+        expect(firstExercise.type, ExerciseTypeEnum.cardio);
+        expect(firstExercise.fields.length, 3);
 
-      // Verify fields structure
-      for (final field in firstExercise.fields) {
-        expect(field.name, isNotEmpty);
-        expect(field.label, isNotEmpty);
-        expect(field.unit, isNotEmpty);
-        expect(field.type, isNotNull);
-      }
-    });
+        // Verify fields structure
+        for (final field in firstExercise.fields) {
+          expect(field.name, isNotEmpty);
+          expect(field.label, isNotEmpty);
+          expect(field.unit, isNotEmpty);
+          expect(field.type, isNotNull);
+        }
+      },
+    );
 
     test('should return exercises with valid IDs', () async {
       // Act

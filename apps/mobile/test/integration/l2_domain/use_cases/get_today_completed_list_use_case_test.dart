@@ -79,10 +79,7 @@ void main() {
         values: {'reps': 12},
       );
 
-      await recordUseCase.execute(
-        exerciseId: exercises[2].id,
-        values: null,
-      );
+      await recordUseCase.execute(exerciseId: exercises[2].id, values: null);
 
       // Act
       final result = await useCase.execute();
@@ -130,10 +127,7 @@ void main() {
       final exercises = await exerciseRepository.getAllExercises();
       final exercise = exercises.first;
 
-      await recordUseCase.execute(
-        exerciseId: exercise.id,
-        values: null,
-      );
+      await recordUseCase.execute(exerciseId: exercise.id, values: null);
 
       // Act
       final result = await useCase.execute();
