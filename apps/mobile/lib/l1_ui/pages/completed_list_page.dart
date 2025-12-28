@@ -155,15 +155,33 @@ class _CompletedListPageState extends State<CompletedListPage>
                         return Column(
                           children: [
                             // Group Header (always visible)
-                            GestureDetector(
-                              onTap: () => _toggleGroup(index),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                                margin: EdgeInsets.only(
-                                  bottom: isExpanded ? 4 : 16,
-                                ),
-                                padding: const EdgeInsets.all(20),
+                            AnimatedBuilder(
+                              animation: _getController(index),
+                              builder: (context, child) {
+                                final progress = _getController(index).value;
+                                double bottomMargin;
+                                
+                                if (progress == 0) {
+                                  // Fully collapsed
+                                  bottomMargin = 16;
+                                } else if (progress < 0.25) {
+                                  // Collapsing: animate from 4 to 16
+                                  bottomMargin = 4 + (1 - progress / 0.25) * 12;
+                                } else if (progress < 0.75) {
+                                  // Expanding or staying: margin = 0
+                                  bottomMargin = 0;
+                                } else {
+                                  // Last 25% of expansion: animate from 0 to 4
+                                  bottomMargin = ((progress - 0.75) / 0.25) * 4;
+                                }
+                                
+                                return GestureDetector(
+                                  onTap: () => _toggleGroup(index),
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                      bottom: bottomMargin,
+                                    ),
+                                    padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF4A4A4A),
                                   borderRadius: BorderRadius.circular(0),
@@ -238,6 +256,8 @@ class _CompletedListPageState extends State<CompletedListPage>
                                   ],
                                 ),
                               ),
+                                );
+                              },
                             ),
 
                             // Expanded Set Details with Size + Slide Animation
@@ -248,13 +268,16 @@ class _CompletedListPageState extends State<CompletedListPage>
                               ),
                               axisAlignment: -1.0,
                               child: SlideTransition(
-                                position: Tween<Offset>(
-                                  begin: const Offset(0, -1.5),
-                                  end: Offset.zero,
-                                ).animate(CurvedAnimation(
-                                  parent: _getController(index),
-                                  curve: Curves.easeOut,
-                                )),
+                                position:
+                                    Tween<Offset>(
+                                      begin: const Offset(0, -1.5),
+                                      end: Offset.zero,
+                                    ).animate(
+                                      CurvedAnimation(
+                                        parent: _getController(index),
+                                        curve: Curves.easeOut,
+                                      ),
+                                    ),
                                 child: Column(
                                   children: group.sets.asMap().entries.map((
                                     entry,
@@ -265,60 +288,60 @@ class _CompletedListPageState extends State<CompletedListPage>
                                         setIndex == group.sets.length - 1;
 
                                     return Container(
-                                    margin: EdgeInsets.only(
-                                      bottom: isLastSet ? 16 : 4,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                      vertical: 14,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF3E3E3E),
-                                      borderRadius: BorderRadius.circular(0),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Set ${setIndex + 1}',
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w700,
-                                                color: Color(0xFFB9E479),
+                                      margin: EdgeInsets.only(
+                                        bottom: isLastSet ? 16 : 4,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 14,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF3E3E3E),
+                                        borderRadius: BorderRadius.circular(0),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Set ${setIndex + 1}',
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xFFB9E479),
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              _formatTime(
-                                                set.workoutSet.completedAt,
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                _formatTime(
+                                                  set.workoutSet.completedAt,
+                                                ),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.white54,
+                                                ),
                                               ),
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.white54,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          _formatSetValues(
-                                            set.workoutSet.values,
+                                            ],
                                           ),
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w300,
-                                            color: Color(0xFFF2F2F2),
+                                          Text(
+                                            _formatSetValues(
+                                              set.workoutSet.values,
+                                            ),
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                              color: Color(0xFFF2F2F2),
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             ),
