@@ -30,20 +30,31 @@ class GetRecommendedExercisesUseCase {
 
     final testExercises = <Exercise>[];
 
+    // Cardio with 3 fields (duration + reps + height) - test max field count first
+    if (exerciseMap.containsKey('cardio_17'))
+      testExercises.add(exerciseMap['cardio_17']!); // Box Step-Ups: 3 fields
+
     // Strength exercises (2 fields: weight + reps)
-    if (exerciseMap.containsKey('legs_1')) testExercises.add(exerciseMap['legs_1']!);
-    if (exerciseMap.containsKey('chest_1')) testExercises.add(exerciseMap['chest_1']!);
-    if (exerciseMap.containsKey('back_1')) testExercises.add(exerciseMap['back_1']!);
+    if (exerciseMap.containsKey('legs_1'))
+      testExercises.add(exerciseMap['legs_1']!);
+    if (exerciseMap.containsKey('chest_1'))
+      testExercises.add(exerciseMap['chest_1']!);
+    if (exerciseMap.containsKey('back_1'))
+      testExercises.add(exerciseMap['back_1']!);
 
     // Cardio exercises (2 fields, varying types)
-    if (exerciseMap.containsKey('cardio_1')) testExercises.add(exerciseMap['cardio_1']!); // duration + speed
-    if (exerciseMap.containsKey('cardio_5')) testExercises.add(exerciseMap['cardio_5']!); // duration + distance
-    if (exerciseMap.containsKey('cardio_7')) testExercises.add(exerciseMap['cardio_7']!); // duration + floors
+    if (exerciseMap.containsKey('cardio_1'))
+      testExercises.add(exerciseMap['cardio_1']!); // 2 fields: duration + speed
+    if (exerciseMap.containsKey('cardio_5'))
+      testExercises.add(exerciseMap['cardio_5']!); // 2 fields: duration + distance
 
-    // Flexibility exercises (1-3 fields, different combos)
-    if (exerciseMap.containsKey('flex_6')) testExercises.add(exerciseMap['flex_6']!); // 1 field: reps only
-    if (exerciseMap.containsKey('flex_1')) testExercises.add(exerciseMap['flex_1']!); // 2 fields: holdTime + side
-    if (exerciseMap.containsKey('flex_3')) testExercises.add(exerciseMap['flex_3']!); // 2 fields: holdTime + reps
+    // Flexibility exercises (1-2 fields, different combos)
+    if (exerciseMap.containsKey('flex_6'))
+      testExercises.add(exerciseMap['flex_6']!); // 1 field: reps only
+    if (exerciseMap.containsKey('flex_1'))
+      testExercises.add(exerciseMap['flex_1']!); // 2 fields: holdTime + side
+    if (exerciseMap.containsKey('flex_3'))
+      testExercises.add(exerciseMap['flex_3']!); // 2 fields: holdTime + reps
 
     // If we don't have enough test exercises, fill with remaining
     if (testExercises.length < 10) {

@@ -355,10 +355,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                     Text(
                       _errorMessage!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.red,
-                      ),
+                      style: const TextStyle(fontSize: 16, color: Colors.red),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
