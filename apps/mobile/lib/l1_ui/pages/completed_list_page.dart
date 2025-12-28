@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_today_completed_list_use_case.dart';
+import '../view_models/workout_group.dart';
 
 class CompletedListPage extends StatefulWidget {
   const CompletedListPage({super.key});
@@ -12,6 +13,8 @@ class CompletedListPage extends StatefulWidget {
 class _CompletedListPageState extends State<CompletedListPage> {
   bool _isLoading = true;
   List<WorkoutSetWithDetails> _completedWorkouts = [];
+  List<WorkoutGroup> _workoutGroups = [];
+  final Set<int> _expandedGroups = {};
 
   @override
   void initState() {
@@ -24,18 +27,43 @@ class _CompletedListPageState extends State<CompletedListPage> {
       final useCase = GetIt.instance<GetTodayCompletedListUseCase>();
       final workouts = await useCase.execute();
 
+      // Group consecutive workouts
+      final groups = WorkoutGroup.groupConsecutive(workouts);
+
       setState(() {
         _completedWorkouts = workouts;
+        _workoutGroups = groups;
         _isLoading = false;
       });
 
-      debugPrint('✓ Loaded ${workouts.length} completed workouts');
+      debugPrint('✓ Loaded ${workouts.length} workouts in ${groups.length} groups');
     } catch (e) {
       debugPrint('Error loading completed workouts: $e');
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  void _toggleGroup(int index) {
+    setState(() {
+      if (_expandedGroups.contains(index)) {
+        _expandedGroups.remove(index);
+      } else {
+        _expandedGroups.add(index);
+      }
+    });
+  }
+
+  String _formatSetValues(Map<String, dynamic>? values) {
+    if (values == null || values.isEmpty) {
+      return '-kg · -reps';
+    }
+
+    final weight = values['weight']?.toString() ?? '-';
+    final reps = values['reps']?.toString() ?? '-';
+    
+    return '${weight}kg · ${reps}reps';
   }
 
   @override
@@ -65,7 +93,7 @@ class _CompletedListPageState extends State<CompletedListPage> {
                   ),
                   child: Center(
                     child: Text(
-                      '${_completedWorkouts.length}',
+                      '${_workoutGroups.fold<int>(0, (sum, group) => sum + group.setCount)}',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
@@ -85,80 +113,155 @@ class _CompletedListPageState extends State<CompletedListPage> {
                         color: Color(0xFFB9E479),
                       ),
                     )
-                  : _completedWorkouts.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No completed exercises yet',
-                        style: TextStyle(fontSize: 18, color: Colors.white54),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                      itemCount: _completedWorkouts.length,
-                      itemBuilder: (context, index) {
-                        final workout = _completedWorkouts[index];
-                        final values = workout.workoutSet.values;
-
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF4A4A4A),
-                            borderRadius: BorderRadius.circular(0),
+                  : _workoutGroups.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No completed exercises yet',
+                            style: TextStyle(fontSize: 18, color: Colors.white54),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      workout.exerciseName.toUpperCase(),
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w900,
-                                        color: Color(0xFFF2F2F2),
-                                        letterSpacing: 0.5,
-                                      ),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          itemCount: _workoutGroups.length,
+                          itemBuilder: (context, index) {
+                            final group = _workoutGroups[index];
+                            final isExpanded = _expandedGroups.contains(index);
+
+                            return Column(
+                              children: [
+                                // Group Header (always visible)
+                                GestureDetector(
+                                  onTap: () => _toggleGroup(index),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 16),
+                                    padding: const EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF4A4A4A),
+                                      borderRadius: BorderRadius.circular(0),
                                     ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      _formatTime(
-                                        workout.workoutSet.completedAt,
-                                      ),
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.white54,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              if (values != null && values.isNotEmpty)
-                                Row(
-                                  children: values.entries.map((entry) {
-                                    if (entry.key == 'unit')
-                                      return const SizedBox.shrink();
-                                    return Padding(
-                                      padding: const EdgeInsets.only(left: 16),
-                                      child: Text(
-                                        '${entry.value} ${entry.key}',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w300,
-                                          color: Color(0xFFB9E479),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      group.exerciseName.toUpperCase(),
+                                                      style: const TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.w900,
+                                                        color: Color(0xFFF2F2F2),
+                                                        letterSpacing: 0.5,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    padding: const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 4,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(0xFFB9E479),
+                                                      borderRadius: BorderRadius.circular(12),
+                                                    ),
+                                                    child: Text(
+                                                      '${group.setCount}',
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w900,
+                                                        color: Color(0xFF1A1A1A),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Icon(
+                                                    isExpanded
+                                                        ? Icons.keyboard_arrow_up
+                                                        : Icons.keyboard_arrow_down,
+                                                    color: Colors.white54,
+                                                    size: 24,
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                group.getTimeRangeDisplay(),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.white54,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                                // Expanded Set Details
+                                if (isExpanded)
+                                  ...group.sets.asMap().entries.map((entry) {
+                                    final setIndex = entry.key;
+                                    final set = entry.value;
+
+                                    return Container(
+                                      margin: const EdgeInsets.only(
+                                        bottom: 12,
+                                        left: 20,
+                                        right: 20,
+                                      ),
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF3A3A3A),
+                                        borderRadius: BorderRadius.circular(0),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Set ${setIndex + 1}',
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xFFB9E479),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                _formatTime(set.workoutSet.completedAt),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.white54,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            _formatSetValues(set.workoutSet.values),
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                              color: Color(0xFFF2F2F2),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     );
                                   }).toList(),
-                                ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                              ],
+                            );
+                          },
+                        ),
             ),
           ],
         ),
