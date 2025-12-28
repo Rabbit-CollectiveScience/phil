@@ -240,25 +240,33 @@ class _CompletedListPageState extends State<CompletedListPage>
                               ),
                             ),
 
-                            // Expanded Set Details with Size Animation
+                            // Expanded Set Details with Size + Slide Animation
                             SizeTransition(
                               sizeFactor: CurvedAnimation(
                                 parent: _getController(index),
                                 curve: Curves.easeInOut,
                               ),
                               axisAlignment: -1.0,
-                              child: Column(
-                                children: group.sets.asMap().entries.map((
-                                  entry,
-                                ) {
-                                  final setIndex = entry.key;
-                                  final set = entry.value;
-                                  final isLastSet =
-                                      setIndex == group.sets.length - 1;
+                              child: SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: const Offset(0, -1.5),
+                                  end: Offset.zero,
+                                ).animate(CurvedAnimation(
+                                  parent: _getController(index),
+                                  curve: Curves.easeOut,
+                                )),
+                                child: Column(
+                                  children: group.sets.asMap().entries.map((
+                                    entry,
+                                  ) {
+                                    final setIndex = entry.key;
+                                    final set = entry.value;
+                                    final isLastSet =
+                                        setIndex == group.sets.length - 1;
 
-                                  return Container(
+                                    return Container(
                                     margin: EdgeInsets.only(
-                                        bottom: isLastSet ? 16 : 4,
+                                      bottom: isLastSet ? 16 : 4,
                                     ),
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 20,
@@ -311,6 +319,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                     ),
                                   );
                                 }).toList(),
+                                ),
                               ),
                             ),
                           ],
