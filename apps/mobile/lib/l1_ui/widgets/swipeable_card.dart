@@ -75,6 +75,8 @@ class SwipeableCardState extends State<SwipeableCard>
   bool _isDraggingToken = false;
   Offset? _dragStartGlobal;
   Offset? _lastTapPosition;
+  Offset? _dragStartLocalPosition;
+  bool _gestureCommitted = false;
 
   // State transition with logging
   void _transitionState(CardInteractionState newState) {
@@ -416,28 +418,54 @@ class SwipeableCardState extends State<SwipeableCard>
             cardHeight * 0.75; // Bottom 25% starts at 75%
 
         if (localPosition.dy >= bottomThreshold) {
-          // Started drag in bottom 25% - token drag mode
-          _transitionState(CardInteractionState.draggingToken);
-
+          // Started in bottom 25% - store position but don't commit yet
           setState(() {
-            _isDraggingToken = true;
+            _dragStartLocalPosition = localPosition;
             _dragStartGlobal = details.globalPosition;
+            _gestureCommitted = false;
           });
-          widget.onTokenDrag?.call(details.globalPosition, true);
-          return;
+          return; // Wait for pan update to determine direction
         }
       }
     }
 
-    // Normal card drag
+    // Normal card drag (not in bottom area)
     _transitionState(CardInteractionState.draggingCard);
 
     setState(() {
       _isDragging = true;
+      _gestureCommitted = true;
     });
   }
 
   void _handlePanUpdate(DragUpdateDetails details) {
+    // Check if we're in bottom area but haven't committed to a gesture yet
+    if (!_gestureCommitted && _dragStartLocalPosition != null) {
+      final deltaY = details.delta.dy;
+      
+      // Determine gesture type based on initial direction
+      if (deltaY > 0) {
+        // Dragging DOWN → Token mode
+        _transitionState(CardInteractionState.draggingToken);
+        setState(() {
+          _isDraggingToken = true;
+          _gestureCommitted = true;
+        });
+        widget.onTokenDrag?.call(details.globalPosition, true);
+      } else {
+        // Dragging UP/SIDEWAYS → Card drag mode
+        _transitionState(CardInteractionState.draggingCard);
+        setState(() {
+          _isDragging = true;
+          _gestureCommitted = true;
+        _dragStartLocalPosition = null;
+        _gestureCommitted = false;
+          _dragStartLocalPosition = null;
+        });
+      }
+      return;
+    }
+
     if (_isDraggingToken) {
       // Update token position
       widget.onTokenDrag?.call(details.globalPosition, true);
@@ -476,6 +504,8 @@ class SwipeableCardState extends State<SwipeableCard>
     else {
       setState(() {
         _dragOffset = Offset.zero;
+        _dragStartLocalPosition = null;
+        _gestureCommitted = false;
         _dragRotation = 0.0;
         _isDragging = false;
       });

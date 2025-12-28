@@ -109,9 +109,7 @@ class _CompletedListPageState extends State<CompletedListPage>
         backgroundColor: const Color(0xFF1A1A1A),
         body: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xFFB9E479),
-                ),
+                child: CircularProgressIndicator(color: Color(0xFFB9E479)),
               )
             : CustomScrollView(
                 slivers: [
@@ -153,200 +151,241 @@ class _CompletedListPageState extends State<CompletedListPage>
                           child: Center(
                             child: Text(
                               'No completed exercises yet',
-                              style: TextStyle(fontSize: 18, color: Colors.white54),
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white54,
+                              ),
                             ),
                           ),
                         )
                       : SliverPadding(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                           sliver: SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                final group = _workoutGroups[index];
-                        final isExpanded = _expandedGroups.contains(index);
+                            delegate: SliverChildBuilderDelegate((
+                              context,
+                              index,
+                            ) {
+                              final group = _workoutGroups[index];
+                              final isExpanded = _expandedGroups.contains(
+                                index,
+                              );
 
-                        return Column(
-                          children: [
-                            // Group Header (always visible)
-                            AnimatedBuilder(
-                              animation: _getController(index),
-                              builder: (context, child) {
-                                final progress = _getController(index).value;
-                                double bottomMargin;
+                              return Column(
+                                children: [
+                                  // Group Header (always visible)
+                                  AnimatedBuilder(
+                                    animation: _getController(index),
+                                    builder: (context, child) {
+                                      final progress = _getController(
+                                        index,
+                                      ).value;
+                                      double bottomMargin;
 
-                                if (progress == 0) {
-                                  // Fully collapsed
-                                  bottomMargin = 16;
-                                } else if (progress < 0.25) {
-                                  // Collapsing: animate from 4 to 16
-                                  bottomMargin = 4 + (1 - progress / 0.25) * 12;
-                                } else if (progress < 0.75) {
-                                  // Expanding or staying: margin = 0
-                                  bottomMargin = 0;
-                                } else {
-                                  // Last 25% of expansion: animate from 0 to 4
-                                  bottomMargin = ((progress - 0.75) / 0.25) * 4;
-                                }
+                                      if (progress == 0) {
+                                        // Fully collapsed
+                                        bottomMargin = 16;
+                                      } else if (progress < 0.25) {
+                                        // Collapsing: animate from 4 to 16
+                                        bottomMargin =
+                                            4 + (1 - progress / 0.25) * 12;
+                                      } else if (progress < 0.75) {
+                                        // Expanding or staying: margin = 0
+                                        bottomMargin = 0;
+                                      } else {
+                                        // Last 25% of expansion: animate from 0 to 4
+                                        bottomMargin =
+                                            ((progress - 0.75) / 0.25) * 4;
+                                      }
 
-                                return GestureDetector(
-                                  onTap: () => _toggleGroup(index),
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                      bottom: bottomMargin,
-                                    ),
-                                    padding: const EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF4A4A4A),
-                                      borderRadius: BorderRadius.circular(0),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Column(
+                                      return GestureDetector(
+                                        onTap: () => _toggleGroup(index),
+                                        child: Container(
+                                          margin: EdgeInsets.only(
+                                            bottom: bottomMargin,
+                                          ),
+                                          padding: const EdgeInsets.all(20),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF4A4A4A),
+                                            borderRadius: BorderRadius.circular(
+                                              0,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                CrossAxisAlignment.center,
                                             children: [
-                                              Text(
-                                                group.exerciseName
-                                                    .toUpperCase(),
-                                                style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w900,
-                                                  color: Color(0xFFF2F2F2),
-                                                  letterSpacing: 0.5,
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      group.exerciseName
+                                                          .toUpperCase(),
+                                                      style: const TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                        color: Color(
+                                                          0xFFF2F2F2,
+                                                        ),
+                                                        letterSpacing: 0.5,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      group
+                                                          .getTimeRangeDisplay(),
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        color: Colors.white54,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                group.getTimeRangeDisplay(),
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Colors.white54,
+                                              Container(
+                                                width: 32,
+                                                height: 32,
+                                                decoration: const BoxDecoration(
+                                                  color: Color(0xFFB9E479),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  '${group.setCount}',
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w900,
+                                                    color: Color(0xFF1A1A1A),
+                                                  ),
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          width: 32,
-                                          height: 32,
-                                          decoration: const BoxDecoration(
-                                            color: Color(0xFFB9E479),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            '${group.setCount}',
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w900,
-                                              color: Color(0xFF1A1A1A),
+                                      );
+                                    },
+                                  ),
+
+                                  // Expanded Set Details with Size + Slide Animation
+                                  SizeTransition(
+                                    sizeFactor: CurvedAnimation(
+                                      parent: _getController(index),
+                                      curve: Curves.easeInOut,
+                                    ),
+                                    axisAlignment: -1.0,
+                                    child: SlideTransition(
+                                      position:
+                                          Tween<Offset>(
+                                            begin: const Offset(0, -1.5),
+                                            end: Offset.zero,
+                                          ).animate(
+                                            CurvedAnimation(
+                                              parent: _getController(index),
+                                              curve: Curves.easeOut,
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                      child: Column(
+                                        children: group.sets
+                                            .asMap()
+                                            .entries
+                                            .map((entry) {
+                                              final setIndex = entry.key;
+                                              final set = entry.value;
+                                              final isLastSet =
+                                                  setIndex ==
+                                                  group.sets.length - 1;
+
+                                              return Container(
+                                                margin: EdgeInsets.only(
+                                                  bottom: isLastSet ? 16 : 4,
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 14,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(
+                                                    0xFF3E3E3E,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(0),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'Set ${setIndex + 1}',
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                color: Color(
+                                                                  0xFFB9E479,
+                                                                ),
+                                                              ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 4,
+                                                        ),
+                                                        Text(
+                                                          _formatTime(
+                                                            set
+                                                                .workoutSet
+                                                                .completedAt,
+                                                          ),
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300,
+                                                                color: Colors
+                                                                    .white54,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Text(
+                                                      _formatSetValues(
+                                                        set.workoutSet.values,
+                                                        set.exercise,
+                                                      ),
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        color: Color(
+                                                          0xFFF2F2F2,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            })
+                                            .toList(),
+                                      ),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-
-                            // Expanded Set Details with Size + Slide Animation
-                            SizeTransition(
-                              sizeFactor: CurvedAnimation(
-                                parent: _getController(index),
-                                curve: Curves.easeInOut,
-                              ),
-                              axisAlignment: -1.0,
-                              child: SlideTransition(
-                                position:
-                                    Tween<Offset>(
-                                      begin: const Offset(0, -1.5),
-                                      end: Offset.zero,
-                                    ).animate(
-                                      CurvedAnimation(
-                                        parent: _getController(index),
-                                        curve: Curves.easeOut,
-                                      ),
-                                    ),
-                                child: Column(
-                                  children: group.sets.asMap().entries.map((
-                                    entry,
-                                  ) {
-                                    final setIndex = entry.key;
-                                    final set = entry.value;
-                                    final isLastSet =
-                                        setIndex == group.sets.length - 1;
-
-                                    return Container(
-                                      margin: EdgeInsets.only(
-                                        bottom: isLastSet ? 16 : 4,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 20,
-                                        vertical: 14,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF3E3E3E),
-                                        borderRadius: BorderRadius.circular(0),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Set ${setIndex + 1}',
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Color(0xFFB9E479),
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                _formatTime(
-                                                  set.workoutSet.completedAt,
-                                                ),
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Colors.white54,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Text(
-                                            _formatSetValues(
-                                              set.workoutSet.values,
-                                              set.exercise,
-                                            ),
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w300,
-                                              color: Color(0xFFF2F2F2),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                              },
-                              childCount: _workoutGroups.length,
-                            ),
+                                ],
+                              );
+                            }, childCount: _workoutGroups.length),
                           ),
                         ),
                 ],
