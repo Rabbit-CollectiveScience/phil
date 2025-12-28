@@ -442,7 +442,7 @@ class SwipeableCardState extends State<SwipeableCard>
     // Check if we're in bottom area but haven't committed to a gesture yet
     if (!_gestureCommitted && _dragStartLocalPosition != null) {
       final deltaY = details.delta.dy;
-      
+
       // Determine gesture type based on initial direction
       if (deltaY > 0) {
         // Dragging DOWN → Token mode
@@ -458,8 +458,8 @@ class SwipeableCardState extends State<SwipeableCard>
         setState(() {
           _isDragging = true;
           _gestureCommitted = true;
-        _dragStartLocalPosition = null;
-        _gestureCommitted = false;
+          _dragStartLocalPosition = null;
+          _gestureCommitted = false;
           _dragStartLocalPosition = null;
         });
       }
@@ -649,6 +649,7 @@ class SwipeableCardState extends State<SwipeableCard>
           },
           child: IconButton(
             onPressed: () {
+              focusNode.requestFocus();
               _startFieldTimer(field.name);
               String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
               int current = int.tryParse(text) ?? 0;
@@ -686,6 +687,7 @@ class SwipeableCardState extends State<SwipeableCard>
           },
           child: IconButton(
             onPressed: () {
+              focusNode.requestFocus();
               _startFieldTimer(field.name);
               String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
               int current = int.tryParse(text) ?? 0;
