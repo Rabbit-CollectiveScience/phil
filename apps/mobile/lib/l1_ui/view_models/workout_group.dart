@@ -35,11 +35,11 @@ class WorkoutGroup {
   /// Multiple sets: "10:00 - 10:35"
   String getTimeRangeDisplay() {
     final startTime = _formatTime(firstCompletedAt);
-    
+
     if (setCount == 1) {
       return startTime;
     }
-    
+
     final endTime = _formatTime(lastCompletedAt);
     return '$startTime - $endTime';
   }
