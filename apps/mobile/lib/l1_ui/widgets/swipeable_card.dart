@@ -69,7 +69,6 @@ class SwipeableCardState extends State<SwipeableCard>
   final Map<String, TextEditingController> _fieldControllers = {};
   final Map<String, FocusNode> _fieldFocusNodes = {};
   late final Widget _frontCard;
-  late final Widget _backCard;
   final Map<String, Timer?> _fieldTimers = {};
   final GlobalKey _zetButtonKey = GlobalKey();
   bool _isDraggingToken = false;
@@ -77,6 +76,7 @@ class SwipeableCardState extends State<SwipeableCard>
   Offset? _lastTapPosition;
   Offset? _dragStartLocalPosition;
   bool _gestureCommitted = false;
+  int _currentSetNumber = 1;
 
   // State transition with logging
   void _transitionState(CardInteractionState newState) {
@@ -141,9 +141,8 @@ class SwipeableCardState extends State<SwipeableCard>
       });
     }
 
-    // Cache both front and back cards - ListenableBuilder handles focus reactivity
+    // Cache front card only - back card needs to rebuild for set number updates
     _frontCard = _buildFrontCard();
-    _backCard = _buildBackCard();
 
     _flipController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -558,7 +557,7 @@ class SwipeableCardState extends State<SwipeableCard>
             ),
           ],
         ),
-        child: isFrontVisible ? _frontCard : _backCard,
+        child: isFrontVisible ? _frontCard : _buildBackCard(),
       ),
     );
   }
@@ -756,59 +755,71 @@ class SwipeableCardState extends State<SwipeableCard>
               SizedBox(
                 key: _zetButtonKey,
                 width: double.infinity,
-                child: Builder(
-                  builder: (buttonContext) {
-                    return ElevatedButton(
-                      onPressed: () {
-                        // Get button position in global coordinates using button's own context
-                        final RenderBox? box =
-                            buttonContext.findRenderObject() as RenderBox?;
-                        if (box != null) {
-                          final Offset position = box.localToGlobal(
-                            Offset.zero,
-                          );
-                          final Offset buttonCenter = Offset(
-                            position.dx + box.size.width / 2,
-                            position.dy + box.size.height / 2,
-                          );
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Only allow button press when in stable idleFlipped state
+                    if (_currentState != CardInteractionState.idleFlipped) {
+                      if (kDebugMode) {
+                        debugPrint(
+                          '[CardState] ${widget.card.exerciseName}: ZET button tap rejected - state is $_currentState',
+                        );
+                      }
+                      return;
+                    }
+                    
+                    // Get button position in global coordinates
+                    final RenderBox? box =
+                        _zetButtonKey.currentContext?.findRenderObject() as RenderBox?;
+                    if (box != null) {
+                      final Offset position = box.localToGlobal(
+                        Offset.zero,
+                      );
+                      final Offset buttonCenter = Offset(
+                        position.dx + box.size.width / 2,
+                        position.dy + box.size.height / 2,
+                      );
 
-                          // Transition to animatingToken state to block interactions
-                          _transitionState(CardInteractionState.animatingToken);
-                          widget.onCompleted(buttonCenter, () {
-                            // Return to stable state after animation completes
-                            if (mounted) {
-                              if (kDebugMode) {
-                                debugPrint(
-                                  '[CardState] ${widget.card.exerciseName}: Token animation complete, returning to idleFlipped',
-                                );
-                              }
-                              _transitionState(
-                                CardInteractionState.idleFlipped,
-                              );
-                            }
-                          });
+                      // Transition to animatingToken state to block interactions
+                      _transitionState(CardInteractionState.animatingToken);
+                      
+                      // Increment set number immediately
+                      setState(() {
+                        _currentSetNumber++;
+                      });
+                      
+                      widget.onCompleted(buttonCenter, () {
+                        // Return to stable state after animation completes
+                        if (mounted) {
+                          if (kDebugMode) {
+                            debugPrint(
+                              '[CardState] ${widget.card.exerciseName}: Token animation complete, returning to idleFlipped',
+                            );
+                          }
+                          _transitionState(
+                            CardInteractionState.idleFlipped,
+                          );
                         }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(
-                          0xFFB9E479,
-                        ), // Lime green accent
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                      ),
-                      child: Text(
-                        'ZET ${widget.zetCount}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 2.0,
-                        ),
-                      ),
-                    );
+                      });
+                    }
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(
+                      0xFFB9E479,
+                    ), // Lime green accent
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                  ),
+                  child: Text(
+                    'ZET $_currentSetNumber',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
                 ),
               ),
             ],
