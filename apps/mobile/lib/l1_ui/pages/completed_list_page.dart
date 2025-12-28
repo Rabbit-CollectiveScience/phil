@@ -18,6 +18,8 @@ class _CompletedListPageState extends State<CompletedListPage>
   List<WorkoutGroup> _workoutGroups = [];
   final Set<int> _expandedGroups = {};
   final Map<int, AnimationController> _controllers = {};
+  final ScrollController _scrollController = ScrollController();
+  bool _isPopping = false;
 
   @override
   void initState() {
@@ -27,6 +29,7 @@ class _CompletedListPageState extends State<CompletedListPage>
 
   @override
   void dispose() {
+    _scrollController.dispose();
     for (var controller in _controllers.values) {
       controller.dispose();
     }
@@ -98,20 +101,31 @@ class _CompletedListPageState extends State<CompletedListPage>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onVerticalDragEnd: (details) {
-        // Detect downward swipe
-        if (details.primaryVelocity != null && details.primaryVelocity! > 500) {
-          Navigator.pop(context);
-        }
-      },
-      child: Scaffold(
-        backgroundColor: const Color(0xFF1A1A1A),
-        body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFFB9E479)),
-              )
-            : CustomScrollView(
+    return Scaffold(
+      backgroundColor: const Color(0xFF1A1A1A),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xFFB9E479)),
+            )
+          : NotificationListener<ScrollUpdateNotification>(
+              onNotification: (notification) {
+                // Track overscroll when at the top
+                if (!_isPopping &&
+                    _scrollController.hasClients &&
+                    _scrollController.position.pixels <= 0) {
+                  if (notification.metrics.pixels < -150) {
+                    _isPopping = true;
+                    Navigator.of(context).pop();
+                    return true;
+                  }
+                }
+                return false;
+              },
+              child: CustomScrollView(
+                controller: _scrollController,
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
                 slivers: [
                   // Counter at top (scrolls with content)
                   SliverToBoxAdapter(
@@ -390,7 +404,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                         ),
                 ],
               ),
-      ),
+            ),
     );
   }
 
