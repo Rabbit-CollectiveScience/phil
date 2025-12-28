@@ -202,11 +202,8 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                     .toUpperCase(),
                                                 style: const TextStyle(
                                                   fontSize: 18,
-                                                  fontWeight:
-                                                      FontWeight.w900,
-                                                  color: Color(
-                                                    0xFFF2F2F2,
-                                                  ),
+                                                  fontWeight: FontWeight.w900,
+                                                  color: Color(0xFFF2F2F2),
                                                   letterSpacing: 0.5,
                                                 ),
                                               ),
@@ -226,9 +223,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                           width: 32,
                                           height: 32,
                                           decoration: const BoxDecoration(
-                                            color: Color(
-                                              0xFFB9E479,
-                                            ),
+                                            color: Color(0xFFB9E479),
                                             shape: BoxShape.circle,
                                           ),
                                           alignment: Alignment.center,
@@ -236,11 +231,8 @@ class _CompletedListPageState extends State<CompletedListPage>
                                             '${group.setCount}',
                                             style: const TextStyle(
                                               fontSize: 16,
-                                              fontWeight:
-                                                  FontWeight.w900,
-                                              color: Color(
-                                                0xFF1A1A1A,
-                                              ),
+                                              fontWeight: FontWeight.w900,
+                                              color: Color(0xFF1A1A1A),
                                             ),
                                           ),
                                         ),
