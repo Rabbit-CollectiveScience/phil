@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'l1_ui/pages/workout_home_page.dart';
+import 'l2_domain/models/workout_set.dart';
 import 'l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
+import 'l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
 import 'l3_data/repositories/exercise_repository.dart';
 import 'l3_data/repositories/stub_exercise_repository.dart';
+import 'l3_data/repositories/workout_set_repository.dart';
+import 'l3_data/repositories/hive_workout_set_repository.dart';
 
 // Global GetIt instance for dependency injection
 final getIt = GetIt.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Hive for local storage
+  await Hive.initFlutter();
+
+  // Register Hive adapters
+  Hive.registerAdapter(WorkoutSetAdapter());
+
+  // Open Hive boxes
+  await Hive.openBox<WorkoutSet>('workout_sets');
 
   // Setup dependency injection
   _setupDependencies();
@@ -22,10 +36,14 @@ void main() async {
 void _setupDependencies() {
   // Register L3 - Data Layer (Repositories)
   getIt.registerSingleton<ExerciseRepository>(StubExerciseRepository());
+  getIt.registerSingleton<WorkoutSetRepository>(HiveWorkoutSetRepository());
 
   // Register L2 - Domain Layer (Use Cases)
   getIt.registerFactory<GetRecommendedExercisesUseCase>(
     () => GetRecommendedExercisesUseCase(getIt<ExerciseRepository>()),
+  );
+  getIt.registerFactory<RecordWorkoutSetUseCase>(
+    () => RecordWorkoutSetUseCase(getIt<WorkoutSetRepository>()),
   );
 }
 

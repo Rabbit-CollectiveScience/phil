@@ -1,22 +1,25 @@
+import 'package:hive/hive.dart';
 import '../../l2_domain/models/workout_set.dart';
 import 'workout_set_repository.dart';
 
-// Strategy: Stub implementation of WorkoutSetRepository
+// Implementation: Hive-based WorkoutSetRepository
 //
 // Responsibility:
-// - Provides in-memory stub data for testing and development
-// - Simulates database operations without persistence
-// - Strategy Pattern: Simple stub data strategy
+// - Persists workout sets to local device storage using Hive
+// - Provides CRUD operations for workout sets
+// - Handles date-based queries for analytics
 //
-// Usage: For initial development and testing without real data source
+// Strategy: On-device NoSQL document storage
+// Future: Can be extended to sync with MongoDB
 
-class StubWorkoutSetRepository implements WorkoutSetRepository {
-  final List<WorkoutSet> _workoutSets = [];
+class HiveWorkoutSetRepository implements WorkoutSetRepository {
+  static const String _boxName = 'workout_sets';
+
+  Box<WorkoutSet> get _box => Hive.box<WorkoutSet>(_boxName);
 
   @override
   Future<WorkoutSet> saveWorkoutSet(WorkoutSet workoutSet) async {
-    // Simulate save by adding to in-memory list
-    _workoutSets.add(workoutSet);
+    await _box.put(workoutSet.id, workoutSet);
     return workoutSet;
   }
 
@@ -25,11 +28,13 @@ class StubWorkoutSetRepository implements WorkoutSetRepository {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
+    final allSets = _box.values.toList();
+
     if (startDate == null && endDate == null) {
-      return List.from(_workoutSets);
+      return allSets;
     }
 
-    return _workoutSets.where((set) {
+    return allSets.where((set) {
       if (startDate != null && set.completedAt.isBefore(startDate)) {
         return false;
       }
@@ -51,7 +56,7 @@ class StubWorkoutSetRepository implements WorkoutSetRepository {
 
   @override
   Future<void> deleteWorkoutSet(String id) async {
-    _workoutSets.removeWhere((set) => set.id == id);
+    await _box.delete(id);
   }
 
   @override
@@ -59,12 +64,4 @@ class StubWorkoutSetRepository implements WorkoutSetRepository {
     final sets = await getWorkoutSets(startDate: startDate, endDate: endDate);
     return sets.length;
   }
-
-  // Helper method for testing - clear all data
-  void clear() {
-    _workoutSets.clear();
-  }
-
-  // Helper method for testing - get count
-  int get count => _workoutSets.length;
 }

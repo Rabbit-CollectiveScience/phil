@@ -11,6 +11,7 @@ import '../widgets/floating_card_entrance.dart';
 import 'completed_list_page.dart';
 import 'stats_page.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
+import '../../l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   const WorkoutHomePage({super.key});
@@ -127,11 +128,34 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   void _completeTopCard(
     Offset buttonPosition,
     VoidCallback onAnimationComplete,
-  ) {
+  ) async {
     if (_isTokenAnimating) return; // Prevent multiple animations
 
     // Vibrate when token starts moving to counter
     Vibration.vibrate(duration: 50);
+
+    // Record workout set to database before updating UI
+    if (_cardOrder.isNotEmpty) {
+      final topIndex = _cardOrder[0];
+      final completedCard = _cards[topIndex];
+
+      try {
+        // Get use case from dependency injection
+        final recordUseCase = GetIt.instance<RecordWorkoutSetUseCase>();
+
+        // Record the workout set with null values (user didn't input data yet)
+        await recordUseCase.execute(
+          exerciseId: completedCard.exercise.id,
+          exerciseType: completedCard.exercise.type,
+          values: null, // Accept null - user can add data later
+        );
+
+        debugPrint('✓ Workout set recorded: ${completedCard.exercise.name}');
+      } catch (e) {
+        debugPrint('Error recording workout set: $e');
+        // Continue with UI update even if save fails
+      }
+    }
 
     // Increment counter immediately so button updates
     setState(() {
