@@ -1,10 +1,42 @@
 import 'package:flutter/material.dart';
-import '../view_models/card_model.dart';
+import 'package:get_it/get_it.dart';
+import '../../l2_domain/use_cases/workout_use_cases/get_today_completed_list_use_case.dart';
 
-class CompletedListPage extends StatelessWidget {
-  final List<CardModel> completedCards;
+class CompletedListPage extends StatefulWidget {
+  const CompletedListPage({super.key});
 
-  const CompletedListPage({super.key, required this.completedCards});
+  @override
+  State<CompletedListPage> createState() => _CompletedListPageState();
+}
+
+class _CompletedListPageState extends State<CompletedListPage> {
+  bool _isLoading = true;
+  List<WorkoutSetWithDetails> _completedWorkouts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCompletedWorkouts();
+  }
+
+  Future<void> _loadCompletedWorkouts() async {
+    try {
+      final useCase = GetIt.instance<GetTodayCompletedListUseCase>();
+      final workouts = await useCase.execute();
+
+      setState(() {
+        _completedWorkouts = workouts;
+        _isLoading = false;
+      });
+
+      debugPrint('✓ Loaded ${workouts.length} completed workouts');
+    } catch (e) {
+      debugPrint('Error loading completed workouts: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +65,7 @@ class CompletedListPage extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      '${completedCards.length}',
+                      '${_completedWorkouts.length}',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
@@ -47,7 +79,13 @@ class CompletedListPage extends StatelessWidget {
             const SizedBox(height: 40),
             // Completed cards list
             Expanded(
-              child: completedCards.isEmpty
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFFB9E479),
+                      ),
+                    )
+                  : _completedWorkouts.isEmpty
                   ? const Center(
                       child: Text(
                         'No completed exercises yet',
@@ -56,9 +94,11 @@ class CompletedListPage extends StatelessWidget {
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                      itemCount: completedCards.length,
+                      itemCount: _completedWorkouts.length,
                       itemBuilder: (context, index) {
-                        final card = completedCards[index];
+                        final workout = _completedWorkouts[index];
+                        final values = workout.workoutSet.values;
+
                         return Container(
                           margin: const EdgeInsets.only(bottom: 16),
                           padding: const EdgeInsets.all(20),
@@ -70,27 +110,41 @@ class CompletedListPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                child: Text(
-                                  card.exerciseName.toUpperCase(),
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(0xFFF2F2F2),
-                                    letterSpacing: 0.5,
-                                  ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      workout.exerciseName.toUpperCase(),
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w900,
+                                        color: Color(0xFFF2F2F2),
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      _formatTime(
+                                        workout.workoutSet.completedAt,
+                                      ),
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.white54,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  ...card.exercise.fields.map((field) {
-                                    final value =
-                                        card.fieldValues[field.name] ?? '';
-                                    if (value.isEmpty)
+                              if (values != null && values.isNotEmpty)
+                                Row(
+                                  children: values.entries.map((entry) {
+                                    if (entry.key == 'unit')
                                       return const SizedBox.shrink();
                                     return Padding(
-                                      padding: const EdgeInsets.only(right: 16),
+                                      padding: const EdgeInsets.only(left: 16),
                                       child: Text(
-                                        '$value ${field.unit}',
+                                        '${entry.value} ${entry.key}',
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w300,
@@ -99,8 +153,7 @@ class CompletedListPage extends StatelessWidget {
                                       ),
                                     );
                                   }).toList(),
-                                ],
-                              ),
+                                ),
                             ],
                           ),
                         );
@@ -111,5 +164,11 @@ class CompletedListPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatTime(DateTime dateTime) {
+    final hour = dateTime.hour.toString().padLeft(2, '0');
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 }

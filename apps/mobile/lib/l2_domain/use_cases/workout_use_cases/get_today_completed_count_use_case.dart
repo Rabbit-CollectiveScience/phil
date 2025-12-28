@@ -1,3 +1,5 @@
+import '../../../l3_data/repositories/workout_set_repository.dart';
+
 // Use Case: Get count of completed workout sets for TODAY (Workout Mode)
 //
 // Responsibility:
@@ -8,10 +10,15 @@
 // Used by: WorkoutHomePage to display completion counter
 
 class GetTodayCompletedCountUseCase {
+  final WorkoutSetRepository _repository;
+
+  GetTodayCompletedCountUseCase(this._repository);
+
   Future<int> execute({DateTime? startDate, DateTime? endDate}) async {
-    // TODO: Implement
-    // - Query workout sets within date range
-    // - Return count
-    throw UnimplementedError();
+    // Get today's workout sets
+    final todayWorkouts = await _repository.getTodayWorkoutSets();
+
+    // Return count
+    return todayWorkouts.length;
   }
 }

@@ -1,4 +1,7 @@
 import '../../models/workout_set.dart';
+import '../../models/exercise.dart';
+import '../../../l3_data/repositories/workout_set_repository.dart';
+import '../../../l3_data/repositories/exercise_repository.dart';
 
 // Use Case: Get detailed list of completed workout sets for TODAY (Workout Mode)
 //
@@ -11,15 +14,42 @@ import '../../models/workout_set.dart';
 // Used by: CompletedListPage to display today's workout history
 
 class GetTodayCompletedListUseCase {
+  final WorkoutSetRepository _workoutSetRepository;
+  final ExerciseRepository _exerciseRepository;
+
+  GetTodayCompletedListUseCase(
+    this._workoutSetRepository,
+    this._exerciseRepository,
+  );
+
   Future<List<WorkoutSetWithDetails>> execute({
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    // TODO: Implement
-    // - Query workout sets within date range
-    // - Join with exercise data
-    // - Return list with full details
-    throw UnimplementedError();
+    // Get today's workout sets
+    final todayWorkouts = await _workoutSetRepository.getTodayWorkoutSets();
+
+    // Get all exercises for lookup
+    final exercises = await _exerciseRepository.getAllExercises();
+    final exerciseMap = {for (var e in exercises) e.id: e};
+
+    // Join workout sets with exercise data
+    final workoutsWithDetails = todayWorkouts.map((workoutSet) {
+      final exercise = exerciseMap[workoutSet.exerciseId];
+
+      return WorkoutSetWithDetails(
+        workoutSet: workoutSet,
+        exerciseName: exercise?.name ?? 'Unknown Exercise',
+        exercise: exercise,
+      );
+    }).toList();
+
+    // Sort by completion time - most recent first
+    workoutsWithDetails.sort(
+      (a, b) => b.workoutSet.completedAt.compareTo(a.workoutSet.completedAt),
+    );
+
+    return workoutsWithDetails;
   }
 }
 
@@ -27,9 +57,11 @@ class GetTodayCompletedListUseCase {
 class WorkoutSetWithDetails {
   final WorkoutSet workoutSet;
   final String exerciseName;
-  // TODO: Add more fields as needed
-  // - Exercise type
-  // - Formatted display values
+  final Exercise? exercise;
 
-  WorkoutSetWithDetails({required this.workoutSet, required this.exerciseName});
+  WorkoutSetWithDetails({
+    required this.workoutSet,
+    required this.exerciseName,
+    this.exercise,
+  });
 }

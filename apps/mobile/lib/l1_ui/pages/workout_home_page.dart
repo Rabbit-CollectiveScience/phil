@@ -12,6 +12,7 @@ import 'completed_list_page.dart';
 import 'stats_page.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
 import '../../l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
+import '../../l2_domain/use_cases/workout_use_cases/get_today_completed_count_use_case.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   const WorkoutHomePage({super.key});
@@ -58,6 +59,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   void initState() {
     super.initState();
     _loadExercises();
+    _loadTodayCount();
     _tokenController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -101,6 +103,22 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loadTodayCount() async {
+    try {
+      // Load today's completed workout count from database
+      final countUseCase = GetIt.instance<GetTodayCompletedCountUseCase>();
+      final count = await countUseCase.execute();
+
+      setState(() {
+        _visualCounterValue = count;
+      });
+
+      debugPrint('✓ Loaded today\'s workout count: $count');
+    } catch (e) {
+      debugPrint('Error loading today\'s count: $e');
     }
   }
 
@@ -290,7 +308,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
-          return CompletedListPage(completedCards: _completedCards);
+          return const CompletedListPage();
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           // New page slides up from bottom
