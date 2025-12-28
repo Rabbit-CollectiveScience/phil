@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
 import 'package:phil/l3_data/repositories/stub_workout_set_repository.dart';
 import 'package:phil/l2_domain/models/workout_set.dart';
-import 'package:phil/l2_domain/models/exercise_type_enum.dart';
 
 void main() {
   // Initialize Flutter bindings for testing
@@ -24,13 +23,11 @@ void main() {
     test('should create and save a workout set with valid structure', () async {
       // Arrange
       const exerciseId = 'chest_barbell_bench_press';
-      const exerciseType = ExerciseTypeEnum.strength;
-      final values = {'weight': 100, 'reps': 10, 'unit': 'kg'};
+      final values = {'weight': 100, 'reps': 10};
 
       // Act
       final result = await useCase.execute(
         exerciseId: exerciseId,
-        exerciseType: exerciseType,
         values: values,
       );
 
@@ -46,13 +43,11 @@ void main() {
       // Act
       final result1 = await useCase.execute(
         exerciseId: 'exercise_1',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'reps': 10},
       );
 
       final result2 = await useCase.execute(
         exerciseId: 'exercise_2',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'reps': 12},
       );
 
@@ -65,12 +60,10 @@ void main() {
     test('should accept null values', () async {
       // Arrange
       const exerciseId = 'chest_push_up';
-      const exerciseType = ExerciseTypeEnum.strength;
 
       // Act
       final result = await useCase.execute(
         exerciseId: exerciseId,
-        exerciseType: exerciseType,
         values: null,
       );
 
@@ -85,13 +78,11 @@ void main() {
     test('should accept empty values map', () async {
       // Arrange
       const exerciseId = 'cardio_running';
-      const exerciseType = ExerciseTypeEnum.cardio;
       final emptyValues = <String, dynamic>{};
 
       // Act
       final result = await useCase.execute(
         exerciseId: exerciseId,
-        exerciseType: exerciseType,
         values: emptyValues,
       );
 
@@ -107,7 +98,6 @@ void main() {
       // Act
       final result = await useCase.execute(
         exerciseId: 'exercise_1',
-        exerciseType: ExerciseTypeEnum.strength,
         values: null,
       );
 
@@ -134,7 +124,6 @@ void main() {
       // Act
       await useCase.execute(
         exerciseId: 'exercise_1',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'reps': 10},
       );
 
@@ -150,19 +139,16 @@ void main() {
       // Act
       await useCase.execute(
         exerciseId: 'exercise_1',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'reps': 10},
       );
 
       await useCase.execute(
         exerciseId: 'exercise_2',
-        exerciseType: ExerciseTypeEnum.cardio,
         values: null,
       );
 
       await useCase.execute(
         exerciseId: 'exercise_3',
-        exerciseType: ExerciseTypeEnum.flexibility,
         values: {'duration': 30},
       );
 
@@ -183,7 +169,6 @@ void main() {
       // Act
       final result = await useCase.execute(
         exerciseId: 'exercise_test',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'weight': 50, 'reps': 8},
       );
 
@@ -198,33 +183,41 @@ void main() {
       expect(result.completedAt, equals(savedSet.completedAt));
     });
 
-    test('should handle different exercise types', () async {
-      // Act & Assert for Strength
+    test('should handle flexible field configurations', () async {
+      // Act & Assert for 2 fields (strength)
       final strengthSet = await useCase.execute(
         exerciseId: 'chest_bench_press',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'weight': 100, 'reps': 10},
       );
       expect(strengthSet, isNotNull);
+      expect(strengthSet.values, equals({'weight': 100, 'reps': 10}));
 
-      // Act & Assert for Cardio
+      // Act & Assert for 2 fields (cardio)
       final cardioSet = await useCase.execute(
         exerciseId: 'cardio_running',
-        exerciseType: ExerciseTypeEnum.cardio,
-        values: {'duration': 1800, 'distance': 5.0},
+        values: {'durationInSeconds': 1800, 'distance': 5.0},
       );
       expect(cardioSet, isNotNull);
+      expect(cardioSet.values, equals({'durationInSeconds': 1800, 'distance': 5.0}));
 
-      // Act & Assert for Flexibility
-      final flexibilitySet = await useCase.execute(
-        exerciseId: 'flexibility_hamstring_stretch',
-        exerciseType: ExerciseTypeEnum.flexibility,
-        values: {'holdTime': 30},
+      // Act & Assert for 3 fields (cardio with height)
+      final threeFieldSet = await useCase.execute(
+        exerciseId: 'cardio_17',
+        values: {'durationInSeconds': 600, 'reps': 15, 'height': 45},
       );
-      expect(flexibilitySet, isNotNull);
+      expect(threeFieldSet, isNotNull);
+      expect(threeFieldSet.values, equals({'durationInSeconds': 600, 'reps': 15, 'height': 45}));
+
+      // Act & Assert for 1 field (flexibility)
+      final oneFieldSet = await useCase.execute(
+        exerciseId: 'flex_6',
+        values: {'reps': 10},
+      );
+      expect(oneFieldSet, isNotNull);
+      expect(oneFieldSet.values, equals({'reps': 10}));
 
       // Verify all saved
-      expect(repository.count, 3);
+      expect(repository.count, 4);
     });
   });
 }

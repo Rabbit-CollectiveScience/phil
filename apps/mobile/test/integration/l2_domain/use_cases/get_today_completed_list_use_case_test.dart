@@ -3,7 +3,6 @@ import 'package:phil/l2_domain/use_cases/workout_use_cases/get_today_completed_l
 import 'package:phil/l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
 import 'package:phil/l3_data/repositories/stub_workout_set_repository.dart';
 import 'package:phil/l3_data/repositories/stub_exercise_repository.dart';
-import 'package:phil/l2_domain/models/exercise_type_enum.dart';
 import 'package:phil/l2_domain/models/workout_set.dart';
 
 void main() {
@@ -47,7 +46,6 @@ void main() {
         // Record a workout set
         await recordUseCase.execute(
           exerciseId: firstExercise.id,
-          exerciseType: firstExercise.type,
           values: {'reps': 10, 'weight': 100},
         );
 
@@ -73,19 +71,16 @@ void main() {
       // Record multiple workout sets
       await recordUseCase.execute(
         exerciseId: exercises[0].id,
-        exerciseType: exercises[0].type,
         values: {'reps': 10},
       );
 
       await recordUseCase.execute(
         exerciseId: exercises[1].id,
-        exerciseType: exercises[1].type,
         values: {'reps': 12},
       );
 
       await recordUseCase.execute(
         exerciseId: exercises[2].id,
-        exerciseType: exercises[2].type,
         values: null,
       );
 
@@ -108,7 +103,6 @@ void main() {
       // Record today's workout
       await recordUseCase.execute(
         exerciseId: exercise.id,
-        exerciseType: exercise.type,
         values: {'reps': 10},
       );
 
@@ -138,7 +132,6 @@ void main() {
 
       await recordUseCase.execute(
         exerciseId: exercise.id,
-        exerciseType: exercise.type,
         values: null,
       );
 
@@ -160,7 +153,6 @@ void main() {
         // Record workouts in sequence
         final set1 = await recordUseCase.execute(
           exerciseId: exercises[0].id,
-          exerciseType: exercises[0].type,
           values: {'reps': 10},
         );
 
@@ -169,7 +161,6 @@ void main() {
 
         final set2 = await recordUseCase.execute(
           exerciseId: exercises[1].id,
-          exerciseType: exercises[1].type,
           values: {'reps': 12},
         );
 
@@ -177,7 +168,6 @@ void main() {
 
         final set3 = await recordUseCase.execute(
           exerciseId: exercises[2].id,
-          exerciseType: exercises[2].type,
           values: {'reps': 15},
         );
 
@@ -199,7 +189,6 @@ void main() {
 
       await recordUseCase.execute(
         exerciseId: exercise.id,
-        exerciseType: exercise.type,
         values: {'reps': 10},
       );
 

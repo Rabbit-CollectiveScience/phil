@@ -36,6 +36,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   final List<CardModel> _completedCards = [];
   final GlobalKey<ExpandableSearchBarState> _searchBarKey = GlobalKey();
   final GlobalKey _counterKey = GlobalKey();
+  GlobalKey<SwipeableCardState>? _topCardKey;
   int _visualCounterValue = 0;
 
   // Token animation
@@ -97,6 +98,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
             .toList();
         _cardOrder = List.generate(_cards.length, (index) => index);
         _isLoading = false;
+        // Initialize key for top card
+        _topCardKey = GlobalKey<SwipeableCardState>();
       });
     } catch (e) {
       // Show error to user instead of silent failure
@@ -142,6 +145,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         _cardOrder.add(topIndex);
       }
       _isTransitioningCards = false;
+      // Create new key for new top card
+      _topCardKey = GlobalKey<SwipeableCardState>();
     });
   }
 
@@ -160,17 +165,19 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       final completedCard = _cards[topIndex];
 
       try {
+        // Extract field values from card
+        final fieldValues = _topCardKey?.currentState?.getFieldValues();
+        
         // Get use case from dependency injection
         final recordUseCase = GetIt.instance<RecordWorkoutSetUseCase>();
 
-        // Record the workout set with null values (user didn't input data yet)
+        // Record the workout set with extracted values
         await recordUseCase.execute(
           exerciseId: completedCard.exercise.id,
-          exerciseType: completedCard.exercise.type,
-          values: null, // Accept null - user can add data later
+          values: fieldValues?.isNotEmpty == true ? fieldValues : null,
         );
 
-        debugPrint('✓ Workout set recorded: ${completedCard.exercise.name}');
+        debugPrint('✓ Workout set recorded: ${completedCard.exercise.name} with values: $fieldValues');
       } catch (e) {
         debugPrint('Error recording workout set: $e');
         // Continue with UI update even if save fails
@@ -418,9 +425,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                 ),
                                 child: i == 0
                                     ? SwipeableCard(
-                                        key: ValueKey(
-                                          'card_${_cardOrder[0]}_${_completedCards.length}',
-                                        ),
+                                        key: _topCardKey,
                                         card: _cards[_cardOrder[0]],
                                         onSwipedAway: _removeTopCard,
                                         onStartSwipeAway: () {

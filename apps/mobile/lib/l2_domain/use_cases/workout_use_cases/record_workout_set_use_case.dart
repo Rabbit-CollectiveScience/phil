@@ -1,6 +1,5 @@
 import 'package:uuid/uuid.dart';
 import '../../models/workout_set.dart';
-import '../../models/exercise_type_enum.dart';
 import '../../../l3_data/repositories/workout_set_repository.dart';
 
 // Use Case: Record a completed workout set
@@ -21,7 +20,6 @@ class RecordWorkoutSetUseCase {
 
   Future<WorkoutSet> execute({
     required String exerciseId,
-    required ExerciseTypeEnum exerciseType,
     Map<String, dynamic>? values,
   }) async {
     // Create WorkoutSet with current timestamp

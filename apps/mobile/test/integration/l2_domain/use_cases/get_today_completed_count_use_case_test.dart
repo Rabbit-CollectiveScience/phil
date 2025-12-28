@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/use_cases/workout_use_cases/get_today_completed_count_use_case.dart';
 import 'package:phil/l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
 import 'package:phil/l3_data/repositories/stub_workout_set_repository.dart';
-import 'package:phil/l2_domain/models/exercise_type_enum.dart';
 import 'package:phil/l2_domain/models/workout_set.dart';
 
 void main() {
@@ -35,19 +34,16 @@ void main() {
       // Arrange - Record 3 workout sets today
       await recordUseCase.execute(
         exerciseId: 'exercise_1',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'reps': 10},
       );
 
       await recordUseCase.execute(
         exerciseId: 'exercise_2',
-        exerciseType: ExerciseTypeEnum.cardio,
         values: null,
       );
 
       await recordUseCase.execute(
         exerciseId: 'exercise_3',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'weight': 50, 'reps': 8},
       );
 
@@ -62,7 +58,6 @@ void main() {
       // Arrange - Record today's workout
       await recordUseCase.execute(
         exerciseId: 'today_exercise',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'reps': 10},
       );
 
@@ -89,7 +84,6 @@ void main() {
       for (int i = 0; i < 5; i++) {
         await recordUseCase.execute(
           exerciseId: 'exercise_$i',
-          exerciseType: ExerciseTypeEnum.strength,
           values: null,
         );
       }
@@ -105,7 +99,6 @@ void main() {
       // Arrange - Record initial workouts
       await recordUseCase.execute(
         exerciseId: 'exercise_1',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'reps': 10},
       );
 
@@ -116,13 +109,11 @@ void main() {
       // Arrange - Record more workouts
       await recordUseCase.execute(
         exerciseId: 'exercise_2',
-        exerciseType: ExerciseTypeEnum.cardio,
         values: null,
       );
 
       await recordUseCase.execute(
         exerciseId: 'exercise_3',
-        exerciseType: ExerciseTypeEnum.flexibility,
         values: {'duration': 30},
       );
 
@@ -137,7 +128,6 @@ void main() {
       // Arrange - Record some workouts
       await recordUseCase.execute(
         exerciseId: 'exercise_1',
-        exerciseType: ExerciseTypeEnum.strength,
         values: {'reps': 10},
       );
 

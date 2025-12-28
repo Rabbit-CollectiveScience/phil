@@ -18,7 +18,7 @@ void main() {
       useCase = GetRecommendedExercisesUseCase(repository);
     });
 
-    test('should return 10 exercises from chest strength workout', () async {
+    test('should return 10 exercises with cardio_17 (3-field exercise) first', () async {
       // Act
       final result = await useCase.execute();
 
@@ -26,13 +26,13 @@ void main() {
       expect(result, isNotEmpty);
       expect(result.length, 10);
 
-      // Verify first exercise structure
+      // Verify first exercise is cardio_17 with 3 fields
       final firstExercise = result.first;
-      expect(firstExercise.id, isNotEmpty);
+      expect(firstExercise.id, 'cardio_17');
       expect(firstExercise.name, isNotEmpty);
       expect(firstExercise.description, isNotEmpty);
-      expect(firstExercise.type, ExerciseTypeEnum.strength);
-      expect(firstExercise.fields, isNotEmpty);
+      expect(firstExercise.type, ExerciseTypeEnum.cardio);
+      expect(firstExercise.fields.length, 3);
 
       // Verify fields structure
       for (final field in firstExercise.fields) {
@@ -43,13 +43,13 @@ void main() {
       }
     });
 
-    test('should return exercises with chest IDs', () async {
+    test('should return exercises with valid IDs', () async {
       // Act
       final result = await useCase.execute();
 
       // Assert
       for (final exercise in result) {
-        expect(exercise.id, startsWith('chest_'));
+        expect(exercise.id, isNotEmpty);
       }
     });
 
@@ -59,11 +59,10 @@ void main() {
 
       // Assert
       for (final exercise in result) {
-        // Most chest exercises should have weight and reps fields
+        // All exercises should have at least one field
         expect(exercise.fields.length, greaterThanOrEqualTo(1));
 
         final fieldNames = exercise.fields.map((f) => f.name).toList();
-        // At minimum should have reps field for bodyweight, or weight+reps for loaded
         expect(fieldNames, isNotEmpty);
       }
     });

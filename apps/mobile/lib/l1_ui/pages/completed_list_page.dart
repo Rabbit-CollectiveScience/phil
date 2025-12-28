@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_today_completed_list_use_case.dart';
+import '../../l2_domain/models/exercise.dart';
 import '../view_models/workout_group.dart';
 
 class CompletedListPage extends StatefulWidget {
@@ -80,15 +81,16 @@ class _CompletedListPageState extends State<CompletedListPage>
     });
   }
 
-  String _formatSetValues(Map<String, dynamic>? values) {
-    if (values == null || values.isEmpty) {
-      return '-kg · -reps';
+  String _formatSetValues(Map<String, dynamic>? values, Exercise? exercise) {
+    if (values == null || values.isEmpty || exercise == null) {
+      return 'No data recorded';
     }
 
-    final weight = values['weight']?.toString() ?? '-';
-    final reps = values['reps']?.toString() ?? '-';
-
-    return '${weight}kg · ${reps}reps';
+    // Dynamically format based on exercise fields
+    return exercise.fields.map((field) {
+      final value = values[field.name]?.toString() ?? '-';
+      return '$value ${field.unit}'.trim();
+    }).join(' · ');
   }
 
   @override
@@ -314,6 +316,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                           Text(
                                             _formatSetValues(
                                               set.workoutSet.values,
+                                              set.exercise,
                                             ),
                                             style: const TextStyle(
                                               fontSize: 14,

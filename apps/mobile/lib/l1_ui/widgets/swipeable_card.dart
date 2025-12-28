@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../view_models/card_model.dart';
+import '../../l2_domain/models/field_type_enum.dart';
 
 /// Card interaction states for gesture handling
 enum CardInteractionState {
@@ -50,10 +51,10 @@ class SwipeableCard extends StatefulWidget {
   });
 
   @override
-  State<SwipeableCard> createState() => _SwipeableCardState();
+  State<SwipeableCard> createState() => SwipeableCardState();
 }
 
-class _SwipeableCardState extends State<SwipeableCard>
+class SwipeableCardState extends State<SwipeableCard>
     with SingleTickerProviderStateMixin {
   // State Machine
   CardInteractionState _currentState = CardInteractionState.idle;
@@ -162,6 +163,52 @@ class _SwipeableCardState extends State<SwipeableCard>
         widget.onCardUpdate(widget.card.copyWith(isFlipped: false));
       }
     });
+  }
+
+  /// Extract field values from controllers as Map<String, dynamic>
+  /// Parses text, removes units, converts to proper types based on field.type
+  Map<String, dynamic> getFieldValues() {
+    final values = <String, dynamic>{};
+    
+    for (var field in widget.card.exercise.fields) {
+      final controller = _fieldControllers[field.name];
+      if (controller == null) continue;
+      
+      // Extract raw text and remove units
+      String text = controller.text.replaceAll(field.unit, '').trim();
+      
+      // Handle placeholder "- unit" → skip this field
+      if (text == '-' || text.isEmpty) {
+        continue;
+      }
+      
+      // Convert to proper type based on field type
+      switch (field.type) {
+        case FieldTypeEnum.number:
+          // Try double first, fallback to int
+          final doubleValue = double.tryParse(text);
+          if (doubleValue != null) {
+            // Store as int if no decimal part, otherwise double
+            values[field.name] = doubleValue == doubleValue.toInt() 
+                ? doubleValue.toInt() 
+                : doubleValue;
+          }
+        case FieldTypeEnum.duration:
+          // Duration stored as integer seconds
+          final intValue = int.tryParse(text);
+          if (intValue != null) {
+            values[field.name] = intValue;
+          }
+        case FieldTypeEnum.text:
+          // Store as string
+          values[field.name] = text;
+        case FieldTypeEnum.boolean:
+          // Parse boolean
+          values[field.name] = text.toLowerCase() == 'true' || text == '1';
+      }
+    }
+    
+    return values;
   }
 
   @override

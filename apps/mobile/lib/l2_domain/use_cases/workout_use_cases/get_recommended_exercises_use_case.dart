@@ -46,7 +46,9 @@ class GetRecommendedExercisesUseCase {
     if (exerciseMap.containsKey('cardio_1'))
       testExercises.add(exerciseMap['cardio_1']!); // 2 fields: duration + speed
     if (exerciseMap.containsKey('cardio_5'))
-      testExercises.add(exerciseMap['cardio_5']!); // 2 fields: duration + distance
+      testExercises.add(
+        exerciseMap['cardio_5']!,
+      ); // 2 fields: duration + distance
 
     // Flexibility exercises (1-2 fields, different combos)
     if (exerciseMap.containsKey('flex_6'))
