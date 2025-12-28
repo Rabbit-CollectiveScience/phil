@@ -21,20 +21,42 @@ class StubExerciseRepository implements ExerciseRepository {
       return _cachedExercises!;
     }
 
-    // Load chest exercises JSON
-    final jsonString = await rootBundle.loadString(
+    // Load all exercise JSON files
+    final exerciseFiles = [
+      'assets/data/exercises/strength_legs_exercises.json',
       'assets/data/exercises/strength_chest_exercises.json',
-    );
+      'assets/data/exercises/strength_back_exercises.json',
+      'assets/data/exercises/strength_shoulders_exercises.json',
+      'assets/data/exercises/strength_arms_exercises.json',
+      'assets/data/exercises/strength_core_exercises.json',
+      'assets/data/exercises/cardio_exercises.json',
+      'assets/data/exercises/flexibility_exercises.json',
+    ];
 
-    final List<dynamic> jsonList = json.decode(jsonString) as List<dynamic>;
+    final List<Exercise> allExercises = [];
 
-    _cachedExercises = jsonList
-        .map(
-          (exerciseJson) =>
-              Exercise.fromJson(exerciseJson as Map<String, dynamic>),
-        )
-        .toList();
+    for (final file in exerciseFiles) {
+      try {
+        final jsonString = await rootBundle.loadString(file);
+        final List<dynamic> jsonList = json.decode(jsonString) as List<dynamic>;
+        final exercises = jsonList
+            .map(
+              (exerciseJson) =>
+                  Exercise.fromJson(exerciseJson as Map<String, dynamic>),
+            )
+            .toList();
+        allExercises.addAll(exercises);
+      } catch (e) {
+        // Log error but continue loading other files
+        print('Error loading $file: $e');
+      }
+    }
 
+    if (allExercises.isEmpty) {
+      throw Exception('Failed to load any exercises from assets');
+    }
+
+    _cachedExercises = allExercises;
     return _cachedExercises!;
   }
 

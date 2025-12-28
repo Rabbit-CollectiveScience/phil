@@ -31,8 +31,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   static const double _counterSize = 60.0;
   static const double _counterBottomPadding = 40.0;
 
-  late List<CardModel> _cards;
-  late List<int> _cardOrder;
+  List<CardModel> _cards = [];
+  List<int> _cardOrder = [];
   final List<CardModel> _completedCards = [];
   final GlobalKey<ExpandableSearchBarState> _searchBarKey = GlobalKey();
   final GlobalKey _counterKey = GlobalKey();
@@ -51,6 +51,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
 
   // Loading state
   bool _isLoading = true;
+  String? _errorMessage;
 
   // Card transition animation
   bool _isTransitioningCards = false;
@@ -98,10 +99,11 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         _isLoading = false;
       });
     } catch (e) {
-      // Handle error - could show error UI
+      // Show error to user instead of silent failure
       debugPrint('Error loading exercises: $e');
       setState(() {
         _isLoading = false;
+        _errorMessage = 'Failed to load exercises: ${e.toString()}';
       });
     }
   }
@@ -338,6 +340,40 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       body: Center(
         child: _isLoading
             ? const CircularProgressIndicator()
+            : _errorMessage != null
+            ? Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 60,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      _errorMessage!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _isLoading = true;
+                          _errorMessage = null;
+                        });
+                        _loadExercises();
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              )
             : _cards.isEmpty
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
