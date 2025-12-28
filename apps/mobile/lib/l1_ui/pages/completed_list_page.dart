@@ -189,57 +189,26 @@ class _CompletedListPageState extends State<CompletedListPage>
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                      group.exerciseName
-                                                          .toUpperCase(),
-                                                      style: const TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        color: Color(
-                                                          0xFFF2F2F2,
-                                                        ),
-                                                        letterSpacing: 0.5,
-                                                      ),
-                                                    ),
+                                              Text(
+                                                group.exerciseName
+                                                    .toUpperCase(),
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight:
+                                                      FontWeight.w900,
+                                                  color: Color(
+                                                    0xFFF2F2F2,
                                                   ),
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(
-                                                          horizontal: 12,
-                                                          vertical: 4,
-                                                        ),
-                                                    decoration: BoxDecoration(
-                                                      color: const Color(
-                                                        0xFFB9E479,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            12,
-                                                          ),
-                                                    ),
-                                                    child: Text(
-                                                      '${group.setCount}',
-                                                      style: const TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        color: Color(
-                                                          0xFF1A1A1A,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                  letterSpacing: 0.5,
+                                                ),
                                               ),
                                               const SizedBox(height: 4),
                                               Text(
@@ -251,6 +220,28 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                 ),
                                               ),
                                             ],
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 32,
+                                          height: 32,
+                                          decoration: const BoxDecoration(
+                                            color: Color(
+                                              0xFFB9E479,
+                                            ),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            '${group.setCount}',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight:
+                                                  FontWeight.w900,
+                                              color: Color(
+                                                0xFF1A1A1A,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ],
