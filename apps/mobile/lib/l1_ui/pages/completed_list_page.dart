@@ -157,8 +157,12 @@ class _CompletedListPageState extends State<CompletedListPage>
                             // Group Header (always visible)
                             GestureDetector(
                               onTap: () => _toggleGroup(index),
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 4),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                                margin: EdgeInsets.only(
+                                  bottom: isExpanded ? 4 : 16,
+                                ),
                                 padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF4A4A4A),
