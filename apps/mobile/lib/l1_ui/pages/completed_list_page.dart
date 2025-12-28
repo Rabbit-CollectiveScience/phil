@@ -160,7 +160,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                               builder: (context, child) {
                                 final progress = _getController(index).value;
                                 double bottomMargin;
-                                
+
                                 if (progress == 0) {
                                   // Fully collapsed
                                   bottomMargin = 16;
@@ -174,7 +174,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                   // Last 25% of expansion: animate from 0 to 4
                                   bottomMargin = ((progress - 0.75) / 0.25) * 4;
                                 }
-                                
+
                                 return GestureDetector(
                                   onTap: () => _toggleGroup(index),
                                   child: Container(
@@ -182,80 +182,80 @@ class _CompletedListPageState extends State<CompletedListPage>
                                       bottom: bottomMargin,
                                     ),
                                     padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF4A4A4A),
-                                  borderRadius: BorderRadius.circular(0),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF4A4A4A),
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Expanded(
-                                                child: Text(
-                                                  group.exerciseName
-                                                      .toUpperCase(),
-                                                  style: const TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w900,
-                                                    color: Color(0xFFF2F2F2),
-                                                    letterSpacing: 0.5,
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 12,
-                                                      vertical: 4,
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      group.exerciseName
+                                                          .toUpperCase(),
+                                                      style: const TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                        color: Color(
+                                                          0xFFF2F2F2,
+                                                        ),
+                                                        letterSpacing: 0.5,
+                                                      ),
                                                     ),
-                                                decoration: BoxDecoration(
-                                                  color: const Color(
-                                                    0xFFB9E479,
                                                   ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                child: Text(
-                                                  '${group.setCount}',
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w900,
-                                                    color: Color(0xFF1A1A1A),
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 12,
+                                                          vertical: 4,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(
+                                                        0xFFB9E479,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                    child: Text(
+                                                      '${group.setCount}',
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                        color: Color(
+                                                          0xFF1A1A1A,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                ],
                                               ),
-                                              const SizedBox(width: 8),
-                                              Icon(
-                                                isExpanded
-                                                    ? Icons.keyboard_arrow_up
-                                                    : Icons.keyboard_arrow_down,
-                                                color: Colors.white54,
-                                                size: 24,
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                group.getTimeRangeDisplay(),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.white54,
+                                                ),
                                               ),
                                             ],
                                           ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            group.getTimeRangeDisplay(),
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w300,
-                                              color: Colors.white54,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
+                                  ),
                                 );
                               },
                             ),
