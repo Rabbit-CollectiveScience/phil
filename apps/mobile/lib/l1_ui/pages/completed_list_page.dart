@@ -107,54 +107,62 @@ class _CompletedListPageState extends State<CompletedListPage>
       },
       child: Scaffold(
         backgroundColor: const Color(0xFF1A1A1A),
-        body: Column(
-          children: [
-            // Counter circle at top to create connection illusion
-            const SizedBox(height: 80),
-            Center(
-              child: GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFB9E479),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${_workoutGroups.fold<int>(0, (sum, group) => sum + group.setCount)}',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xFF1A1A1A),
-                      ),
+        body: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xFFB9E479),
+                ),
+              )
+            : CustomScrollView(
+                slivers: [
+                  // Counter at top (scrolls with content)
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 80),
+                        Center(
+                          child: GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xFFB9E479),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${_workoutGroups.fold<int>(0, (sum, group) => sum + group.setCount)}',
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w900,
+                                    color: Color(0xFF1A1A1A),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                      ],
                     ),
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 40),
-            // Completed cards list
-            Expanded(
-              child: _isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        color: Color(0xFFB9E479),
-                      ),
-                    )
-                  : _workoutGroups.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No completed exercises yet',
-                        style: TextStyle(fontSize: 18, color: Colors.white54),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                      itemCount: _workoutGroups.length,
-                      itemBuilder: (context, index) {
-                        final group = _workoutGroups[index];
+                  // Completed cards list
+                  _workoutGroups.isEmpty
+                      ? const SliverFillRemaining(
+                          child: Center(
+                            child: Text(
+                              'No completed exercises yet',
+                              style: TextStyle(fontSize: 18, color: Colors.white54),
+                            ),
+                          ),
+                        )
+                      : SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          sliver: SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final group = _workoutGroups[index];
                         final isExpanded = _expandedGroups.contains(index);
 
                         return Column(
@@ -336,11 +344,13 @@ class _CompletedListPageState extends State<CompletedListPage>
                             ),
                           ],
                         );
-                      },
-                    ),
-            ),
-          ],
-        ),
+                              },
+                              childCount: _workoutGroups.length,
+                            ),
+                          ),
+                        ),
+                ],
+              ),
       ),
     );
   }
