@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
+import 'package:get_it/get_it.dart';
 import '../view_models/card_model.dart';
 import '../widgets/swipeable_card.dart';
 import '../widgets/expandable_search_bar.dart';
@@ -10,7 +11,6 @@ import '../widgets/floating_card_entrance.dart';
 import 'completed_list_page.dart';
 import 'stats_page.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
-import '../../l3_data/repositories/stub_exercise_repository.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   const WorkoutHomePage({super.key});
@@ -80,8 +80,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
 
   Future<void> _loadExercises() async {
     try {
-      final repository = StubExerciseRepository();
-      final useCase = GetRecommendedExercisesUseCase(repository);
+      // Get use case from dependency injection - L1 never knows about L3
+      final useCase = GetIt.instance<GetRecommendedExercisesUseCase>();
       final exercises = await useCase.execute();
 
       // Bold Studio theme - pronounced grey cards on deep charcoal background

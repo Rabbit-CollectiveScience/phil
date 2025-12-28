@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'l1_ui/pages/workout_home_page.dart';
+import 'l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
+import 'l3_data/repositories/exercise_repository.dart';
+import 'l3_data/repositories/stub_exercise_repository.dart';
+
+// Global GetIt instance for dependency injection
+final getIt = GetIt.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Setup dependency injection
+  _setupDependencies();
+
   runApp(const MyApp());
+}
+
+/// Configure all dependencies for the app
+/// L3 (Data) -> L2 (Domain) dependency chain
+void _setupDependencies() {
+  // Register L3 - Data Layer (Repositories)
+  getIt.registerSingleton<ExerciseRepository>(StubExerciseRepository());
+
+  // Register L2 - Domain Layer (Use Cases)
+  getIt.registerFactory<GetRecommendedExercisesUseCase>(
+    () => GetRecommendedExercisesUseCase(getIt<ExerciseRepository>()),
+  );
 }
 
 class MyApp extends StatelessWidget {
