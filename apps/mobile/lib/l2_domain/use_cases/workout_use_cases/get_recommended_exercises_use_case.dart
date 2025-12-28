@@ -22,7 +22,39 @@ class GetRecommendedExercisesUseCase {
     // TODO: Apply user preferences/filters if any
     // TODO: Sort by recommendation logic (e.g., recently used, favorites, etc.)
 
-    // For now, return first 10 exercises
-    return exercises.take(10).toList();
+    // For testing: Return diverse exercises with different field configurations
+    // This ensures we test all field types and counts (1-3 fields)
+    final Map<String, Exercise> exerciseMap = {
+      for (var e in exercises) e.id: e,
+    };
+
+    final testExercises = <Exercise>[];
+
+    // Strength exercises (2 fields: weight + reps)
+    if (exerciseMap.containsKey('legs_1')) testExercises.add(exerciseMap['legs_1']!);
+    if (exerciseMap.containsKey('chest_1')) testExercises.add(exerciseMap['chest_1']!);
+    if (exerciseMap.containsKey('back_1')) testExercises.add(exerciseMap['back_1']!);
+
+    // Cardio exercises (2 fields, varying types)
+    if (exerciseMap.containsKey('cardio_1')) testExercises.add(exerciseMap['cardio_1']!); // duration + speed
+    if (exerciseMap.containsKey('cardio_5')) testExercises.add(exerciseMap['cardio_5']!); // duration + distance
+    if (exerciseMap.containsKey('cardio_7')) testExercises.add(exerciseMap['cardio_7']!); // duration + floors
+
+    // Flexibility exercises (1-3 fields, different combos)
+    if (exerciseMap.containsKey('flex_6')) testExercises.add(exerciseMap['flex_6']!); // 1 field: reps only
+    if (exerciseMap.containsKey('flex_1')) testExercises.add(exerciseMap['flex_1']!); // 2 fields: holdTime + side
+    if (exerciseMap.containsKey('flex_3')) testExercises.add(exerciseMap['flex_3']!); // 2 fields: holdTime + reps
+
+    // If we don't have enough test exercises, fill with remaining
+    if (testExercises.length < 10) {
+      for (var exercise in exercises) {
+        if (!testExercises.contains(exercise)) {
+          testExercises.add(exercise);
+          if (testExercises.length >= 10) break;
+        }
+      }
+    }
+
+    return testExercises;
   }
 }
