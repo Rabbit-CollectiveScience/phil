@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_today_completed_list_use_case.dart';
 import '../../l2_domain/models/exercise.dart';
@@ -97,6 +98,26 @@ class _CompletedListPageState extends State<CompletedListPage>
           return '$value ${field.unit}'.trim();
         })
         .join(' · ');
+  }
+
+  void _removeSetLocally(WorkoutSetWithDetails setToRemove) {
+    setState(() {
+      // Remove from completed workouts list
+      _completedWorkouts.removeWhere(
+        (workout) => workout.workoutSet.id == setToRemove.workoutSet.id,
+      );
+
+      // Regroup after removal
+      _workoutGroups = WorkoutGroup.groupConsecutive(_completedWorkouts);
+    });
+
+    // Show feedback
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Set deleted (local only)'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -308,19 +329,38 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                 margin: EdgeInsets.only(
                                                   bottom: isLastSet ? 16 : 4,
                                                 ),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 20,
-                                                      vertical: 14,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  color: const Color(
-                                                    0xFF3E3E3E,
+                                                child: Slidable(
+                                                  key: Key(set.workoutSet.id),
+                                                  endActionPane: ActionPane(
+                                                    motion: const ScrollMotion(),
+                                                    extentRatio: 0.25,
+                                                    children: [
+                                                      SlidableAction(
+                                                        onPressed: (context) {
+                                                          _removeSetLocally(set);
+                                                        },
+                                                        backgroundColor: Colors.red,
+                                                        foregroundColor: Colors.white,
+                                                        icon: Icons.delete,
+                                                        label: 'Delete',
+                                                        borderRadius: BorderRadius.zero,
+                                                      ),
+                                                    ],
                                                   ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(0),
-                                                ),
-                                                child: Row(
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 20,
+                                                          vertical: 14,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(
+                                                        0xFF3E3E3E,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(0),
+                                                    ),
+                                                    child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
@@ -379,6 +419,8 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                       ),
                                                     ),
                                                   ],
+                                                ),
+                                                  ),
                                                 ),
                                               );
                                             })
