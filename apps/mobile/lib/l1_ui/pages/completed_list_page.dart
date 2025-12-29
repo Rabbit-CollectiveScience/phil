@@ -202,7 +202,11 @@ class _CompletedListPageState extends State<CompletedListPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Set deleted'),
+            content: Text(
+              'Set deleted',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
             duration: Duration(seconds: 2),
           ),
         );

@@ -130,7 +130,9 @@ void main() {
       final remainingSets = await repository.getWorkoutSets();
       expect(remainingSets.length, 2);
 
-      final benchPressSet = remainingSets.firstWhere((s) => s.id == benchPress.id);
+      final benchPressSet = remainingSets.firstWhere(
+        (s) => s.id == benchPress.id,
+      );
       expect(benchPressSet.exerciseId, 'chest_bench_press');
       expect(benchPressSet.values, equals({'weight': 100, 'reps': 10}));
       expect(benchPressSet.completedAt, benchPress.completedAt);
