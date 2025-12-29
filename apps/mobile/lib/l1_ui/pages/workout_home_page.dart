@@ -219,12 +219,13 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
           );
     });
 
-    _tokenController.forward(from: 0.0).then((_) {
-      // Animation complete - update visual counter now
+    _tokenController.forward(from: 0.0).then((_) async {
+      // Animation complete - reload counter from database
       setState(() {
         _isTokenAnimating = false;
-        _visualCounterValue = _completedCards.length;
       });
+      // Reload actual count from database
+      await _loadTodayCount();
       // Notify card that animation is complete
       onAnimationComplete();
     });
@@ -242,10 +243,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         // Token center position >= counter top - 90px (30px half token + 60px buffer)
         // Registers one button width (60px) before visual contact
         if (position.dy >= counterTop - 90) {
-          // Token reached counter zone, update visual counter
-          setState(() {
-            _visualCounterValue = _completedCards.length;
-          });
+          // Token reached counter zone, reload count from database
+          await _loadTodayCount();
           _completeTopCard(position, () {
             // No callback needed for drag completion
           });

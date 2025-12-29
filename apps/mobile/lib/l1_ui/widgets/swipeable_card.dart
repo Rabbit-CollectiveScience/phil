@@ -766,14 +766,13 @@ class SwipeableCardState extends State<SwipeableCard>
                       }
                       return;
                     }
-                    
+
                     // Get button position in global coordinates
                     final RenderBox? box =
-                        _zetButtonKey.currentContext?.findRenderObject() as RenderBox?;
+                        _zetButtonKey.currentContext?.findRenderObject()
+                            as RenderBox?;
                     if (box != null) {
-                      final Offset position = box.localToGlobal(
-                        Offset.zero,
-                      );
+                      final Offset position = box.localToGlobal(Offset.zero);
                       final Offset buttonCenter = Offset(
                         position.dx + box.size.width / 2,
                         position.dy + box.size.height / 2,
@@ -781,12 +780,12 @@ class SwipeableCardState extends State<SwipeableCard>
 
                       // Transition to animatingToken state to block interactions
                       _transitionState(CardInteractionState.animatingToken);
-                      
+
                       // Increment set number immediately
                       setState(() {
                         _currentSetNumber++;
                       });
-                      
+
                       widget.onCompleted(buttonCenter, () {
                         // Return to stable state after animation completes
                         if (mounted) {
@@ -795,9 +794,7 @@ class SwipeableCardState extends State<SwipeableCard>
                               '[CardState] ${widget.card.exerciseName}: Token animation complete, returning to idleFlipped',
                             );
                           }
-                          _transitionState(
-                            CardInteractionState.idleFlipped,
-                          );
+                          _transitionState(CardInteractionState.idleFlipped);
                         }
                       });
                     }
