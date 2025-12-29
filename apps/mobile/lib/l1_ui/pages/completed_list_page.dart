@@ -94,6 +94,17 @@ class _CompletedListPageState extends State<CompletedListPage>
         _isLoading = false;
       });
 
+      // Restore expansion state for previously expanded groups
+      for (int i = 0; i < _workoutGroups.length; i++) {
+        final group = _workoutGroups[i];
+        if (_expandedExerciseIds.contains(group.exerciseId)) {
+          final controller = _getController(i);
+          if (controller.value == 0) {
+            controller.value = 1.0; // Set to fully expanded without animation
+          }
+        }
+      }
+
       debugPrint(
         '✓ Loaded ${workouts.length} workouts in ${groups.length} groups',
       );
