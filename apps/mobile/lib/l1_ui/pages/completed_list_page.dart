@@ -232,20 +232,48 @@ class _CompletedListPageState extends State<CompletedListPage>
                                             ((progress - 0.75) / 0.25) * 4;
                                       }
 
-                                      return GestureDetector(
-                                        onTap: () => _toggleGroup(index),
-                                        child: Container(
-                                          margin: EdgeInsets.only(
-                                            bottom: bottomMargin,
+                                      return Container(
+                                        margin: EdgeInsets.only(
+                                          bottom: bottomMargin,
+                                        ),
+                                        child: Slidable(
+                                          key: Key('group_${group.exerciseId}'),
+                                          endActionPane: ActionPane(
+                                            motion: const ScrollMotion(),
+                                            extentRatio: 0.25,
+                                            children: [
+                                              CustomSlidableAction(
+                                                onPressed: (context) {
+                                                  // TODO: Delete all sets in group
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text('Delete all sets (not implemented yet)'),
+                                                      duration: Duration(seconds: 2),
+                                                    ),
+                                                  );
+                                                },
+                                                backgroundColor: Colors.red,
+                                                borderRadius: BorderRadius.zero,
+                                                padding: EdgeInsets.zero,
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                  size: 24,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          padding: const EdgeInsets.all(20),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFF4A4A4A),
-                                            borderRadius: BorderRadius.circular(
-                                              0,
-                                            ),
-                                          ),
-                                          child: Row(
+                                          child: GestureDetector(
+                                            onTap: () => _toggleGroup(index),
+                                            child: Container(
+                                              padding: const EdgeInsets.all(20),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFF4A4A4A),
+                                                borderRadius: BorderRadius.circular(
+                                                  0,
+                                                ),
+                                              ),
+                                              child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             crossAxisAlignment:
@@ -291,6 +319,8 @@ class _CompletedListPageState extends State<CompletedListPage>
                                               ),
                                             ],
                                           ),
+                                            ),
+                                          ),
                                         ),
                                       );
                                     },
@@ -315,55 +345,54 @@ class _CompletedListPageState extends State<CompletedListPage>
                                             ),
                                           ),
                                       child: Column(
-                                        children: group.sets
-                                            .asMap()
-                                            .entries
-                                            .map((entry) {
-                                              final setIndex = entry.key;
-                                              final set = entry.value;
-                                              final isLastSet =
-                                                  setIndex ==
-                                                  group.sets.length - 1;
+                                        children: group.sets.asMap().entries.map((
+                                          entry,
+                                        ) {
+                                          final setIndex = entry.key;
+                                          final set = entry.value;
+                                          final isLastSet =
+                                              setIndex == group.sets.length - 1;
 
-                                              return Container(
-                                                margin: EdgeInsets.only(
-                                                  bottom: isLastSet ? 16 : 4,
-                                                ),
-                                                child: Slidable(
-                                                  key: Key(set.workoutSet.id),
-                                                  endActionPane: ActionPane(
-                                                    motion: const ScrollMotion(),
-                                                    extentRatio: 0.25,
-                                                    children: [
-                                                      CustomSlidableAction(
-                                                        onPressed: (context) {
-                                                          _removeSetLocally(set);
-                                                        },
-                                                        backgroundColor: Colors.red,
-                                                        borderRadius: BorderRadius.zero,
-                                                        padding: EdgeInsets.zero,
-                                                        child: const Icon(
-                                                          Icons.delete,
-                                                          color: Colors.white,
-                                                          size: 24,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: Container(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(
-                                                          horizontal: 20,
-                                                          vertical: 14,
-                                                        ),
-                                                    decoration: BoxDecoration(
-                                                      color: const Color(
-                                                        0xFF3E3E3E,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(0),
+                                          return Container(
+                                            margin: EdgeInsets.only(
+                                              bottom: isLastSet ? 16 : 4,
+                                            ),
+                                            child: Slidable(
+                                              key: Key(set.workoutSet.id),
+                                              endActionPane: ActionPane(
+                                                motion: const ScrollMotion(),
+                                                extentRatio: 0.25,
+                                                children: [
+                                                  CustomSlidableAction(
+                                                    onPressed: (context) {
+                                                      _removeSetLocally(set);
+                                                    },
+                                                    backgroundColor: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.zero,
+                                                    padding: EdgeInsets.zero,
+                                                    child: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.white,
+                                                      size: 24,
                                                     ),
-                                                    child: Row(
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 14,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(
+                                                    0xFF3E3E3E,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(0),
+                                                ),
+                                                child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
@@ -423,11 +452,10 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                     ),
                                                   ],
                                                 ),
-                                                  ),
-                                                ),
-                                              );
-                                            })
-                                            .toList(),
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
                                       ),
                                     ),
                                   ),

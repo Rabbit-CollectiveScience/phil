@@ -63,7 +63,7 @@ class WorkoutGroup {
 
     // Step 1: Group by exercise ID
     final Map<String, List<WorkoutSetWithDetails>> exerciseGroups = {};
-    
+
     for (final workout in workouts) {
       final exerciseId = workout.workoutSet.exerciseId;
       exerciseGroups.putIfAbsent(exerciseId, () => []);
@@ -73,7 +73,7 @@ class WorkoutGroup {
     // Step 2: Create groups, maintaining order of first appearance
     final groups = <WorkoutGroup>[];
     final seenExercises = <String>{};
-    
+
     for (final workout in workouts) {
       final exerciseId = workout.workoutSet.exerciseId;
       if (!seenExercises.contains(exerciseId)) {
@@ -92,8 +92,9 @@ class WorkoutGroup {
 
     // Sort sets by completion time (oldest to newest for display)
     final sortedSets = List<WorkoutSetWithDetails>.from(sets)
-      ..sort((a, b) => 
-        a.workoutSet.completedAt.compareTo(b.workoutSet.completedAt));
+      ..sort(
+        (a, b) => a.workoutSet.completedAt.compareTo(b.workoutSet.completedAt),
+      );
 
     return WorkoutGroup(
       exerciseName: firstSet.exerciseName,
