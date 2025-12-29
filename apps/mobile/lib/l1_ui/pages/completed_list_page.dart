@@ -335,15 +335,18 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                     motion: const ScrollMotion(),
                                                     extentRatio: 0.25,
                                                     children: [
-                                                      SlidableAction(
+                                                      CustomSlidableAction(
                                                         onPressed: (context) {
                                                           _removeSetLocally(set);
                                                         },
                                                         backgroundColor: Colors.red,
-                                                        foregroundColor: Colors.white,
-                                                        icon: Icons.delete,
-                                                        label: 'Delete',
                                                         borderRadius: BorderRadius.zero,
+                                                        padding: EdgeInsets.zero,
+                                                        child: const Icon(
+                                                          Icons.delete,
+                                                          color: Colors.white,
+                                                          size: 24,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
