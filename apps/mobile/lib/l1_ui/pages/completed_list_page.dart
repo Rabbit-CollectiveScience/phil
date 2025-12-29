@@ -248,17 +248,6 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                         letterSpacing: 0.5,
                                                       ),
                                                     ),
-                                                    const SizedBox(height: 4),
-                                                    Text(
-                                                      group
-                                                          .getTimeRangeDisplay(),
-                                                      style: const TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                        color: Colors.white54,
-                                                      ),
-                                                    ),
                                                   ],
                                                 ),
                                               ),

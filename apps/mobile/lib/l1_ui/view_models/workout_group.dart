@@ -3,15 +3,14 @@ import '../../l2_domain/use_cases/workout_use_cases/get_today_completed_list_use
 // View Model: Grouped workout sets for UI display
 //
 // Purpose:
-// - Groups consecutive workout sets of the same exercise
+// - Groups workout sets by exercise (all sets of same exercise together)
 // - Provides display-ready data for completed list page
 // - Pure UI presentation logic
 //
 // Example grouping:
 // Push Up, Push Up, Squat, Squat, Push Up
-// → Group 1: Push Up (2 sets)
+// → Group 1: Push Up (3 sets)
 // → Group 2: Squat (2 sets)
-// → Group 3: Push Up (1 set)
 
 class WorkoutGroup {
   final String exerciseName;
@@ -50,61 +49,59 @@ class WorkoutGroup {
     return '$hour:$minute';
   }
 
-  /// Groups consecutive workout sets by exercise
+  /// Groups workout sets by exercise (all sets of same exercise together)
   /// Input: List of WorkoutSetWithDetails (should be sorted by time)
-  /// Output: List of WorkoutGroup with consecutive same exercises grouped
+  /// Output: List of WorkoutGroup with all same exercises grouped together
   ///
   /// Algorithm:
-  /// 1. Reverse list (newest to oldest → oldest to newest)
-  /// 2. Group consecutive same exercises
-  /// 3. Reverse groups (to show newest group first)
+  /// 1. Group all sets by exercise ID
+  /// 2. Create groups sorted by first occurrence (newest first)
   static List<WorkoutGroup> groupConsecutive(
     List<WorkoutSetWithDetails> workouts,
   ) {
     if (workouts.isEmpty) return [];
 
-    // Step 1: Reverse to process oldest to newest
-    final orderedWorkouts = workouts.reversed.toList();
+    // Step 1: Group by exercise ID
+    final Map<String, List<WorkoutSetWithDetails>> exerciseGroups = {};
+    
+    for (final workout in workouts) {
+      final exerciseId = workout.workoutSet.exerciseId;
+      exerciseGroups.putIfAbsent(exerciseId, () => []);
+      exerciseGroups[exerciseId]!.add(workout);
+    }
 
-    // Step 2: Group consecutive same exercises
+    // Step 2: Create groups, maintaining order of first appearance
     final groups = <WorkoutGroup>[];
-    List<WorkoutSetWithDetails> currentGroup = [orderedWorkouts[0]];
-    String currentExerciseId = orderedWorkouts[0].workoutSet.exerciseId;
-
-    for (int i = 1; i < orderedWorkouts.length; i++) {
-      final workout = orderedWorkouts[i];
-
-      if (workout.workoutSet.exerciseId == currentExerciseId) {
-        // Same exercise, add to current group
-        currentGroup.add(workout);
-      } else {
-        // Different exercise, finalize current group and start new one
-        groups.add(_createGroup(currentGroup));
-        currentGroup = [workout];
-        currentExerciseId = workout.workoutSet.exerciseId;
+    final seenExercises = <String>{};
+    
+    for (final workout in workouts) {
+      final exerciseId = workout.workoutSet.exerciseId;
+      if (!seenExercises.contains(exerciseId)) {
+        seenExercises.add(exerciseId);
+        final sets = exerciseGroups[exerciseId]!;
+        groups.add(_createGroup(sets));
       }
     }
 
-    // Add final group
-    if (currentGroup.isNotEmpty) {
-      groups.add(_createGroup(currentGroup));
-    }
-
-    // Step 3: Reverse groups to show newest first
-    return groups.reversed.toList();
+    return groups;
   }
 
   static WorkoutGroup _createGroup(List<WorkoutSetWithDetails> sets) {
     final firstSet = sets.first;
     final lastSet = sets.last;
 
+    // Sort sets by completion time (oldest to newest for display)
+    final sortedSets = List<WorkoutSetWithDetails>.from(sets)
+      ..sort((a, b) => 
+        a.workoutSet.completedAt.compareTo(b.workoutSet.completedAt));
+
     return WorkoutGroup(
       exerciseName: firstSet.exerciseName,
       exerciseId: firstSet.workoutSet.exerciseId,
       setCount: sets.length,
-      sets: sets,
-      firstCompletedAt: firstSet.workoutSet.completedAt,
-      lastCompletedAt: lastSet.workoutSet.completedAt,
+      sets: sortedSets,
+      firstCompletedAt: sortedSets.first.workoutSet.completedAt,
+      lastCompletedAt: sortedSets.last.workoutSet.completedAt,
     );
   }
 }
