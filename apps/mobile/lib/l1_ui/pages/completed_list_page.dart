@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_today_completed_list_use_case.dart';
+import '../../l2_domain/use_cases/workout_use_cases/remove_workout_set_use_case.dart';
 import '../../l2_domain/models/exercise.dart';
 import '../view_models/workout_group.dart';
 
@@ -171,44 +172,52 @@ class _CompletedListPageState extends State<CompletedListPage>
       if (groupController != null) groupController.reverse(),
     ]);
 
-    // After animation completes, remove from state
-    setState(() {
-      _deletingSetIds.remove(setId);
-      if (isLastSetInGroup && exerciseId != null) {
-        _deletingExerciseIds.remove(exerciseId);
-      }
+    // After animation completes, delete from database
+    try {
+      final removeUseCase = GetIt.instance<RemoveWorkoutSetUseCase>();
+      await removeUseCase.execute(setId);
 
-      // Remove from completed workouts list
-      _completedWorkouts.removeWhere(
-        (workout) => workout.workoutSet.id == setId,
-      );
-
-      // If this was the last set, remove from expanded tracking
-      if (isLastSetInGroup && exerciseId != null) {
-        _expandedExerciseIds.remove(exerciseId);
-        // Dispose the expand/collapse controller for this group
-        if (groupIndex != null) {
-          _controllers.remove(groupIndex)?.dispose();
+      // Clean up animation state
+      setState(() {
+        _deletingSetIds.remove(setId);
+        if (isLastSetInGroup && exerciseId != null) {
+          _deletingExerciseIds.remove(exerciseId);
+          _expandedExerciseIds.remove(exerciseId);
         }
+      });
+
+      // Clean up controllers
+      _deleteControllers.remove(setId)?.dispose();
+      if (exerciseId != null) {
+        _groupDeleteControllers.remove(exerciseId)?.dispose();
+      }
+      if (groupIndex != null) {
+        _controllers.remove(groupIndex)?.dispose();
       }
 
-      // Regroup after removal
-      _workoutGroups = WorkoutGroup.groupConsecutive(_completedWorkouts);
-    });
+      // Reload data from database
+      await _loadCompletedWorkouts();
 
-    // Clean up controllers
-    _deleteControllers.remove(setId)?.dispose();
-    if (exerciseId != null) {
-      _groupDeleteControllers.remove(exerciseId)?.dispose();
+      // Show feedback
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Set deleted'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error deleting workout set: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to delete set'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     }
-
-    // Show feedback
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Set deleted (local only)'),
-        duration: Duration(seconds: 2),
-      ),
-    );
   }
 
   @override
@@ -295,9 +304,8 @@ class _CompletedListPageState extends State<CompletedListPage>
                               final isExpanded = _expandedExerciseIds.contains(
                                 group.exerciseId,
                               );
-                              final isGroupDeleting = _deletingExerciseIds.contains(
-                                group.exerciseId,
-                              );
+                              final isGroupDeleting = _deletingExerciseIds
+                                  .contains(group.exerciseId);
 
                               Widget groupContent = Column(
                                 children: [
@@ -594,27 +602,33 @@ class _CompletedListPageState extends State<CompletedListPage>
                               // Wrap with delete animation if needed
                               if (isGroupDeleting) {
                                 return AnimatedBuilder(
-                                  animation: _getGroupDeleteController(group.exerciseId),
+                                  animation: _getGroupDeleteController(
+                                    group.exerciseId,
+                                  ),
                                   builder: (context, child) {
-                                    final deleteProgress = _getGroupDeleteController(
-                                      group.exerciseId,
-                                    ).value;
+                                    final deleteProgress =
+                                        _getGroupDeleteController(
+                                          group.exerciseId,
+                                        ).value;
 
                                     return SizeTransition(
-                                      sizeFactor: AlwaysStoppedAnimation(deleteProgress),
+                                      sizeFactor: AlwaysStoppedAnimation(
+                                        deleteProgress,
+                                      ),
                                       axisAlignment: -1.0,
                                       child: SlideTransition(
-                                        position: Tween<Offset>(
-                                          begin: const Offset(0, -0.5),
-                                          end: Offset.zero,
-                                        ).animate(
-                                          CurvedAnimation(
-                                            parent: AlwaysStoppedAnimation(
-                                              deleteProgress,
+                                        position:
+                                            Tween<Offset>(
+                                              begin: const Offset(0, -0.5),
+                                              end: Offset.zero,
+                                            ).animate(
+                                              CurvedAnimation(
+                                                parent: AlwaysStoppedAnimation(
+                                                  deleteProgress,
+                                                ),
+                                                curve: Curves.easeOut,
+                                              ),
                                             ),
-                                            curve: Curves.easeOut,
-                                          ),
-                                        ),
                                         child: FadeTransition(
                                           opacity: AlwaysStoppedAnimation(
                                             deleteProgress,

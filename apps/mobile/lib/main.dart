@@ -5,6 +5,7 @@ import 'l1_ui/pages/workout_home_page.dart';
 import 'l2_domain/models/workout_set.dart';
 import 'l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
 import 'l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
+import 'l2_domain/use_cases/workout_use_cases/remove_workout_set_use_case.dart';
 import 'l2_domain/use_cases/workout_use_cases/get_today_completed_count_use_case.dart';
 import 'l2_domain/use_cases/workout_use_cases/get_today_completed_list_use_case.dart';
 import 'l3_data/repositories/exercise_repository.dart';
@@ -46,6 +47,9 @@ void _setupDependencies() {
   );
   getIt.registerFactory<RecordWorkoutSetUseCase>(
     () => RecordWorkoutSetUseCase(getIt<WorkoutSetRepository>()),
+  );
+  getIt.registerFactory<RemoveWorkoutSetUseCase>(
+    () => RemoveWorkoutSetUseCase(getIt<WorkoutSetRepository>()),
   );
   getIt.registerFactory<GetTodayCompletedCountUseCase>(
     () => GetTodayCompletedCountUseCase(getIt<WorkoutSetRepository>()),
