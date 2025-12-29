@@ -17,10 +17,12 @@ class _CompletedListPageState extends State<CompletedListPage>
   bool _isLoading = true;
   List<WorkoutSetWithDetails> _completedWorkouts = [];
   List<WorkoutGroup> _workoutGroups = [];
-  final Set<int> _expandedGroups = {};
+  final Set<String> _expandedExerciseIds = {};
   final Map<int, AnimationController> _controllers = {};
   final Map<String, AnimationController> _deleteControllers = {};
+  final Map<String, AnimationController> _groupDeleteControllers = {};
   final Set<String> _deletingSetIds = {};
+  final Set<String> _deletingExerciseIds = {};
   final ScrollController _scrollController = ScrollController();
   bool _isPopping = false;
 
@@ -39,6 +41,9 @@ class _CompletedListPageState extends State<CompletedListPage>
     for (var controller in _deleteControllers.values) {
       controller.dispose();
     }
+    for (var controller in _groupDeleteControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -55,6 +60,17 @@ class _CompletedListPageState extends State<CompletedListPage>
   AnimationController _getDeleteController(String setId) {
     return _deleteControllers.putIfAbsent(
       setId,
+      () => AnimationController(
+        duration: const Duration(milliseconds: 300),
+        vsync: this,
+        value: 1.0, // Start fully visible
+      ),
+    );
+  }
+
+  AnimationController _getGroupDeleteController(String exerciseId) {
+    return _groupDeleteControllers.putIfAbsent(
+      exerciseId,
       () => AnimationController(
         duration: const Duration(milliseconds: 300),
         vsync: this,
@@ -89,13 +105,15 @@ class _CompletedListPageState extends State<CompletedListPage>
   }
 
   void _toggleGroup(int index) {
+    final group = _workoutGroups[index];
+    final exerciseId = group.exerciseId;
     final controller = _getController(index);
     setState(() {
-      if (_expandedGroups.contains(index)) {
-        _expandedGroups.remove(index);
+      if (_expandedExerciseIds.contains(exerciseId)) {
+        _expandedExerciseIds.remove(exerciseId);
         controller.reverse();
       } else {
-        _expandedGroups.add(index);
+        _expandedExerciseIds.add(exerciseId);
         controller.forward();
       }
     });
@@ -118,32 +136,71 @@ class _CompletedListPageState extends State<CompletedListPage>
 
   void _removeSetLocally(WorkoutSetWithDetails setToRemove) async {
     final setId = setToRemove.workoutSet.id;
-    
-    // Mark as deleting and get controller
+
+    // Find which group this set belongs to and check if it's the last one
+    int? groupIndex;
+    String? exerciseId;
+    bool isLastSetInGroup = false;
+    for (int i = 0; i < _workoutGroups.length; i++) {
+      final group = _workoutGroups[i];
+      if (group.sets.any((s) => s.workoutSet.id == setId)) {
+        groupIndex = i;
+        exerciseId = group.exerciseId;
+        isLastSetInGroup = group.sets.length == 1;
+        break;
+      }
+    }
+
+    // Mark as deleting and get controllers
     setState(() {
       _deletingSetIds.add(setId);
+      if (isLastSetInGroup && exerciseId != null) {
+        _deletingExerciseIds.add(exerciseId);
+      }
     });
-    
-    final controller = _getDeleteController(setId);
-    
-    // Animate out (reverse from 1.0 to 0.0)
-    await controller.reverse();
-    
+
+    final setController = _getDeleteController(setId);
+    AnimationController? groupController;
+    if (isLastSetInGroup && exerciseId != null) {
+      groupController = _getGroupDeleteController(exerciseId);
+    }
+
+    // Animate out both (reverse from 1.0 to 0.0)
+    await Future.wait([
+      setController.reverse(),
+      if (groupController != null) groupController.reverse(),
+    ]);
+
     // After animation completes, remove from state
     setState(() {
       _deletingSetIds.remove(setId);
-      
+      if (isLastSetInGroup && exerciseId != null) {
+        _deletingExerciseIds.remove(exerciseId);
+      }
+
       // Remove from completed workouts list
       _completedWorkouts.removeWhere(
         (workout) => workout.workoutSet.id == setId,
       );
 
+      // If this was the last set, remove from expanded tracking
+      if (isLastSetInGroup && exerciseId != null) {
+        _expandedExerciseIds.remove(exerciseId);
+        // Dispose the expand/collapse controller for this group
+        if (groupIndex != null) {
+          _controllers.remove(groupIndex)?.dispose();
+        }
+      }
+
       // Regroup after removal
       _workoutGroups = WorkoutGroup.groupConsecutive(_completedWorkouts);
     });
-    
-    // Clean up controller
+
+    // Clean up controllers
     _deleteControllers.remove(setId)?.dispose();
+    if (exerciseId != null) {
+      _groupDeleteControllers.remove(exerciseId)?.dispose();
+    }
 
     // Show feedback
     ScaffoldMessenger.of(context).showSnackBar(
@@ -235,11 +292,14 @@ class _CompletedListPageState extends State<CompletedListPage>
                               index,
                             ) {
                               final group = _workoutGroups[index];
-                              final isExpanded = _expandedGroups.contains(
-                                index,
+                              final isExpanded = _expandedExerciseIds.contains(
+                                group.exerciseId,
+                              );
+                              final isGroupDeleting = _deletingExerciseIds.contains(
+                                group.exerciseId,
                               );
 
-                              return Column(
+                              Widget groupContent = Column(
                                 children: [
                                   // Group Header (always visible)
                                   AnimatedBuilder(
@@ -349,78 +409,111 @@ class _CompletedListPageState extends State<CompletedListPage>
                                             ),
                                           ),
                                       child: Column(
-                                        children: group.sets
-                                            .asMap()
-                                            .entries
-                                            .map((entry) {
-                                              final setIndex = entry.key;
-                                              final set = entry.value;
-                                              final isLastSet =
-                                                  setIndex ==
-                                                  group.sets.length - 1;
+                                        children: group.sets.asMap().entries.map((
+                                          entry,
+                                        ) {
+                                          final setIndex = entry.key;
+                                          final set = entry.value;
+                                          final isLastSet =
+                                              setIndex == group.sets.length - 1;
 
-                                              final setId = set.workoutSet.id;
-                                              final isDeleting = _deletingSetIds.contains(setId);
-                                              
-                                              return Container(
-                                                margin: EdgeInsets.only(
-                                                  bottom: isLastSet ? 16 : 4,
-                                                ),
-                                                child: AnimatedBuilder(
-                                                  animation: isDeleting ? _getDeleteController(setId) : const AlwaysStoppedAnimation(1.0),
-                                                  builder: (context, child) {
-                                                    final deleteProgress = isDeleting ? _getDeleteController(setId).value : 1.0;
-                                                    
-                                                    return SizeTransition(
-                                                      sizeFactor: AlwaysStoppedAnimation(deleteProgress),
-                                                      axisAlignment: -1.0,
-                                                      child: SlideTransition(
-                                                        position: Tween<Offset>(
-                                                          begin: const Offset(0, -0.5),
+                                          final setId = set.workoutSet.id;
+                                          final isDeleting = _deletingSetIds
+                                              .contains(setId);
+
+                                          return Container(
+                                            margin: EdgeInsets.only(
+                                              bottom: isLastSet ? 16 : 4,
+                                            ),
+                                            child: AnimatedBuilder(
+                                              animation: isDeleting
+                                                  ? _getDeleteController(setId)
+                                                  : const AlwaysStoppedAnimation(
+                                                      1.0,
+                                                    ),
+                                              builder: (context, child) {
+                                                final deleteProgress =
+                                                    isDeleting
+                                                    ? _getDeleteController(
+                                                        setId,
+                                                      ).value
+                                                    : 1.0;
+
+                                                return SizeTransition(
+                                                  sizeFactor:
+                                                      AlwaysStoppedAnimation(
+                                                        deleteProgress,
+                                                      ),
+                                                  axisAlignment: -1.0,
+                                                  child: SlideTransition(
+                                                    position:
+                                                        Tween<Offset>(
+                                                          begin: const Offset(
+                                                            0,
+                                                            -0.5,
+                                                          ),
                                                           end: Offset.zero,
                                                         ).animate(
                                                           CurvedAnimation(
-                                                            parent: AlwaysStoppedAnimation(deleteProgress),
-                                                            curve: Curves.easeOut,
+                                                            parent:
+                                                                AlwaysStoppedAnimation(
+                                                                  deleteProgress,
+                                                                ),
+                                                            curve:
+                                                                Curves.easeOut,
                                                           ),
                                                         ),
-                                                        child: FadeTransition(
-                                                          opacity: AlwaysStoppedAnimation(deleteProgress),
-                                                          child: Slidable(
-                                                            key: Key(setId),
-                                                            endActionPane: ActionPane(
-                                                              motion: const ScrollMotion(),
-                                                              extentRatio: 0.25,
-                                                              children: [
-                                                                CustomSlidableAction(
-                                                                  onPressed: (context) {
-                                                                    _removeSetLocally(set);
-                                                                  },
-                                                                  backgroundColor: Colors.red,
-                                                                  borderRadius: BorderRadius.zero,
-                                                                  padding: EdgeInsets.zero,
-                                                                  child: const Icon(
-                                                                    Icons.delete,
-                                                                    color: Colors.white,
-                                                                    size: 24,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            child: Container(
+                                                    child: FadeTransition(
+                                                      opacity:
+                                                          AlwaysStoppedAnimation(
+                                                            deleteProgress,
+                                                          ),
+                                                      child: Slidable(
+                                                        key: Key(setId),
+                                                        endActionPane: ActionPane(
+                                                          motion:
+                                                              const ScrollMotion(),
+                                                          extentRatio: 0.25,
+                                                          children: [
+                                                            CustomSlidableAction(
+                                                              onPressed: (context) {
+                                                                _removeSetLocally(
+                                                                  set,
+                                                                );
+                                                              },
+                                                              backgroundColor:
+                                                                  Colors.red,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .zero,
                                                               padding:
-                                                                  const EdgeInsets.symmetric(
-                                                                    horizontal: 20,
-                                                                    vertical: 14,
-                                                                  ),
-                                                              decoration: BoxDecoration(
-                                                                color: const Color(
-                                                                  0xFF3E3E3E,
-                                                                ),
-                                                                borderRadius:
-                                                                    BorderRadius.circular(0),
+                                                                  EdgeInsets
+                                                                      .zero,
+                                                              child: const Icon(
+                                                                Icons.delete,
+                                                                color: Colors
+                                                                    .white,
+                                                                size: 24,
                                                               ),
-                                                              child: Row(
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 20,
+                                                                vertical: 14,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            color: const Color(
+                                                              0xFF3E3E3E,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  0,
+                                                                ),
+                                                          ),
+                                                          child: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
                                                                     .spaceBetween,
@@ -432,16 +525,16 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                                 children: [
                                                                   Text(
                                                                     'Set ${setIndex + 1}',
-                                                                    style:
-                                                                        const TextStyle(
-                                                                          fontSize: 14,
-                                                                          fontWeight:
-                                                                              FontWeight
-                                                                                  .w700,
-                                                                          color: Color(
-                                                                            0xFFB9E479,
-                                                                          ),
-                                                                        ),
+                                                                    style: const TextStyle(
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                      color: Color(
+                                                                        0xFFB9E479,
+                                                                      ),
+                                                                    ),
                                                                   ),
                                                                   const SizedBox(
                                                                     height: 4,
@@ -452,27 +545,30 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                                           .workoutSet
                                                                           .completedAt,
                                                                     ),
-                                                                    style:
-                                                                        const TextStyle(
-                                                                          fontSize: 12,
-                                                                          fontWeight:
-                                                                              FontWeight
-                                                                                  .w300,
-                                                                          color: Colors
-                                                                              .white54,
-                                                                        ),
+                                                                    style: const TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w300,
+                                                                      color: Colors
+                                                                          .white54,
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),
                                                               Text(
                                                                 _formatSetValues(
-                                                                  set.workoutSet.values,
+                                                                  set
+                                                                      .workoutSet
+                                                                      .values,
                                                                   set.exercise,
                                                                 ),
                                                                 style: const TextStyle(
                                                                   fontSize: 14,
                                                                   fontWeight:
-                                                                      FontWeight.w300,
+                                                                      FontWeight
+                                                                          .w300,
                                                                   color: Color(
                                                                     0xFFF2F2F2,
                                                                   ),
@@ -480,21 +576,59 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                               ),
                                                             ],
                                                           ),
-                                                            ),
-                                                          ),
                                                         ),
                                                       ),
-                                                    );
-                                                  },
-                                                ),
-                                              );
-                                            })
-                                            .toList(),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        }).toList(),
                                       ),
                                     ),
                                   ),
                                 ],
                               );
+
+                              // Wrap with delete animation if needed
+                              if (isGroupDeleting) {
+                                return AnimatedBuilder(
+                                  animation: _getGroupDeleteController(group.exerciseId),
+                                  builder: (context, child) {
+                                    final deleteProgress = _getGroupDeleteController(
+                                      group.exerciseId,
+                                    ).value;
+
+                                    return SizeTransition(
+                                      sizeFactor: AlwaysStoppedAnimation(deleteProgress),
+                                      axisAlignment: -1.0,
+                                      child: SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: const Offset(0, -0.5),
+                                          end: Offset.zero,
+                                        ).animate(
+                                          CurvedAnimation(
+                                            parent: AlwaysStoppedAnimation(
+                                              deleteProgress,
+                                            ),
+                                            curve: Curves.easeOut,
+                                          ),
+                                        ),
+                                        child: FadeTransition(
+                                          opacity: AlwaysStoppedAnimation(
+                                            deleteProgress,
+                                          ),
+                                          child: child,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: groupContent,
+                                );
+                              }
+
+                              return groupContent;
                             }, childCount: _workoutGroups.length),
                           ),
                         ),
