@@ -19,6 +19,8 @@ class _CompletedListPageState extends State<CompletedListPage>
   List<WorkoutGroup> _workoutGroups = [];
   final Set<int> _expandedGroups = {};
   final Map<int, AnimationController> _controllers = {};
+  final Map<String, AnimationController> _deleteControllers = {};
+  final Set<String> _deletingSetIds = {};
   final ScrollController _scrollController = ScrollController();
   bool _isPopping = false;
 
@@ -34,6 +36,9 @@ class _CompletedListPageState extends State<CompletedListPage>
     for (var controller in _controllers.values) {
       controller.dispose();
     }
+    for (var controller in _deleteControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -43,6 +48,17 @@ class _CompletedListPageState extends State<CompletedListPage>
       () => AnimationController(
         duration: const Duration(milliseconds: 300),
         vsync: this,
+      ),
+    );
+  }
+
+  AnimationController _getDeleteController(String setId) {
+    return _deleteControllers.putIfAbsent(
+      setId,
+      () => AnimationController(
+        duration: const Duration(milliseconds: 300),
+        vsync: this,
+        value: 1.0, // Start fully visible
       ),
     );
   }
@@ -100,16 +116,34 @@ class _CompletedListPageState extends State<CompletedListPage>
         .join(' · ');
   }
 
-  void _removeSetLocally(WorkoutSetWithDetails setToRemove) {
+  void _removeSetLocally(WorkoutSetWithDetails setToRemove) async {
+    final setId = setToRemove.workoutSet.id;
+    
+    // Mark as deleting and get controller
     setState(() {
+      _deletingSetIds.add(setId);
+    });
+    
+    final controller = _getDeleteController(setId);
+    
+    // Animate out (reverse from 1.0 to 0.0)
+    await controller.reverse();
+    
+    // After animation completes, remove from state
+    setState(() {
+      _deletingSetIds.remove(setId);
+      
       // Remove from completed workouts list
       _completedWorkouts.removeWhere(
-        (workout) => workout.workoutSet.id == setToRemove.workoutSet.id,
+        (workout) => workout.workoutSet.id == setId,
       );
 
       // Regroup after removal
       _workoutGroups = WorkoutGroup.groupConsecutive(_completedWorkouts);
     });
+    
+    // Clean up controller
+    _deleteControllers.remove(setId)?.dispose();
 
     // Show feedback
     ScaffoldMessenger.of(context).showSnackBar(
@@ -325,105 +359,133 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                   setIndex ==
                                                   group.sets.length - 1;
 
+                                              final setId = set.workoutSet.id;
+                                              final isDeleting = _deletingSetIds.contains(setId);
+                                              
                                               return Container(
                                                 margin: EdgeInsets.only(
                                                   bottom: isLastSet ? 16 : 4,
                                                 ),
-                                                child: Slidable(
-                                                  key: Key(set.workoutSet.id),
-                                                  endActionPane: ActionPane(
-                                                    motion: const ScrollMotion(),
-                                                    extentRatio: 0.25,
-                                                    children: [
-                                                      CustomSlidableAction(
-                                                        onPressed: (context) {
-                                                          _removeSetLocally(set);
-                                                        },
-                                                        backgroundColor: Colors.red,
-                                                        borderRadius: BorderRadius.zero,
-                                                        padding: EdgeInsets.zero,
-                                                        child: const Icon(
-                                                          Icons.delete,
-                                                          color: Colors.white,
-                                                          size: 24,
+                                                child: AnimatedBuilder(
+                                                  animation: isDeleting ? _getDeleteController(setId) : const AlwaysStoppedAnimation(1.0),
+                                                  builder: (context, child) {
+                                                    final deleteProgress = isDeleting ? _getDeleteController(setId).value : 1.0;
+                                                    
+                                                    return SizeTransition(
+                                                      sizeFactor: AlwaysStoppedAnimation(deleteProgress),
+                                                      axisAlignment: -1.0,
+                                                      child: SlideTransition(
+                                                        position: Tween<Offset>(
+                                                          begin: const Offset(0, -0.5),
+                                                          end: Offset.zero,
+                                                        ).animate(
+                                                          CurvedAnimation(
+                                                            parent: AlwaysStoppedAnimation(deleteProgress),
+                                                            curve: Curves.easeOut,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: Container(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(
-                                                          horizontal: 20,
-                                                          vertical: 14,
-                                                        ),
-                                                    decoration: BoxDecoration(
-                                                      color: const Color(
-                                                        0xFF3E3E3E,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(0),
-                                                    ),
-                                                    child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'Set ${setIndex + 1}',
-                                                          style:
-                                                              const TextStyle(
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                color: Color(
-                                                                  0xFFB9E479,
+                                                        child: FadeTransition(
+                                                          opacity: AlwaysStoppedAnimation(deleteProgress),
+                                                          child: Slidable(
+                                                            key: Key(setId),
+                                                            endActionPane: ActionPane(
+                                                              motion: const ScrollMotion(),
+                                                              extentRatio: 0.25,
+                                                              children: [
+                                                                CustomSlidableAction(
+                                                                  onPressed: (context) {
+                                                                    _removeSetLocally(set);
+                                                                  },
+                                                                  backgroundColor: Colors.red,
+                                                                  borderRadius: BorderRadius.zero,
+                                                                  padding: EdgeInsets.zero,
+                                                                  child: const Icon(
+                                                                    Icons.delete,
+                                                                    color: Colors.white,
+                                                                    size: 24,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets.symmetric(
+                                                                    horizontal: 20,
+                                                                    vertical: 14,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                color: const Color(
+                                                                  0xFF3E3E3E,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(0),
+                                                              ),
+                                                              child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    'Set ${setIndex + 1}',
+                                                                    style:
+                                                                        const TextStyle(
+                                                                          fontSize: 14,
+                                                                          fontWeight:
+                                                                              FontWeight
+                                                                                  .w700,
+                                                                          color: Color(
+                                                                            0xFFB9E479,
+                                                                          ),
+                                                                        ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 4,
+                                                                  ),
+                                                                  Text(
+                                                                    _formatTime(
+                                                                      set
+                                                                          .workoutSet
+                                                                          .completedAt,
+                                                                    ),
+                                                                    style:
+                                                                        const TextStyle(
+                                                                          fontSize: 12,
+                                                                          fontWeight:
+                                                                              FontWeight
+                                                                                  .w300,
+                                                                          color: Colors
+                                                                              .white54,
+                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Text(
+                                                                _formatSetValues(
+                                                                  set.workoutSet.values,
+                                                                  set.exercise,
+                                                                ),
+                                                                style: const TextStyle(
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight.w300,
+                                                                  color: Color(
+                                                                    0xFFF2F2F2,
+                                                                  ),
                                                                 ),
                                                               ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 4,
-                                                        ),
-                                                        Text(
-                                                          _formatTime(
-                                                            set
-                                                                .workoutSet
-                                                                .completedAt,
+                                                            ],
                                                           ),
-                                                          style:
-                                                              const TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300,
-                                                                color: Colors
-                                                                    .white54,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Text(
-                                                      _formatSetValues(
-                                                        set.workoutSet.values,
-                                                        set.exercise,
-                                                      ),
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                        color: Color(
-                                                          0xFFF2F2F2,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                  ),
+                                                    );
+                                                  },
                                                 ),
                                               );
                                             })
