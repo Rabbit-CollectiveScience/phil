@@ -214,12 +214,12 @@ class _CompletedListPageState extends State<CompletedListPage>
       // Show feedback
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
               'Set deleted',
               style: TextStyle(color: AppColors.offWhite),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
             duration: Duration(seconds: 2),
           ),
         );
@@ -228,8 +228,9 @@ class _CompletedListPageState extends State<CompletedListPage>
       debugPrint('Error deleting workout set: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Failed to delete set'),
+            backgroundColor: AppColors.error,
             duration: Duration(seconds: 2),
           ),
         );
@@ -516,7 +517,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                                 );
                                                               },
                                                               backgroundColor:
-                                                                  Colors.red,
+                                                                  AppColors.error,
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .zero,

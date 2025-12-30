@@ -7,7 +7,7 @@ class StatsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.deepCharcoal,
+      backgroundColor: AppColors.lightBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -23,22 +23,29 @@ class StatsPage extends StatelessWidget {
                       height: 44,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.darkGrey,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back,
                         color: AppColors.offWhite,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.pureBlack.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: AppColors.darkText,
                         size: 24,
                       ),
                     ),
                   ),
                   const SizedBox(width: 16),
-                  const Text(
+                  Text(
                     'STATS',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w900,
-                      color: AppColors.darkGrey,
+                      color: AppColors.darkText,
                       letterSpacing: 1.5,
                     ),
                   ),
@@ -50,7 +57,10 @@ class StatsPage extends StatelessWidget {
               child: Center(
                 child: Text(
                   'Dashboard content coming soon',
-                  style: TextStyle(fontSize: 16, color: AppColors.offWhite50),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColors.darkText.withOpacity(0.5),
+                  ),
                 ),
               ),
             ),

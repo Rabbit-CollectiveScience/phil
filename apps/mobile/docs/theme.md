@@ -8,6 +8,16 @@
 - Pronounced visual hierarchy
 - Minimalist, focused interactions
 
+**Dual-Mode Design Philosophy**
+- **Dark Zone (Workout Mode)**: Deep charcoal background for active workout time
+  - Workout Home Page, Completed List, Exercise Filter
+  - Optimized for gym environment, minimizes eye strain during physical activity
+  - High contrast lime green accents for quick visual feedback
+- **Light Zone (Analysis Mode)**: Light background for reflection and review
+  - Stats Page, analytical screens
+  - Reflects "off-gym" time, analytical mindset
+  - Better for reading detailed information and charts
+
 **Visual Style**
 - Dark theme optimized for gym environments
 - High contrast for readability in various lighting conditions

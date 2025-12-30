@@ -35,6 +35,32 @@ class AppColors {
   /// Usage: Text on lime green backgrounds for maximum contrast
   static const Color pureBlack = Color(0xFF000000);
 
+  // ========== Dual-Mode System ==========
+  // Dark Zone (Workout Mode): deepCharcoal background + offWhite text
+  // Light Zone (Analysis Mode): lightBackground + darkText
+
+  /// Light Background - For analytical/reflection pages
+  /// Usage: Stats page, review screens (off-gym time)
+  static const Color lightBackground = Color(0xFFF5F5F5);
+
+  /// Dark Text - For light mode pages
+  /// Usage: Primary text on light backgrounds
+  static const Color darkText = Color(0xFF1A1A1A);
+
+  // ========== State Colors ==========
+
+  /// Error state color
+  /// Usage: Error messages, destructive actions
+  static const Color error = Color(0xFFE74C3C);
+
+  /// Warning state color
+  /// Usage: Warning messages, cautionary actions
+  static const Color warning = Color(0xFFF39C12);
+
+  /// Success state color (alias to lime green)
+  /// Usage: Success messages, completion feedback
+  static const Color success = limeGreen;
+
   // ========== Semantic Color Variants ==========
 
   /// Off-White variants for different text hierarchies

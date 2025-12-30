@@ -160,11 +160,7 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
                 child: Container(
                   width: 48,
                   alignment: Alignment.center,
-                  child: Icon(
-                    Icons.close,
-                    color: AppColors.offWhite,
-                    size: 24,
-                  ),
+                  child: Icon(Icons.close, color: AppColors.offWhite, size: 24),
                 ),
               );
             },
