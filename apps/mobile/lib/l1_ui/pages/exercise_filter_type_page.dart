@@ -111,13 +111,10 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
                                 _pressedFilterId = option.id;
                               });
 
-                              // Haptic feedback
-                              if (await Vibration.hasVibrator() ?? false) {
-                                Vibration.vibrate(duration: 50);
-                              }
-
                               // Small delay to show the pressed state
-                              await Future.delayed(const Duration(milliseconds: 100));
+                              await Future.delayed(
+                                const Duration(milliseconds: 100),
+                              );
 
                               // Return selected filter ID
                               if (context.mounted) {
