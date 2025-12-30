@@ -40,6 +40,9 @@ class LocalPreferencesRepository implements PreferencesRepository {
   @override
   Future<void> saveFilterSelection(String filterId, DateTime timestamp) async {
     await _prefs.setString(_keyLastFilterId, filterId);
-    await _prefs.setString(_keyLastFilterTimestamp, timestamp.toIso8601String());
+    await _prefs.setString(
+      _keyLastFilterTimestamp,
+      timestamp.toIso8601String(),
+    );
   }
 }

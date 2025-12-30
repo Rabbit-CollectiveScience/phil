@@ -15,6 +15,9 @@ import 'exercise_filter_type_page.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
 import '../../l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_today_completed_count_use_case.dart';
+import '../../l2_domain/use_cases/filter_use_cases/get_last_filter_selection_use_case.dart';
+import '../../l2_domain/use_cases/filter_use_cases/record_filter_selection_use_case.dart';
+import '../../l2_domain/use_cases/filter_use_cases/should_show_filter_page_use_case.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   const WorkoutHomePage({super.key});
@@ -66,6 +69,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   @override
   void initState() {
     super.initState();
+    _loadLastFilterSelection();
+    _checkAndShowFilterPage();
     _loadExercises();
     _loadTodayCount();
     _tokenController = AnimationController(
@@ -130,6 +135,39 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       debugPrint('✓ Loaded today\'s workout count: $count');
     } catch (e) {
       debugPrint('Error loading today\'s count: $e');
+    }
+  }
+
+  Future<void> _loadLastFilterSelection() async {
+    try {
+      final useCase = GetIt.instance<GetLastFilterSelectionUseCase>();
+      final filterId = await useCase.executeWithDefault();
+
+      setState(() {
+        _selectedFilterId = filterId;
+      });
+
+      debugPrint('✓ Loaded last filter selection: $filterId');
+    } catch (e) {
+      debugPrint('Error loading last filter selection: $e');
+    }
+  }
+
+  Future<void> _checkAndShowFilterPage() async {
+    try {
+      final useCase = GetIt.instance<ShouldShowFilterPageUseCase>();
+      final shouldShow = await useCase.execute();
+
+      if (shouldShow) {
+        // Wait for first frame to be rendered before showing filter page
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _showFilterModal();
+          }
+        });
+      }
+    } catch (e) {
+      debugPrint('Error checking if should show filter page: $e');
     }
   }
 
@@ -376,14 +414,25 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       ),
     );
 
-    if (selectedFilterId != null && selectedFilterId != _selectedFilterId) {
-      setState(() {
-        _selectedFilterId = selectedFilterId;
-      });
-      // TODO: Implement actual filtering logic in domain layer
-      debugPrint(
-        'Filter selected: $selectedFilterId (UI only - not yet filtering)',
-      );
+    if (selectedFilterId != null) {
+      // Record filter selection (even if same as current)
+      try {
+        final recordUseCase = GetIt.instance<RecordFilterSelectionUseCase>();
+        await recordUseCase.execute(selectedFilterId);
+        debugPrint('✓ Recorded filter selection: $selectedFilterId');
+      } catch (e) {
+        debugPrint('Error recording filter selection: $e');
+      }
+
+      if (selectedFilterId != _selectedFilterId) {
+        setState(() {
+          _selectedFilterId = selectedFilterId;
+        });
+        // TODO: Implement actual filtering logic in domain layer
+        debugPrint(
+          'Filter selected: $selectedFilterId (UI only - not yet filtering)',
+        );
+      }
     }
   }
 

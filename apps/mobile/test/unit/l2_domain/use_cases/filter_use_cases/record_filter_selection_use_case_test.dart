@@ -18,8 +18,9 @@ void main() {
     });
 
     test('saves filter selection with current timestamp', () async {
-      when(mockRepository.saveFilterSelection(any, any))
-          .thenAnswer((_) async => {});
+      when(
+        mockRepository.saveFilterSelection(any, any),
+      ).thenAnswer((_) async => {});
 
       await useCase.execute('legs');
 
@@ -33,19 +34,19 @@ void main() {
 
     test('saves filter selection with provided timestamp', () async {
       final timestamp = DateTime(2025, 12, 30, 15, 45);
-      when(mockRepository.saveFilterSelection(any, any))
-          .thenAnswer((_) async => {});
+      when(
+        mockRepository.saveFilterSelection(any, any),
+      ).thenAnswer((_) async => {});
 
       await useCase.execute('back', timestamp: timestamp);
 
-      verify(
-        mockRepository.saveFilterSelection('back', timestamp),
-      ).called(1);
+      verify(mockRepository.saveFilterSelection('back', timestamp)).called(1);
     });
 
     test('saves "all" filter correctly', () async {
-      when(mockRepository.saveFilterSelection(any, any))
-          .thenAnswer((_) async => {});
+      when(
+        mockRepository.saveFilterSelection(any, any),
+      ).thenAnswer((_) async => {});
 
       await useCase.execute('all');
 

@@ -36,7 +36,7 @@ void main() {
         final now = DateTime.now();
         await repository.saveFilterSelection('legs', now);
         final result = await repository.getLastFilterTimestamp();
-        
+
         expect(result, isNotNull);
         expect(result!.year, now.year);
         expect(result.month, now.month);

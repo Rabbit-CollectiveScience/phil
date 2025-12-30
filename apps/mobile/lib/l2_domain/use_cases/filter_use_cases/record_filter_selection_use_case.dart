@@ -16,7 +16,7 @@ class RecordFilterSelectionUseCase {
   RecordFilterSelectionUseCase(this._preferencesRepository);
 
   /// Record user's filter selection
-  /// 
+  ///
   /// [filterId] - The selected filter ('chest', 'legs', 'all', etc.)
   /// [timestamp] - When selection was made (defaults to now)
   Future<void> execute(String filterId, {DateTime? timestamp}) async {

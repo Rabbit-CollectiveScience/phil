@@ -72,7 +72,7 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
       getIt<ExerciseRepository>(),
     ),
   );
-  
+
   // Filter use cases
   getIt.registerFactory<GetLastFilterSelectionUseCase>(
     () => GetLastFilterSelectionUseCase(getIt<PreferencesRepository>()),
