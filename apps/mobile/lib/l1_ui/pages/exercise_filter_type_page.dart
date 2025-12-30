@@ -29,16 +29,27 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
       backgroundColor: const Color(0xFF1A1A1A), // Deep charcoal background
       body: NotificationListener<ScrollUpdateNotification>(
         onNotification: (notification) {
-          // Track overscroll when at the top
-          if (!_isPopping &&
-              _scrollController.hasClients &&
-              _scrollController.position.pixels <= 0) {
-            if (notification.metrics.pixels < -150) {
-              _isPopping = true;
-              Navigator.of(context).pop();
-              return true;
-            }
+          if (_isPopping) return false;
+          
+          if (!_scrollController.hasClients) return false;
+          
+          final pixels = _scrollController.position.pixels;
+          final maxScroll = _scrollController.position.maxScrollExtent;
+          
+          // Track overscroll at the top (pull down to dismiss)
+          if (pixels <= 0 && notification.metrics.pixels < -150) {
+            _isPopping = true;
+            Navigator.of(context).pop();
+            return true;
           }
+          
+          // Track overscroll at the bottom (pull up to dismiss)
+          if (pixels >= maxScroll && notification.metrics.pixels > maxScroll + 150) {
+            _isPopping = true;
+            Navigator.of(context).pop();
+            return true;
+          }
+          
           return false;
         },
         child: SingleChildScrollView(
@@ -47,11 +58,11 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
             parent: AlwaysScrollableScrollPhysics(),
           ),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+              height: MediaQuery.of(context).size.height,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                   const Text(
                     'Training Focus',
                     style: TextStyle(
@@ -69,17 +80,16 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        childAspectRatio: 1.0,
-                      ),
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 1.0,
+                          ),
                       itemCount: ExerciseFilterTypeOption.allOptions.length,
                       itemBuilder: (context, index) {
                         final option =
                             ExerciseFilterTypeOption.allOptions[index];
-                        final isSelected =
-                            option.id == widget.selectedFilterId;
+                        final isSelected = option.id == widget.selectedFilterId;
 
                         return ExerciseFilterTypeGridTile(
                           option: option,
