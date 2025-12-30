@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'l1_ui/pages/workout_home_page.dart';
 import 'l2_domain/models/workout_set.dart';
 import 'l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
@@ -8,10 +9,15 @@ import 'l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
 import 'l2_domain/use_cases/workout_use_cases/remove_workout_set_use_case.dart';
 import 'l2_domain/use_cases/workout_use_cases/get_today_completed_count_use_case.dart';
 import 'l2_domain/use_cases/workout_use_cases/get_today_completed_list_use_case.dart';
+import 'l2_domain/use_cases/filter_use_cases/get_last_filter_selection_use_case.dart';
+import 'l2_domain/use_cases/filter_use_cases/record_filter_selection_use_case.dart';
+import 'l2_domain/use_cases/filter_use_cases/should_show_filter_page_use_case.dart';
 import 'l3_data/repositories/exercise_repository.dart';
 import 'l3_data/repositories/stub_exercise_repository.dart';
 import 'l3_data/repositories/workout_set_repository.dart';
 import 'l3_data/repositories/hive_workout_set_repository.dart';
+import 'l3_data/repositories/preferences_repository.dart';
+import 'l3_data/repositories/local_preferences_repository.dart';
 
 // Global GetIt instance for dependency injection
 final getIt = GetIt.instance;
@@ -28,18 +34,24 @@ void main() async {
   // Open Hive boxes
   await Hive.openBox<WorkoutSet>('workout_sets');
 
+  // Initialize SharedPreferences
+  final sharedPreferences = await SharedPreferences.getInstance();
+
   // Setup dependency injection
-  _setupDependencies();
+  _setupDependencies(sharedPreferences);
 
   runApp(const MyApp());
 }
 
 /// Configure all dependencies for the app
 /// L3 (Data) -> L2 (Domain) dependency chain
-void _setupDependencies() {
+void _setupDependencies(SharedPreferences sharedPreferences) {
   // Register L3 - Data Layer (Repositories)
   getIt.registerSingleton<ExerciseRepository>(StubExerciseRepository());
   getIt.registerSingleton<WorkoutSetRepository>(HiveWorkoutSetRepository());
+  getIt.registerSingleton<PreferencesRepository>(
+    LocalPreferencesRepository(sharedPreferences),
+  );
 
   // Register L2 - Domain Layer (Use Cases)
   getIt.registerFactory<GetRecommendedExercisesUseCase>(
@@ -59,6 +71,17 @@ void _setupDependencies() {
       getIt<WorkoutSetRepository>(),
       getIt<ExerciseRepository>(),
     ),
+  );
+  
+  // Filter use cases
+  getIt.registerFactory<GetLastFilterSelectionUseCase>(
+    () => GetLastFilterSelectionUseCase(getIt<PreferencesRepository>()),
+  );
+  getIt.registerFactory<RecordFilterSelectionUseCase>(
+    () => RecordFilterSelectionUseCase(getIt<PreferencesRepository>()),
+  );
+  getIt.registerFactory<ShouldShowFilterPageUseCase>(
+    () => ShouldShowFilterPageUseCase(getIt<PreferencesRepository>()),
   );
 }
 

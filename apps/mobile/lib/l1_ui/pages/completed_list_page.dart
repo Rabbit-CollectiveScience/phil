@@ -499,8 +499,12 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                             CustomSlidableAction(
                                                               onPressed: (context) async {
                                                                 // Vibrate when delete is tapped
-                                                                if (await Vibration.hasVibrator() ?? false) {
-                                                                  Vibration.vibrate(duration: 50);
+                                                                if (await Vibration.hasVibrator() ??
+                                                                    false) {
+                                                                  Vibration.vibrate(
+                                                                    duration:
+                                                                        50,
+                                                                  );
                                                                 }
                                                                 _removeSetLocally(
                                                                   set,
