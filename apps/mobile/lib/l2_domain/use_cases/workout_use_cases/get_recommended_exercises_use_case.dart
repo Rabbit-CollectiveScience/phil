@@ -35,10 +35,8 @@ class GetRecommendedExercisesUseCase {
     // If filter is provided and not 'all', filter by category
     final filteredExercises =
         (filterCategory != null && filterCategory != 'all')
-            ? exercises
-                .where((e) => e.categories.contains(filterCategory))
-                .toList()
-            : exercises;
+        ? exercises.where((e) => e.categories.contains(filterCategory)).toList()
+        : exercises;
 
     // TODO: Sort by recommendation logic (e.g., recently used, favorites, etc.)
 
@@ -49,13 +47,13 @@ class GetRecommendedExercisesUseCase {
   /// Priority: starts-with > contains
   List<Exercise> _searchExercises(List<Exercise> exercises, String query) {
     final queryLower = query.toLowerCase();
-    
+
     final startsWith = <Exercise>[];
     final contains = <Exercise>[];
 
     for (final exercise in exercises) {
       final nameLower = exercise.name.toLowerCase();
-      
+
       if (nameLower.startsWith(queryLower)) {
         startsWith.add(exercise);
       } else if (nameLower.contains(queryLower)) {

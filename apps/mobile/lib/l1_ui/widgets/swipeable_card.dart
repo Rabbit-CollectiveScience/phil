@@ -37,6 +37,7 @@ class SwipeableCard extends StatefulWidget {
   onCompleted;
   final ValueChanged<CardModel> onCardUpdate;
   final void Function(Offset position, bool isDragging)? onTokenDrag;
+  final VoidCallback? onInteractionStart;
   final int zetCount;
 
   const SwipeableCard({
@@ -47,6 +48,7 @@ class SwipeableCard extends StatefulWidget {
     required this.onCompleted,
     required this.onCardUpdate,
     this.onTokenDrag,
+    this.onInteractionStart,
     required this.zetCount,
   });
 
@@ -317,6 +319,9 @@ class SwipeableCardState extends State<SwipeableCard>
       );
     }
 
+    // Notify parent that user is interacting (dismiss keyboard, etc.)
+    widget.onInteractionStart?.call();
+
     // State machine guard: only allow tap in idle (front) or idleFlipped (back)
     if (!_currentState.allowsTap &&
         _currentState != CardInteractionState.idleFlipped) {
@@ -394,6 +399,9 @@ class SwipeableCardState extends State<SwipeableCard>
         '[CardGesture] ${widget.card.exerciseName}: Pan start detected, state: $_currentState',
       );
     }
+
+    // Notify parent that user is interacting (dismiss keyboard, etc.)
+    widget.onInteractionStart?.call();
 
     // State machine guard: only allow pan in idle states
     if (!_currentState.allowsPanStart) {

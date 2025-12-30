@@ -107,7 +107,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       if (searchQuery != null && searchQuery.isNotEmpty) {
         debugPrint('🔍 _loadExercises: Searching for "$searchQuery"');
       } else {
-        debugPrint('🔍 _loadExercises: Loading with filter = $_selectedFilterId');
+        debugPrint(
+          '🔍 _loadExercises: Loading with filter = $_selectedFilterId',
+        );
       }
 
       // Use case handles search or filter logic
@@ -523,6 +525,10 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                         },
                                         onCompleted: _completeTopCard,
                                         onTokenDrag: _handleTokenDrag,
+                                        onInteractionStart: () {
+                                          _searchBarKey.currentState
+                                              ?.collapse();
+                                        },
                                         zetCount: _completedCards.length + 1,
                                         onCardUpdate: (updatedCard) =>
                                             _updateCard(
