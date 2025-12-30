@@ -8,8 +8,10 @@ import '../widgets/expandable_search_bar.dart';
 import '../widgets/dashboard_icon_button.dart';
 import '../widgets/completion_counter.dart';
 import '../widgets/floating_card_entrance.dart';
+import '../widgets/exercise_filter_type_button.dart';
 import 'completed_list_page.dart';
 import 'stats_page.dart';
+import 'exercise_filter_type_page.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
 import '../../l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_today_completed_count_use_case.dart';
@@ -56,6 +58,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
 
   // Card transition animation
   bool _isTransitioningCards = false;
+
+  // Filter state (UI only - not yet connected to actual filtering)
+  String _selectedFilterId = 'all';
 
   @override
   void initState() {
@@ -339,9 +344,44 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         transitionDuration: const Duration(milliseconds: 400),
       ),
     );
-    
+
     // User returned - reload counter from database
     await _loadTodayCount();
+  }
+
+  void _showFilterModal() async {
+    final selectedFilterId = await Navigator.of(context).push<String>(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return ExerciseFilterTypePage(
+            selectedFilterId: _selectedFilterId,
+          );
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          // Slide in from top
+          const begin = Offset(0.0, -1.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+
+          var tween = Tween(begin: begin, end: end)
+              .chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+      ),
+    );
+
+    if (selectedFilterId != null && selectedFilterId != _selectedFilterId) {
+      setState(() {
+        _selectedFilterId = selectedFilterId;
+      });
+      // TODO: Implement actual filtering logic in domain layer
+      debugPrint('Filter selected: $selectedFilterId (UI only - not yet filtering)');
+    }
   }
 
   @override
@@ -485,6 +525,19 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                         onExpand: () {},
                         onSearchChanged: _onSearchChanged,
                         onDismissKeyboard: () {},
+                      ),
+                    ),
+                    // Filter button at top center
+                    Positioned(
+                      top: _topIconsPadding,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: ExerciseFilterTypeButton(
+                          selectedFilterId: _selectedFilterId,
+                          onTap: _showFilterModal,
+                          size: _iconSize,
+                        ),
                       ),
                     ),
                     // Dashboard icon at top right
