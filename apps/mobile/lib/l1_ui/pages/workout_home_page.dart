@@ -314,8 +314,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     });
   }
 
-  void _navigateToViewCards() {
-    Navigator.of(context).push(
+  void _navigateToViewCards() async {
+    await Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
           return const CompletedListPage();
@@ -339,6 +339,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         transitionDuration: const Duration(milliseconds: 400),
       ),
     );
+    
+    // User returned - reload counter from database
+    await _loadTodayCount();
   }
 
   @override
