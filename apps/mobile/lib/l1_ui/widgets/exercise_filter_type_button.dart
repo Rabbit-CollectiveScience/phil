@@ -36,19 +36,20 @@ class ExerciseFilterTypeButton extends StatelessWidget {
             ),
           ],
         ),
-        child: Image.asset(
-          selectedOption.imagePath,
-          width: size * 0.55,
-          height: size * 0.55,
-          color: AppColors.pureBlack,
-          errorBuilder: (context, error, stackTrace) {
-            // Fallback icon if image not found
-            return Icon(
-              Icons.fitness_center,
-              color: AppColors.pureBlack,
-              size: size * 0.25,
-            );
-          },
+        child: Padding(
+          padding: EdgeInsets.all(size * 0.18),
+          child: Image.asset(
+            selectedOption.imagePath,
+            color: AppColors.pureBlack,
+            errorBuilder: (context, error, stackTrace) {
+              // Fallback icon if image not found
+              return Icon(
+                Icons.fitness_center,
+                color: AppColors.pureBlack,
+                size: size * 0.5,
+              );
+            },
+          ),
         ),
       ),
     );
