@@ -16,6 +16,7 @@ class ExerciseFilterTypePage extends StatefulWidget {
 class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
   final ScrollController _scrollController = ScrollController();
   bool _isPopping = false;
+  String? _pressedFilterId;
 
   @override
   void dispose() {
@@ -96,17 +97,27 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
                         itemBuilder: (context, index) {
                           final option =
                               ExerciseFilterTypeOption.allOptions[index];
-                          final isSelected =
-                              option.id == widget.selectedFilterId;
+                          // Tile is selected if it's currently pressed OR it was the previously selected one (but not both)
+                          final isSelected = _pressedFilterId != null
+                              ? option.id == _pressedFilterId
+                              : option.id == widget.selectedFilterId;
 
                           return ExerciseFilterTypeGridTile(
                             option: option,
                             isSelected: isSelected,
                             onTap: () async {
+                              // Set pressed state first for immediate visual feedback
+                              setState(() {
+                                _pressedFilterId = option.id;
+                              });
+
                               // Haptic feedback
                               if (await Vibration.hasVibrator() ?? false) {
                                 Vibration.vibrate(duration: 50);
                               }
+
+                              // Small delay to show the pressed state
+                              await Future.delayed(const Duration(milliseconds: 100));
 
                               // Return selected filter ID
                               if (context.mounted) {
