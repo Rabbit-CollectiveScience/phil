@@ -13,77 +13,41 @@ class ExerciseFilterTypePage extends StatefulWidget {
   State<ExerciseFilterTypePage> createState() => _ExerciseFilterTypePageState();
 }
 
-class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage>
-    with SingleTickerProviderStateMixin {
-  double _dragOffset = 0.0;
-  late AnimationController _bounceController;
-  late Animation<double> _bounceAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _bounceController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _bounceAnimation = Tween<double>(begin: 0.0, end: 0.0).animate(
-      CurvedAnimation(parent: _bounceController, curve: Curves.elasticOut),
-    );
-  }
+class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
+  final ScrollController _scrollController = ScrollController();
+  bool _isPopping = false;
 
   @override
   void dispose() {
-    _bounceController.dispose();
+    _scrollController.dispose();
     super.dispose();
-  }
-
-  void _handleVerticalDragUpdate(DragUpdateDetails details) {
-    setState(() {
-      // Only allow upward drag (negative values)
-      _dragOffset += details.delta.dy;
-
-      // Prevent downward drag completely
-      if (_dragOffset > 0) {
-        _dragOffset = 0;
-      }
-    });
-  }
-
-  void _handleVerticalDragEnd(DragEndDetails details) {
-    // If dragged up more than 150 pixels, dismiss (matching completed page)
-    if (_dragOffset < -150) {
-      Navigator.of(context).pop();
-    } else {
-      // Bounce back to original position with elastic animation
-      _bounceAnimation = Tween<double>(begin: _dragOffset, end: 0.0).animate(
-        CurvedAnimation(parent: _bounceController, curve: Curves.elasticOut),
-      );
-
-      _bounceController.forward(from: 0.0).then((_) {
-        setState(() {
-          _dragOffset = 0.0;
-        });
-      });
-
-      // Update position during animation
-      _bounceController.addListener(() {
-        setState(() {
-          _dragOffset = _bounceAnimation.value;
-        });
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onVerticalDragUpdate: _handleVerticalDragUpdate,
-      onVerticalDragEnd: _handleVerticalDragEnd,
-      child: Scaffold(
-        backgroundColor: const Color(0xFF1A1A1A), // Deep charcoal background
-        body: Transform.translate(
-          offset: Offset(0, _dragOffset),
-          child: SafeArea(
+    return Scaffold(
+      backgroundColor: const Color(0xFF1A1A1A), // Deep charcoal background
+      body: NotificationListener<ScrollUpdateNotification>(
+        onNotification: (notification) {
+          // Track overscroll when at the top
+          if (!_isPopping &&
+              _scrollController.hasClients &&
+              _scrollController.position.pixels <= 0) {
+            if (notification.metrics.pixels < -150) {
+              _isPopping = true;
+              Navigator.of(context).pop();
+              return true;
+            }
+          }
+          return false;
+        },
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -105,16 +69,17 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage>
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                            childAspectRatio: 1.0,
-                          ),
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                        childAspectRatio: 1.0,
+                      ),
                       itemCount: ExerciseFilterTypeOption.allOptions.length,
                       itemBuilder: (context, index) {
                         final option =
                             ExerciseFilterTypeOption.allOptions[index];
-                        final isSelected = option.id == widget.selectedFilterId;
+                        final isSelected =
+                            option.id == widget.selectedFilterId;
 
                         return ExerciseFilterTypeGridTile(
                           option: option,
