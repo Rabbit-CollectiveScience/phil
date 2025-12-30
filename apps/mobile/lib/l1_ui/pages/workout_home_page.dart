@@ -525,8 +525,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                       child: Center(
                         child: IgnorePointer(
                           ignoring: _isSearchExpanded,
-                          child: AnimatedOpacity(
-                            duration: const Duration(milliseconds: 300),
+                          child: Opacity(
                             opacity: _isSearchExpanded ? 0.0 : 1.0,
                             child: ExerciseFilterTypeButton(
                               selectedFilterId: _selectedFilterId,
