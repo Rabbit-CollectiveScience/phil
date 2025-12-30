@@ -158,11 +158,13 @@ await useCase.execute(...);
 - Time formatting for display
 - Navigation and gestures
 - Theme and styling
+- Search bar UI state (expanded/collapsed)
 
 ### Domain Logic (L2)
 - Business validation rules
 - ID generation and timestamps
 - Data filtering by business criteria
+- Search queries across data sources
 - Workflow orchestration
 - Business calculations
 
@@ -179,6 +181,26 @@ class GetTodayCompletedCountUseCase {
   Future<int> execute() async {
     final todayWorkouts = await _repository.getTodayWorkoutSets();
     return todayWorkouts.length; // Business rule: what counts as "today"
+  }
+}
+
+// ✅ Domain Logic in L2 - Search
+class GetRecommendedExercisesUseCase {
+  Future<List<Exercise>> execute({
+    String? filterCategory,
+    String? searchQuery,
+  }) async {
+    final exercises = await _repository.getAllExercises();
+    
+    // Business rule: Search overrides filter
+    if (searchQuery != null && searchQuery.isNotEmpty) {
+      return _searchExercises(exercises, searchQuery);
+    }
+    
+    // Business rule: Filter by category
+    return exercises.where((e) => 
+      e.categories.contains(filterCategory)
+    ).toList();
   }
 }
 ```
@@ -229,6 +251,8 @@ test('should create workout with unique ID', () async {
 | L1 imports repositories | Use GetIt to inject use cases |
 | Use cases return widgets | Return domain models |
 | Manual repo instantiation | Register in main.dart |
+| Search filtering in UI with local state | Search queries through L2 use case |
+| Reordering cards to simulate search | Load searched exercises from repository |
 
 ---
 

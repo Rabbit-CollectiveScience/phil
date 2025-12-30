@@ -62,7 +62,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   // Card transition animation
   bool _isTransitioningCards = false;
 
-  // Filter state (UI only - not yet connected to actual filtering)
+  // Filter state
   String _selectedFilterId = 'all';
   bool _isSearchExpanded = false;
 
@@ -99,16 +99,21 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     return screenWidth - (_iconPadding * 2) - _iconSize - _dashboardSpacing;
   }
 
-  Future<void> _loadExercises() async {
+  Future<void> _loadExercises({String? searchQuery}) async {
     try {
       // Get use case from dependency injection - L1 never knows about L3
       final useCase = GetIt.instance<GetRecommendedExercisesUseCase>();
 
-      debugPrint('🔍 _loadExercises: Loading with filter = $_selectedFilterId');
+      if (searchQuery != null && searchQuery.isNotEmpty) {
+        debugPrint('🔍 _loadExercises: Searching for "$searchQuery"');
+      } else {
+        debugPrint('🔍 _loadExercises: Loading with filter = $_selectedFilterId');
+      }
 
-      // Use case filters exercises by category
+      // Use case handles search or filter logic
       final exercises = await useCase.execute(
         filterCategory: _selectedFilterId,
+        searchQuery: searchQuery,
       );
 
       debugPrint('🔍 _loadExercises: Got ${exercises.length} exercises');
@@ -336,41 +341,14 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   }
 
   void _onSearchChanged(String query) {
+    // If search is cleared, return to filtered view
     if (query.isEmpty) {
-      setState(() {
-        _cardOrder = List.generate(_cards.length, (index) => index);
-      });
+      _loadExercises();
       return;
     }
 
-    setState(() {
-      final queryLower = query.toLowerCase();
-      final matches = <int>[];
-
-      // First pass: starts with query
-      for (int i = 0; i < _cards.length; i++) {
-        if (_cards[i].exerciseName.toLowerCase().startsWith(queryLower)) {
-          matches.add(i);
-        }
-      }
-
-      // Second pass: contains query
-      for (int i = 0; i < _cards.length; i++) {
-        if (!matches.contains(i) &&
-            _cards[i].exerciseName.toLowerCase().contains(queryLower)) {
-          matches.add(i);
-        }
-      }
-
-      // Third pass: remaining cards
-      for (int i = 0; i < _cards.length; i++) {
-        if (!matches.contains(i)) {
-          matches.add(i);
-        }
-      }
-
-      _cardOrder = matches;
-    });
+    // Search all exercises via use case (overrides filter)
+    _loadExercises(searchQuery: query);
   }
 
   void _navigateToViewCards() async {

@@ -139,5 +139,106 @@ void main() {
         );
       }
     });
+
+    // ========== SEARCH FUNCTIONALITY TESTS ==========
+
+    test('should search exercises by name ignoring filter', () async {
+      // Act - search for "squat" even though we might have a filter
+      final result = await useCase.execute(searchQuery: 'squat');
+
+      // Assert
+      expect(result, isNotEmpty);
+      for (final exercise in result) {
+        expect(
+          exercise.name.toLowerCase().contains('squat'),
+          isTrue,
+          reason: 'Exercise "${exercise.name}" should contain "squat"',
+        );
+      }
+    });
+
+    test('should search case-insensitive', () async {
+      // Act - search with different cases
+      final lowerCase = await useCase.execute(searchQuery: 'squat');
+      final upperCase = await useCase.execute(searchQuery: 'SQUAT');
+      final mixedCase = await useCase.execute(searchQuery: 'SqUaT');
+
+      // Assert - all should return same results
+      expect(lowerCase.length, equals(upperCase.length));
+      expect(lowerCase.length, equals(mixedCase.length));
+      expect(lowerCase.map((e) => e.id).toSet(),
+          equals(upperCase.map((e) => e.id).toSet()));
+    });
+
+    test('should return empty list when no exercises match search', () async {
+      // Act - search for something that doesn't exist
+      final result = await useCase.execute(searchQuery: 'zzzznonexistent');
+
+      // Assert
+      expect(result, isEmpty);
+    });
+
+    test('should prioritize exercises starting with query over contains',
+        () async {
+      // Act - search for "curl" (should have "Barbell Curl" before "Preacher Curl")
+      final result = await useCase.execute(searchQuery: 'curl');
+
+      // Assert
+      expect(result, isNotEmpty);
+
+      // Find exercises that start with "curl" and ones that contain "curl"
+      final startsWithCurl = result
+          .where((e) => e.name.toLowerCase().startsWith('curl'))
+          .toList();
+      final containsCurl = result
+          .where((e) =>
+              e.name.toLowerCase().contains('curl') &&
+              !e.name.toLowerCase().startsWith('curl'))
+          .toList();
+
+      // If both exist, verify ordering
+      if (startsWithCurl.isNotEmpty && containsCurl.isNotEmpty) {
+        final firstStartsWithIndex = result.indexOf(startsWithCurl.first);
+        final firstContainsIndex = result.indexOf(containsCurl.first);
+        expect(firstStartsWithIndex, lessThan(firstContainsIndex),
+            reason: 'Exercises starting with query should come first');
+      }
+    });
+
+    test('should return all exercises when search query is empty string',
+        () async {
+      // Act
+      final emptySearch = await useCase.execute(searchQuery: '');
+      final noSearch = await useCase.execute();
+
+      // Assert - both should return same results
+      expect(emptySearch.length, equals(noSearch.length));
+    });
+
+    test(
+        'should search all exercises even when filterCategory is provided (search overrides filter)',
+        () async {
+      // Arrange - Get all exercises first
+      final allExercises = await useCase.execute();
+
+      // Find an exercise that's NOT in the 'arms' category
+      final nonArmsExercise = allExercises.firstWhere(
+        (e) => !e.categories.contains('arms'),
+        orElse: () => allExercises.first,
+      );
+
+      // Act - Search for that exercise while having 'arms' filter
+      final result = await useCase.execute(
+        searchQuery: nonArmsExercise.name.substring(0, 5),
+        filterCategory: 'arms',
+      );
+
+      // Assert - Should find the non-arms exercise (search overrides filter)
+      expect(
+        result.any((e) => e.id == nonArmsExercise.id),
+        isTrue,
+        reason: 'Search should override filter and find exercises from any category',
+      );
+    });
   });
 }
