@@ -545,8 +545,12 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                         availableWidth: _getSearchBarWidth(context),
                         iconSize: _iconSize,
                         onExpand: () {
-                          setState(() {
-                            _isSearchExpanded = true;
+                          Future.delayed(const Duration(milliseconds: 300), () {
+                            if (mounted) {
+                              setState(() {
+                                _isSearchExpanded = true;
+                              });
+                            }
                           });
                         },
                         onCollapse: () {

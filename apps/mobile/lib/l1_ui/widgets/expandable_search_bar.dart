@@ -159,7 +159,11 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
                 child: Container(
                   width: 48,
                   alignment: Alignment.center,
-                  child: const Icon(Icons.close, color: Color(0xFFF2F2F2), size: 24),
+                  child: const Icon(
+                    Icons.close,
+                    color: Color(0xFFF2F2F2),
+                    size: 24,
+                  ),
                 ),
               );
             },
