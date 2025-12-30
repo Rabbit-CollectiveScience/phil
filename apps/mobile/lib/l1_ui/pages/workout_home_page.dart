@@ -343,6 +343,11 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   }
 
   void _onSearchChanged(String query) {
+    // Update search expanded state based on query
+    setState(() {
+      _isSearchExpanded = query.isNotEmpty;
+    });
+
     // If search is cleared, return to filtered view
     if (query.isEmpty) {
       _loadExercises();
