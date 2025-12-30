@@ -3,7 +3,7 @@
     "id": "shoulders_1",
     "name": "Barbell Overhead Press",
     "description": "Stand with feet shoulder-width apart and hold a barbell at shoulder height with hands slightly wider than shoulder-width, elbows pointed slightly forward. Brace your core and press the bar straight up overhead until your arms are fully extended, moving your head back slightly to allow the bar to pass. Lock out at the top with biceps by your ears, then lower the bar back to the starting position with control. This compound movement is the king of shoulder builders, primarily targeting the anterior and medial deltoids while also engaging the triceps and upper chest.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -13,7 +13,7 @@
     "id": "shoulders_2",
     "name": "Seated Barbell Overhead Press",
     "description": "Sit on a bench with back support and hold a barbell at shoulder height with hands slightly wider than shoulder-width. Press the bar straight up overhead until your arms are fully extended, then lower back to shoulder height with control. The seated position removes leg drive and stabilization demands, allowing you to focus purely on shoulder strength. This variation is excellent for isolating the deltoids and building pressing strength with slightly more stability than the standing version.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -23,7 +23,7 @@
     "id": "shoulders_3",
     "name": "Dumbbell Overhead Press",
     "description": "Stand or sit with feet shoulder-width apart holding dumbbells at shoulder height with palms facing forward and elbows at about 90 degrees. Press both dumbbells up and slightly inward until your arms are fully extended overhead, then lower back to the starting position with control. The independent movement of each arm requires more stabilization than a barbell and helps identify and correct strength imbalances. This exercise builds overall shoulder mass and strength while improving shoulder stability.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -33,7 +33,7 @@
     "id": "shoulders_4",
     "name": "Seated Dumbbell Overhead Press",
     "description": "Sit on a bench with back support holding dumbbells at shoulder height with palms facing forward. Press both dumbbells straight up until your arms are fully extended, then lower back to shoulder height with control. The seated position eliminates leg drive and lower body compensation, forcing your shoulders to do all the work. This variation allows you to lift heavier weights with better form than standing, making it excellent for building shoulder mass and strength.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -43,7 +43,7 @@
     "id": "shoulders_5",
     "name": "Arnold Press",
     "description": "Sit on a bench holding dumbbells at shoulder height with palms facing you and elbows in front of your body. As you press the dumbbells up, rotate your palms outward so they face forward at the top of the movement. Lower back down while rotating your palms back to face you. This rotational pressing variation, made famous by Arnold Schwarzenegger, provides a unique stimulus by working the shoulders through a greater range of motion and hitting all three deltoid heads more completely than standard presses.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -53,7 +53,7 @@
     "id": "shoulders_6",
     "name": "Single-Arm Dumbbell Press",
     "description": "Stand or sit holding a dumbbell at shoulder height in one hand, your other hand on your hip or extended for balance. Press the dumbbell straight up until your arm is fully extended, then lower back to shoulder height with control. The unilateral nature creates an anti-lateral flexion challenge for your core while building single-arm pressing strength. This variation helps identify and correct imbalances while improving shoulder stability and core engagement.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -63,7 +63,7 @@
     "id": "shoulders_7",
     "name": "Push Press",
     "description": "Stand with feet shoulder-width apart holding a barbell at shoulder height. Dip slightly by bending your knees, then explosively drive through your legs while pressing the bar overhead. Use leg drive to generate momentum to help you press heavier weights overhead than you could with strict pressing alone. Lower back to shoulders with control. This explosive variation allows you to overload the shoulders with heavier weight while building power and developing the stretch-shortening cycle.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -73,7 +73,7 @@
     "id": "shoulders_8",
     "name": "Dumbbell Lateral Raise",
     "description": "Stand with feet shoulder-width apart holding dumbbells at your sides with palms facing in. Keeping a slight bend in your elbows, raise the dumbbells out to the sides until your arms are parallel to the ground, leading with your elbows. Pause briefly at the top, then lower back down with control. Avoid using momentum or excessive body English. This isolation exercise specifically targets the medial (side) deltoids, crucial for building shoulder width and creating the coveted V-taper.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -83,7 +83,7 @@
     "id": "shoulders_9",
     "name": "Cable Lateral Raise",
     "description": "Stand beside a cable machine with the cable set at the lowest position. Grab the handle with your far hand (crossing in front of your body) and step away slightly to create tension. With a slight bend in your elbow, raise the cable out to the side until your arm is parallel to the ground. Lower with control, maintaining tension throughout. The constant tension from the cable provides a different stimulus than dumbbells, keeping the medial delts under load throughout the entire range of motion.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -93,7 +93,7 @@
     "id": "shoulders_10",
     "name": "Seated Lateral Raise",
     "description": "Sit on the edge of a bench holding dumbbells at your sides with palms facing in. Raise the dumbbells out to the sides until your arms are parallel to the ground, leading with your elbows. Lower back down with control. The seated position removes the ability to use momentum or body English, forcing strict form and making the exercise more challenging. This variation ensures maximum isolation of the medial deltoids.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -103,7 +103,7 @@
     "id": "shoulders_11",
     "name": "Dumbbell Front Raise",
     "description": "Stand with feet shoulder-width apart holding dumbbells in front of your thighs with palms facing down or toward each other. Keeping your arms straight with a slight bend in the elbows, raise one or both dumbbells directly in front of you until they reach shoulder height. Lower back down with control without swinging. This isolation movement specifically targets the anterior (front) deltoids, which are also heavily involved in pressing movements.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -113,7 +113,7 @@
     "id": "shoulders_12",
     "name": "Barbell Front Raise",
     "description": "Stand holding a barbell in front of your thighs with an overhand grip, hands about shoulder-width apart. Keeping your arms straight with a slight elbow bend, raise the barbell directly in front of you until it reaches shoulder height or slightly above. Lower back down with control. Using a barbell allows you to lift heavier weight than dumbbells while working both front delts simultaneously, building strength and mass in the anterior deltoids.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -123,7 +123,7 @@
     "id": "shoulders_13",
     "name": "Cable Front Raise",
     "description": "Stand facing away from a cable machine with the cable set at the lowest position. Hold the handle or rope behind your back with both hands or one hand. Raise your arm(s) forward and up until shoulder height or slightly above. Lower with control, maintaining tension throughout. The cable provides constant tension on the front delts throughout the entire movement, offering a unique stimulus compared to free weight variations.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -133,7 +133,7 @@
     "id": "shoulders_14",
     "name": "Bent-Over Dumbbell Reverse Fly",
     "description": "Stand with feet shoulder-width apart, hinge forward at the hips until your torso is nearly parallel to the ground, holding dumbbells hanging straight down with palms facing each other. Keeping a slight bend in your elbows, raise the dumbbells out to the sides until your arms are parallel to the ground, squeezing your rear delts and upper back. Lower with control. This isolation exercise targets the often-neglected posterior (rear) deltoids, essential for shoulder health and balanced development.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -143,7 +143,7 @@
     "id": "shoulders_15",
     "name": "Seated Bent-Over Dumbbell Reverse Fly",
     "description": "Sit on the edge of a bench with your torso bent forward over your thighs, holding dumbbells behind your calves with palms facing each other. Raise the dumbbells out to the sides by squeezing your rear delts, lifting until your arms are parallel to the ground. Lower back down with control. The seated position provides stability and ensures strict form, maximizing rear deltoid isolation while minimizing lower back strain.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -153,7 +153,7 @@
     "id": "shoulders_16",
     "name": "Cable Reverse Fly",
     "description": "Stand in the middle of a cable crossover station with cables set at shoulder height. Cross your arms and grab the opposite handles (left hand grabs right cable, right hand grabs left). Pull the cables back and outward in a reverse fly motion, squeezing your rear delts and bringing your arms out to the sides. Return with control. The constant cable tension effectively targets the posterior deltoids throughout the entire range of motion.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -163,7 +163,7 @@
     "id": "shoulders_17",
     "name": "Face Pull",
     "description": "Attach a rope to a cable machine at upper chest or face height. Grab both ends of the rope with an overhand grip and step back to create tension. Pull the rope toward your face, separating the ends and bringing them beside your ears, with your elbows high and back. Squeeze your rear delts and upper back, then return to the starting position with control. This exercise targets the rear deltoids, rhomboids, and rotator cuff, crucial for shoulder health and posture.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -173,7 +173,7 @@
     "id": "shoulders_18",
     "name": "Pec Deck Reverse Fly",
     "description": "Sit facing a pec deck machine with your chest against the pad. Grab the handles with arms extended in front of you at shoulder height. Pull the handles back and outward in a reverse fly motion, squeezing your rear delts and bringing your arms out to the sides. Return with control. The fixed path and constant tension of the machine make this an excellent rear delt builder, especially useful for beginners learning the movement pattern.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -183,7 +183,7 @@
     "id": "shoulders_19",
     "name": "Barbell Upright Row",
     "description": "Stand holding a barbell in front of your thighs with an overhand grip, hands about shoulder-width apart or slightly closer. Pull the bar straight up along your body by leading with your elbows, bringing the bar to upper chest or chin height. Keep the bar close to your body throughout. Lower with control. This compound movement targets all three deltoid heads with particular emphasis on the medial delts, while also working the upper traps.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -193,7 +193,7 @@
     "id": "shoulders_20",
     "name": "Dumbbell Upright Row",
     "description": "Stand holding dumbbells in front of your thighs with palms facing your body. Pull the dumbbells straight up by leading with your elbows, bringing them to upper chest height while keeping them close to your body. Lower back down with control. The dumbbells allow for a more natural movement path than a barbell, reducing potential shoulder discomfort while still effectively targeting the deltoids and upper traps.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -203,7 +203,7 @@
     "id": "shoulders_21",
     "name": "Cable Upright Row",
     "description": "Attach a straight bar or rope to a low cable pulley. Stand facing the machine and grab the attachment with an overhand grip, hands about shoulder-width apart. Pull the cable straight up along your body by leading with your elbows, bringing the attachment to upper chest height. Lower with control, maintaining tension throughout. The constant cable tension provides a unique stimulus and keeps the shoulders under load throughout the entire range of motion.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -213,7 +213,7 @@
     "id": "shoulders_22",
     "name": "Machine Shoulder Press",
     "description": "Sit in a shoulder press machine with your back against the pad and grab the handles at shoulder height. Press the handles straight up until your arms are fully extended, then lower back to the starting position with control. The fixed path of the machine provides stability and allows you to focus purely on pushing, making it excellent for beginners or for pushing to failure safely. This variation is also useful for isolating the shoulders when fatigued.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -223,7 +223,7 @@
     "id": "shoulders_23",
     "name": "Smith Machine Shoulder Press",
     "description": "Position a bench inside a Smith machine and set the bar at upper chest height. Sit with your back against the bench and grab the bar slightly wider than shoulder-width. Unrack the bar and press it straight up until your arms are fully extended, then lower back to the starting position with control. The fixed vertical path of the Smith machine provides stability while allowing you to lift heavy weight safely, making it effective for building shoulder strength and mass.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -233,7 +233,7 @@
     "id": "shoulders_24",
     "name": "Pike Push-Up",
     "description": "Start in a downward dog position with your hands on the floor shoulder-width apart and hips high in the air, forming an inverted V with your body. Bend your elbows and lower your head toward the floor between your hands, keeping your hips high. Press back up to the starting position. This bodyweight variation shifts more emphasis to the shoulders compared to regular push-ups, serving as an excellent progression toward handstand push-ups.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -242,7 +242,7 @@
     "id": "shoulders_25",
     "name": "Elevated Pike Push-Up",
     "description": "Place your feet on an elevated surface like a bench or box and assume a pike position with your hands on the floor. The higher elevation increases the angle and difficulty. Bend your elbows and lower your head toward the floor, then press back up. The increased elevation places more of your bodyweight over your shoulders, making this significantly harder than regular pike push-ups and closer to a handstand push-up.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -251,7 +251,7 @@
     "id": "shoulders_26",
     "name": "Handstand Push-Up",
     "description": "Kick up into a handstand against a wall with your hands slightly wider than shoulder-width and body straight. Lower yourself by bending your elbows until your head nearly touches the floor, then press back up to full arm extension. Keep your core tight and body as straight as possible. This advanced bodyweight exercise requires significant shoulder strength, balance, and body control, making it one of the most challenging shoulder exercises.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -260,7 +260,7 @@
     "id": "shoulders_27",
     "name": "Landmine Press",
     "description": "Place a barbell in a landmine attachment or corner and load the free end. Hold the end of the barbell at shoulder height with one hand, standing perpendicular to the bar. Press the bar up and forward in an arc until your arm is fully extended, then lower back to shoulder height with control. The angled pressing path is more natural for the shoulder joint and reduces stress while still building pressing strength. This unilateral variation also challenges core stability.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -270,7 +270,7 @@
     "id": "shoulders_28",
     "name": "Plate Front Raise",
     "description": "Stand holding a weight plate with both hands at the 3 and 9 o'clock positions, arms extended down in front of your thighs. Keeping your arms straight with a slight elbow bend, raise the plate directly in front of you until it reaches shoulder height or slightly above. Lower back down with control. This variation allows you to use a different grip pattern while effectively targeting the anterior deltoids, and the plate provides a stable platform for the movement.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -280,7 +280,7 @@
     "id": "shoulders_29",
     "name": "Bradford Press",
     "description": "Hold a barbell at the front of your shoulders with a narrow grip (hands inside shoulder-width). Press the bar up and slightly back, stopping just before full lockout, then lower it behind your neck to the back of your shoulders. Immediately press it back up and forward to the front starting position. Continue alternating in this fashion. This unique variation keeps constant tension on all three deltoid heads throughout the movement and improves shoulder mobility.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -290,7 +290,7 @@
     "id": "shoulders_30",
     "name": "Behind-the-Neck Press",
     "description": "Sit or stand holding a barbell across the back of your shoulders at the base of your neck. Press the bar straight up until your arms are fully extended overhead, then lower back to the starting position behind your neck with control. Only perform this exercise if you have good shoulder mobility and flexibility. This variation emphasizes the medial and posterior deltoids more than front presses, though it requires caution and proper mobility.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -300,7 +300,7 @@
     "id": "shoulders_31",
     "name": "Single-Arm Cable Lateral Raise",
     "description": "Stand beside a cable machine with the cable at the lowest position. Grab the handle with your near hand (not crossing) and step slightly away. With a slight bend in your elbow, raise the cable out to the side until your arm is parallel to the ground. Lower with control. Perform all reps on one side before switching. This unilateral variation allows you to focus on each medial delt individually and correct any imbalances.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -310,7 +310,7 @@
     "id": "shoulders_32",
     "name": "Leaning Lateral Raise",
     "description": "Stand beside a sturdy vertical support and grab it with one hand. Hold a dumbbell in your other hand and lean away from the support, creating a slight angle with your body. Raise the dumbbell out to the side until it's parallel to the ground or slightly above. The leaning position pre-stretches the medial delt and allows for a greater range of motion, making this an effective variation for targeting shoulder width.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -320,7 +320,7 @@
     "id": "shoulders_33",
     "name": "Y-Raise",
     "description": "Stand holding light dumbbells at your sides or lie face-down on an incline bench. Raise your arms up and outward at about 30-45 degrees from your body, forming a Y-shape when viewed from the front. Keep your thumbs pointing up throughout. Squeeze your shoulder blades together at the top, then lower with control. This movement targets the lower traps and rear delts while improving shoulder health and posture.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -330,7 +330,7 @@
     "id": "shoulders_34",
     "name": "Lu Raise",
     "description": "Stand holding a light barbell or dumbbells in front of your thighs with a wide grip. Raise your arms up and outward at about 45 degrees, ending with the weight overhead in a wide Y-position. Keep your arms relatively straight throughout. Lower back down with control. This exercise, named after Chinese weightlifter Lu Xiaojun, builds shoulder strength and mobility throughout a large range of motion, working all three deltoid heads.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -340,7 +340,7 @@
     "id": "shoulders_35",
     "name": "Bus Driver",
     "description": "Hold a weight plate at arms' length in front of you at shoulder height with both hands at the 3 and 9 o'clock positions. Keeping your arms extended and the plate at shoulder height, rotate the plate left and right as if steering a bus. Continue rotating for reps or time without letting your arms drop. This isometric hold with dynamic rotation challenges the anterior and medial deltoids while building shoulder endurance.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -350,7 +350,7 @@
     "id": "shoulders_36",
     "name": "Single-Arm Landmine Press",
     "description": "Place a barbell in a landmine attachment and load the free end. Hold the end at shoulder height with one hand while standing in a staggered or split stance. Press the bar up and forward in an arc until your arm is fully extended, then lower back down. This unilateral pressing variation provides a more natural pressing angle while challenging anti-rotation core stability and addressing any side-to-side strength imbalances.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -360,7 +360,7 @@
     "id": "shoulders_37",
     "name": "Kneeling Landmine Press",
     "description": "Place a barbell in a landmine attachment and kneel on the floor holding the free end at shoulder height with one or both hands. Press the bar up and forward until your arm(s) are fully extended, then lower back down with control. The kneeling position removes leg drive and requires more core stability, forcing your shoulders to do more work. This variation is excellent for building pure shoulder pressing strength.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -370,7 +370,7 @@
     "id": "shoulders_38",
     "name": "Alternating Dumbbell Press",
     "description": "Stand or sit holding dumbbells at shoulder height with palms facing forward. Press one dumbbell up to full extension while keeping the other at shoulder height, then lower it back down. Immediately press the other dumbbell up while the first stays at shoulder height. Continue alternating. This variation increases time under tension for each shoulder and challenges stability and coordination.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -380,7 +380,7 @@
     "id": "shoulders_39",
     "name": "Incline Bench Reverse Fly",
     "description": "Set an incline bench to about 30-45 degrees and lie chest-down on it holding dumbbells. Let your arms hang straight down with palms facing each other. Raise the dumbbells out to the sides until your arms are parallel to the ground, squeezing your rear delts and upper back. Lower with control. The incline bench provides chest support and ensures strict form, maximally isolating the posterior deltoids and upper back.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -390,7 +390,7 @@
     "id": "shoulders_40",
     "name": "Cuban Press",
     "description": "Hold light dumbbells or a barbell at waist height with elbows bent at 90 degrees and upper arms parallel to the ground. Rotate your forearms up, externally rotating your shoulders until the weights are overhead. Then press the weights straight up to full extension. Reverse the movement to return to starting position. This complex movement combines external rotation with pressing, building rotator cuff strength and shoulder stability while working all three deltoid heads.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -400,7 +400,7 @@
     "id": "shoulders_41",
     "name": "Six-Way Shoulder Raise",
     "description": "Hold light dumbbells and perform six consecutive raising movements: front raise, lateral raise, bent-over reverse fly, then repeat. This is considered one rep. This comprehensive movement hits all three deltoid heads in succession, providing a complete shoulder workout in one exercise. The high volume and variety make it excellent for shoulder endurance and muscular development.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -410,7 +410,7 @@
     "id": "shoulders_42",
     "name": "Band Pull-Apart",
     "description": "Hold a resistance band at chest height with arms extended and hands about shoulder-width apart. Pull the band apart by bringing your hands out to the sides, squeezing your shoulder blades together. Keep your arms straight or with a slight elbow bend. Return to starting position with control. This exercise targets the rear delts, rhomboids, and rotator cuff, making it excellent for shoulder health, posture, and injury prevention.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -419,7 +419,7 @@
     "id": "shoulders_43",
     "name": "Overhead Band Pull-Apart",
     "description": "Hold a resistance band overhead with arms extended and hands wider than shoulder-width. Pull the band apart by bringing your hands down and out to the sides in an arc until they're at shoulder height, squeezing your shoulder blades together. Return to overhead position with control. This variation emphasizes the rear delts and upper back while also improving overhead mobility.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -428,7 +428,7 @@
     "id": "shoulders_44",
     "name": "Wall Walk",
     "description": "Start in a push-up position with your feet against a wall. Walk your hands backward toward the wall while simultaneously walking your feet up the wall. Continue until you're in a handstand position or as close as you can safely get. Walk back down to the starting position. This dynamic bodyweight exercise builds shoulder strength, stability, and confidence in inverted positions while also challenging core strength.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -437,7 +437,7 @@
     "id": "shoulders_45",
     "name": "Dumbbell Shrug",
     "description": "Stand holding dumbbells at your sides with arms straight and palms facing your body. Elevate your shoulders straight up toward your ears in a shrugging motion, squeezing at the top. Lower back down with control. Avoid rolling your shoulders forward or backward. While primarily targeting the upper trapezius, this exercise also involves the levator scapulae and contributes to overall shoulder and upper back development.",
-    "type": "strength",
+    "categories": ["strength", "shoulders"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}

@@ -3,7 +3,7 @@
     "id": "cardio_1",
     "name": "Treadmill",
     "description": "Step onto the treadmill and start at a walking pace to warm up. Gradually increase the speed to your desired pace using the speed controls. Maintain an upright posture with shoulders back, look forward, and pump your arms naturally at your sides. Land mid-foot with each step and keep your stride smooth and controlled. Monitor your heart rate and adjust speed as needed for your target training zone.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "speed", "label": "Speed", "unit": "km/h", "type": "number"}
@@ -13,7 +13,7 @@
     "id": "cardio_2",
     "name": "Incline Treadmill",
     "description": "Set the treadmill to a steep incline (typically 8-15%) and maintain a moderate walking speed (3-5 km/h). Keep your posture upright - avoid leaning forward or holding onto the rails, as this reduces the effectiveness. Engage your glutes and hamstrings as you push through each step. Take deliberate, controlled steps and maintain steady breathing. This exercise is excellent for building lower body strength while providing cardiovascular benefits with less joint impact than running.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "incline", "label": "Incline", "unit": "%", "type": "number"}
@@ -23,7 +23,7 @@
     "id": "cardio_3",
     "name": "Stationary Bike",
     "description": "Adjust the seat height so your knee is slightly bent when the pedal is at its lowest position. Sit on the saddle with feet secured in pedal straps or cages. Start pedaling at a comfortable pace and gradually increase your speed and resistance to your target intensity. Keep your upper body relaxed with a slight forward lean, hands resting lightly on the handlebars. Maintain a steady cadence (pedal rotations per minute) throughout your workout. Adjust resistance to control effort level.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "resistance", "label": "Resistance", "unit": "level", "type": "number"}
@@ -33,7 +33,7 @@
     "id": "cardio_4",
     "name": "Spin Class",
     "description": "Join a group cycling class led by an instructor. Adjust your bike seat and handlebars for proper fit before class begins. Follow the instructor's cues to adjust resistance (tension knob) and speed. The class typically includes intervals of seated riding, standing climbs, sprints, and recovery periods. Maintain proper form with core engaged and shoulders relaxed. Keep your feet secured and pedal in smooth circles. Match the suggested cadence and resistance to the music and instructor's guidance.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "resistance", "label": "Avg Resistance", "unit": "level", "type": "number"}
@@ -43,7 +43,7 @@
     "id": "cardio_5",
     "name": "Rowing Machine",
     "description": "Sit on the rowing machine seat and secure your feet in the foot straps. Grab the handle with both hands. The rowing motion has four phases: catch (knees bent, arms extended), drive (push with legs, then lean back, then pull arms), finish (legs extended, handle at chest), and recovery (extend arms, lean forward, bend knees). Drive powerfully with your legs first, then engage your core and pull with your arms. Keep your back straight and core engaged throughout. The motion should be smooth and continuous: 60% leg drive, 20% core, 20% arm pull.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "distance", "label": "Distance", "unit": "meters", "type": "number"}
@@ -53,7 +53,7 @@
     "id": "cardio_6",
     "name": "Elliptical",
     "description": "Step onto the elliptical machine and place your feet on the pedals, hands on the moving handles. Start moving your legs in a smooth, continuous elliptical motion - push down and back with one leg while the other comes forward and up. Coordinate your arm movement by pushing and pulling the handles in sync with your legs. Keep your posture upright, core engaged, and weight evenly distributed. Adjust resistance and incline to modify intensity. You can also pedal in reverse to target different muscles.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "resistance", "label": "Resistance", "unit": "level", "type": "number"}
@@ -63,7 +63,7 @@
     "id": "cardio_7",
     "name": "Stair Climber",
     "description": "Step onto the stair climber machine and lightly hold the side rails for balance (not support). Begin stepping as the stairs rotate downward beneath you, lifting your knees to step up continuously. Maintain an upright posture without leaning heavily on the rails. Keep your entire foot on each step rather than just your toes. Adjust the speed to control intensity - faster speeds mean you must step more quickly. Engage your glutes and core with each step. The machine tracks floors climbed and calories burned.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "floors", "label": "Floors", "unit": "floors", "type": "number"}
@@ -73,7 +73,7 @@
     "id": "cardio_8",
     "name": "StepMill",
     "description": "Step onto the rotating staircase of the StepMill and grab the handles lightly for balance. As the steps revolve downward, continuously climb upward by placing each foot fully on a step. Avoid leaning on the rails - use them only for light balance. Keep your torso upright and look forward, not down at your feet. Adjust the speed setting to make the steps rotate faster or slower. Take one step at a time or skip steps for increased intensity. This simulates endless stair climbing.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "floors", "label": "Floors", "unit": "floors", "type": "number"}
@@ -83,7 +83,7 @@
     "id": "cardio_9",
     "name": "Jump Rope",
     "description": "Hold one end of the rope in each hand with the rope behind your feet. Swing the rope overhead and jump as it passes under your feet. Use your wrists to rotate the rope, not your entire arms. Jump only high enough to clear the rope - stay light on your feet and land softly on the balls of your feet. Keep your elbows close to your sides and maintain an upright posture. Start with basic single jumps, jumping on both feet simultaneously. Maintain a steady rhythm and breathing pattern.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "jumps", "label": "Total Jumps", "unit": "jumps", "type": "number"}
@@ -93,7 +93,7 @@
     "id": "cardio_10",
     "name": "Double Unders",
     "description": "Hold the jump rope handles and start with a higher, more powerful jump than regular jump rope. As you jump, quickly flick your wrists to make the rope pass under your feet twice before landing. This requires precise timing - jump higher, spin faster. Keep your core tight and arms close to your body. Land softly with bent knees. This advanced jump rope skill requires practice but provides intense cardiovascular stimulus in short bursts.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -103,7 +103,7 @@
     "id": "cardio_11",
     "name": "Burpees",
     "description": "Start standing. Squat down and place your hands on the floor in front of your feet. Jump or step both feet back into a plank position with your body in a straight line. Optionally, perform a push-up. Jump or step your feet back to your hands, returning to the squat position. Explosively jump up, reaching your arms overhead. Land softly and immediately begin the next rep. Maintain core tension throughout and breathe rhythmically. This full-body exercise rapidly elevates heart rate.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -113,7 +113,7 @@
     "id": "cardio_12",
     "name": "Mountain Climbers",
     "description": "Start in a plank position with hands directly under shoulders and body in a straight line from head to heels. Keeping your core tight and hips level, drive one knee forward toward your chest, then quickly switch legs as if running in place horizontally. Continue alternating legs as fast as you can while maintaining plank position. Keep your hands firmly planted and avoid bouncing your hips up and down. Breathe steadily throughout this high-intensity core and cardio exercise.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -123,7 +123,7 @@
     "id": "cardio_13",
     "name": "High Knees",
     "description": "Stand tall with feet hip-width apart. Run in place while lifting your knees as high as possible toward your chest with each step - ideally bringing your thighs parallel to the ground. Pump your arms in running motion. Land lightly on the balls of your feet and maintain a fast pace. Keep your core engaged and posture upright. Focus on lifting knees high rather than just running fast. This exercise quickly elevates heart rate and works hip flexors and core.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -133,7 +133,7 @@
     "id": "cardio_14",
     "name": "Jumping Jacks",
     "description": "Stand with feet together and arms at your sides. Jump and simultaneously spread your feet wider than hip-width while raising your arms out to the sides and overhead, bringing your hands to touch or clap above your head. Jump again to return to the starting position with feet together and arms down. Maintain a steady rhythm and land softly on the balls of your feet. Keep your core engaged and knees soft. This classic exercise provides steady-state cardio and full-body movement.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -143,7 +143,7 @@
     "id": "cardio_15",
     "name": "Box Jumps",
     "description": "Stand facing a sturdy box or platform at a comfortable distance (about a foot away). Bend your knees and swing your arms back, then explosively jump up onto the box, swinging your arms forward for momentum. Land softly with both feet fully on the box in a quarter-squat position, knees aligned over toes. Stand up fully on the box, then carefully step down one foot at a time (or jump down if experienced). Reset and repeat. Focus on landing softly and jumping with control.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -153,7 +153,7 @@
     "id": "cardio_16",
     "name": "Jump Squats",
     "description": "Stand with feet shoulder-width apart. Lower into a squat position by bending your knees and pushing your hips back, as if sitting in a chair. Keep your chest up and weight in your heels. From the bottom of the squat, explosively jump up as high as you can, fully extending your hips, knees, and ankles. Reach your arms overhead. Land softly with bent knees, immediately absorbing the impact by going back into the squat position. Repeat continuously for reps or time.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -163,7 +163,7 @@
     "id": "cardio_17",
     "name": "Box Step-Ups",
     "description": "Stand facing a box or platform with feet hip-width apart. Step one foot fully onto the box, placing your entire foot flat on the surface. Drive through the heel of the elevated foot to step up, bringing your other foot onto the box. Stand fully upright on the box. Step down with the same foot that stepped up first, then the other foot. Alternate which foot leads, or complete all reps on one side before switching. Keep your chest up and core engaged throughout.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"},
@@ -174,7 +174,7 @@
     "id": "cardio_18",
     "name": "Battle Ropes",
     "description": "Stand with feet shoulder-width apart, knees slightly bent, facing the anchor point of the battle ropes. Grab one end of each rope with hands. Keeping your core tight and back straight, rapidly alternate raising and lowering each arm, creating waves in the ropes. Use your whole body - slightly squat and engage your core to generate power. Variations include simultaneous waves (both arms together), slams (lifting ropes overhead and slamming down), or circular motions. Maintain intensity for timed intervals.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "intervals", "label": "Intervals", "unit": "rounds", "type": "number"}
@@ -184,7 +184,7 @@
     "id": "cardio_19",
     "name": "Ski Erg",
     "description": "Stand facing the Ski Erg machine and grab the handles overhead. Pull the handles down powerfully using your core, lats, and arms in a motion similar to cross-country skiing. Bend at the hips and knees slightly as you pull down. Extend your arms back up smoothly, allowing the handles to return to the starting position. Engage your core throughout and use your whole body, not just your arms. The motion should be fluid and continuous with a strong pull and controlled return.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "distance", "label": "Distance", "unit": "meters", "type": "number"}
@@ -194,7 +194,7 @@
     "id": "cardio_20",
     "name": "Assault Bike",
     "description": "Sit on the assault bike (air bike/fan bike) and place your feet on the pedals and hands on the moving handles. Begin pedaling while simultaneously pushing and pulling the handles. The harder and faster you work, the more resistance the fan creates. Keep your core engaged and maintain an upright posture. Push through your legs and coordinate your arm movements. This full-body cardio machine is excellent for high-intensity intervals. The fan provides smooth, scalable resistance based on your effort.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "distance", "label": "Distance", "unit": "km", "type": "number"}
@@ -204,7 +204,7 @@
     "id": "cardio_21",
     "name": "VersaClimber",
     "description": "Step onto the VersaClimber and grab the handles. Place your feet on the foot pedals. Begin a climbing motion by simultaneously pulling one handle down while pushing the opposite foot pedal down, alternating sides in a coordinated climbing rhythm. Keep your core tight and body close to the machine. The motion simulates vertical climbing. Adjust the resistance level and maintain a steady pace. This provides an intense full-body cardio workout that's low-impact on joints.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "floors", "label": "Floors", "unit": "floors", "type": "number"}
@@ -214,7 +214,7 @@
     "id": "cardio_22",
     "name": "Plank Jacks",
     "description": "Start in a high plank position with hands under shoulders and body in a straight line. Keep your core tight and hips level. Jump both feet out wide to the sides, like the bottom position of a jumping jack, then jump them back together. Continue jumping feet out and in while maintaining the plank position. Keep your hands planted firmly and avoid letting your hips sag or pike up. This combines core stability with cardiovascular work.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -224,7 +224,7 @@
     "id": "cardio_23",
     "name": "Squat Thrusts",
     "description": "Start standing with feet hip-width apart. Squat down and place your hands flat on the floor in front of you. Jump or step both feet straight back into a high plank position. Immediately jump or step feet back forward to your hands, returning to the squat position. Stand up to complete one rep. This is similar to a burpee but without the jump at the end. Keep your core engaged throughout and maintain a steady, fast pace. Focus on smooth transitions between positions.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -234,7 +234,7 @@
     "id": "cardio_24",
     "name": "Bear Crawls",
     "description": "Start on your hands and knees with hands under shoulders and knees under hips. Lift your knees a few inches off the ground so you're on your hands and toes. Keep your back flat, core engaged, and hips down. Move forward by advancing your right hand and left foot simultaneously, then left hand and right foot. Keep your movements controlled and your body low to the ground. Crawl forward for a set distance, maintaining tension in your core throughout. This builds cardiovascular endurance and full-body strength.",
-    "type": "cardio",
+    "categories": ["cardio"],
     "fields": [
       {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
       {"name": "distance", "label": "Distance", "unit": "meters", "type": "number"}

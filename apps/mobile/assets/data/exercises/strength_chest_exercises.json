@@ -3,7 +3,7 @@
     "id": "chest_1",
     "name": "Barbell Bench Press",
     "description": "Lie flat on a bench with feet planted firmly on the ground. Grip the barbell slightly wider than shoulder-width and unrack it, positioning it directly over your chest. Lower the bar in a controlled manner to your mid-chest, keeping your elbows at about a 45-degree angle. Press the bar back up explosively while maintaining a slight arch in your lower back and keeping your shoulder blades retracted throughout the movement. This is the fundamental compound movement for building overall chest mass and strength.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -13,7 +13,7 @@
     "id": "chest_2",
     "name": "Incline Barbell Press",
     "description": "Set an adjustable bench to a 30-45 degree incline and position yourself under a barbell in a rack with feet planted firmly. Grip the bar slightly wider than shoulder-width and unrack it, holding it above your upper chest. Lower the bar in a controlled manner to your upper chest, keeping your elbows at about a 45-degree angle. Press the bar back up explosively, focusing on contracting your upper pectorals while maintaining shoulder blade retraction throughout the movement. This targets the often-underdeveloped upper chest region.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -23,7 +23,7 @@
     "id": "chest_3",
     "name": "Decline Barbell Press",
     "description": "Secure your legs at the top of a decline bench set to 15-30 degrees and carefully lie back with the barbell positioned at arm's length above your lower chest. Lower the bar to your lower sternum with elbows tucked at 45 degrees, maintaining control throughout the descent. Press the bar back up in a slight arc toward your upper chest, keeping your shoulder blades retracted. Focus on engaging your lower pectorals while maintaining a stable base with your legs secured. This emphasizes the lower chest region.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -33,7 +33,7 @@
     "id": "chest_4",
     "name": "Dumbbell Bench Press",
     "description": "Sit on a flat bench with dumbbells resting on your thighs, then kick them up as you lie back, positioning them at chest level with palms facing forward. Press the dumbbells up until your arms are fully extended, bringing them slightly together at the top. Lower with control until your elbows are slightly below shoulder level, feeling a stretch in your chest. The dumbbell variation allows for greater range of motion and more natural movement patterns compared to barbell, helping address strength imbalances between sides.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -43,7 +43,7 @@
     "id": "chest_5",
     "name": "Incline Dumbbell Press",
     "description": "Set an adjustable bench to a 30-45 degree incline and sit with dumbbells resting on your thighs. Kick the weights up as you lie back, positioning them at shoulder level with palms facing forward. Press the dumbbells up and slightly together at the top, following a natural arc. Lower with control until your elbows are slightly below shoulder level, feeling a stretch in your upper chest. This movement provides excellent upper chest activation with the added benefit of unilateral work to fix muscle imbalances.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -53,7 +53,7 @@
     "id": "chest_6",
     "name": "Decline Dumbbell Press",
     "description": "Secure yourself on a decline bench set to 15-30 degrees with dumbbells in hand. Position the dumbbells at your lower chest with palms facing forward. Press the weights up until arms are extended, bringing them slightly together at the top. Lower with control, allowing elbows to go slightly below torso level for a deep stretch in your lower chest. This variation targets the lower pectorals while the decline angle reduces shoulder involvement, making it easier on the shoulder joints.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -63,7 +63,7 @@
     "id": "chest_7",
     "name": "Dumbbell Chest Fly",
     "description": "Lie on a flat bench with a dumbbell in each hand, arms extended above your chest with a slight bend in your elbows and palms facing each other. Lower the weights out to your sides in a wide arc, keeping the bend in your elbows constant throughout. Descend until you feel a deep stretch across your chest, but don't let your elbows drop below shoulder level. Squeeze your pecs to bring the dumbbells back together above your chest, maintaining the arc motion. This isolation movement emphasizes the stretch and contraction of the chest muscles.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -73,7 +73,7 @@
     "id": "chest_8",
     "name": "Incline Dumbbell Fly",
     "description": "Set a bench to 30-45 degrees and lie back with dumbbells held above your upper chest, palms facing each other with a slight elbow bend. Lower the weights out and down in a wide arc, maintaining the fixed elbow angle throughout the movement. Feel a deep stretch across your upper chest at the bottom position. Bring the dumbbells back together using your chest muscles, following the same arc path. The incline angle specifically targets the upper pectorals and front deltoids.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -83,7 +83,7 @@
     "id": "chest_9",
     "name": "Decline Dumbbell Fly",
     "description": "Secure yourself on a decline bench with dumbbells held at arm's length above your lower chest, palms facing each other with slightly bent elbows. Lower the weights out to the sides in an arc motion, keeping elbows at a fixed angle. Descend until you feel a stretch in your lower chest without letting elbows drop too low. Squeeze your lower pecs to bring the dumbbells back to starting position. The decline angle shifts tension to the lower chest fibers and reduces shoulder strain.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -93,7 +93,7 @@
     "id": "chest_10",
     "name": "Push-Ups",
     "description": "Start in a high plank position with hands slightly wider than shoulder-width apart and body forming a straight line from head to heels. Lower your chest toward the ground by bending your elbows, keeping them at a 45-degree angle to your torso. Descend until your chest is just above the floor or touches it, maintaining core tension throughout. Push back up to the starting position, fully extending your arms while keeping your body rigid. This classic bodyweight movement builds functional pressing strength and core stability.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -102,7 +102,7 @@
     "id": "chest_11",
     "name": "Incline Push-Ups",
     "description": "Place your hands on an elevated surface like a bench, box, or bar set at waist to chest height, slightly wider than shoulder-width. Step your feet back to create a straight body line at an incline angle. Lower your chest toward the elevated surface by bending your elbows to 45 degrees. Push back up to full arm extension while maintaining core engagement. The elevated hand position makes this easier than regular push-ups, perfect for beginners or high-rep finishing sets while still effectively working the chest.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -111,7 +111,7 @@
     "id": "chest_12",
     "name": "Decline Push-Ups",
     "description": "Place your feet on an elevated surface like a bench or box while your hands are on the ground slightly wider than shoulder-width. Maintain a straight body line from elevated feet to head. Lower your chest toward the floor with elbows at 45 degrees, descending until chest nearly touches ground. Push back up powerfully to full extension. The feet-elevated position increases difficulty and shifts more emphasis to the upper chest and shoulders, making it ideal for advanced trainees.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -120,7 +120,7 @@
     "id": "chest_13",
     "name": "Diamond Push-Ups",
     "description": "Assume a push-up position with hands close together under your chest, forming a diamond or triangle shape with your index fingers and thumbs touching. Keep your body in a straight line from head to heels with core engaged and elbows tucked very close to your sides. Lower yourself until your chest nearly touches your hands, maintaining the tight elbow position. Press back up to full arm extension. While this heavily emphasizes triceps, it also provides excellent inner chest stimulation due to the narrow hand placement.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -129,7 +129,7 @@
     "id": "chest_14",
     "name": "Wide-Grip Push-Ups",
     "description": "Set up in a push-up position with hands placed significantly wider than shoulder-width, roughly 1.5 to 2 times your shoulder width. Keep your body straight and core tight. Lower your chest toward the ground, allowing your elbows to flare out more than standard push-ups. Descend until chest is just above floor, feeling a stretch across your chest. Push back up to starting position. The wide grip reduces tricep involvement and places greater stretch and tension on the chest muscles, particularly the outer pecs.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -138,7 +138,7 @@
     "id": "chest_15",
     "name": "Chest Dips",
     "description": "Grasp parallel bars or dip handles and jump or step up to support yourself with straight arms. Lean your torso forward about 30 degrees and allow your feet to drift slightly behind you. Lower yourself by bending your elbows and allowing them to flare slightly outward, descending until you feel a deep stretch in your chest or your upper arms are parallel to the ground. Keep the forward lean throughout. Push back up to the starting position, focusing on contracting your chest muscles. This advanced bodyweight movement heavily loads the chest and is excellent for building mass.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
     ]
@@ -147,7 +147,7 @@
     "id": "chest_16",
     "name": "Machine Chest Press",
     "description": "Adjust the seat height so the handles align with your mid-chest and sit with your back flat against the pad. Grip the handles with a neutral or pronated grip and plant your feet firmly. Push the handles forward in a smooth, controlled motion, extending your arms fully without locking out your elbows. Squeeze your chest at the peak contraction. Return the weight to the starting position with control, maintaining tension in your chest throughout the negative portion. Machines provide stable, consistent resistance ideal for safely pushing to failure.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -157,7 +157,7 @@
     "id": "chest_17",
     "name": "Cable Chest Fly",
     "description": "Stand in the center of a cable machine with handles set at shoulder height, grasping one in each hand with arms extended out to your sides. Step forward into a staggered stance and lean slightly forward, maintaining a soft bend in your elbows. Bring the handles together in front of your chest in a wide arc motion, focusing on squeezing your pecs at the point where your hands meet. Control the weight back to the starting position, feeling a stretch across your chest. Cables provide constant tension throughout the entire range of motion.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -167,7 +167,7 @@
     "id": "chest_18",
     "name": "Cable Crossover Low to High",
     "description": "Set cable pulleys to the lowest position and grasp a handle in each hand, standing in the center with arms extended down and out to the sides. Step forward into a split stance and maintain a slight forward lean with chest up. Pull the handles upward and together in front of your upper chest, crossing them slightly at the top in an arc motion. Focus on squeezing your upper pecs while controlling the weight back to the starting position with arms fully extended. This angle specifically targets the upper chest fibers.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -177,7 +177,7 @@
     "id": "chest_19",
     "name": "Cable Crossover High to Low",
     "description": "Set cable pulleys to the highest position and stand in the center, grasping a handle in each hand with arms extended up and out. Step forward into a staggered stance with a slight forward lean. Pull the handles downward and together in front of your lower abdomen in an arc motion, crossing them at the bottom. Focus on contracting your lower chest as you bring the cables together. Control the weight back up, feeling a stretch in your lower pecs. This downward angle emphasizes the lower chest region.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -187,7 +187,7 @@
     "id": "chest_20",
     "name": "Pec Deck Machine",
     "description": "Sit in a pec deck machine with your back flat against the pad and feet planted firmly on the ground. Position your forearms against the vertical pads with elbows bent at 90 degrees and at shoulder height. Adjust the seat so your upper arms are parallel to the floor. Squeeze your chest to bring the pads together in front of you, focusing on the contraction at the peak. Slowly control the pads back out to the starting position, feeling a deep stretch across your chest. This machine provides excellent isolation for the chest with minimal shoulder involvement.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -197,7 +197,7 @@
     "id": "chest_21",
     "name": "Smith Machine Bench Press",
     "description": "Position a flat bench centered under the Smith machine bar. Lie back with the bar aligned over your mid-chest and grip it slightly wider than shoulder-width. Unrack the bar by rotating it and lower it to your chest in a controlled manner, keeping elbows at 45 degrees. Press the bar back up along the fixed vertical path until arms are extended. The Smith machine provides a stable, guided bar path making it ideal for training without a spotter, pushing to failure safely, or focusing purely on chest contraction without worrying about balance.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -207,7 +207,7 @@
     "id": "chest_22",
     "name": "Smith Machine Incline Press",
     "description": "Set an adjustable bench to 30-45 degrees under the Smith machine bar, positioning it so the bar aligns with your upper chest. Lie back and grip the bar slightly wider than shoulders, unrack by rotating, then lower to your upper chest with controlled tempo. Press back up along the guided path, focusing on upper pec contraction. The fixed bar path allows you to safely overload your upper chest without needing balance or stabilization, perfect for isolating the target muscles and training to muscular failure.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -217,7 +217,7 @@
     "id": "chest_23",
     "name": "Smith Machine Decline Press",
     "description": "Position a decline bench under the Smith machine with the bar aligned over your lower chest. Secure your legs and lie back, gripping the bar slightly wider than shoulder-width. Unrack the bar and lower it to your lower sternum with elbows tucked at 45 degrees. Press back up along the machine's fixed path, squeezing your lower pecs. The Smith machine's stability is particularly useful for decline pressing where the inverted position can make balance more challenging with free weights.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -227,7 +227,7 @@
     "id": "chest_24",
     "name": "Dumbbell Pullover",
     "description": "Lie perpendicular across a flat bench with only your upper back and shoulders supported, feet planted firmly on the floor with hips slightly lower than shoulders. Hold a single dumbbell with both hands above your chest, arms slightly bent at the elbows. Lower the dumbbell in an arc behind your head until you feel a deep stretch in your chest and lats, keeping the elbow angle constant. Pull the weight back over your chest using your lats and chest muscles. This classic exercise uniquely targets both the chest and lats while expanding the rib cage.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -237,7 +237,7 @@
     "id": "chest_25",
     "name": "Barbell Floor Press",
     "description": "Lie on the floor with knees bent and feet flat, positioning yourself under a barbell in a rack or having it handed to you. Grip the bar slightly wider than shoulder-width and hold it above your chest. Lower the bar until your triceps and elbows touch the floor, then pause briefly. Press the bar back up explosively to full extension. The limited range of motion makes this excellent for building lockout strength, overloading the top portion of the press, and is more shoulder-friendly than full ROM bench pressing.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -247,7 +247,7 @@
     "id": "chest_26",
     "name": "Dumbbell Floor Press",
     "description": "Lie on the floor with knees bent and dumbbells held at chest level, elbows resting on the ground. Press the dumbbells up until arms are fully extended, bringing them slightly together at the top. Lower with control until your elbows and triceps touch the floor, then pause. The floor acts as a natural stopping point, preventing excessive shoulder extension and making this variation safer for those with shoulder issues. It emphasizes the lockout portion of the press while still effectively working the chest.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -257,7 +257,7 @@
     "id": "chest_27",
     "name": "Svend Press",
     "description": "Stand upright holding a weight plate (or two plates together) at chest level between both palms, squeezing it hard. Keep your arms bent at about 90 degrees with elbows at chest height. Press the plate straight out in front of you until arms are extended, maintaining constant inward pressure to squeeze the plates together. Bring the plate back to your chest with control. This unique exercise intensely targets the inner chest and creates a strong mind-muscle connection through the squeezing action throughout the movement.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -267,7 +267,7 @@
     "id": "chest_28",
     "name": "Landmine Press",
     "description": "Position a barbell in a landmine attachment or corner with weight loaded on one end. Grab the loaded end with one hand at shoulder height, standing in a staggered stance. Press the bar up and forward at a diagonal angle until your arm is fully extended overhead. Lower with control back to shoulder level. The angled pressing path creates unique tension on the chest and shoulders while the unilateral nature challenges core stability. This variation is excellent for athletes and those wanting a more functional pressing pattern.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -277,7 +277,7 @@
     "id": "chest_29",
     "name": "Close-Grip Bench Press",
     "description": "Lie on a flat bench with feet planted firmly and grip the barbell with hands positioned at shoulder-width or slightly narrower, inside your normal bench press grip. Unrack the bar and position it over your chest. Lower the bar to your lower chest or upper abdomen with elbows tucked tightly to your sides throughout. Press back up explosively, maintaining the narrow grip and close elbow position. While primarily a tricep exercise, this variation still effectively works the chest, particularly the inner pecs, while reducing shoulder strain.",
-    "type": "strength",
+    "categories": ["strength", "chest"],
     "fields": [
       {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
       {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
