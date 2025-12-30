@@ -16,11 +16,6 @@ class ExerciseFilterTypeOption {
   /// All available filter type options
   static const List<ExerciseFilterTypeOption> allOptions = [
     ExerciseFilterTypeOption(
-      id: 'all',
-      label: 'All',
-      icon: Icons.grid_view_rounded,
-    ),
-    ExerciseFilterTypeOption(
       id: 'arms',
       label: 'Arms',
       icon: Icons.fitness_center,
@@ -55,6 +50,11 @@ class ExerciseFilterTypeOption {
       id: 'flexibility',
       label: 'Flexibility',
       icon: Icons.self_improvement,
+    ),
+    ExerciseFilterTypeOption(
+      id: 'all',
+      label: 'All',
+      icon: Icons.border_all,
     ),
   ];
 
