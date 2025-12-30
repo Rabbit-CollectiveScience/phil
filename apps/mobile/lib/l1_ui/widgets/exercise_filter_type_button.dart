@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import '../view_models/exercise_filter_type_option.dart';
 
 /// Filter button shown at top-center of home page
@@ -25,7 +26,7 @@ class ExerciseFilterTypeButton extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: const Color(0xFFB9E479), // Lime green accent color
+          color: AppColors.limeGreen,
           borderRadius: BorderRadius.zero, // Sharp corners
           boxShadow: [
             BoxShadow(
@@ -37,7 +38,7 @@ class ExerciseFilterTypeButton extends StatelessWidget {
         ),
         child: Icon(
           selectedOption.icon,
-          color: Colors.black, // Almost black icon
+          color: AppColors.pureBlack,
           size: size * 0.55,
         ),
       ),

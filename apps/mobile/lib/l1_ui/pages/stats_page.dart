@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 class StatsPage extends StatelessWidget {
   const StatsPage({super.key});
@@ -6,7 +7,7 @@ class StatsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: AppColors.deepCharcoal,
       body: SafeArea(
         child: Column(
           children: [
@@ -22,11 +23,11 @@ class StatsPage extends StatelessWidget {
                       height: 44,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: const Color(0xFF2A2A2A),
+                        color: AppColors.darkGrey,
                       ),
                       child: const Icon(
                         Icons.arrow_back,
-                        color: Color(0xFFF2F2F2),
+                        color: AppColors.offWhite,
                         size: 24,
                       ),
                     ),
@@ -37,7 +38,7 @@ class StatsPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w900,
-                      color: Color(0xFF2A2A2A),
+                      color: AppColors.darkGrey,
                       letterSpacing: 1.5,
                     ),
                   ),
@@ -49,7 +50,7 @@ class StatsPage extends StatelessWidget {
               child: Center(
                 child: Text(
                   'Dashboard content coming soon',
-                  style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+                  style: TextStyle(fontSize: 16, color: AppColors.offWhite50),
                 ),
               ),
             ),

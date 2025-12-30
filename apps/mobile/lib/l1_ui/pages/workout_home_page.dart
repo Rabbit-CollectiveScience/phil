@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
 import 'package:get_it/get_it.dart';
+import '../theme/app_colors.dart';
 import '../view_models/card_model.dart';
 import '../widgets/swipeable_card.dart';
 import '../widgets/expandable_search_bar.dart';
@@ -121,7 +122,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       debugPrint('🔍 _loadExercises: Got ${exercises.length} exercises');
 
       // Bold Studio theme - pronounced grey cards on deep charcoal background
-      const cardColor = Color(0xFF4A4A4A);
+      final cardColor = AppColors.boldGrey;
 
       setState(() {
         _cards = exercises
@@ -369,18 +370,14 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search_off,
-            size: 80,
-            color: Colors.white.withOpacity(0.3),
-          ),
+          Icon(Icons.search_off, size: 80, color: AppColors.offWhite30),
           const SizedBox(height: 20),
           Text(
             'No exercises found',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.white.withOpacity(0.7),
+              color: AppColors.offWhite70,
             ),
           ),
           const SizedBox(height: 12),
@@ -388,10 +385,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
             hasActiveSearch
                 ? 'Try a different search term'
                 : 'Try selecting a different category',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white.withOpacity(0.5),
-            ),
+            style: TextStyle(fontSize: 16, color: AppColors.offWhite50),
           ),
         ],
       );
@@ -400,15 +394,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            'All cards swiped!',
-            style: TextStyle(fontSize: 24),
-          ),
+          const Text('All cards swiped!', style: TextStyle(fontSize: 24)),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _resetCards,
-            child: const Text('Reset'),
-          ),
+          ElevatedButton(onPressed: _resetCards, child: const Text('Reset')),
         ],
       );
     }
@@ -548,67 +536,71 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                   i >= 0;
                                   i--
                                 )
-                            FloatingCardEntrance(
-                              index: i,
-                              child: AnimatedPadding(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeOut,
-                                padding: EdgeInsets.only(
-                                  top: (_isTransitioningCards && i > 0)
-                                      ? (i - 1) * 10.0
-                                      : i * 10.0,
-                                  right: (_isTransitioningCards && i > 0)
-                                      ? (i - 1) * 5.0
-                                      : i * 5.0,
-                                ),
-                                child: i == 0
-                                    ? SwipeableCard(
-                                        key: _topCardKey,
-                                        card: _cards[_cardOrder[0]],
-                                        onSwipedAway: _removeTopCard,
-                                        onStartSwipeAway: () {
-                                          setState(() {
-                                            _isTransitioningCards = true;
-                                          });
-                                        },
-                                        onCompleted: _completeTopCard,
-                                        onTokenDrag: _handleTokenDrag,
-                                        onInteractionStart: () {
-                                          _searchBarKey.currentState
-                                              ?.collapse();
-                                        },
-                                        zetCount: _completedCards.length + 1,
-                                        onCardUpdate: (updatedCard) =>
-                                            _updateCard(
-                                              _cardOrder[0],
-                                              updatedCard,
-                                            ),
-                                      )
-                                    : IgnorePointer(
-                                        child: RepaintBoundary(
-                                          child: SwipeableCard(
-                                            key: ValueKey(
-                                              'card_${_cardOrder[i]}',
-                                            ),
-                                            card: _cards[_cardOrder[i]],
-                                            onSwipedAway: () {},
-                                            onCompleted:
-                                                (
-                                                  Offset _,
-                                                  VoidCallback callback,
-                                                ) {},
-                                            zetCount:
-                                                _completedCards.length + 1,
-                                            onCardUpdate: (updatedCard) =>
-                                                _updateCard(
-                                                  _cardOrder[i],
-                                                  updatedCard,
-                                                ),
-                                          ),
-                                        ),
+                                  FloatingCardEntrance(
+                                    index: i,
+                                    child: AnimatedPadding(
+                                      duration: const Duration(
+                                        milliseconds: 300,
                                       ),
-                              ),
-                            ),
+                                      curve: Curves.easeOut,
+                                      padding: EdgeInsets.only(
+                                        top: (_isTransitioningCards && i > 0)
+                                            ? (i - 1) * 10.0
+                                            : i * 10.0,
+                                        right: (_isTransitioningCards && i > 0)
+                                            ? (i - 1) * 5.0
+                                            : i * 5.0,
+                                      ),
+                                      child: i == 0
+                                          ? SwipeableCard(
+                                              key: _topCardKey,
+                                              card: _cards[_cardOrder[0]],
+                                              onSwipedAway: _removeTopCard,
+                                              onStartSwipeAway: () {
+                                                setState(() {
+                                                  _isTransitioningCards = true;
+                                                });
+                                              },
+                                              onCompleted: _completeTopCard,
+                                              onTokenDrag: _handleTokenDrag,
+                                              onInteractionStart: () {
+                                                _searchBarKey.currentState
+                                                    ?.collapse();
+                                              },
+                                              zetCount:
+                                                  _completedCards.length + 1,
+                                              onCardUpdate: (updatedCard) =>
+                                                  _updateCard(
+                                                    _cardOrder[0],
+                                                    updatedCard,
+                                                  ),
+                                            )
+                                          : IgnorePointer(
+                                              child: RepaintBoundary(
+                                                child: SwipeableCard(
+                                                  key: ValueKey(
+                                                    'card_${_cardOrder[i]}',
+                                                  ),
+                                                  card: _cards[_cardOrder[i]],
+                                                  onSwipedAway: () {},
+                                                  onCompleted:
+                                                      (
+                                                        Offset _,
+                                                        VoidCallback callback,
+                                                      ) {},
+                                                  zetCount:
+                                                      _completedCards.length +
+                                                      1,
+                                                  onCardUpdate: (updatedCard) =>
+                                                      _updateCard(
+                                                        _cardOrder[i],
+                                                        updatedCard,
+                                                      ),
+                                                ),
+                                              ),
+                                            ),
+                                    ),
+                                  ),
                               ],
                             ),
                     ),
@@ -700,7 +692,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                               height: 60,
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Color(0xFFB9E479),
+                                color: AppColors.limeGreen,
                               ),
                               child: const Center(
                                 child: Text(
@@ -727,7 +719,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                           height: 60,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Color(0xFFB9E479),
+                            color: AppColors.limeGreen,
                           ),
                           child: const Center(
                             child: Text(

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l1_ui/pages/workout_home_page.dart';
+import 'l1_ui/theme/app_colors.dart';
 import 'l2_domain/models/workout_set.dart';
 import 'l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
 import 'l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
@@ -98,9 +99,7 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.white,
           brightness: Brightness.dark,
         ),
-        scaffoldBackgroundColor: const Color(
-          0xFF1A1A1A,
-        ), // Bold Studio: deep charcoal
+        scaffoldBackgroundColor: AppColors.deepCharcoal,
         useMaterial3: true,
       ),
       home: const WorkoutHomePage(),

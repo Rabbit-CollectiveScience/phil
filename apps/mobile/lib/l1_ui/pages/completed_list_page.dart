@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:vibration/vibration.dart';
+import '../theme/app_colors.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_today_completed_list_use_case.dart';
 import '../../l2_domain/use_cases/workout_use_cases/remove_workout_set_use_case.dart';
 import '../../l2_domain/models/exercise.dart';
@@ -214,7 +215,10 @@ class _CompletedListPageState extends State<CompletedListPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Set deleted', style: TextStyle(color: Colors.white)),
+            content: Text(
+              'Set deleted',
+              style: TextStyle(color: AppColors.offWhite),
+            ),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 2),
           ),
@@ -236,10 +240,10 @@ class _CompletedListPageState extends State<CompletedListPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
+      backgroundColor: AppColors.deepCharcoal,
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFFB9E479)),
+              child: CircularProgressIndicator(color: AppColors.limeGreen),
             )
           : NotificationListener<ScrollUpdateNotification>(
               onNotification: (notification) {
@@ -274,7 +278,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                               height: 60,
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Color(0xFFB9E479),
+                                color: AppColors.limeGreen,
                               ),
                               child: Center(
                                 child: Text(
@@ -282,7 +286,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                   style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.w900,
-                                    color: Color(0xFF1A1A1A),
+                                    color: AppColors.deepCharcoal,
                                   ),
                                 ),
                               ),
@@ -295,13 +299,13 @@ class _CompletedListPageState extends State<CompletedListPage>
                   ),
                   // Completed cards list
                   _workoutGroups.isEmpty
-                      ? const SliverFillRemaining(
+                      ? SliverFillRemaining(
                           child: Center(
                             child: Text(
                               'No completed exercises yet',
                               style: TextStyle(
                                 fontSize: 18,
-                                color: Colors.white54,
+                                color: AppColors.offWhite.withOpacity(0.54),
                               ),
                             ),
                           ),
@@ -355,7 +359,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                           ),
                                           padding: const EdgeInsets.all(20),
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFF4A4A4A),
+                                            color: AppColors.boldGrey,
                                             borderRadius: BorderRadius.circular(
                                               0,
                                             ),
@@ -391,7 +395,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                 width: 32,
                                                 height: 32,
                                                 decoration: const BoxDecoration(
-                                                  color: Color(0xFFB9E479),
+                                                  color: AppColors.limeGreen,
                                                   shape: BoxShape.circle,
                                                 ),
                                                 alignment: Alignment.center,
@@ -400,7 +404,8 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                   style: const TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w900,
-                                                    color: Color(0xFF1A1A1A),
+                                                    color:
+                                                        AppColors.deepCharcoal,
                                                   ),
                                                 ),
                                               ),

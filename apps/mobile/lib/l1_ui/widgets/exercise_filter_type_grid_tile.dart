@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import '../view_models/exercise_filter_type_option.dart';
 
 /// Grid tile for exercise filter type selection
@@ -21,14 +22,12 @@ class ExerciseFilterTypeGridTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFFB9E479) // Lime green for selected
-              : const Color(0xFF4A4A4A), // Bold grey for unselected
+          color: isSelected ? AppColors.limeGreen : AppColors.boldGrey,
           borderRadius: BorderRadius.zero, // Sharp corners
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFFB9E479).withOpacity(0.3),
+                    color: AppColors.limeGreenGlow,
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -49,7 +48,7 @@ class ExerciseFilterTypeGridTile extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                color: isSelected ? Colors.black : Colors.white,
+                color: isSelected ? AppColors.pureBlack : AppColors.offWhite,
               ),
               textAlign: TextAlign.center,
             ),

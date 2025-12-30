@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import 'package:vibration/vibration.dart';
 import '../view_models/exercise_filter_type_option.dart';
 import '../widgets/exercise_filter_type_grid_tile.dart';
@@ -33,7 +34,7 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFF1A1A1A), // Deep charcoal background
+        backgroundColor: AppColors.deepCharcoal,
         body: NotificationListener<ScrollUpdateNotification>(
           onNotification: (notification) {
             if (_isPopping) return false;
@@ -74,7 +75,7 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
                     const Text(
                       'Training Focus',
                       style: TextStyle(
-                        color: Color(0xFFF2F2F2),
+                        color: AppColors.offWhite,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.2,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 class CompletionCounter extends StatelessWidget {
   final int count;
@@ -29,13 +30,13 @@ class CompletionCounter extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: const Color(0xFFB9E479), // Lime accent color
+          color: AppColors.limeGreen,
         ),
         child: Center(
           child: Text(
             count.toString(),
             style: const TextStyle(
-              color: Color(0xFF1A1A1A), // Dark background for contrast
+              color: AppColors.deepCharcoal,
               fontSize: 24,
               fontWeight: FontWeight.w900, // Ultra bold
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 class ExpandableSearchBar extends StatefulWidget {
   final double availableWidth;
@@ -91,9 +92,7 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
         height: widget.iconSize,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22),
-          color: _isExpanded
-              ? const Color(0xFF2A2A2A)
-              : Colors.white.withOpacity(0.15),
+          color: _isExpanded ? AppColors.darkGrey : AppColors.offWhite15,
         ),
         child: _isExpanded ? _buildExpandedContent() : _buildCollapsedContent(),
       ),
@@ -101,8 +100,8 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
   }
 
   Widget _buildCollapsedContent() {
-    return const Center(
-      child: Icon(Icons.search, color: Colors.white70, size: 24),
+    return Center(
+      child: Icon(Icons.search, color: AppColors.offWhite70, size: 24),
     );
   }
 
@@ -111,9 +110,9 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
       children: [
         Row(
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(left: 12, right: 8),
-              child: Icon(Icons.search, color: Color(0xFFB9E479), size: 24),
+              child: Icon(Icons.search, color: AppColors.limeGreen, size: 24),
             ),
             Expanded(
               child: TextField(
@@ -121,22 +120,22 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
                 focusNode: _focusNode,
                 onChanged: widget.onSearchChanged,
                 enableInteractiveSelection: false,
-                style: const TextStyle(
-                  color: Color(0xFFF2F2F2),
+                style: TextStyle(
+                  color: AppColors.offWhite,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'TYPE TO FILTER',
                   hintStyle: TextStyle(
-                    color: Colors.white38,
+                    color: AppColors.offWhite38,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 1.0,
                   ),
                   border: InputBorder.none,
                   isDense: true,
-                  contentPadding: const EdgeInsets.only(
+                  contentPadding: EdgeInsets.only(
                     top: 12,
                     bottom: 12,
                     right: 48,
@@ -161,9 +160,9 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
                 child: Container(
                   width: 48,
                   alignment: Alignment.center,
-                  child: const Icon(
+                  child: Icon(
                     Icons.close,
-                    color: Color(0xFFF2F2F2),
+                    color: AppColors.offWhite,
                     size: 24,
                   ),
                 ),

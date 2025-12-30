@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import '../view_models/card_model.dart';
 import '../../l2_domain/models/field_type_enum.dart';
 
@@ -583,7 +584,7 @@ class SwipeableCardState extends State<SwipeableCard>
             style: const TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.w900,
-              color: Color(0xFFF2F2F2),
+              color: AppColors.offWhite,
               letterSpacing: 0.5,
               height: 1.2,
             ),
@@ -592,8 +593,8 @@ class SwipeableCardState extends State<SwipeableCard>
           ElevatedButton(
             onPressed: _handleTap,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFB9E479), // Lime green accent
-              foregroundColor: Colors.black,
+              backgroundColor: AppColors.limeGreen,
+              foregroundColor: AppColors.pureBlack,
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(0),
@@ -633,7 +634,7 @@ class SwipeableCardState extends State<SwipeableCard>
       textAlign: TextAlign.center,
       style: const TextStyle(
         fontSize: 32,
-        color: Color(0xFFF2F2F2),
+        color: AppColors.offWhite,
         fontWeight: FontWeight.w300,
         letterSpacing: 1.5,
       ),
@@ -675,7 +676,7 @@ class SwipeableCardState extends State<SwipeableCard>
               }
             },
             icon: const Icon(Icons.chevron_left),
-            color: const Color(0xFFB9E479),
+            color: AppColors.limeGreen,
             iconSize: 28,
             style: IconButton.styleFrom(padding: const EdgeInsets.all(4)),
           ),
@@ -711,7 +712,7 @@ class SwipeableCardState extends State<SwipeableCard>
               );
             },
             icon: const Icon(Icons.chevron_right),
-            color: const Color(0xFFB9E479),
+            color: AppColors.limeGreen,
             iconSize: 28,
             style: IconButton.styleFrom(padding: const EdgeInsets.all(4)),
           ),
@@ -745,7 +746,7 @@ class SwipeableCardState extends State<SwipeableCard>
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w900,
-                      color: Color(0xFFF2F2F2),
+                      color: AppColors.offWhite,
                       letterSpacing: 1.2,
                       height: 1.15,
                     ),
@@ -808,10 +809,8 @@ class SwipeableCardState extends State<SwipeableCard>
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(
-                      0xFFB9E479,
-                    ), // Lime green accent
-                    foregroundColor: Colors.black,
+                    backgroundColor: AppColors.limeGreen,
+                    foregroundColor: AppColors.pureBlack,
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(0),
@@ -867,11 +866,11 @@ class SwipeableCardState extends State<SwipeableCard>
                     height: 28,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xFF2A2A2A),
+                      color: AppColors.darkGrey,
                     ),
                     child: const Icon(
                       Icons.close,
-                      color: Color(0xFFF2F2F2),
+                      color: AppColors.offWhite,
                       size: 14,
                     ),
                   ),
