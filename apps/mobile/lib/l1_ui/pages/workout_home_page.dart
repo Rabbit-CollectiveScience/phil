@@ -353,6 +353,62 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     _loadExercises(searchQuery: query);
   }
 
+  Widget _buildEmptyState() {
+    // Check if we have an active search or filter
+    final searchText = _searchBarKey.currentState?.searchText ?? '';
+    final hasActiveSearch = searchText.isNotEmpty;
+    final hasActiveFilter = _selectedFilterId != 'all';
+
+    if (hasActiveSearch || hasActiveFilter) {
+      // No results for current search/filter
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.search_off,
+            size: 80,
+            color: Colors.white.withOpacity(0.3),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'No exercises found',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white.withOpacity(0.7),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            hasActiveSearch
+                ? 'Try a different search term'
+                : 'Try selecting a different category',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white.withOpacity(0.5),
+            ),
+          ),
+        ],
+      );
+    } else {
+      // All cards completed
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'All cards swiped!',
+            style: TextStyle(fontSize: 24),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _resetCards,
+            child: const Text('Reset'),
+          ),
+        ],
+      );
+    }
+  }
+
   void _navigateToViewCards() async {
     await Navigator.of(context).push(
       PageRouteBuilder(
@@ -468,21 +524,6 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                   ],
                 ),
               )
-            : _cards.isEmpty
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'All cards swiped!',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _resetCards,
-                    child: const Text('Reset'),
-                  ),
-                ],
-              )
             : GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
@@ -490,16 +531,18 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                 },
                 child: Stack(
                   children: [
-                    // Main card area
+                    // Main card area - conditional content
                     Center(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          for (
-                            int i = min(_cardOrder.length - 1, 2);
-                            i >= 0;
-                            i--
-                          )
+                      child: _cards.isEmpty
+                          ? _buildEmptyState()
+                          : Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                for (
+                                  int i = min(_cardOrder.length - 1, 2);
+                                  i >= 0;
+                                  i--
+                                )
                             FloatingCardEntrance(
                               index: i,
                               child: AnimatedPadding(
@@ -561,8 +604,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                       ),
                               ),
                             ),
-                        ],
-                      ),
+                              ],
+                            ),
                     ),
                     // Filter button at top center (rendered first, behind search)
                     Positioned(

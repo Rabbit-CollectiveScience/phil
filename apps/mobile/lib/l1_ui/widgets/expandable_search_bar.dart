@@ -40,6 +40,8 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
     return _showSearchOverlay || _controller.text.isNotEmpty;
   }
 
+  String get searchText => _controller.text;
+
   void expand() {
     setState(() {
       _showSearchOverlay = true;
