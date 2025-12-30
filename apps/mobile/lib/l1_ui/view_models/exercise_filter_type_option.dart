@@ -15,21 +15,11 @@ class ExerciseFilterTypeOption {
 
   /// All available filter type options
   static const List<ExerciseFilterTypeOption> allOptions = [
-    ExerciseFilterTypeOption(
-      id: 'arms',
-      label: 'Arms',
-      icon: Icons.fitness_center,
-    ),
+    ExerciseFilterTypeOption(id: 'chest', label: 'Chest', icon: Icons.shield),
     ExerciseFilterTypeOption(
       id: 'back',
       label: 'Back',
       icon: Icons.accessibility_new,
-    ),
-    ExerciseFilterTypeOption(id: 'chest', label: 'Chest', icon: Icons.shield),
-    ExerciseFilterTypeOption(
-      id: 'core',
-      label: 'Core',
-      icon: Icons.crisis_alert,
     ),
     ExerciseFilterTypeOption(
       id: 'legs',
@@ -37,9 +27,19 @@ class ExerciseFilterTypeOption {
       icon: Icons.directions_run,
     ),
     ExerciseFilterTypeOption(
+      id: 'arms',
+      label: 'Arms',
+      icon: Icons.fitness_center,
+    ),
+    ExerciseFilterTypeOption(
       id: 'shoulders',
       label: 'Shoulders',
       icon: Icons.arrow_upward,
+    ),
+    ExerciseFilterTypeOption(
+      id: 'core',
+      label: 'Core',
+      icon: Icons.crisis_alert,
     ),
     ExerciseFilterTypeOption(
       id: 'cardio',
