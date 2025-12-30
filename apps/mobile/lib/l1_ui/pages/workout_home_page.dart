@@ -492,11 +492,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.error_outline,
-                      color: AppColors.error,
-                      size: 60,
-                    ),
+                    Icon(Icons.error_outline, color: AppColors.error, size: 60),
                     const SizedBox(height: 20),
                     Text(
                       _errorMessage!,

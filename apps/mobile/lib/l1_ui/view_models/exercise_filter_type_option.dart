@@ -1,57 +1,63 @@
-import 'package:flutter/material.dart';
-
 /// UI model for exercise filter type options
 /// Used in the filter grid modal for display
 class ExerciseFilterTypeOption {
   final String id;
   final String label;
-  final IconData icon;
+  final String imagePath;
 
   const ExerciseFilterTypeOption({
     required this.id,
     required this.label,
-    required this.icon,
+    required this.imagePath,
   });
 
   /// All available filter type options
   static const List<ExerciseFilterTypeOption> allOptions = [
-    ExerciseFilterTypeOption(id: 'chest', label: 'Chest', icon: Icons.shield),
+    ExerciseFilterTypeOption(
+      id: 'chest',
+      label: 'Chest',
+      imagePath: 'assets/images/exercise_types/chest.png',
+    ),
     ExerciseFilterTypeOption(
       id: 'back',
       label: 'Back',
-      icon: Icons.accessibility_new,
+      imagePath: 'assets/images/exercise_types/back.png',
     ),
     ExerciseFilterTypeOption(
       id: 'legs',
       label: 'Legs',
-      icon: Icons.directions_run,
+      imagePath: 'assets/images/exercise_types/legs.png',
     ),
     ExerciseFilterTypeOption(
       id: 'arms',
       label: 'Arms',
-      icon: Icons.fitness_center,
+      imagePath: 'assets/images/exercise_types/arms.png',
     ),
     ExerciseFilterTypeOption(
       id: 'shoulders',
       label: 'Shoulders',
-      icon: Icons.arrow_upward,
+      imagePath: 'assets/images/exercise_types/shoulders.png',
     ),
     ExerciseFilterTypeOption(
       id: 'core',
       label: 'Core',
-      icon: Icons.crisis_alert,
+      imagePath: 'assets/images/exercise_types/core.png',
     ),
     ExerciseFilterTypeOption(
       id: 'cardio',
       label: 'Cardio',
-      icon: Icons.favorite,
+      imagePath: 'assets/images/exercise_types/cardio.png',
     ),
     ExerciseFilterTypeOption(
       id: 'flexibility',
       label: 'Flexibility',
-      icon: Icons.self_improvement,
+      imagePath: 'assets/images/exercise_types/flexibility.png',
     ),
-    ExerciseFilterTypeOption(id: 'all', label: 'All', icon: Icons.border_all),
+    ExerciseFilterTypeOption(
+      id: 'all',
+      label: 'All',
+      imagePath: 'assets/images/exercise_types/all.png',
+    ),
   ];
 
   /// Get option by ID

@@ -37,10 +37,19 @@ class ExerciseFilterTypeGridTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              option.icon,
-              color: isSelected ? Colors.black : Colors.white,
-              size: 32,
+            Image.asset(
+              option.imagePath,
+              width: 32,
+              height: 32,
+              color: isSelected ? AppColors.pureBlack : AppColors.offWhite,
+              errorBuilder: (context, error, stackTrace) {
+                // Fallback to placeholder if image not found
+                return Icon(
+                  Icons.fitness_center,
+                  color: isSelected ? AppColors.pureBlack : AppColors.offWhite,
+                  size: 32,
+                );
+              },
             ),
             const SizedBox(height: 8),
             Text(

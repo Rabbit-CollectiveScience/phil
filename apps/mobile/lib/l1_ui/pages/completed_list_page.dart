@@ -517,7 +517,8 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                                 );
                                                               },
                                                               backgroundColor:
-                                                                  AppColors.error,
+                                                                  AppColors
+                                                                      .error,
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .zero,
