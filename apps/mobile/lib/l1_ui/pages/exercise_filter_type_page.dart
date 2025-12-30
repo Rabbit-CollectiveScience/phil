@@ -30,26 +30,27 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
       body: NotificationListener<ScrollUpdateNotification>(
         onNotification: (notification) {
           if (_isPopping) return false;
-          
+
           if (!_scrollController.hasClients) return false;
-          
+
           final pixels = _scrollController.position.pixels;
           final maxScroll = _scrollController.position.maxScrollExtent;
-          
+
           // Track overscroll at the top (pull down to dismiss)
           if (pixels <= 0 && notification.metrics.pixels < -150) {
             _isPopping = true;
             Navigator.of(context).pop();
             return true;
           }
-          
+
           // Track overscroll at the bottom (pull up to dismiss)
-          if (pixels >= maxScroll && notification.metrics.pixels > maxScroll + 150) {
+          if (pixels >= maxScroll &&
+              notification.metrics.pixels > maxScroll + 150) {
             _isPopping = true;
             Navigator.of(context).pop();
             return true;
           }
-          
+
           return false;
         },
         child: SingleChildScrollView(
@@ -58,11 +59,11 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
             parent: AlwaysScrollableScrollPhysics(),
           ),
           child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+            height: MediaQuery.of(context).size.height,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   const Text(
                     'Training Focus',
                     style: TextStyle(
@@ -72,7 +73,7 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage> {
                       letterSpacing: 1.2,
                     ),
                   ),
-                  const SizedBox(height: 40),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: GridView.builder(
