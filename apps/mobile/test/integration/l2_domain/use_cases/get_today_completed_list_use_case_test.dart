@@ -193,8 +193,6 @@ void main() {
       final workoutDetails = result.first;
       expect(workoutDetails.exercise!.id, exercise.id);
       expect(workoutDetails.exercise!.name, exercise.name);
-      // ignore: deprecated_member_use_from_same_package
-      expect(workoutDetails.exercise!.type, exercise.type);
       expect(workoutDetails.exercise!.categories, exercise.categories);
       expect(workoutDetails.exercise!.description, exercise.description);
       expect(workoutDetails.exercise!.fields, isNotEmpty);

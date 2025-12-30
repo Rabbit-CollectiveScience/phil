@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/models/exercise.dart';
-import 'package:phil/l2_domain/models/exercise_field.dart';
 
 void main() {
   group('Exercise Filtering by Categories', () {

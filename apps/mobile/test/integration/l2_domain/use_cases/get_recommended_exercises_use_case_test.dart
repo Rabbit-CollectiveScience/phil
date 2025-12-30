@@ -1,9 +1,6 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
 import 'package:phil/l3_data/repositories/stub_exercise_repository.dart';
-import 'package:phil/l2_domain/models/exercise.dart';
-import 'package:phil/l2_domain/models/exercise_type_enum.dart';
 
 void main() {
   // Initialize Flutter bindings for asset loading
@@ -33,8 +30,6 @@ void main() {
         expect(firstExercise.id, 'cardio_17');
         expect(firstExercise.name, isNotEmpty);
         expect(firstExercise.description, isNotEmpty);
-        // ignore: deprecated_member_use_from_same_package
-        expect(firstExercise.type, ExerciseTypeEnum.cardio);
         expect(firstExercise.categories, contains('cardio'));
         expect(firstExercise.fields.length, 3);
 

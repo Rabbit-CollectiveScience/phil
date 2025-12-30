@@ -1,8 +1,12 @@
 # Data Model Design Overview
 
-## Philosophy: Flexible Field-Based Architecture
+## Philosophy: Flexible Field-Based Architecture with Tag System
 
-The app uses a **dynamic field-based system** rather than rigid, type-specific models. This design enables a single unified `Exercise` model to handle **strength**, **cardio**, and **flexibility** exercises through configurable fields, eliminating code duplication and enabling easy extensibility.
+The app uses a **dynamic field-based system** with a **flexible tagging approach** rather than rigid, type-specific models. This design enables a single unified `Exercise` model to handle all exercise variations through:
+1. **Configurable fields** - Define what data each exercise tracks
+2. **Category tags** - Enable flexible filtering by activity type and body parts
+
+This eliminates code duplication and enables easy extensibility.
 
 ---
 
@@ -18,20 +22,23 @@ class Exercise {
   final String id;                    // Unique identifier (e.g., "arms_1", "cardio_5")
   final String name;                  // Display name (e.g., "Barbell Curl")
   final String description;           // Detailed instructions
-  final ExerciseTypeEnum type;        // strength | cardio | flexibility
+  final List<String> categories;      // Tags: activity type + body parts
   final List<ExerciseField> fields;   // Dynamic trackable fields
 }
 ```
 
-**Key Design Decision:** Instead of creating `StrengthExercise`, `CardioExercise`, `FlexibilityExercise` subclasses, the `fields` property defines what each exercise tracks. This means:
-- **Strength**: `[{weight, reps}]`
-- **Cardio**: `[{durationInSeconds, speed}]` or `[{durationInSeconds, resistance}]`
-- **Flexibility**: `[{holdTimeInSeconds, side}]`
+**Key Design Decision:** The `categories` array acts as a flexible tagging system:
+- **Single-focus strength**: `["strength", "arms"]` (Barbell Curl)
+- **Compound strength**: `["strength", "back", "legs", "core"]` (Deadlift)
+- **Cardio**: `["cardio"]` (Treadmill)
+- **Flexibility with target**: `["flexibility", "legs"]` (Hamstring Stretch)
 
 **Benefits:**
 - Single code path for all exercise types
-- Easy to add new exercise types (e.g., "balance", "plyometric")
+- Compound exercises naturally appear in multiple filter categories
+- Easy to add new categories without model changes
 - UI can dynamically render input fields based on `fields` metadata
+- Simple filtering: just check if `categories.contains(filterId)`
 
 ---
 
@@ -96,17 +103,6 @@ class WorkoutSet extends HiveObject {
 
 ## Enums
 
-### ExerciseTypeEnum
-**Location:** `lib/l2_domain/models/exercise_type_enum.dart`
-
-```dart
-enum ExerciseTypeEnum { strength, cardio, flexibility }
-```
-
-High-level categorization for filtering and organizing exercises.
-
----
-
 ### FieldTypeEnum
 **Location:** `lib/l2_domain/models/field_type_enum.dart`
 
@@ -132,20 +128,37 @@ User preference for weight display (kilograms or pounds). Applied to `ExerciseFi
 ## Data Flow: Exercise Definition → Workout Recording
 
 ### 1. **Exercise Definition (JSON → Exercise)**
-Exercises are defined in JSON files in `assets/data/exercises/`:
+Exercises are defined in JSON files organized by body part/type in `assets/data/exercises/`:
 - `strength_arms_exercises.json`
 - `strength_back_exercises.json`
+- `strength_chest_exercises.json`
+- `strength_core_exercises.json`
+- `strength_legs_exercises.json`
+- `strength_shoulders_exercises.json`
 - `cardio_exercises.json`
 - `flexibility_exercises.json`
-- etc.
 
-**Example: Barbell Curl (Strength)**
+**Example: Barbell Curl (Single-focus Strength)**
 ```json
 {
   "id": "arms_1",
   "name": "Barbell Curl",
   "description": "Stand with feet shoulder-width apart...",
-  "type": "strength",
+  "categories": ["strength", "arms"],
+  "fields": [
+    {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+    {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+  ]
+}
+```
+
+**Example: Deadlift (Compound Strength)**
+```json
+{
+  "id": "legs_10",
+  "name": "Barbell Deadlift",
+  "description": "Stand with feet hip-width apart...",
+  "categories": ["strength", "back", "legs", "core"],
   "fields": [
     {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
     {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
@@ -159,7 +172,7 @@ Exercises are defined in JSON files in `assets/data/exercises/`:
   "id": "cardio_1",
   "name": "Treadmill",
   "description": "Step onto the treadmill...",
-  "type": "cardio",
+  "categories": ["cardio"],
   "fields": [
     {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
     {"name": "speed", "label": "Speed", "unit": "km/h", "type": "number"}
@@ -167,13 +180,13 @@ Exercises are defined in JSON files in `assets/data/exercises/`:
 }
 ```
 
-**Example: Neck Side Stretch (Flexibility)**
+**Example: Hamstring Stretch (Flexibility with body part)**
 ```json
 {
   "id": "flex_1",
-  "name": "Neck Side Stretch",
+  "name": "Hamstring Stretch",
   "description": "Stand or sit upright...",
-  "type": "flexibility",
+  "categories": ["flexibility", "legs"],
   "fields": [
     {"name": "holdTimeInSeconds", "label": "Hold Time", "unit": "seconds", "type": "duration", "defaultValue": 20},
     {"name": "side", "label": "Side", "unit": "", "type": "text"}
@@ -196,7 +209,29 @@ When the user selects an exercise:
 
 ---
 
-### 3. **Workout Recording (User Input → WorkoutSet)**
+### 3. **Filtering by Category**
+When the user selects a filter:
+```dart
+List<Exercise> filterExercises(List<Exercise> exercises, String filterId) {
+  if (filterId == 'all') return exercises;
+  
+  return exercises.where((exercise) => 
+    exercise.categories.contains(filterId)
+  ).toList();
+}
+```
+
+**Examples:**
+- Filter by `"arms"` → Returns exercises with `categories.contains("arms")`
+- Filter by `"legs"` → Returns squat, deadlift (compound!), hamstring stretch
+- Filter by `"cardio"` → Returns only cardio exercises
+- Filter by `"all"` → Returns everything
+
+**Benefit:** Compound exercises naturally appear in multiple filter views!
+
+---
+
+### 4. **Workout Recording (User Input → WorkoutSet)**
 When the user completes a set:
 1. User enters values in dynamically rendered inputs
 2. App creates `WorkoutSet` with:
@@ -233,7 +268,7 @@ WorkoutSet(
 
 ---
 
-### 4. **Data Retrieval and Display**
+### 5. **Data Retrieval and Display**
 When displaying workout history:
 1. Fetch `WorkoutSet` from Hive database
 2. Look up corresponding `Exercise` by `exerciseId`
@@ -278,31 +313,73 @@ The app follows **Clean Architecture** principles:
 ## Why This Design?
 
 ### 1. **Extensibility**
-Adding a new exercise type (e.g., "yoga", "balance") requires:
-- Adding enum value to `ExerciseTypeEnum`
-- Creating JSON file with exercises and their fields
-- **No code changes to models or UI**
+Adding a new category or exercise:
+- Add new JSON file or entries with appropriate categories
+- **No code changes to models or UI required**
+- Example: Add "plyometric" category by just using `["plyometric", "legs"]` in JSON
 
-### 2. **Maintainability**
+### 2. **Compound Exercise Support**
+- Multiple categories in one exercise (e.g., deadlift = `["strength", "back", "legs", "core"]`)
+- Automatically appears in multiple filter views
+- Accurately represents which muscle groups are worked
+
+### 3. **Maintainability**
 - Single `Exercise` model = one place to update
 - Shared UI components for all exercise types
-- No parallel code paths for strength/cardio/flexibility
+- Simple filtering logic: `categories.contains(filterId)`
+- No parallel code paths for different exercise types
 
-### 3. **Data Consistency**
+### 4. **Data Consistency**
 - `WorkoutSet.values` keys always match `ExerciseField.name`
 - Type safety through `FieldTypeEnum` validation
+- Categories are just strings - flexible and future-proof
 - Timestamps ensure chronological ordering
 
-### 4. **Testability**
+### 5. **Testability**
 - Models are pure Dart (no Flutter dependencies in L2)
 - Use cases can be tested in isolation with mocks
 - Field-based design enables property-based testing
+- Simple filter logic is easy to test
 
 ---
 
 ## Example: Full Cycle
 
 **1. JSON Definition (Dumbbell Curl):**
+```json
+{
+  "id": "arms_3",
+  "name": "Dumbbell Curl",
+  "categories": ["strength", "arms"],
+  "fields": [
+    {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+    {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+  ]
+}
+```
+
+**2. Parsed Exercise Model:**
+```dart
+Exercise(
+  id: "arms_3",
+  name: "Dumbbell Curl",
+  description: "Stand with feet shoulder-width apart...",
+  categories: ["strength", "arms"],
+  fields: [
+    ExerciseField(name: "weight", label: "Weight", unit: "kg", type: FieldTypeEnum.number),
+    ExerciseField(name: "reps", label: "Reps", unit: "reps", type: FieldTypeEnum.number)
+  ]
+)
+```
+
+**3. Filtering:**
+- User selects "Arms" filter
+- Code checks: `exercise.categories.contains("arms")` → ✅ match
+- Exercise appears in filtered list
+
+**4. UI Renders:**
+- Number input labeled "Weight" with "kg" unit
+- Number input labeled "Reps" with "reps" unit
 ```json
 {
   "id": "arms_3",
@@ -329,15 +406,15 @@ Exercise(
 )
 ```
 
-**3. UI Renders:**
+**4. UI Renders:**
 - Number input labeled "Weight" with "kg" unit
 - Number input labeled "Reps" with "reps" unit
 
-**4. User Completes Set:**
+**5. User Completes Set:**
 - Weight: 25 kg
 - Reps: 15
 
-**5. WorkoutSet Created:**
+**6. WorkoutSet Created:**
 ```dart
 WorkoutSet(
   id: "set_789",
@@ -351,16 +428,42 @@ WorkoutSet(
 )
 ```
 
-**6. Saved to Hive:**
+**7. Saved to Hive:**
 - Local database persists WorkoutSet
 - Can be queried by `exerciseId`, `completedAt`, or aggregated for analytics
 
-**7. Display in History:**
+**8. Display in History:**
 ```
 Dumbbell Curl
 Today, 2:45 PM
 Weight: 25 kg | Reps: 15
 ```
+
+---
+
+## Compound Exercise Example
+
+**Deadlift with multiple categories:**
+
+```json
+{
+  "id": "legs_10",
+  "name": "Barbell Deadlift",
+  "categories": ["strength", "back", "legs", "core"],
+  "fields": [
+    {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
+    {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
+  ]
+}
+```
+
+**Filter behavior:**
+- Filter by "Back" → Deadlift appears ✅
+- Filter by "Legs" → Deadlift appears ✅
+- Filter by "Core" → Deadlift appears ✅
+- Filter by "Arms" → Deadlift does NOT appear ❌
+
+This accurately represents that deadlifts work multiple muscle groups!
 
 ---
 
@@ -373,7 +476,7 @@ Add fields that derive from others (e.g., `totalVolume = weight * reps * sets`)
 Extend `ExerciseField` with `minValue`, `maxValue`, `required` properties
 
 ### 3. **Custom Exercise Creation**
-Allow users to define custom exercises with their own fields
+Allow users to define custom exercises with their own categories and fields
 
 ### 4. **Analytics**
 Aggregate `WorkoutSet.values` for progress tracking (e.g., "max weight over time")
@@ -381,46 +484,21 @@ Aggregate `WorkoutSet.values` for progress tracking (e.g., "max weight over time
 ### 5. **Exercise Relationships**
 Add `supersetsId` or `circuit` fields to group related exercises
 
+### 6. **Category Hierarchy**
+Add primary/secondary category distinction for better organization
+
 ---
 
 ## Summary
 
-The **flexible field-based architecture** is the core innovation of this data model design:
+The **flexible field-based architecture with category tagging** is the core innovation:
 
 - ✅ **Single source of truth:** One `Exercise` model for all types
 - ✅ **Dynamic rendering:** UI adapts to `fields` metadata
+- ✅ **Flexible filtering:** Tag-based categories support compound exercises
 - ✅ **Type-safe flexibility:** `FieldTypeEnum` guides validation while allowing variety
 - ✅ **Clean separation:** L2 domain models have zero framework dependencies
-- ✅ **Scalable:** New exercise types require JSON changes only, no code refactoring
+- ✅ **Scalable:** New categories require only JSON changes, no code refactoring
+- ✅ **Accurate representation:** Compound exercises can belong to multiple categories
 
 This design prioritizes **extensibility**, **maintainability**, and **simplicity** over rigid type hierarchies.
-2. Lookup Exercise by exerciseId
-   ↓
-3. Read Exercise.fields to interpret values
-   ↓
-4. Format display: values[field.name] + field.unit
-   ↓
-5. Example: "100.0 kg · 10 reps"
-```
-
-## Key Constraints
-
-1. **WorkoutSet.values keys must match Exercise.fields[].name**  
-   Invalid: `{"wt": 100}` when field name is `"weight"`
-
-2. **Exercise must exist to interpret WorkoutSet**  
-   WorkoutSet alone is meaningless without Exercise context
-
-3. **Field order in Exercise.fields determines UI display order**  
-   First field appears first in input form and summary text
-
-4. **Values can be null but fields cannot**  
-   Exercise.fields is required, WorkoutSet.values is optional
-
-## Storage
-
-- **Exercises**: Loaded from JSON files in `assets/data/exercises/*.json`
-- **WorkoutSets**: Persisted locally using Hive NoSQL database
-- **Hive Adapter**: Generated code in `workout_set.g.dart` handles serialization
-
-Exercises are read-only reference data. WorkoutSets are user-generated transaction data.

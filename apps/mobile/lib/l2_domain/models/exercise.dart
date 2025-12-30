@@ -1,4 +1,3 @@
-import 'exercise_type_enum.dart';
 import 'exercise_field.dart';
 
 // Model: Exercise with flexible field-based tracking
@@ -31,16 +30,6 @@ class Exercise {
     required this.categories,
     required this.fields,
   });
-
-  /// Backward-compatible type property
-  /// Derives type from first category (by convention)
-  @Deprecated('Use categories instead. Will be removed in future version.')
-  ExerciseTypeEnum get type {
-    if (categories.contains('strength')) return ExerciseTypeEnum.strength;
-    if (categories.contains('cardio')) return ExerciseTypeEnum.cardio;
-    if (categories.contains('flexibility')) return ExerciseTypeEnum.flexibility;
-    return ExerciseTypeEnum.strength; // Default fallback
-  }
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
     // Support both new format (categories) and old format (type)

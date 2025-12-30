@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/models/exercise.dart';
-import 'package:phil/l2_domain/models/exercise_type_enum.dart';
 
 void main() {
   group('Exercise Model - Categories Support', () {
@@ -118,30 +117,12 @@ void main() {
       final cardioExercise = Exercise.fromJson(cardioJson);
       final flexibilityExercise = Exercise.fromJson(flexibilityJson);
 
-      // ignore: deprecated_member_use_from_same_package
-      expect(strengthExercise.type, ExerciseTypeEnum.strength);
-      // ignore: deprecated_member_use_from_same_package
-      expect(cardioExercise.type, ExerciseTypeEnum.cardio);
-      // ignore: deprecated_member_use_from_same_package
-      expect(flexibilityExercise.type, ExerciseTypeEnum.flexibility);
+      expect(strengthExercise.categories, contains('strength'));
+      expect(cardioExercise.categories, contains('cardio'));
+      expect(flexibilityExercise.categories, contains('flexibility'));
     });
 
-    test('should fallback to strength if no valid category found', () {
-      final json = {
-        'id': 'test_1',
-        'name': 'Test Exercise',
-        'description': 'Test',
-        'categories': ['unknown'],
-        'fields': [],
-      };
-
-      final exercise = Exercise.fromJson(json);
-
-      // ignore: deprecated_member_use_from_same_package
-      expect(exercise.type, ExerciseTypeEnum.strength);
-    });
-
-    test('should handle missing categories and type gracefully', () {
+    test('should handle missing categories gracefully', () {
       final json = {
         'id': 'test_1',
         'name': 'Test Exercise',
@@ -152,8 +133,6 @@ void main() {
       final exercise = Exercise.fromJson(json);
 
       expect(exercise.categories, ['strength']); // Default fallback
-      // ignore: deprecated_member_use_from_same_package
-      expect(exercise.type, ExerciseTypeEnum.strength);
     });
   });
 }
