@@ -18,8 +18,10 @@ import 'exercise_field.dart';
 class Exercise {
   final String id;
   final String name;
-  final String description; // Description of the exercise (instructions, notes, etc.)
-  final List<String> categories; // Tags for filtering: activity type + body parts
+  final String
+  description; // Description of the exercise (instructions, notes, etc.)
+  final List<String>
+  categories; // Tags for filtering: activity type + body parts
   final List<ExerciseField> fields; // Defines what this exercise tracks
 
   Exercise({
@@ -43,7 +45,7 @@ class Exercise {
   factory Exercise.fromJson(Map<String, dynamic> json) {
     // Support both new format (categories) and old format (type)
     List<String> categories;
-    
+
     if (json.containsKey('categories')) {
       // New format: parse categories array
       categories = (json['categories'] as List<dynamic>)

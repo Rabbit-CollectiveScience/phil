@@ -98,7 +98,10 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     try {
       // Get use case from dependency injection - L1 never knows about L3
       final useCase = GetIt.instance<GetRecommendedExercisesUseCase>();
-      final exercises = await useCase.execute();
+      final allExercises = await useCase.execute();
+
+      // Filter exercises based on selected category
+      final exercises = _filterExercises(allExercises);
 
       // Bold Studio theme - pronounced grey cards on deep charcoal background
       const cardColor = Color(0xFF4A4A4A);
@@ -120,6 +123,18 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         _errorMessage = 'Failed to load exercises: ${e.toString()}';
       });
     }
+  }
+
+  List<dynamic> _filterExercises(List<dynamic> exercises) {
+    // If 'all' is selected, return all exercises
+    if (_selectedFilterId == 'all') {
+      return exercises;
+    }
+
+    // Filter by category (checks if exercise.categories contains the filter ID)
+    return exercises.where((exercise) {
+      return exercise.categories.contains(_selectedFilterId);
+    }).toList();
   }
 
   Future<void> _loadTodayCount() async {
@@ -428,10 +443,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         setState(() {
           _selectedFilterId = selectedFilterId;
         });
-        // TODO: Implement actual filtering logic in domain layer
-        debugPrint(
-          'Filter selected: $selectedFilterId (UI only - not yet filtering)',
-        );
+        // Reload exercises with new filter
+        _loadExercises();
+        debugPrint('Filter selected: $selectedFilterId');
       }
     }
   }

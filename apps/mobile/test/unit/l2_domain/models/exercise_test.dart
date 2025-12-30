@@ -12,8 +12,8 @@ void main() {
         'categories': ['strength', 'arms'],
         'fields': [
           {'name': 'weight', 'label': 'Weight', 'unit': 'kg', 'type': 'number'},
-          {'name': 'reps', 'label': 'Reps', 'unit': 'reps', 'type': 'number'}
-        ]
+          {'name': 'reps', 'label': 'Reps', 'unit': 'reps', 'type': 'number'},
+        ],
       };
 
       final exercise = Exercise.fromJson(json);
@@ -33,8 +33,8 @@ void main() {
         'type': 'strength',
         'fields': [
           {'name': 'weight', 'label': 'Weight', 'unit': 'kg', 'type': 'number'},
-          {'name': 'reps', 'label': 'Reps', 'unit': 'reps', 'type': 'number'}
-        ]
+          {'name': 'reps', 'label': 'Reps', 'unit': 'reps', 'type': 'number'},
+        ],
       };
 
       final exercise = Exercise.fromJson(json);
@@ -53,8 +53,8 @@ void main() {
         'categories': ['strength', 'back', 'legs', 'core'],
         'fields': [
           {'name': 'weight', 'label': 'Weight', 'unit': 'kg', 'type': 'number'},
-          {'name': 'reps', 'label': 'Reps', 'unit': 'reps', 'type': 'number'}
-        ]
+          {'name': 'reps', 'label': 'Reps', 'unit': 'reps', 'type': 'number'},
+        ],
       };
 
       final exercise = Exercise.fromJson(json);
@@ -73,9 +73,14 @@ void main() {
         'description': 'Step onto the treadmill...',
         'categories': ['cardio'],
         'fields': [
-          {'name': 'durationInSeconds', 'label': 'Duration', 'unit': 'seconds', 'type': 'duration'},
-          {'name': 'speed', 'label': 'Speed', 'unit': 'km/h', 'type': 'number'}
-        ]
+          {
+            'name': 'durationInSeconds',
+            'label': 'Duration',
+            'unit': 'seconds',
+            'type': 'duration',
+          },
+          {'name': 'speed', 'label': 'Speed', 'unit': 'km/h', 'type': 'number'},
+        ],
       };
 
       final exercise = Exercise.fromJson(json);
@@ -90,7 +95,7 @@ void main() {
         'name': 'Barbell Curl',
         'description': 'Test',
         'categories': ['strength', 'arms'],
-        'fields': []
+        'fields': [],
       };
 
       final cardioJson = {
@@ -98,7 +103,7 @@ void main() {
         'name': 'Treadmill',
         'description': 'Test',
         'categories': ['cardio'],
-        'fields': []
+        'fields': [],
       };
 
       final flexibilityJson = {
@@ -106,7 +111,7 @@ void main() {
         'name': 'Hamstring Stretch',
         'description': 'Test',
         'categories': ['flexibility', 'legs'],
-        'fields': []
+        'fields': [],
       };
 
       final strengthExercise = Exercise.fromJson(strengthJson);
@@ -127,7 +132,7 @@ void main() {
         'name': 'Test Exercise',
         'description': 'Test',
         'categories': ['unknown'],
-        'fields': []
+        'fields': [],
       };
 
       final exercise = Exercise.fromJson(json);
@@ -141,7 +146,7 @@ void main() {
         'id': 'test_1',
         'name': 'Test Exercise',
         'description': 'Test',
-        'fields': []
+        'fields': [],
       };
 
       final exercise = Exercise.fromJson(json);

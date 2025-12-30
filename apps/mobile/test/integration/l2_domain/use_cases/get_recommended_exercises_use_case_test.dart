@@ -33,7 +33,9 @@ void main() {
         expect(firstExercise.id, 'cardio_17');
         expect(firstExercise.name, isNotEmpty);
         expect(firstExercise.description, isNotEmpty);
+        // ignore: deprecated_member_use_from_same_package
         expect(firstExercise.type, ExerciseTypeEnum.cardio);
+        expect(firstExercise.categories, contains('cardio'));
         expect(firstExercise.fields.length, 3);
 
         // Verify fields structure
