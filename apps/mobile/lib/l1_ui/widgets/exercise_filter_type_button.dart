@@ -17,8 +17,7 @@ class ExerciseFilterTypeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedOption =
-        ExerciseFilterTypeOption.getById(selectedFilterId);
+    final selectedOption = ExerciseFilterTypeOption.getById(selectedFilterId);
 
     return GestureDetector(
       onTap: onTap,

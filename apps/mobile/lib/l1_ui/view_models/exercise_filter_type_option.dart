@@ -30,11 +30,7 @@ class ExerciseFilterTypeOption {
       label: 'Back',
       icon: Icons.accessibility_new,
     ),
-    ExerciseFilterTypeOption(
-      id: 'chest',
-      label: 'Chest',
-      icon: Icons.shield,
-    ),
+    ExerciseFilterTypeOption(id: 'chest', label: 'Chest', icon: Icons.shield),
     ExerciseFilterTypeOption(
       id: 'core',
       label: 'Core',

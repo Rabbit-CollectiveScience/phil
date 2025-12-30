@@ -353,9 +353,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     final selectedFilterId = await Navigator.of(context).push<String>(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
-          return ExerciseFilterTypePage(
-            selectedFilterId: _selectedFilterId,
-          );
+          return ExerciseFilterTypePage(selectedFilterId: _selectedFilterId);
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           // Slide in from top
@@ -363,8 +361,10 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
           const end = Offset.zero;
           const curve = Curves.easeInOut;
 
-          var tween = Tween(begin: begin, end: end)
-              .chain(CurveTween(curve: curve));
+          var tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(tween),
@@ -380,7 +380,9 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         _selectedFilterId = selectedFilterId;
       });
       // TODO: Implement actual filtering logic in domain layer
-      debugPrint('Filter selected: $selectedFilterId (UI only - not yet filtering)');
+      debugPrint(
+        'Filter selected: $selectedFilterId (UI only - not yet filtering)',
+      );
     }
   }
 
