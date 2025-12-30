@@ -26,7 +26,7 @@ class ExerciseFilterTypeButton extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: const Color(0xFF4A4A4A), // Bold grey matching card color
+          color: const Color(0xFFB9E479), // Lime green accent color
           borderRadius: BorderRadius.zero, // Sharp corners
           boxShadow: [
             BoxShadow(
@@ -38,7 +38,7 @@ class ExerciseFilterTypeButton extends StatelessWidget {
         ),
         child: Icon(
           selectedOption.icon,
-          color: Colors.white,
+          color: Colors.black, // Almost black icon
           size: size * 0.55,
         ),
       ),
