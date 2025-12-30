@@ -41,7 +41,7 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage>
     setState(() {
       // Only allow upward drag (negative values)
       _dragOffset += details.delta.dy;
-      
+
       // Prevent downward drag completely
       if (_dragOffset > 0) {
         _dragOffset = 0;
@@ -55,10 +55,7 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage>
       Navigator.of(context).pop();
     } else {
       // Bounce back to original position with elastic animation
-      _bounceAnimation = Tween<double>(
-        begin: _dragOffset,
-        end: 0.0,
-      ).animate(
+      _bounceAnimation = Tween<double>(begin: _dragOffset, end: 0.0).animate(
         CurvedAnimation(parent: _bounceController, curve: Curves.elasticOut),
       );
 
@@ -92,7 +89,7 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Filter Exercises',
+                    'Training Focus',
                     style: TextStyle(
                       color: Color(0xFFF2F2F2),
                       fontSize: 24,
@@ -108,11 +105,11 @@ class _ExerciseFilterTypePageState extends State<ExerciseFilterTypePage>
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        childAspectRatio: 1.0,
-                      ),
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 1.0,
+                          ),
                       itemCount: ExerciseFilterTypeOption.allOptions.length,
                       itemBuilder: (context, index) {
                         final option =
