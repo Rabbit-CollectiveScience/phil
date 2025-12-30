@@ -69,10 +69,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   @override
   void initState() {
     super.initState();
-    _loadLastFilterSelection();
-    _checkAndShowFilterPage();
-    _loadExercises();
-    _loadTodayCount();
+    _initialize();
     _tokenController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -81,6 +78,14 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         .animate(
           CurvedAnimation(parent: _tokenController, curve: Curves.easeInCubic),
         );
+  }
+
+  Future<void> _initialize() async {
+    // Load filter first, then load exercises with correct filter
+    await _loadLastFilterSelection();
+    _loadExercises();
+    _checkAndShowFilterPage();
+    _loadTodayCount();
   }
 
   @override
@@ -98,10 +103,15 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     try {
       // Get use case from dependency injection - L1 never knows about L3
       final useCase = GetIt.instance<GetRecommendedExercisesUseCase>();
-      final allExercises = await useCase.execute();
 
-      // Filter exercises based on selected category
-      final exercises = _filterExercises(allExercises);
+      debugPrint('🔍 _loadExercises: Loading with filter = $_selectedFilterId');
+
+      // Use case filters exercises by category
+      final exercises = await useCase.execute(
+        filterCategory: _selectedFilterId,
+      );
+
+      debugPrint('🔍 _loadExercises: Got ${exercises.length} exercises');
 
       // Bold Studio theme - pronounced grey cards on deep charcoal background
       const cardColor = Color(0xFF4A4A4A);
@@ -125,18 +135,6 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
     }
   }
 
-  List<dynamic> _filterExercises(List<dynamic> exercises) {
-    // If 'all' is selected, return all exercises
-    if (_selectedFilterId == 'all') {
-      return exercises;
-    }
-
-    // Filter by category (checks if exercise.categories contains the filter ID)
-    return exercises.where((exercise) {
-      return exercise.categories.contains(_selectedFilterId);
-    }).toList();
-  }
-
   Future<void> _loadTodayCount() async {
     try {
       // Load today's completed workout count from database
@@ -158,11 +156,13 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       final useCase = GetIt.instance<GetLastFilterSelectionUseCase>();
       final filterId = await useCase.executeWithDefault();
 
+      debugPrint('✓ Loaded last filter selection: $filterId');
+
       setState(() {
         _selectedFilterId = filterId;
       });
 
-      debugPrint('✓ Loaded last filter selection: $filterId');
+      debugPrint('✓ _selectedFilterId is now: $_selectedFilterId');
     } catch (e) {
       debugPrint('Error loading last filter selection: $e');
     }

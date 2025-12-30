@@ -55,7 +55,7 @@ void main() {
 
     test('should return all exercises when filter is "all"', () {
       final filterId = 'all';
-      
+
       final filtered = exercises.where((exercise) {
         return filterId == 'all' || exercise.categories.contains(filterId);
       }).toList();
@@ -66,7 +66,7 @@ void main() {
 
     test('should filter by "arms" category', () {
       final filterId = 'arms';
-      
+
       final filtered = exercises.where((exercise) {
         return exercise.categories.contains(filterId);
       }).toList();
@@ -77,7 +77,7 @@ void main() {
 
     test('should filter by "chest" category', () {
       final filterId = 'chest';
-      
+
       final filtered = exercises.where((exercise) {
         return exercise.categories.contains(filterId);
       }).toList();
@@ -88,20 +88,23 @@ void main() {
 
     test('should filter by "legs" category and include compound exercises', () {
       final filterId = 'legs';
-      
+
       final filtered = exercises.where((exercise) {
         return exercise.categories.contains(filterId);
       }).toList();
 
       expect(filtered.length, 3); // squat, deadlift, hamstring stretch
       expect(filtered.any((e) => e.id == 'legs_1'), true);
-      expect(filtered.any((e) => e.id == 'legs_10'), true); // deadlift (compound)
+      expect(
+        filtered.any((e) => e.id == 'legs_10'),
+        true,
+      ); // deadlift (compound)
       expect(filtered.any((e) => e.id == 'flex_1'), true); // hamstring stretch
     });
 
     test('should filter by "back" category', () {
       final filterId = 'back';
-      
+
       final filtered = exercises.where((exercise) {
         return exercise.categories.contains(filterId);
       }).toList();
@@ -112,7 +115,7 @@ void main() {
 
     test('should filter by "core" category', () {
       final filterId = 'core';
-      
+
       final filtered = exercises.where((exercise) {
         return exercise.categories.contains(filterId);
       }).toList();
@@ -123,7 +126,7 @@ void main() {
 
     test('should filter by "cardio" category', () {
       final filterId = 'cardio';
-      
+
       final filtered = exercises.where((exercise) {
         return exercise.categories.contains(filterId);
       }).toList();
@@ -134,7 +137,7 @@ void main() {
 
     test('should filter by "flexibility" category', () {
       final filterId = 'flexibility';
-      
+
       final filtered = exercises.where((exercise) {
         return exercise.categories.contains(filterId);
       }).toList();
@@ -145,7 +148,7 @@ void main() {
 
     test('should return empty list when no exercises match filter', () {
       final filterId = 'shoulders';
-      
+
       final filtered = exercises.where((exercise) {
         return exercise.categories.contains(filterId);
       }).toList();
@@ -156,7 +159,7 @@ void main() {
 
     test('compound exercise appears in multiple filter results', () {
       final deadlift = exercises.firstWhere((e) => e.id == 'legs_10');
-      
+
       // Deadlift should appear when filtering by any of its categories
       expect(deadlift.categories, contains('back'));
       expect(deadlift.categories, contains('legs'));
@@ -164,9 +167,15 @@ void main() {
       expect(deadlift.categories, contains('strength'));
 
       // Verify it would appear in all these filters
-      final backFiltered = exercises.where((e) => e.categories.contains('back')).toList();
-      final legsFiltered = exercises.where((e) => e.categories.contains('legs')).toList();
-      final coreFiltered = exercises.where((e) => e.categories.contains('core')).toList();
+      final backFiltered = exercises
+          .where((e) => e.categories.contains('back'))
+          .toList();
+      final legsFiltered = exercises
+          .where((e) => e.categories.contains('legs'))
+          .toList();
+      final coreFiltered = exercises
+          .where((e) => e.categories.contains('core'))
+          .toList();
 
       expect(backFiltered, contains(deadlift));
       expect(legsFiltered, contains(deadlift));
