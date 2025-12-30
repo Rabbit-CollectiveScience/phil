@@ -51,11 +51,7 @@ class ExerciseFilterTypeOption {
       label: 'Flexibility',
       icon: Icons.self_improvement,
     ),
-    ExerciseFilterTypeOption(
-      id: 'all',
-      label: 'All',
-      icon: Icons.border_all,
-    ),
+    ExerciseFilterTypeOption(id: 'all', label: 'All', icon: Icons.border_all),
   ];
 
   /// Get option by ID

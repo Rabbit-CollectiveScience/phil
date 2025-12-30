@@ -61,6 +61,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
 
   // Filter state (UI only - not yet connected to actual filtering)
   String _selectedFilterId = 'all';
+  bool _isSearchExpanded = false;
 
   @override
   void initState() {
@@ -516,7 +517,27 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                         ],
                       ),
                     ),
-                    // Search bar at top left
+                    // Filter button at top center (rendered first, behind search)
+                    Positioned(
+                      top: _topIconsPadding,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: IgnorePointer(
+                          ignoring: _isSearchExpanded,
+                          child: AnimatedOpacity(
+                            duration: const Duration(milliseconds: 300),
+                            opacity: _isSearchExpanded ? 0.0 : 1.0,
+                            child: ExerciseFilterTypeButton(
+                              selectedFilterId: _selectedFilterId,
+                              onTap: _showFilterModal,
+                              size: _iconSize,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Search bar at top left (rendered after, covers filter)
                     Positioned(
                       top: _topIconsPadding,
                       left: _iconPadding,
@@ -524,22 +545,18 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                         key: _searchBarKey,
                         availableWidth: _getSearchBarWidth(context),
                         iconSize: _iconSize,
-                        onExpand: () {},
+                        onExpand: () {
+                          setState(() {
+                            _isSearchExpanded = true;
+                          });
+                        },
+                        onCollapse: () {
+                          setState(() {
+                            _isSearchExpanded = false;
+                          });
+                        },
                         onSearchChanged: _onSearchChanged,
                         onDismissKeyboard: () {},
-                      ),
-                    ),
-                    // Filter button at top center
-                    Positioned(
-                      top: _topIconsPadding,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: ExerciseFilterTypeButton(
-                          selectedFilterId: _selectedFilterId,
-                          onTap: _showFilterModal,
-                          size: _iconSize,
-                        ),
                       ),
                     ),
                     // Dashboard icon at top right

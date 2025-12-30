@@ -4,6 +4,7 @@ class ExpandableSearchBar extends StatefulWidget {
   final double availableWidth;
   final double iconSize;
   final VoidCallback onExpand;
+  final VoidCallback? onCollapse;
   final ValueChanged<String> onSearchChanged;
   final VoidCallback? onDismissKeyboard;
 
@@ -12,6 +13,7 @@ class ExpandableSearchBar extends StatefulWidget {
     required this.availableWidth,
     required this.iconSize,
     required this.onExpand,
+    this.onCollapse,
     required this.onSearchChanged,
     this.onDismissKeyboard,
   });
@@ -52,6 +54,7 @@ class ExpandableSearchBarState extends State<ExpandableSearchBar> {
       setState(() {
         _showSearchOverlay = false;
       });
+      widget.onCollapse?.call();
     }
     widget.onDismissKeyboard?.call();
   }
