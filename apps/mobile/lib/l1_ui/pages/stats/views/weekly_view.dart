@@ -18,8 +18,8 @@ class _WeeklyViewState extends State<WeeklyView> {
     final String weekLabel = _currentWeekOffset == 0
         ? 'This Week'
         : _currentWeekOffset == -1
-            ? 'Last Week'
-            : '${-_currentWeekOffset} Weeks Ago';
+        ? 'Last Week'
+        : '${-_currentWeekOffset} Weeks Ago';
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -151,12 +151,7 @@ class _WeeklyViewState extends State<WeeklyView> {
             prValue: '110 kg',
           ),
           const SizedBox(height: 12),
-          TypeCard(
-            type: 'BACK',
-            exercises: 6,
-            sets: 38,
-            volume: 2800,
-          ),
+          TypeCard(type: 'BACK', exercises: 6, sets: 38, volume: 2800),
           const SizedBox(height: 12),
           TypeCard(
             type: 'LEGS',
@@ -167,40 +162,15 @@ class _WeeklyViewState extends State<WeeklyView> {
             bestVolumeValue: '5,200 kg',
           ),
           const SizedBox(height: 12),
-          TypeCard(
-            type: 'SHOULDERS',
-            exercises: 0,
-            sets: 0,
-            volume: 0,
-          ),
+          TypeCard(type: 'SHOULDERS', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 12),
-          TypeCard(
-            type: 'ARMS',
-            exercises: 0,
-            sets: 0,
-            volume: 0,
-          ),
+          TypeCard(type: 'ARMS', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 12),
-          TypeCard(
-            type: 'CORE',
-            exercises: 0,
-            sets: 0,
-            volume: 0,
-          ),
+          TypeCard(type: 'CORE', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 12),
-          TypeCard(
-            type: 'CARDIO',
-            exercises: 0,
-            sets: 0,
-            volume: 0,
-          ),
+          TypeCard(type: 'CARDIO', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 12),
-          TypeCard(
-            type: 'FLEXIBILITY',
-            exercises: 0,
-            sets: 0,
-            volume: 0,
-          ),
+          TypeCard(type: 'FLEXIBILITY', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 20),
         ],
       ),

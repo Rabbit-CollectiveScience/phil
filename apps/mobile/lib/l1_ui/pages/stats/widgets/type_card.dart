@@ -94,9 +94,17 @@ class TypeCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              MetricItem(value: '$exercises', label: 'Exercises', hasData: hasData),
+              MetricItem(
+                value: '$exercises',
+                label: 'Exercises',
+                hasData: hasData,
+              ),
               MetricItem(value: '$sets', label: 'Sets', hasData: hasData),
-              MetricItem(value: '${volume.toInt()}', label: 'kg', hasData: hasData),
+              MetricItem(
+                value: '${volume.toInt()}',
+                label: 'kg',
+                hasData: hasData,
+              ),
             ],
           ),
           if (hasNotableOutcome) ...[
