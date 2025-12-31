@@ -75,8 +75,8 @@ class _StatsPageState extends State<StatsPage> {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
                         color: AppColors.boldGrey,
+                        borderRadius: BorderRadius.zero,
                         boxShadow: [
                           BoxShadow(
                             color: AppColors.pureBlack.withOpacity(0.3),
@@ -115,7 +115,7 @@ class _StatsPageState extends State<StatsPage> {
                           offset: const Offset(0, 50),
                           color: AppColors.boldGrey,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.zero,
                           ),
                           itemBuilder: (context) {
                             return sections.map((section) {
@@ -142,7 +142,7 @@ class _StatsPageState extends State<StatsPage> {
                             ),
                             decoration: BoxDecoration(
                               color: AppColors.boldGrey,
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.zero,
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,

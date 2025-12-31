@@ -28,7 +28,7 @@ class ExerciseDetailCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.zero,
         border: isNewPR
             ? Border.all(color: AppColors.limeGreen, width: 2)
             : Border.all(color: const Color(0xFFE0E0E0), width: 1),
@@ -116,7 +116,7 @@ class ExerciseDetailCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.limeGreen,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.zero,
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -164,15 +164,32 @@ class ExerciseDetailCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w900,
-            color: highlightValue ? AppColors.limeGreen : AppColors.darkText,
-            height: 1.0,
-          ),
-        ),
+        highlightValue
+            ? Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.limeGreen,
+                  borderRadius: BorderRadius.zero,
+                ),
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.pureBlack,
+                    height: 1.0,
+                  ),
+                ),
+              )
+            : Text(
+                value,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.darkText,
+                  height: 1.0,
+                ),
+              ),
         const SizedBox(height: 2),
         Text(
           subtitle,
