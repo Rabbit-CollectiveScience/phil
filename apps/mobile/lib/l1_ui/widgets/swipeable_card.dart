@@ -584,7 +584,7 @@ class SwipeableCardState extends State<SwipeableCard>
             style: const TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.w900,
-              color: AppColors.offWhite,
+              color: AppColors.limeGreen,
               letterSpacing: 0.5,
               height: 1.2,
             ),
