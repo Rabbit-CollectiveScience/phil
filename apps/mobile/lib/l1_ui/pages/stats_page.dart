@@ -50,7 +50,7 @@ class StatsPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: AppColors.deepCharcoal,
       body: SafeArea(
         child: Column(
           children: [
@@ -66,18 +66,18 @@ class StatsPage extends StatelessWidget {
                       height: 44,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.offWhite,
+                        color: AppColors.boldGrey,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.pureBlack.withOpacity(0.1),
-                            blurRadius: 4,
+                            color: AppColors.pureBlack.withOpacity(0.3),
+                            blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
                       child: Icon(
                         Icons.arrow_back,
-                        color: AppColors.darkText,
+                        color: AppColors.offWhite,
                         size: 24,
                       ),
                     ),
@@ -88,7 +88,7 @@ class StatsPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w900,
-                      color: AppColors.darkText,
+                      color: AppColors.offWhite,
                       letterSpacing: 1.5,
                     ),
                   ),
@@ -116,7 +116,7 @@ class StatsPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
-                        color: AppColors.darkText,
+                        color: AppColors.offWhite,
                         letterSpacing: 1.2,
                       ),
                     ),

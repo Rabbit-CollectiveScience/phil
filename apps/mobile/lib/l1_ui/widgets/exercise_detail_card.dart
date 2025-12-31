@@ -31,14 +31,14 @@ class ExerciseDetailCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         border: isNewPR
             ? Border.all(color: AppColors.limeGreen, width: 2)
-            : null,
+            : Border.all(color: const Color(0xFFE0E0E0), width: 1),
         boxShadow: [
           BoxShadow(
             color: isNewPR
-                ? AppColors.limeGreen.withOpacity(0.2)
-                : AppColors.pureBlack.withOpacity(0.06),
-            blurRadius: isNewPR ? 12 : 8,
-            offset: const Offset(0, 2),
+                ? AppColors.limeGreen.withOpacity(0.3)
+                : Colors.white.withOpacity(0.08),
+            blurRadius: isNewPR ? 20 : 16,
+            offset: const Offset(0, 4),
           ),
         ],
       ),

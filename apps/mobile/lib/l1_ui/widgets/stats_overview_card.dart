@@ -25,10 +25,14 @@ class StatsOverviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.pureBlack.withOpacity(0.08),
-            blurRadius: 12,
+            color: Colors.white.withOpacity(0.1),
+            blurRadius: 24,
             offset: const Offset(0, 4),
           ),
         ],
