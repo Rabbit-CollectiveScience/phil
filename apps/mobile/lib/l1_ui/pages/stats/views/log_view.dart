@@ -425,11 +425,7 @@ class _LogViewState extends State<LogView> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.add,
-              color: AppColors.pureBlack,
-              size: 20,
-            ),
+            Icon(Icons.add, color: AppColors.pureBlack, size: 20),
             const SizedBox(width: 8),
             Text(
               'Add Set',

@@ -3,6 +3,7 @@ import '../../theme/app_colors.dart';
 import 'views/today_view.dart';
 import 'views/weekly_view.dart';
 import 'views/log_view.dart';
+import 'views/trend_view.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
@@ -193,6 +194,8 @@ class _StatsPageState extends State<StatsPage> {
                   ? const WeeklyView()
                   : _selectedSection == 'LOG'
                   ? const LogView()
+                  : _selectedSection == 'TREND'
+                  ? const TrendView()
                   : Center(
                       child: Text(
                         '$_selectedSection coming soon',
