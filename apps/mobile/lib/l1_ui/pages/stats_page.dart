@@ -184,16 +184,16 @@ class _StatsPageState extends State<StatsPage> {
                       exerciseDetails,
                     )
                   : _selectedSection == 'WEEKLY'
-                      ? _buildWeeklyContent()
-                      : Center(
-                          child: Text(
-                            '$_selectedSection coming soon',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.offWhite.withOpacity(0.5),
-                            ),
-                          ),
+                  ? _buildWeeklyContent()
+                  : Center(
+                      child: Text(
+                        '$_selectedSection coming soon',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.offWhite.withOpacity(0.5),
                         ),
+                      ),
+                    ),
             ),
           ],
         ),
@@ -257,8 +257,8 @@ class _StatsPageState extends State<StatsPage> {
     final String weekLabel = _currentWeekOffset == 0
         ? 'This Week'
         : _currentWeekOffset == -1
-            ? 'Last Week'
-            : '${-_currentWeekOffset} Weeks Ago';
+        ? 'Last Week'
+        : '${-_currentWeekOffset} Weeks Ago';
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -449,6 +449,9 @@ class _StatsPageState extends State<StatsPage> {
     int sets,
     double volume,
   ) {
+    final typeKey = type.toLowerCase();
+    final iconPath = 'assets/images/exercise_types/$typeKey.png';
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -466,14 +469,32 @@ class _StatsPageState extends State<StatsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            type,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              color: AppColors.darkText,
-              letterSpacing: 0.5,
-            ),
+          Row(
+            children: [
+              Image.asset(
+                iconPath,
+                width: 24,
+                height: 24,
+                color: AppColors.darkText,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(
+                    Icons.fitness_center,
+                    size: 24,
+                    color: AppColors.darkText,
+                  );
+                },
+              ),
+              const SizedBox(width: 12),
+              Text(
+                type,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.darkText,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           Row(
@@ -542,11 +563,7 @@ class _StatsPageState extends State<StatsPage> {
               color: AppColors.limeGreen,
               borderRadius: BorderRadius.zero,
             ),
-            child: Icon(
-              icon,
-              color: AppColors.pureBlack,
-              size: 24,
-            ),
+            child: Icon(icon, color: AppColors.pureBlack, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
