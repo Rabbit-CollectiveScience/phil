@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+import '../../../theme/app_colors.dart';
 import 'metric_tile.dart';
-import 'exercise_type_chip.dart';
+import '../../../widgets/exercise_type_chip.dart';
 
 /// Overview card showing today's workout summary
 class StatsOverviewCard extends StatelessWidget {

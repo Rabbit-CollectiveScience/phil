@@ -11,7 +11,7 @@ import '../widgets/completion_counter.dart';
 import '../widgets/floating_card_entrance.dart';
 import '../widgets/exercise_filter_type_button.dart';
 import 'completed_list_page.dart';
-import 'stats_page.dart';
+import 'stats/stats_page.dart';
 import 'exercise_filter_type_page.dart';
 import '../../l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
 import '../../l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
