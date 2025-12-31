@@ -10,6 +10,7 @@ class LogView extends StatefulWidget {
 
 class _LogViewState extends State<LogView> {
   DateTime _selectedDate = DateTime.now();
+  final Set<int> _expandedCards = {};
 
   // Mock data
   final List<Map<String, dynamic>> _mockSets = [
@@ -60,7 +61,7 @@ class _LogViewState extends State<LogView> {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -92,7 +93,10 @@ class _LogViewState extends State<LogView> {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final selected = DateTime(
-        _selectedDate.year, _selectedDate.month, _selectedDate.day);
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
     return selected == today;
   }
 
@@ -189,7 +193,7 @@ class _LogViewState extends State<LogView> {
               final set = _mockSets[index];
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: _buildSetCard(set),
+                child: _buildSetCard(set, index),
               );
             })
           else
@@ -200,105 +204,111 @@ class _LogViewState extends State<LogView> {
     );
   }
 
-  Widget _buildSetCard(Map<String, dynamic> set) {
+  Widget _buildSetCard(Map<String, dynamic> set, int index) {
     final repsString = (set['reps'] as List<int>).join('/');
+    final isExpanded = _expandedCards.contains(index);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.zero,
-        border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white.withOpacity(0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          if (isExpanded) {
+            _expandedCards.remove(index);
+          } else {
+            _expandedCards.add(index);
+          }
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.zero,
+          border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white.withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      set['exerciseName'],
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.darkText,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    Text(
-                      set['time'],
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.darkText.withOpacity(0.5),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
                 Text(
-                  '${set['sets']} sets • ${set['totalVolume'].toInt()} kg • $repsString reps',
+                  set['exerciseName'],
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.darkText,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                Text(
+                  set['time'],
+                  style: TextStyle(
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.darkText.withOpacity(0.7),
+                    color: AppColors.darkText.withOpacity(0.5),
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(width: 12),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              // TODO: Handle edit/delete
-            },
-            icon: Icon(
-              Icons.more_vert,
-              color: AppColors.darkText.withOpacity(0.5),
-              size: 20,
+            const SizedBox(height: 8),
+            Text(
+              '${set['sets']} sets • ${set['totalVolume'].toInt()} kg • $repsString reps',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.darkText.withOpacity(0.7),
+              ),
             ),
-            color: AppColors.boldGrey,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem<String>(
-                  value: 'edit',
-                  child: Text(
-                    'Edit',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.offWhite,
-                    ),
-                  ),
+            if (isExpanded) ...[
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.darkText.withOpacity(0.05),
+                  borderRadius: BorderRadius.zero,
                 ),
-                PopupMenuItem<String>(
-                  value: 'delete',
-                  child: Text(
-                    'Delete',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.red[300],
-                    ),
-                  ),
+                child: Column(
+                  children: List.generate(set['sets'], (setIndex) {
+                    final reps = (set['reps'] as List<int>)[setIndex];
+                    final weight = (set['weights'] as List<double>)[setIndex];
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          bottom: setIndex < set['sets'] - 1 ? 8 : 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Set ${setIndex + 1}',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.darkText.withOpacity(0.6),
+                            ),
+                          ),
+                          Text(
+                            '$reps reps × ${weight.toInt()} kg',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.darkText,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
                 ),
-              ];
-            },
-          ),
-        ],
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

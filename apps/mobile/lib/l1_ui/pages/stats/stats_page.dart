@@ -190,18 +190,18 @@ class _StatsPageState extends State<StatsPage> {
                       exerciseDetails: exerciseDetails,
                     )
                   : _selectedSection == 'WEEKLY'
-                      ? const WeeklyView()
-                      : _selectedSection == 'LOG'
-                          ? const LogView()
-                          : Center(
-                              child: Text(
-                                '$_selectedSection coming soon',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.offWhite.withOpacity(0.5),
-                                ),
-                              ),
-                            ),
+                  ? const WeeklyView()
+                  : _selectedSection == 'LOG'
+                  ? const LogView()
+                  : Center(
+                      child: Text(
+                        '$_selectedSection coming soon',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.offWhite.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
             ),
           ],
         ),
