@@ -12,32 +12,122 @@ class _PRViewState extends State<PRView> {
   // Mock PR data grouped by exercise type
   final Map<String, List<Map<String, dynamic>>> _prsByType = {
     'CHEST': [
-      {'exercise': 'BENCH PRESS', 'value': '120 kg', 'date': 'Dec 28, 2025', 'daysAgo': 4},
-      {'exercise': 'INCLINE BENCH', 'value': '100 kg', 'date': 'Dec 20, 2025', 'daysAgo': 12},
-      {'exercise': 'DUMBBELL PRESS', 'value': '45 kg', 'date': 'Dec 15, 2025', 'daysAgo': 17},
-      {'exercise': 'CABLE FLYES', 'value': '30 kg × 15', 'date': 'Dec 10, 2025', 'daysAgo': 22},
+      {
+        'exercise': 'BENCH PRESS',
+        'value': '120 kg',
+        'date': 'Dec 28, 2025',
+        'daysAgo': 4,
+      },
+      {
+        'exercise': 'INCLINE BENCH',
+        'value': '100 kg',
+        'date': 'Dec 20, 2025',
+        'daysAgo': 12,
+      },
+      {
+        'exercise': 'DUMBBELL PRESS',
+        'value': '45 kg',
+        'date': 'Dec 15, 2025',
+        'daysAgo': 17,
+      },
+      {
+        'exercise': 'CABLE FLYES',
+        'value': '30 kg × 15',
+        'date': 'Dec 10, 2025',
+        'daysAgo': 22,
+      },
     ],
     'BACK': [
-      {'exercise': 'DEADLIFT', 'value': '180 kg', 'date': 'Dec 25, 2025', 'daysAgo': 7},
-      {'exercise': 'PULL-UPS', 'value': 'BW+25 kg × 8', 'date': 'Dec 22, 2025', 'daysAgo': 10},
-      {'exercise': 'BARBELL ROW', 'value': '110 kg', 'date': 'Dec 18, 2025', 'daysAgo': 14},
-      {'exercise': 'LAT PULLDOWN', 'value': '90 kg × 10', 'date': 'Dec 12, 2025', 'daysAgo': 20},
+      {
+        'exercise': 'DEADLIFT',
+        'value': '180 kg',
+        'date': 'Dec 25, 2025',
+        'daysAgo': 7,
+      },
+      {
+        'exercise': 'PULL-UPS',
+        'value': 'BW+25 kg × 8',
+        'date': 'Dec 22, 2025',
+        'daysAgo': 10,
+      },
+      {
+        'exercise': 'BARBELL ROW',
+        'value': '110 kg',
+        'date': 'Dec 18, 2025',
+        'daysAgo': 14,
+      },
+      {
+        'exercise': 'LAT PULLDOWN',
+        'value': '90 kg × 10',
+        'date': 'Dec 12, 2025',
+        'daysAgo': 20,
+      },
     ],
     'LEGS': [
-      {'exercise': 'SQUAT', 'value': '160 kg', 'date': 'Dec 26, 2025', 'daysAgo': 6},
-      {'exercise': 'FRONT SQUAT', 'value': '120 kg', 'date': 'Dec 19, 2025', 'daysAgo': 13},
-      {'exercise': 'LEG PRESS', 'value': '300 kg', 'date': 'Dec 14, 2025', 'daysAgo': 18},
-      {'exercise': 'ROMANIAN DEADLIFT', 'value': '140 kg', 'date': 'Dec 8, 2025', 'daysAgo': 24},
+      {
+        'exercise': 'SQUAT',
+        'value': '160 kg',
+        'date': 'Dec 26, 2025',
+        'daysAgo': 6,
+      },
+      {
+        'exercise': 'FRONT SQUAT',
+        'value': '120 kg',
+        'date': 'Dec 19, 2025',
+        'daysAgo': 13,
+      },
+      {
+        'exercise': 'LEG PRESS',
+        'value': '300 kg',
+        'date': 'Dec 14, 2025',
+        'daysAgo': 18,
+      },
+      {
+        'exercise': 'ROMANIAN DEADLIFT',
+        'value': '140 kg',
+        'date': 'Dec 8, 2025',
+        'daysAgo': 24,
+      },
     ],
     'SHOULDERS': [
-      {'exercise': 'OVERHEAD PRESS', 'value': '80 kg', 'date': 'Dec 23, 2025', 'daysAgo': 9},
-      {'exercise': 'DUMBBELL SHOULDER PRESS', 'value': '35 kg', 'date': 'Dec 16, 2025', 'daysAgo': 16},
-      {'exercise': 'LATERAL RAISE', 'value': '20 kg × 12', 'date': 'Dec 11, 2025', 'daysAgo': 21},
+      {
+        'exercise': 'OVERHEAD PRESS',
+        'value': '80 kg',
+        'date': 'Dec 23, 2025',
+        'daysAgo': 9,
+      },
+      {
+        'exercise': 'DUMBBELL SHOULDER PRESS',
+        'value': '35 kg',
+        'date': 'Dec 16, 2025',
+        'daysAgo': 16,
+      },
+      {
+        'exercise': 'LATERAL RAISE',
+        'value': '20 kg × 12',
+        'date': 'Dec 11, 2025',
+        'daysAgo': 21,
+      },
     ],
     'ARMS': [
-      {'exercise': 'BARBELL CURL', 'value': '50 kg', 'date': 'Dec 21, 2025', 'daysAgo': 11},
-      {'exercise': 'CLOSE GRIP BENCH', 'value': '90 kg', 'date': 'Dec 17, 2025', 'daysAgo': 15},
-      {'exercise': 'HAMMER CURL', 'value': '25 kg × 10', 'date': 'Dec 9, 2025', 'daysAgo': 23},
+      {
+        'exercise': 'BARBELL CURL',
+        'value': '50 kg',
+        'date': 'Dec 21, 2025',
+        'daysAgo': 11,
+      },
+      {
+        'exercise': 'CLOSE GRIP BENCH',
+        'value': '90 kg',
+        'date': 'Dec 17, 2025',
+        'daysAgo': 15,
+      },
+      {
+        'exercise': 'HAMMER CURL',
+        'value': '25 kg × 10',
+        'date': 'Dec 9, 2025',
+        'daysAgo': 23,
+      },
     ],
   };
 
@@ -80,11 +170,11 @@ class _PRViewState extends State<PRView> {
           // Summary stats
           _buildSummarySection(),
           const SizedBox(height: 24),
-          
+
           // Recent PRs
           _buildRecentPRsSection(),
           const SizedBox(height: 24),
-          
+
           // All PRs by type
           _buildAllPRsSection(),
           const SizedBox(height: 20),
@@ -177,11 +267,7 @@ class _PRViewState extends State<PRView> {
         children: [
           Row(
             children: [
-              Icon(
-                Icons.emoji_events,
-                size: 20,
-                color: AppColors.limeGreen,
-              ),
+              Icon(Icons.emoji_events, size: 20, color: AppColors.limeGreen),
               const SizedBox(width: 8),
               Text(
                 'RECENT PRs',
@@ -353,10 +439,7 @@ class _PRViewState extends State<PRView> {
                     ),
                   ),
                   if (isExpanded) ...[
-                    Container(
-                      height: 1,
-                      color: const Color(0xFFE0E0E0),
-                    ),
+                    Container(height: 1, color: const Color(0xFFE0E0E0)),
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -368,7 +451,8 @@ class _PRViewState extends State<PRView> {
                                 Expanded(
                                   flex: 3,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         pr['exercise'],
@@ -384,7 +468,9 @@ class _PRViewState extends State<PRView> {
                                         style: TextStyle(
                                           fontSize: 11,
                                           fontWeight: FontWeight.w600,
-                                          color: AppColors.darkText.withOpacity(0.5),
+                                          color: AppColors.darkText.withOpacity(
+                                            0.5,
+                                          ),
                                         ),
                                       ),
                                     ],
