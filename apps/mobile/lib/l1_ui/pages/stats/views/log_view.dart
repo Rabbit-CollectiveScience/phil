@@ -396,7 +396,7 @@ class _LogViewState extends State<LogView> {
   Widget _buildAddButton() {
     return GestureDetector(
       onTap: () {
-        // TODO: Open add set dialog
+        _showAddSetDialog();
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -421,6 +421,234 @@ class _LogViewState extends State<LogView> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showAddSetDialog() {
+    final TextEditingController exerciseController = TextEditingController();
+    final TextEditingController repsController = TextEditingController();
+    final TextEditingController weightController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: AppColors.boldGrey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Add Set',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.offWhite,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _formatDate(_selectedDate),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.offWhite.withOpacity(0.5),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Exercise name field
+                Text(
+                  'EXERCISE',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.offWhite.withOpacity(0.7),
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: exerciseController,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.offWhite,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'e.g., Bench Press',
+                    hintStyle: TextStyle(
+                      color: AppColors.offWhite.withOpacity(0.3),
+                    ),
+                    filled: true,
+                    fillColor: AppColors.deepCharcoal,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.zero,
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Reps and Weight row
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'REPS',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.offWhite.withOpacity(0.7),
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: repsController,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.offWhite,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: '10',
+                              hintStyle: TextStyle(
+                                color: AppColors.offWhite.withOpacity(0.3),
+                              ),
+                              filled: true,
+                              fillColor: AppColors.deepCharcoal,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'WEIGHT (KG)',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.offWhite.withOpacity(0.7),
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: weightController,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.offWhite,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: '80',
+                              hintStyle: TextStyle(
+                                color: AppColors.offWhite.withOpacity(0.3),
+                              ),
+                              filled: true,
+                              fillColor: AppColors.deepCharcoal,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                // Action buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: AppColors.deepCharcoal,
+                            borderRadius: BorderRadius.zero,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.offWhite,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          // TODO: Save the set
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: AppColors.limeGreen,
+                            borderRadius: BorderRadius.zero,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Add Set',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.pureBlack,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
