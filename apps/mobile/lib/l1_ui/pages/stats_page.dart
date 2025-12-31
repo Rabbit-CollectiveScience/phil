@@ -369,9 +369,9 @@ class _StatsPageState extends State<StatsPage> {
             ),
           ),
           const SizedBox(height: 24),
-          // Effort by type title
+          // Exercise type breakdown title
           Text(
-            'EFFORT BY TYPE',
+            'BY EXERCISE TYPE',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w900,
@@ -380,36 +380,65 @@ class _StatsPageState extends State<StatsPage> {
             ),
           ),
           const SizedBox(height: 16),
-          // Exercise type breakdown
-          _buildTypeEffortCard('CHEST', 8, 45, 3200),
-          const SizedBox(height: 12),
-          _buildTypeEffortCard('BACK', 6, 38, 2800),
-          const SizedBox(height: 12),
-          _buildTypeEffortCard('LEGS', 4, 28, 4500),
-          const SizedBox(height: 24),
-          // Notable outcomes
-          Text(
-            'NOTABLE OUTCOMES',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: AppColors.offWhite,
-              letterSpacing: 1.2,
-            ),
-          ),
-          const SizedBox(height: 16),
-          _buildNotableOutcomeCard(
-            'NEW PR',
-            'BENCH PRESS',
-            '110 kg',
-            Icons.emoji_events,
+          // All exercise types with integrated notable outcomes
+          _buildTypeCard(
+            type: 'CHEST',
+            exercises: 8,
+            sets: 45,
+            volume: 3200,
+            prExercise: 'BENCH PRESS',
+            prValue: '110 kg',
           ),
           const SizedBox(height: 12),
-          _buildNotableOutcomeCard(
-            'BEST VOLUME',
-            'SQUAT',
-            '5,200 kg this week',
-            Icons.trending_up,
+          _buildTypeCard(
+            type: 'BACK',
+            exercises: 6,
+            sets: 38,
+            volume: 2800,
+          ),
+          const SizedBox(height: 12),
+          _buildTypeCard(
+            type: 'LEGS',
+            exercises: 4,
+            sets: 28,
+            volume: 4500,
+            bestVolumeExercise: 'SQUAT',
+            bestVolumeValue: '5,200 kg',
+          ),
+          const SizedBox(height: 12),
+          _buildTypeCard(
+            type: 'SHOULDERS',
+            exercises: 0,
+            sets: 0,
+            volume: 0,
+          ),
+          const SizedBox(height: 12),
+          _buildTypeCard(
+            type: 'ARMS',
+            exercises: 0,
+            sets: 0,
+            volume: 0,
+          ),
+          const SizedBox(height: 12),
+          _buildTypeCard(
+            type: 'CORE',
+            exercises: 0,
+            sets: 0,
+            volume: 0,
+          ),
+          const SizedBox(height: 12),
+          _buildTypeCard(
+            type: 'CARDIO',
+            exercises: 0,
+            sets: 0,
+            volume: 0,
+          ),
+          const SizedBox(height: 12),
+          _buildTypeCard(
+            type: 'FLEXIBILITY',
+            exercises: 0,
+            sets: 0,
+            volume: 0,
           ),
           const SizedBox(height: 20),
         ],
@@ -443,24 +472,39 @@ class _StatsPageState extends State<StatsPage> {
     );
   }
 
-  Widget _buildTypeEffortCard(
-    String type,
-    int exercises,
-    int sets,
-    double volume,
-  ) {
+  Widget _buildTypeCard({
+    required String type,
+    required int exercises,
+    required int sets,
+    required double volume,
+    String? prExercise,
+    String? prValue,
+    String? bestVolumeExercise,
+    String? bestVolumeValue,
+  }) {
     final typeKey = type.toLowerCase();
     final iconPath = 'assets/images/exercise_types/$typeKey.png';
+    final hasData = exercises > 0 || sets > 0 || volume > 0;
+    final hasPR = prExercise != null && prValue != null;
+    final hasBestVolume = bestVolumeExercise != null && bestVolumeValue != null;
+    final hasNotableOutcome = hasPR || hasBestVolume;
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.zero,
-        border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+        border: Border.all(
+          color: hasNotableOutcome
+              ? AppColors.limeGreen
+              : const Color(0xFFE0E0E0),
+          width: hasNotableOutcome ? 2 : 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.white.withOpacity(0.08),
+            color: hasNotableOutcome
+                ? AppColors.limeGreen.withOpacity(0.15)
+                : Colors.white.withOpacity(0.08),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -475,12 +519,16 @@ class _StatsPageState extends State<StatsPage> {
                 iconPath,
                 width: 24,
                 height: 24,
-                color: AppColors.darkText,
+                color: hasData
+                    ? AppColors.darkText
+                    : AppColors.darkText.withOpacity(0.3),
                 errorBuilder: (context, error, stackTrace) {
                   return Icon(
                     Icons.fitness_center,
                     size: 24,
-                    color: AppColors.darkText,
+                    color: hasData
+                        ? AppColors.darkText
+                        : AppColors.darkText.withOpacity(0.3),
                   );
                 },
               ),
@@ -490,7 +538,9 @@ class _StatsPageState extends State<StatsPage> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
-                  color: AppColors.darkText,
+                  color: hasData
+                      ? AppColors.darkText
+                      : AppColors.darkText.withOpacity(0.3),
                   letterSpacing: 0.5,
                 ),
               ),
@@ -500,17 +550,93 @@ class _StatsPageState extends State<StatsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildMetricItem('$exercises', 'Exercises'),
-              _buildMetricItem('$sets', 'Sets'),
-              _buildMetricItem('${volume.toInt()}', 'kg'),
+              _buildMetricItem('$exercises', 'Exercises', hasData),
+              _buildMetricItem('$sets', 'Sets', hasData),
+              _buildMetricItem('${volume.toInt()}', 'kg', hasData),
             ],
           ),
+          if (hasNotableOutcome) ...[
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.limeGreen,
+                borderRadius: BorderRadius.zero,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (hasPR) ...[
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.emoji_events,
+                          color: AppColors.pureBlack,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'NEW PR',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.pureBlack,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '$prExercise • $prValue',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.pureBlack,
+                      ),
+                    ),
+                  ],
+                  if (hasPR && hasBestVolume) const SizedBox(height: 12),
+                  if (hasBestVolume) ...[
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.trending_up,
+                          color: AppColors.pureBlack,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'BEST VOLUME',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.pureBlack,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '$bestVolumeExercise • $bestVolumeValue',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.pureBlack,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildMetricItem(String value, String label) {
+  Widget _buildMetricItem(String value, String label, bool hasData) {
     return Column(
       children: [
         Text(
@@ -518,7 +644,9 @@ class _StatsPageState extends State<StatsPage> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w900,
-            color: AppColors.darkText,
+            color: hasData
+                ? AppColors.darkText
+                : AppColors.darkText.withOpacity(0.3),
             height: 1.0,
           ),
         ),
@@ -528,81 +656,12 @@ class _StatsPageState extends State<StatsPage> {
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: AppColors.darkText.withOpacity(0.5),
+            color: hasData
+                ? AppColors.darkText.withOpacity(0.5)
+                : AppColors.darkText.withOpacity(0.2),
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildNotableOutcomeCard(
-    String label,
-    String exerciseName,
-    String value,
-    IconData icon,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.zero,
-        border: Border.all(color: AppColors.limeGreen, width: 2),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.limeGreen.withOpacity(0.2),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.limeGreen,
-              borderRadius: BorderRadius.zero,
-            ),
-            child: Icon(icon, color: AppColors.pureBlack, size: 24),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.darkText.withOpacity(0.5),
-                    letterSpacing: 1.0,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  exerciseName,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.darkText,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.darkText.withOpacity(0.7),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

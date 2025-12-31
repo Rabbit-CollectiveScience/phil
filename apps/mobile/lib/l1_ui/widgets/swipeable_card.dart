@@ -797,7 +797,7 @@ class SwipeableCardState extends State<SwipeableCard>
                     ),
                   ),
                   child: Text(
-                    'ZET $_currentSetNumber',
+                    'SET $_currentSetNumber',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w900,
