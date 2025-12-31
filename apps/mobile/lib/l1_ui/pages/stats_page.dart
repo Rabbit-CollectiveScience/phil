@@ -453,7 +453,7 @@ class _StatsPageState extends State<StatsPage> {
     final iconPath = 'assets/images/exercise_types/$typeKey.png';
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.zero,
@@ -470,6 +470,7 @@ class _StatsPageState extends State<StatsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Image.asset(
                 iconPath,
@@ -496,7 +497,7 @@ class _StatsPageState extends State<StatsPage> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
