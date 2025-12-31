@@ -3,8 +3,15 @@ import '../theme/app_colors.dart';
 import '../widgets/stats_overview_card.dart';
 import '../widgets/exercise_detail_card.dart';
 
-class StatsPage extends StatelessWidget {
+class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
+
+  @override
+  State<StatsPage> createState() => _StatsPageState();
+}
+
+class _StatsPageState extends State<StatsPage> {
+  String _selectedSection = 'TODAY';
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +20,9 @@ class StatsPage extends StatelessWidget {
     final int todayExercises = 12;
     final double totalVolume = 2000;
     final List<String> exerciseTypes = ['CHEST', 'SHOULDER', 'CARDIO'];
+
+    // Navigation sections
+    final List<String> sections = ['TODAY', 'WEEKLY', 'TREND', 'HISTORY'];
 
     final List<Map<String, dynamic>> exerciseDetails = [
       {
@@ -83,13 +93,80 @@ class StatsPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Text(
-                    'STATS',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.offWhite,
-                      letterSpacing: 1.5,
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'STATS',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.offWhite,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                        PopupMenuButton<String>(
+                          onSelected: (selected) {
+                            setState(() {
+                              _selectedSection = selected;
+                            });
+                          },
+                          offset: const Offset(0, 50),
+                          color: AppColors.boldGrey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          itemBuilder: (context) {
+                            return sections.map((section) {
+                              return PopupMenuItem<String>(
+                                value: section,
+                                child: Text(
+                                  section,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w900,
+                                    color: section == _selectedSection
+                                        ? AppColors.limeGreen
+                                        : AppColors.offWhite,
+                                    letterSpacing: 0.8,
+                                  ),
+                                ),
+                              );
+                            }).toList();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.boldGrey,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  _selectedSection,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.limeGreen,
+                                    letterSpacing: 0.8,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Icon(
+                                  Icons.arrow_drop_down,
+                                  color: AppColors.limeGreen,
+                                  size: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
