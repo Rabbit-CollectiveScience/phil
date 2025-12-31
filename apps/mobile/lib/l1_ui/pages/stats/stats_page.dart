@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import 'views/today_view.dart';
 import 'views/weekly_view.dart';
+import 'views/log_view.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
@@ -189,16 +190,18 @@ class _StatsPageState extends State<StatsPage> {
                       exerciseDetails: exerciseDetails,
                     )
                   : _selectedSection == 'WEEKLY'
-                  ? const WeeklyView()
-                  : Center(
-                      child: Text(
-                        '$_selectedSection coming soon',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.offWhite.withOpacity(0.5),
-                        ),
-                      ),
-                    ),
+                      ? const WeeklyView()
+                      : _selectedSection == 'LOG'
+                          ? const LogView()
+                          : Center(
+                              child: Text(
+                                '$_selectedSection coming soon',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors.offWhite.withOpacity(0.5),
+                                ),
+                              ),
+                            ),
             ),
           ],
         ),
