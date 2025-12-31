@@ -10,41 +10,78 @@ class LogView extends StatefulWidget {
 
 class _LogViewState extends State<LogView> {
   DateTime _selectedDate = DateTime.now();
-  final Set<int> _expandedCards = {};
 
-  // Mock data
+  // Mock data - flattened to individual sets for swipeable rows
   final List<Map<String, dynamic>> _mockSets = [
     {
       'exerciseName': 'BENCH PRESS',
-      'sets': 3,
-      'totalVolume': 225.0,
-      'reps': [10, 8, 6],
-      'weights': [80.0, 80.0, 85.0],
       'time': '12:34 PM',
+      'setNumber': 1,
+      'reps': 10,
+      'weight': 80.0,
+    },
+    {
+      'exerciseName': 'BENCH PRESS',
+      'time': '12:34 PM',
+      'setNumber': 2,
+      'reps': 8,
+      'weight': 80.0,
+    },
+    {
+      'exerciseName': 'BENCH PRESS',
+      'time': '12:34 PM',
+      'setNumber': 3,
+      'reps': 6,
+      'weight': 85.0,
     },
     {
       'exerciseName': 'SQUAT',
-      'sets': 4,
-      'totalVolume': 400.0,
-      'reps': [12, 10, 10, 8],
-      'weights': [100.0, 100.0, 100.0, 100.0],
       'time': '12:15 PM',
+      'setNumber': 1,
+      'reps': 12,
+      'weight': 100.0,
+    },
+    {
+      'exerciseName': 'SQUAT',
+      'time': '12:15 PM',
+      'setNumber': 2,
+      'reps': 10,
+      'weight': 100.0,
+    },
+    {
+      'exerciseName': 'SQUAT',
+      'time': '12:15 PM',
+      'setNumber': 3,
+      'reps': 10,
+      'weight': 100.0,
+    },
+    {
+      'exerciseName': 'SQUAT',
+      'time': '12:15 PM',
+      'setNumber': 4,
+      'reps': 8,
+      'weight': 100.0,
     },
     {
       'exerciseName': 'SHOULDER PRESS',
-      'sets': 3,
-      'totalVolume': 180.0,
-      'reps': [12, 10, 8],
-      'weights': [60.0, 60.0, 60.0],
       'time': '11:45 AM',
+      'setNumber': 1,
+      'reps': 12,
+      'weight': 60.0,
     },
     {
-      'exerciseName': 'CABLE FLYES',
-      'sets': 3,
-      'totalVolume': 120.0,
-      'reps': [15, 12, 10],
-      'weights': [40.0, 40.0, 40.0],
-      'time': '11:20 AM',
+      'exerciseName': 'SHOULDER PRESS',
+      'time': '11:45 AM',
+      'setNumber': 2,
+      'reps': 10,
+      'weight': 60.0,
+    },
+    {
+      'exerciseName': 'SHOULDER PRESS',
+      'time': '11:45 AM',
+      'setNumber': 3,
+      'reps': 8,
+      'weight': 60.0,
     },
   ];
 
@@ -188,15 +225,11 @@ class _LogViewState extends State<LogView> {
           ),
           const SizedBox(height: 24),
           // Sets list or empty state
-          if (hasSets)
-            ...List.generate(_mockSets.length, (index) {
-              final set = _mockSets[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: _buildSetCard(set, index),
-              );
-            })
-          else
+          if (hasSets) ...[
+            ..._buildGroupedSets(),
+            const SizedBox(height: 20),
+            _buildAddButton(),
+          ] else
             _buildEmptyState(),
           const SizedBox(height: 20),
         ],
@@ -204,109 +237,209 @@ class _LogViewState extends State<LogView> {
     );
   }
 
-  Widget _buildSetCard(Map<String, dynamic> set, int index) {
-    final repsString = (set['reps'] as List<int>).join('/');
-    final isExpanded = _expandedCards.contains(index);
+  List<Widget> _buildGroupedSets() {
+    final List<Widget> widgets = [];
+    String? currentExercise;
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (isExpanded) {
-            _expandedCards.remove(index);
-          } else {
-            _expandedCards.add(index);
-          }
-        });
+    for (int i = 0; i < _mockSets.length; i++) {
+      final set = _mockSets[i];
+      final exerciseName = set['exerciseName'];
+      final time = set['time'];
+
+      // Add exercise header if this is a new exercise
+      if (exerciseName != currentExercise) {
+        if (currentExercise != null) {
+          widgets.add(const SizedBox(height: 20));
+        }
+        widgets.add(_buildExerciseHeader(exerciseName, time));
+        widgets.add(const SizedBox(height: 8));
+        currentExercise = exerciseName;
+      }
+
+      // Add set row
+      widgets.add(_buildSetRow(set, i));
+    }
+
+    return widgets;
+  }
+
+  Widget _buildExerciseHeader(String exerciseName, String time) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            exerciseName,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w900,
+              color: AppColors.offWhite,
+              letterSpacing: 0.5,
+            ),
+          ),
+          Text(
+            time,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppColors.offWhite.withOpacity(0.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSetRow(Map<String, dynamic> set, int index) {
+    return Dismissible(
+      key: Key('set_$index'),
+      background: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.blue[400],
+          borderRadius: BorderRadius.zero,
+        ),
+        alignment: Alignment.centerLeft,
+        child: Icon(Icons.edit, color: Colors.white, size: 20),
+      ),
+      secondaryBackground: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.red[400],
+          borderRadius: BorderRadius.zero,
+        ),
+        alignment: Alignment.centerRight,
+        child: Icon(Icons.delete, color: Colors.white, size: 20),
+      ),
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.endToStart) {
+          // Delete - show confirmation
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: AppColors.boldGrey,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                title: Text(
+                  'Delete Set',
+                  style: TextStyle(
+                    color: AppColors.offWhite,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                content: Text(
+                  'Are you sure you want to delete this set?',
+                  style: TextStyle(color: AppColors.offWhite),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: AppColors.offWhite),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.red[300]),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          // Edit - just return false to not dismiss
+          // TODO: Open edit dialog
+          return false;
+        }
+      },
+      onDismissed: (direction) {
+        // TODO: Handle actual deletion
       },
       child: Container(
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.zero,
           border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.white.withOpacity(0.08),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: AppColors.limeGreen.withOpacity(0.15),
+                borderRadius: BorderRadius.zero,
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                '${set['setNumber']}',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.darkText,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                '${set['reps']} reps × ${set['weight'].toInt()} kg',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.darkText,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.drag_handle,
+              color: AppColors.darkText.withOpacity(0.3),
+              size: 20,
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+    );
+  }
+
+  Widget _buildAddButton() {
+    return GestureDetector(
+      onTap: () {
+        // TODO: Open add set dialog
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: AppColors.limeGreen,
+          borderRadius: BorderRadius.zero,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  set['exerciseName'],
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.darkText,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                Text(
-                  set['time'],
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.darkText.withOpacity(0.5),
-                  ),
-                ),
-              ],
+            Icon(
+              Icons.add,
+              color: AppColors.pureBlack,
+              size: 20,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(width: 8),
             Text(
-              '${set['sets']} sets • ${set['totalVolume'].toInt()} kg • $repsString reps',
+              'Add Set',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: AppColors.darkText.withOpacity(0.7),
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+                color: AppColors.pureBlack,
+                letterSpacing: 0.5,
               ),
             ),
-            if (isExpanded) ...[
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.darkText.withOpacity(0.05),
-                  borderRadius: BorderRadius.zero,
-                ),
-                child: Column(
-                  children: List.generate(set['sets'], (setIndex) {
-                    final reps = (set['reps'] as List<int>)[setIndex];
-                    final weight = (set['weights'] as List<double>)[setIndex];
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          bottom: setIndex < set['sets'] - 1 ? 8 : 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Set ${setIndex + 1}',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.darkText.withOpacity(0.6),
-                            ),
-                          ),
-                          Text(
-                            '$reps reps × ${weight.toInt()} kg',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.darkText,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                ),
-              ),
-            ],
           ],
         ),
       ),
