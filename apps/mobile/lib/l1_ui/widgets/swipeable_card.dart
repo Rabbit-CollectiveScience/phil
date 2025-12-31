@@ -589,26 +589,6 @@ class SwipeableCardState extends State<SwipeableCard>
               height: 1.2,
             ),
           ),
-          const SizedBox(height: 50),
-          ElevatedButton(
-            onPressed: _handleTap,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.limeGreen,
-              foregroundColor: AppColors.pureBlack,
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-            ),
-            child: const Text(
-              "START",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 2.0,
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -861,18 +841,10 @@ class SwipeableCardState extends State<SwipeableCard>
                   height: 40,
                   color: Colors.transparent,
                   alignment: Alignment.topRight,
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.darkGrey,
-                    ),
-                    child: const Icon(
-                      Icons.close,
-                      color: AppColors.offWhite,
-                      size: 14,
-                    ),
+                  child: const Icon(
+                    Icons.close,
+                    color: AppColors.offWhite,
+                    size: 20,
                   ),
                 ),
               ),
