@@ -266,27 +266,14 @@ class _LogViewState extends State<LogView> {
   Widget _buildExerciseHeader(String exerciseName, String time) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            exerciseName,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: AppColors.offWhite,
-              letterSpacing: 0.5,
-            ),
-          ),
-          Text(
-            time,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.offWhite.withOpacity(0.5),
-            ),
-          ),
-        ],
+      child: Text(
+        exerciseName,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w900,
+          color: AppColors.offWhite,
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }
@@ -399,11 +386,6 @@ class _LogViewState extends State<LogView> {
                   color: AppColors.darkText,
                 ),
               ),
-            ),
-            Icon(
-              Icons.drag_handle,
-              color: AppColors.darkText.withOpacity(0.3),
-              size: 20,
             ),
           ],
         ),
