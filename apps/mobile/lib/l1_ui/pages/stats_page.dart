@@ -23,7 +23,13 @@ class _StatsPageState extends State<StatsPage> {
     final List<String> exerciseTypes = ['CHEST', 'SHOULDERS', 'CARDIO'];
 
     // Navigation sections
-    final List<String> sections = ['TODAY', 'WEEKLY', 'TREND', 'HISTORY'];
+    final List<String> sections = [
+      'TODAY',
+      'WEEKLY',
+      'TREND',
+      'HISTORY',
+      'SETTING'
+    ];
 
     final List<Map<String, dynamic>> exerciseDetails = [
       {
@@ -390,12 +396,7 @@ class _StatsPageState extends State<StatsPage> {
             prValue: '110 kg',
           ),
           const SizedBox(height: 12),
-          _buildTypeCard(
-            type: 'BACK',
-            exercises: 6,
-            sets: 38,
-            volume: 2800,
-          ),
+          _buildTypeCard(type: 'BACK', exercises: 6, sets: 38, volume: 2800),
           const SizedBox(height: 12),
           _buildTypeCard(
             type: 'LEGS',
@@ -406,40 +407,15 @@ class _StatsPageState extends State<StatsPage> {
             bestVolumeValue: '5,200 kg',
           ),
           const SizedBox(height: 12),
-          _buildTypeCard(
-            type: 'SHOULDERS',
-            exercises: 0,
-            sets: 0,
-            volume: 0,
-          ),
+          _buildTypeCard(type: 'SHOULDERS', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 12),
-          _buildTypeCard(
-            type: 'ARMS',
-            exercises: 0,
-            sets: 0,
-            volume: 0,
-          ),
+          _buildTypeCard(type: 'ARMS', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 12),
-          _buildTypeCard(
-            type: 'CORE',
-            exercises: 0,
-            sets: 0,
-            volume: 0,
-          ),
+          _buildTypeCard(type: 'CORE', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 12),
-          _buildTypeCard(
-            type: 'CARDIO',
-            exercises: 0,
-            sets: 0,
-            volume: 0,
-          ),
+          _buildTypeCard(type: 'CARDIO', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 12),
-          _buildTypeCard(
-            type: 'FLEXIBILITY',
-            exercises: 0,
-            sets: 0,
-            volume: 0,
-          ),
+          _buildTypeCard(type: 'FLEXIBILITY', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 20),
         ],
       ),
