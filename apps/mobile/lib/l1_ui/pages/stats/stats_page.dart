@@ -59,13 +59,7 @@ class _StatsPageState extends State<StatsPage> {
     ];
 
     // Navigation sections
-    final List<String> sections = [
-      'TODAY',
-      'WEEKLY',
-      'PR',
-      'LOG',
-      'SETTING',
-    ];
+    final List<String> sections = ['TODAY', 'WEEKLY', 'PR', 'LOG', 'SETTING'];
 
     return Scaffold(
       backgroundColor: AppColors.deepCharcoal,
