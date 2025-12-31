@@ -20,7 +20,7 @@ class _StatsPageState extends State<StatsPage> {
     final int todaySets = 35;
     final int todayExercises = 12;
     final double totalVolume = 2000;
-    final List<String> exerciseTypes = ['CHEST', 'SHOULDER', 'CARDIO'];
+    final List<String> exerciseTypes = ['CHEST', 'SHOULDERS', 'CARDIO'];
 
     // Navigation sections
     final List<String> sections = ['TODAY', 'WEEKLY', 'TREND', 'HISTORY'];
@@ -470,7 +470,6 @@ class _StatsPageState extends State<StatsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Image.asset(
                 iconPath,
