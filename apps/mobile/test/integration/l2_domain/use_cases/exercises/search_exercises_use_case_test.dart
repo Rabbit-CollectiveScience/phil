@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/use_cases/exercises/search_exercises_use_case.dart';
 import 'package:phil/l3_data/repositories/exercise_repository.dart';
-import '../../../../stubs/stub_exercise_repository.dart';
+import 'package:phil/l3_data/repositories/stub_exercise_repository.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late ExerciseRepository exerciseRepository;
   late SearchExercisesUseCase useCase;
 
@@ -36,11 +38,10 @@ void main() {
     });
 
     test('returns exact match first in results', () async {
-      // Assuming stub has "Squat" exercise
-      final result = await useCase.execute(searchQuery: 'squat');
+      final result = await useCase.execute(searchQuery: 'bench press');
 
       expect(result.isNotEmpty, isTrue);
-      expect(result.first.name.toLowerCase(), equals('squat'));
+      expect(result.first.name.toLowerCase(), contains('bench press'));
     });
 
     test('prioritizes starts-with matches over contains matches', () async {

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../../l2_domain/use_cases/stats/get_today_stats_overview_use_case.dart';
+import '../../../l2_domain/use_cases/stats/get_today_exercise_details_use_case.dart';
+import '../../../main.dart';
 import '../../shared/theme/app_colors.dart';
 import 'views/today_view.dart';
 import 'views/weekly_view.dart';
 import 'views/log_view.dart';
 import 'views/pr_view.dart';
+import 'view_models/today_stats_overview.dart';
+import 'view_models/exercise_detail_today.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key, this.initialSection = 1});
@@ -16,58 +21,48 @@ class StatsPage extends StatefulWidget {
 
 class _StatsPageState extends State<StatsPage> {
   late String _selectedSection;
+  TodayStatsOverview? _todayOverview;
+  List<ExerciseDetailToday>? _exerciseDetails;
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     final sections = ['PR', 'TODAY', 'WEEKLY', 'LOG', 'SETTING'];
     _selectedSection = sections[widget.initialSection];
+    if (_selectedSection == 'TODAY') {
+      _loadTodayData();
+    }
+  }
+
+  Future<void> _loadTodayData() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final overviewUseCase = getIt<GetTodayStatsOverviewUseCase>();
+      final detailsUseCase = getIt<GetTodayExerciseDetailsUseCase>();
+
+      final overviewMap = await overviewUseCase.execute();
+      final detailsList = await detailsUseCase.execute();
+
+      setState(() {
+        _todayOverview = TodayStatsOverview.fromMap(overviewMap);
+        _exerciseDetails = detailsList
+            .map((map) => ExerciseDetailToday.fromMap(map))
+            .toList();
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _todayOverview = TodayStatsOverview.empty();
+        _exerciseDetails = [];
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Fake data for TODAY view
-    final int todaySets = 35;
-    final int todayExercises = 12;
-    final double totalVolume = 2000;
-    final List<String> exerciseTypes = ['CHEST', 'SHOULDERS', 'CARDIO'];
-
-    final List<Map<String, dynamic>> exerciseDetails = [
-      {
-        'name': 'BENCH PRESS',
-        'sets': 5,
-        'volumeToday': 500.0,
-        'volumeBest': 620.0,
-        'maxWeightToday': 100.0,
-        'prMaxWeight': 110.0,
-      },
-      {
-        'name': 'SHOULDER PRESS',
-        'sets': 4,
-        'volumeToday': 320.0,
-        'volumeBest': 400.0,
-        'maxWeightToday': 80.0,
-        'prMaxWeight': 80.0,
-      },
-      {
-        'name': 'CABLE FLYES',
-        'sets': 3,
-        'volumeToday': 180.0,
-        'volumeBest': 220.0,
-        'maxWeightToday': 60.0,
-        'prMaxWeight': 65.0,
-      },
-      {
-        'name': 'RUNNING',
-        'sets': 1,
-        'volumeToday': 0.0,
-        'volumeBest': 0.0,
-        'maxWeightToday': 0.0,
-        'prMaxWeight': 0.0,
-      },
-    ];
-
-    // Navigation sections
     final List<String> sections = ['PR', 'TODAY', 'WEEKLY', 'LOG', 'SETTING'];
 
     return Scaffold(
@@ -121,6 +116,10 @@ class _StatsPageState extends State<StatsPage> {
                           onSelected: (selected) {
                             setState(() {
                               _selectedSection = selected;
+                              if (selected == 'TODAY' &&
+                                  _todayOverview == null) {
+                                _loadTodayData();
+                              }
                             });
                           },
                           offset: const Offset(0, 50),
@@ -186,13 +185,26 @@ class _StatsPageState extends State<StatsPage> {
             // Content area
             Expanded(
               child: _selectedSection == 'TODAY'
-                  ? TodayView(
-                      todaySets: todaySets,
-                      todayExercises: todayExercises,
-                      totalVolume: totalVolume,
-                      exerciseTypes: exerciseTypes,
-                      exerciseDetails: exerciseDetails,
-                    )
+                  ? _isLoading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.limeGreen,
+                            ),
+                          )
+                        : _todayOverview != null && _exerciseDetails != null
+                        ? TodayView(
+                            overview: _todayOverview!,
+                            exerciseDetails: _exerciseDetails!,
+                          )
+                        : Center(
+                            child: Text(
+                              'Failed to load today stats',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.offWhite.withOpacity(0.5),
+                              ),
+                            ),
+                          )
                   : _selectedSection == 'WEEKLY'
                   ? const WeeklyView()
                   : _selectedSection == 'LOG'

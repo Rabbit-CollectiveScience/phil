@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
 import '../../../shared/theme/app_colors.dart';
 
-/// Detail card for individual exercise stats
+/// Detail card for individual exercise stats (Phase 1: No PRs)
 class ExerciseDetailCard extends StatelessWidget {
   final String exerciseName;
   final int sets;
   final double volumeToday;
-  final double volumeBest;
-  final double maxWeightToday;
-  final double prMaxWeight;
+  final double? maxWeightToday;
 
   const ExerciseDetailCard({
     super.key,
     required this.exerciseName,
     required this.sets,
     required this.volumeToday,
-    required this.volumeBest,
-    required this.maxWeightToday,
-    required this.prMaxWeight,
+    this.maxWeightToday,
   });
-
-  bool get isNewPR => maxWeightToday >= prMaxWeight;
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +23,11 @@ class ExerciseDetailCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.zero,
-        border: isNewPR
-            ? Border.all(color: AppColors.limeGreen, width: 2)
-            : Border.all(color: const Color(0xFFE0E0E0), width: 1),
+        border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
         boxShadow: [
           BoxShadow(
-            color: isNewPR
-                ? AppColors.limeGreen.withOpacity(0.3)
-                : Colors.white.withOpacity(0.08),
-            blurRadius: isNewPR ? 20 : 16,
+            color: Colors.white.withOpacity(0.08),
+            blurRadius: 16,
             offset: const Offset(0, 4),
           ),
         ],
@@ -90,67 +80,33 @@ class ExerciseDetailCard extends StatelessWidget {
               Expanded(
                 child: _buildMetricColumn(
                   'Volume',
-                  '${volumeToday.toInt()} kg',
-                  'Best: ${volumeBest.toInt()} kg',
+                  volumeToday > 0
+                      ? '${volumeToday.toInt()} kg'
+                      : '${volumeToday.toInt()} reps',
                 ),
               ),
-              Container(
-                width: 1,
-                height: 50,
-                color: AppColors.darkGrey.withOpacity(0.2),
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-              Expanded(
-                child: _buildMetricColumn(
-                  'Max Weight',
-                  '${maxWeightToday.toInt()} kg',
-                  'PR: ${prMaxWeight.toInt()} kg',
-                  highlightValue: isNewPR,
+              if (maxWeightToday != null && maxWeightToday! > 0) ...[
+                Container(
+                  width: 1,
+                  height: 50,
+                  color: AppColors.darkGrey.withOpacity(0.2),
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
                 ),
-              ),
+                Expanded(
+                  child: _buildMetricColumn(
+                    'Max Weight',
+                    '${maxWeightToday!.toInt()} kg',
+                  ),
+                ),
+              ],
             ],
           ),
-          if (isNewPR) ...[
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.limeGreen,
-                borderRadius: BorderRadius.zero,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.emoji_events,
-                    size: 14,
-                    color: AppColors.pureBlack,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    'NEW PR!',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.pureBlack,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ],
       ),
     );
   }
 
-  Widget _buildMetricColumn(
-    String label,
-    String value,
-    String subtitle, {
-    bool highlightValue = false,
-  }) {
+  Widget _buildMetricColumn(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -164,39 +120,13 @@ class ExerciseDetailCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        highlightValue
-            ? Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.limeGreen,
-                  borderRadius: BorderRadius.zero,
-                ),
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.pureBlack,
-                    height: 1.0,
-                  ),
-                ),
-              )
-            : Text(
-                value,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.darkText,
-                  height: 1.0,
-                ),
-              ),
-        const SizedBox(height: 2),
         Text(
-          subtitle,
+          value,
           style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: AppColors.darkText.withOpacity(0.4),
+            fontSize: 18,
+            fontWeight: FontWeight.w900,
+            color: AppColors.darkText,
+            height: 1.0,
           ),
         ),
       ],
