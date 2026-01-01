@@ -245,11 +245,7 @@ class _LogViewState extends State<LogView> {
               height: MediaQuery.of(context).size.height - 250,
               child: Column(
                 children: [
-                  Expanded(
-                    child: Center(
-                      child: _buildEmptyState(),
-                    ),
-                  ),
+                  Expanded(child: Center(child: _buildEmptyState())),
                   _buildAddButton(),
                 ],
               ),

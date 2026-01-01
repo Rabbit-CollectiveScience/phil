@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../view_models/card_model.dart';
 import '../../../../l2_domain/models/field_type_enum.dart';
@@ -573,19 +574,22 @@ class SwipeableCardState extends State<SwipeableCard>
 
   Widget _buildFrontCard() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          AutoSizeText(
             widget.card.exerciseName.toUpperCase(),
             textAlign: TextAlign.center,
-            maxLines: 3,
+            maxLines: 5,
+            minFontSize: 12,
+            maxFontSize: 36,
+            stepGranularity: 0.5,
+            wrapWords: true,
             style: const TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.w900,
               color: AppColors.limeGreen,
-              letterSpacing: 0.5,
               height: 1.2,
             ),
           ),
@@ -718,16 +722,18 @@ class SwipeableCardState extends State<SwipeableCard>
               const SizedBox(height: 5),
               Column(
                 children: [
-                  Text(
+                  AutoSizeText(
                     widget.card.exerciseName.toUpperCase(),
                     textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                    minFontSize: 12,
+                    maxFontSize: 24,
+                    wrapWords: true,
+                    overflow: TextOverflow.visible,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w900,
                       color: AppColors.offWhite,
-                      letterSpacing: 1.2,
                       height: 1.15,
                     ),
                   ),
