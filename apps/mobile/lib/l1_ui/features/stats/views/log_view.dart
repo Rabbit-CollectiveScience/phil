@@ -917,20 +917,24 @@ class _AddSetDialogState extends State<_AddSetDialog> {
 
                             try {
                               // Convert field values to proper types
+                              // Only include non-empty values (sparse map)
                               final values = <String, dynamic>{};
                               _fieldControllers.forEach((key, controller) {
-                                final text = controller.text;
-                                // Try to parse as number if possible
-                                final numValue = num.tryParse(text);
-                                values[key] = numValue ?? text;
+                                final text = controller.text.trim();
+                                if (text.isNotEmpty) {
+                                  // Try to parse as number if possible
+                                  final numValue = num.tryParse(text);
+                                  values[key] = numValue ?? text;
+                                }
                               });
 
                               // Save the workout set with custom date
+                              // Pass null if no values, otherwise pass the map
                               final recordUseCase =
                                   GetIt.instance<RecordWorkoutSetUseCase>();
                               await recordUseCase.execute(
                                 exerciseId: _selectedExercise!.id,
-                                values: values,
+                                values: values.isEmpty ? null : values,
                                 completedAt: widget.selectedDate,
                               );
 
