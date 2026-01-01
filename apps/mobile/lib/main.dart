@@ -6,6 +6,7 @@ import 'l1_ui/features/workout/workout_home_page.dart';
 import 'l1_ui/shared/theme/app_colors.dart';
 import 'l2_domain/models/workout_set.dart';
 import 'l2_domain/use_cases/exercises/get_recommended_exercises_use_case.dart';
+import 'l2_domain/use_cases/exercises/search_exercises_use_case.dart';
 import 'l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
 import 'l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
 import 'l2_domain/use_cases/workout_sets/get_today_completed_count_use_case.dart';
@@ -58,6 +59,9 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
   // Register L2 - Domain Layer (Use Cases)
   getIt.registerFactory<GetRecommendedExercisesUseCase>(
     () => GetRecommendedExercisesUseCase(getIt<ExerciseRepository>()),
+  );
+  getIt.registerFactory<SearchExercisesUseCase>(
+    () => SearchExercisesUseCase(getIt<ExerciseRepository>()),
   );
   getIt.registerFactory<RecordWorkoutSetUseCase>(
     () => RecordWorkoutSetUseCase(getIt<WorkoutSetRepository>()),

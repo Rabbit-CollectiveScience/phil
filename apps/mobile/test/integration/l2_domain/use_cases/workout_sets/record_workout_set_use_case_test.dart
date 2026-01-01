@@ -213,5 +213,44 @@ void main() {
       // Verify all saved
       expect(repository.count, 4);
     });
+
+    test('should use custom completedAt date when provided', () async {
+      // Arrange
+      final customDate = DateTime(2025, 6, 15, 10, 30);
+
+      // Act
+      final result = await useCase.execute(
+        exerciseId: 'exercise_1',
+        values: {'reps': 10},
+        completedAt: customDate,
+      );
+
+      // Assert
+      expect(result.completedAt, equals(customDate));
+    });
+
+    test('should use current time when completedAt is null', () async {
+      // Arrange
+      final beforeExecution = DateTime.now();
+
+      // Act
+      final result = await useCase.execute(
+        exerciseId: 'exercise_1',
+        values: {'reps': 10},
+        completedAt: null,
+      );
+
+      final afterExecution = DateTime.now();
+
+      // Assert
+      expect(
+        result.completedAt.isAfter(beforeExecution.subtract(Duration(seconds: 1))),
+        isTrue,
+      );
+      expect(
+        result.completedAt.isBefore(afterExecution.add(Duration(seconds: 1))),
+        isTrue,
+      );
+    });
   });
 }

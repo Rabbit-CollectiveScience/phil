@@ -21,12 +21,13 @@ class RecordWorkoutSetUseCase {
   Future<WorkoutSet> execute({
     required String exerciseId,
     Map<String, dynamic>? values,
+    DateTime? completedAt,
   }) async {
-    // Create WorkoutSet with current timestamp
+    // Create WorkoutSet with specified timestamp or current time
     final workoutSet = WorkoutSet(
       id: _uuid.v4(),
       exerciseId: exerciseId,
-      completedAt: DateTime.now(),
+      completedAt: completedAt ?? DateTime.now(),
       values: values,
     );
 

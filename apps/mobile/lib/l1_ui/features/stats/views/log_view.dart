@@ -5,6 +5,8 @@ import '../../../shared/theme/app_colors.dart';
 import '../../../../l2_domain/use_cases/workout_sets/get_workout_sets_by_date_use_case.dart';
 import '../../../../l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart';
 import '../../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
+import '../../../../l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
+import '../../../../l2_domain/use_cases/exercises/search_exercises_use_case.dart';
 import '../../../../l2_domain/models/exercise.dart';
 import '../../../../l2_domain/models/exercise_field.dart';
 import '../../../../l2_domain/models/field_type_enum.dart';
@@ -465,7 +467,13 @@ class _LogViewState extends State<LogView> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return _AddSetDialog(selectedDate: _selectedDate);
+        return _AddSetDialog(
+          selectedDate: _selectedDate,
+          onSetAdded: () {
+            // Reload the list after a set is added
+            _loadWorkoutSetsForDate();
+          },
+        );
       },
     );
   }
@@ -500,8 +508,12 @@ class _LogViewState extends State<LogView> {
 
 class _AddSetDialog extends StatefulWidget {
   final DateTime selectedDate;
+  final VoidCallback onSetAdded;
 
-  const _AddSetDialog({required this.selectedDate});
+  const _AddSetDialog({
+    required this.selectedDate,
+    required this.onSetAdded,
+  });
 
   @override
   State<_AddSetDialog> createState() => _AddSetDialogState();
@@ -512,104 +524,11 @@ class _AddSetDialogState extends State<_AddSetDialog> {
   Exercise? _selectedExercise;
   final Map<String, TextEditingController> _fieldControllers = {};
   bool _showSuggestions = false;
+  List<Exercise> _searchResults = [];
+  bool _isSearching = false;
+  bool _isSaving = false;
 
-  // Mock exercises with different field configurations
-  final List<Exercise> _mockExercises = [
-    Exercise(
-      id: '1',
-      name: 'Bench Press',
-      description: 'Upper body pushing exercise',
-      categories: ['strength', 'chest'],
-      fields: [
-        ExerciseField(
-          name: 'weight',
-          label: 'Weight',
-          unit: 'kg',
-          type: FieldTypeEnum.number,
-        ),
-        ExerciseField(
-          name: 'reps',
-          label: 'Reps',
-          unit: 'reps',
-          type: FieldTypeEnum.number,
-        ),
-      ],
-    ),
-    Exercise(
-      id: '2',
-      name: 'Squat',
-      description: 'Lower body compound exercise',
-      categories: ['strength', 'legs'],
-      fields: [
-        ExerciseField(
-          name: 'weight',
-          label: 'Weight',
-          unit: 'kg',
-          type: FieldTypeEnum.number,
-        ),
-        ExerciseField(
-          name: 'reps',
-          label: 'Reps',
-          unit: 'reps',
-          type: FieldTypeEnum.number,
-        ),
-      ],
-    ),
-    Exercise(
-      id: '3',
-      name: 'Treadmill Run',
-      description: 'Cardio exercise',
-      categories: ['cardio'],
-      fields: [
-        ExerciseField(
-          name: 'duration',
-          label: 'Duration',
-          unit: 'min',
-          type: FieldTypeEnum.duration,
-        ),
-        ExerciseField(
-          name: 'speed',
-          label: 'Speed',
-          unit: 'km/h',
-          type: FieldTypeEnum.number,
-        ),
-      ],
-    ),
-    Exercise(
-      id: '4',
-      name: 'Deadlift',
-      description: 'Full body compound exercise',
-      categories: ['strength', 'back', 'legs'],
-      fields: [
-        ExerciseField(
-          name: 'weight',
-          label: 'Weight',
-          unit: 'kg',
-          type: FieldTypeEnum.number,
-        ),
-        ExerciseField(
-          name: 'reps',
-          label: 'Reps',
-          unit: 'reps',
-          type: FieldTypeEnum.number,
-        ),
-      ],
-    ),
-    Exercise(
-      id: '5',
-      name: 'Plank',
-      description: 'Core stability exercise',
-      categories: ['core'],
-      fields: [
-        ExerciseField(
-          name: 'duration',
-          label: 'Duration',
-          unit: 'sec',
-          type: FieldTypeEnum.duration,
-        ),
-      ],
-    ),
-  ];
+  // Remove mock exercises - we'll load from database
 
   @override
   void dispose() {
@@ -620,13 +539,38 @@ class _AddSetDialogState extends State<_AddSetDialog> {
     super.dispose();
   }
 
-  List<Exercise> get _filteredExercises {
-    final query = _searchController.text.toLowerCase();
-    if (query.isEmpty) return [];
-    return _mockExercises
-        .where((ex) => ex.name.toLowerCase().contains(query))
-        .toList();
+  Future<void> _searchExercises(String query) async {
+    if (query.trim().isEmpty) {
+      setState(() {
+        _searchResults = [];
+        _showSuggestions = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isSearching = true;
+      _showSuggestions = true;
+    });
+
+    try {
+      final searchUseCase = GetIt.instance<SearchExercisesUseCase>();
+      final results = await searchUseCase.execute(searchQuery: query);
+
+      setState(() {
+        _searchResults = results;
+        _isSearching = false;
+      });
+    } catch (e) {
+      debugPrint('Error searching exercises: $e');
+      setState(() {
+        _searchResults = [];
+        _isSearching = false;
+      });
+    }
   }
+
+  List<Exercise> get _filteredExercises => _searchResults;
 
   void _selectExercise(Exercise exercise) {
     setState(() {
@@ -768,72 +712,106 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                     _fieldControllers.clear();
                   }
                 });
+                // Search as user types
+                _searchExercises(value);
               },
             ),
 
             // Autocomplete suggestions
-            if (_showSuggestions && _filteredExercises.isNotEmpty) ...[
+            if (_showSuggestions) ...[
               const SizedBox(height: 8),
-              Container(
-                constraints: BoxConstraints(maxHeight: 200),
-                decoration: BoxDecoration(
-                  color: AppColors.deepCharcoal,
-                  borderRadius: BorderRadius.zero,
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: _filteredExercises.length,
-                  itemBuilder: (context, index) {
-                    final exercise = _filteredExercises[index];
-                    final fieldPreview = exercise.fields
-                        .map((f) => f.unit)
-                        .where((u) => u.isNotEmpty)
-                        .join(' · ');
+              if (_isSearching)
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.deepCharcoal,
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.limeGreen,
+                      strokeWidth: 2,
+                    ),
+                  ),
+                )
+              else if (_filteredExercises.isEmpty)
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.deepCharcoal,
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  child: Center(
+                    child: Text(
+                      'No exercises found',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.offWhite.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                )
+              else
+                Container(
+                  constraints: BoxConstraints(maxHeight: 200),
+                  decoration: BoxDecoration(
+                    color: AppColors.deepCharcoal,
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _filteredExercises.length,
+                    itemBuilder: (context, index) {
+                      final exercise = _filteredExercises[index];
+                      final fieldPreview = exercise.fields
+                          .map((f) => f.unit)
+                          .where((u) => u.isNotEmpty)
+                          .join(' · ');
 
-                    return InkWell(
-                      onTap: () => _selectExercise(exercise),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: AppColors.boldGrey.withOpacity(0.3),
-                              width: 1,
+                      return InkWell(
+                        onTap: () => _selectExercise(exercise),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: AppColors.boldGrey.withOpacity(0.3),
+                                width: 1,
+                              ),
                             ),
                           ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              exercise.name,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.offWhite,
-                              ),
-                            ),
-                            if (fieldPreview.isNotEmpty) ...[
-                              const SizedBox(height: 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                               Text(
-                                fieldPreview,
+                                exercise.name,
                                 style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.offWhite.withOpacity(0.5),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.offWhite,
                                 ),
                               ),
+                              if (fieldPreview.isNotEmpty) ...[
+                                const SizedBox(height: 4),
+                                Text(
+                                  fieldPreview,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.offWhite.withOpacity(0.5),
+                                  ),
+                                ),
+                              ],
                             ],
-                          ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
             ],
 
             // Dynamic fields based on selected exercise
@@ -933,39 +911,95 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: GestureDetector(
-                    onTap: canSubmit
-                        ? () {
-                            // TODO: Save the set
-                            final values = <String, dynamic>{};
-                            _fieldControllers.forEach((key, controller) {
-                              values[key] = controller.text;
+                    onTap: canSubmit && !_isSaving
+                        ? () async {
+                            setState(() {
+                              _isSaving = true;
                             });
-                            debugPrint(
-                              'Adding set: ${_selectedExercise!.name} with values: $values',
-                            );
-                            Navigator.of(context).pop();
+
+                            try {
+                              // Convert field values to proper types
+                              final values = <String, dynamic>{};
+                              _fieldControllers.forEach((key, controller) {
+                                final text = controller.text;
+                                // Try to parse as number if possible
+                                final numValue = num.tryParse(text);
+                                values[key] = numValue ?? text;
+                              });
+
+                              // Save the workout set with custom date
+                              final recordUseCase =
+                                  GetIt.instance<RecordWorkoutSetUseCase>();
+                              await recordUseCase.execute(
+                                exerciseId: _selectedExercise!.id,
+                                values: values,
+                                completedAt: widget.selectedDate,
+                              );
+
+                              // Close dialog
+                              if (mounted) {
+                                Navigator.of(context).pop();
+                                // Notify parent to reload
+                                widget.onSetAdded();
+                                // Show success message
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Set added',
+                                      style:
+                                          TextStyle(color: AppColors.offWhite),
+                                    ),
+                                    backgroundColor: AppColors.limeGreen,
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              debugPrint('Error saving workout set: $e');
+                              if (mounted) {
+                                setState(() {
+                                  _isSaving = false;
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Failed to save set'),
+                                    backgroundColor: AppColors.error,
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            }
                           }
                         : null,
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       decoration: BoxDecoration(
-                        color: canSubmit
+                        color: canSubmit && !_isSaving
                             ? AppColors.limeGreen
                             : AppColors.limeGreen.withOpacity(0.3),
                         borderRadius: BorderRadius.zero,
                       ),
                       alignment: Alignment.center,
-                      child: Text(
-                        'Add Set',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
-                          color: canSubmit
-                              ? AppColors.pureBlack
-                              : AppColors.pureBlack.withOpacity(0.3),
-                          letterSpacing: 0.5,
-                        ),
-                      ),
+                      child: _isSaving
+                          ? SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: AppColors.pureBlack,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Add Set',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w900,
+                                color: canSubmit && !_isSaving
+                                    ? AppColors.pureBlack
+                                    : AppColors.pureBlack.withOpacity(0.3),
+                                letterSpacing: 0.5,
+                              ),
+                            ),
                     ),
                   ),
                 ),
