@@ -77,35 +77,6 @@ class ExerciseDetailCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          // PR badges (if any)
-          if (prsToday.isNotEmpty) ...[
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              children: prsToday.map((pr) {
-                return Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.limeGreen,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    '${_formatPRType(pr.type)}: ${_formatPRValue(pr.type, pr.value)}',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.black,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 16),
-          ],
           // Metrics grid
           Row(
             children: [
@@ -117,6 +88,7 @@ class ExerciseDetailCard extends StatelessWidget {
                       : volumeToday == 0
                       ? '-'
                       : '${volumeToday.toInt()} reps',
+                  isPR: _hasPR('maxVolume'),
                 ),
               ),
               Container(
@@ -131,16 +103,57 @@ class ExerciseDetailCard extends StatelessWidget {
                   (maxWeightToday != null && maxWeightToday! > 0)
                       ? '${maxWeightToday!.toInt()} kg'
                       : '-',
+                  isPR: _hasPR('maxWeight'),
                 ),
               ),
             ],
           ),
+          // PR badges at the bottom (if any)
+          if (prsToday.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _sortPRsByDisplayOrder().map((pr) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.limeGreen,
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.emoji_events,
+                        size: 14,
+                        color: Colors.black,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _formatPRType(pr.type),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildMetricColumn(String label, String value) {
+  Widget _buildMetricColumn(String label, String value, {bool isPR = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -154,17 +167,57 @@ class ExerciseDetailCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w900,
-            color: AppColors.darkText,
-            height: 1.0,
-          ),
-        ),
+        isPR
+            ? Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.limeGreen,
+                  borderRadius: BorderRadius.zero,
+                ),
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,
+                    height: 1.0,
+                  ),
+                ),
+              )
+            : Text(
+                value,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.darkText,
+                  height: 1.0,
+                ),
+              ),
       ],
     );
+  }
+
+  bool _hasPR(String prType) {
+    return prsToday.any((pr) => pr.type == prType);
+  }
+
+  List<PRToday> _sortPRsByDisplayOrder() {
+    // Define the order based on how metrics are displayed
+    final orderPriority = {
+      'maxVolume': 0,
+      'maxWeight': 1,
+      'maxReps': 2,
+      'maxDistance': 3,
+      'maxDuration': 4,
+    };
+
+    final sorted = List<PRToday>.from(prsToday);
+    sorted.sort((a, b) {
+      final aPriority = orderPriority[a.type] ?? 999;
+      final bPriority = orderPriority[b.type] ?? 999;
+      return aPriority.compareTo(bPriority);
+    });
+    return sorted;
   }
 
   String _formatPRType(String type) {
