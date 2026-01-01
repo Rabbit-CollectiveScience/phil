@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
+import '../../../shared/theme/app_colors.dart';
 import '../widgets/stat_column.dart';
 import '../widgets/type_card.dart';
 

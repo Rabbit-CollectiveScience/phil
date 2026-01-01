@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
+import '../../../shared/theme/app_colors.dart';
 
 class LogView extends StatefulWidget {
   const LogView({super.key});
@@ -434,9 +434,7 @@ class _LogViewState extends State<LogView> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: AppColors.boldGrey,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(

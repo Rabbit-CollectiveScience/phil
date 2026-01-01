@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+import '../../../shared/theme/app_colors.dart';
 
 class CompletionCounter extends StatelessWidget {
   final int count;

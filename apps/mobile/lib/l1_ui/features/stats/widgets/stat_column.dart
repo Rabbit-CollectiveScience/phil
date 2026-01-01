@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
+import '../../../shared/theme/app_colors.dart';
 
-class MetricItem extends StatelessWidget {
+class StatColumn extends StatelessWidget {
   final String value;
   final String label;
-  final bool hasData;
 
-  const MetricItem({
-    super.key,
-    required this.value,
-    required this.label,
-    required this.hasData,
-  });
+  const StatColumn({super.key, required this.value, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +14,9 @@ class MetricItem extends StatelessWidget {
         Text(
           value,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 36,
             fontWeight: FontWeight.w900,
-            color: hasData
-                ? AppColors.darkText
-                : AppColors.darkText.withOpacity(0.3),
+            color: AppColors.darkText,
             height: 1.0,
           ),
         ),
@@ -34,9 +26,8 @@ class MetricItem extends StatelessWidget {
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: hasData
-                ? AppColors.darkText.withOpacity(0.5)
-                : AppColors.darkText.withOpacity(0.2),
+            color: AppColors.darkText.withOpacity(0.5),
+            letterSpacing: 1.2,
           ),
         ),
       ],

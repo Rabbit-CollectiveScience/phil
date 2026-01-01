@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+import '../../../shared/theme/app_colors.dart';
 import '../view_models/exercise_filter_type_option.dart';
 
 /// Filter button shown at top-center of home page

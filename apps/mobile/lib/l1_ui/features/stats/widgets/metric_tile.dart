@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
+import '../../../shared/theme/app_colors.dart';
 
-class StatColumn extends StatelessWidget {
+/// Small metric tile for stats overview
+/// Shows a big number with a label below
+class MetricTile extends StatelessWidget {
   final String value;
   final String label;
 
-  const StatColumn({super.key, required this.value, required this.label});
+  const MetricTile({super.key, required this.value, required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           value,
           style: TextStyle(
-            fontSize: 36,
+            fontSize: 32,
             fontWeight: FontWeight.w900,
             color: AppColors.darkText,
             height: 1.0,

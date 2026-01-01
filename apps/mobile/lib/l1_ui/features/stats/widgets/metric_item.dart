@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
+import '../../../shared/theme/app_colors.dart';
 
-/// Small metric tile for stats overview
-/// Shows a big number with a label below
-class MetricTile extends StatelessWidget {
+class MetricItem extends StatelessWidget {
   final String value;
   final String label;
+  final bool hasData;
 
-  const MetricTile({super.key, required this.value, required this.label});
+  const MetricItem({
+    super.key,
+    required this.value,
+    required this.label,
+    required this.hasData,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           value,
           style: TextStyle(
-            fontSize: 32,
+            fontSize: 20,
             fontWeight: FontWeight.w900,
-            color: AppColors.darkText,
+            color: hasData
+                ? AppColors.darkText
+                : AppColors.darkText.withOpacity(0.3),
             height: 1.0,
           ),
         ),
@@ -29,8 +34,9 @@ class MetricTile extends StatelessWidget {
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: AppColors.darkText.withOpacity(0.5),
-            letterSpacing: 1.2,
+            color: hasData
+                ? AppColors.darkText.withOpacity(0.5)
+                : AppColors.darkText.withOpacity(0.2),
           ),
         ),
       ],

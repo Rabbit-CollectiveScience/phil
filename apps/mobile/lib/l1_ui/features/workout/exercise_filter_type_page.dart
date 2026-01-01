@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+import '../../shared/theme/app_colors.dart';
 import 'package:vibration/vibration.dart';
-import '../view_models/exercise_filter_type_option.dart';
-import '../widgets/exercise_filter_type_grid_tile.dart';
+import 'view_models/exercise_filter_type_option.dart';
+import 'widgets/exercise_filter_type_grid_tile.dart';
 
 /// Full-screen page for selecting exercise filter type
 class ExerciseFilterTypePage extends StatefulWidget {
