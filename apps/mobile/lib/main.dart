@@ -10,6 +10,7 @@ import 'l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
 import 'l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
 import 'l2_domain/use_cases/workout_sets/get_today_completed_count_use_case.dart';
 import 'l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart';
+import 'l2_domain/use_cases/workout_sets/get_workout_sets_by_date_use_case.dart';
 import 'l2_domain/use_cases/filters/get_last_filter_selection_use_case.dart';
 import 'l2_domain/use_cases/filters/record_filter_selection_use_case.dart';
 import 'l2_domain/use_cases/filters/should_show_filter_page_use_case.dart';
@@ -69,6 +70,12 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
   );
   getIt.registerFactory<GetTodayCompletedListUseCase>(
     () => GetTodayCompletedListUseCase(
+      getIt<WorkoutSetRepository>(),
+      getIt<ExerciseRepository>(),
+    ),
+  );
+  getIt.registerFactory<GetWorkoutSetsByDateUseCase>(
+    () => GetWorkoutSetsByDateUseCase(
       getIt<WorkoutSetRepository>(),
       getIt<ExerciseRepository>(),
     ),

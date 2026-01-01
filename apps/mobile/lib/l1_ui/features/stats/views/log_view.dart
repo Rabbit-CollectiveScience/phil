@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import '../../../shared/theme/app_colors.dart';
+import '../../../../l2_domain/use_cases/workout_sets/get_workout_sets_by_date_use_case.dart';
+import '../../../../l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart';
+import '../../../../l2_domain/models/exercise.dart';
+import '../../../../l2_domain/models/field_type_enum.dart';
 
 class LogView extends StatefulWidget {
   const LogView({super.key});
@@ -10,80 +15,37 @@ class LogView extends StatefulWidget {
 
 class _LogViewState extends State<LogView> {
   DateTime _selectedDate = DateTime.now();
+  List<WorkoutSetWithDetails> _sets = [];
+  bool _isLoading = false;
+  String? _errorMessage;
 
-  // Mock data - flattened to individual sets for swipeable rows
-  final List<Map<String, dynamic>> _mockSets = [
-    {
-      'exerciseName': 'BENCH PRESS',
-      'time': '12:34 PM',
-      'setNumber': 1,
-      'reps': 10,
-      'weight': 80.0,
-    },
-    {
-      'exerciseName': 'BENCH PRESS',
-      'time': '12:34 PM',
-      'setNumber': 2,
-      'reps': 8,
-      'weight': 80.0,
-    },
-    {
-      'exerciseName': 'BENCH PRESS',
-      'time': '12:34 PM',
-      'setNumber': 3,
-      'reps': 6,
-      'weight': 85.0,
-    },
-    {
-      'exerciseName': 'SQUAT',
-      'time': '12:15 PM',
-      'setNumber': 1,
-      'reps': 12,
-      'weight': 100.0,
-    },
-    {
-      'exerciseName': 'SQUAT',
-      'time': '12:15 PM',
-      'setNumber': 2,
-      'reps': 10,
-      'weight': 100.0,
-    },
-    {
-      'exerciseName': 'SQUAT',
-      'time': '12:15 PM',
-      'setNumber': 3,
-      'reps': 10,
-      'weight': 100.0,
-    },
-    {
-      'exerciseName': 'SQUAT',
-      'time': '12:15 PM',
-      'setNumber': 4,
-      'reps': 8,
-      'weight': 100.0,
-    },
-    {
-      'exerciseName': 'SHOULDER PRESS',
-      'time': '11:45 AM',
-      'setNumber': 1,
-      'reps': 12,
-      'weight': 60.0,
-    },
-    {
-      'exerciseName': 'SHOULDER PRESS',
-      'time': '11:45 AM',
-      'setNumber': 2,
-      'reps': 10,
-      'weight': 60.0,
-    },
-    {
-      'exerciseName': 'SHOULDER PRESS',
-      'time': '11:45 AM',
-      'setNumber': 3,
-      'reps': 8,
-      'weight': 60.0,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadWorkoutSetsForDate();
+  }
+
+  Future<void> _loadWorkoutSetsForDate() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final useCase = GetIt.instance<GetWorkoutSetsByDateUseCase>();
+      final sets = await useCase.execute(date: _selectedDate);
+
+      setState(() {
+        _sets = sets;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
 
   String _formatDate(DateTime date) {
     final monthNames = [
@@ -118,12 +80,14 @@ class _LogViewState extends State<LogView> {
     setState(() {
       _selectedDate = _selectedDate.subtract(const Duration(days: 1));
     });
+    _loadWorkoutSetsForDate();
   }
 
   void _nextDay() {
     setState(() {
       _selectedDate = _selectedDate.add(const Duration(days: 1));
     });
+    _loadWorkoutSetsForDate();
   }
 
   bool _isToday() {
@@ -139,7 +103,47 @@ class _LogViewState extends State<LogView> {
 
   @override
   Widget build(BuildContext context) {
-    final hasSets = _mockSets.isNotEmpty;
+    // Loading state
+    if (_isLoading) {
+      return Center(
+        child: CircularProgressIndicator(color: AppColors.limeGreen),
+      );
+    }
+
+    // Error state
+    if (_errorMessage != null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, color: AppColors.error, size: 48),
+              const SizedBox(height: 16),
+              Text(
+                'Error loading sets',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.offWhite,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _errorMessage!,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.offWhite.withOpacity(0.7),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final hasSets = _sets.isNotEmpty;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -190,6 +194,7 @@ class _LogViewState extends State<LogView> {
                     setState(() {
                       _selectedDate = picked;
                     });
+                    _loadWorkoutSetsForDate();
                   }
                 },
                 child: Text(
@@ -241,29 +246,28 @@ class _LogViewState extends State<LogView> {
     final List<Widget> widgets = [];
     String? currentExercise;
 
-    for (int i = 0; i < _mockSets.length; i++) {
-      final set = _mockSets[i];
-      final exerciseName = set['exerciseName'];
-      final time = set['time'];
+    for (int i = 0; i < _sets.length; i++) {
+      final setWithDetails = _sets[i];
+      final exerciseName = setWithDetails.exerciseName;
 
       // Add exercise header if this is a new exercise
       if (exerciseName != currentExercise) {
         if (currentExercise != null) {
           widgets.add(const SizedBox(height: 20));
         }
-        widgets.add(_buildExerciseHeader(exerciseName, time));
+        widgets.add(_buildExerciseHeader(exerciseName));
         widgets.add(const SizedBox(height: 8));
         currentExercise = exerciseName;
       }
 
-      // Add set row
-      widgets.add(_buildSetRow(set, i));
+      // Add set row with dynamic fields
+      widgets.add(_buildSetRow(setWithDetails, i));
     }
 
     return widgets;
   }
 
-  Widget _buildExerciseHeader(String exerciseName, String time) {
+  Widget _buildExerciseHeader(String exerciseName) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Text(
@@ -278,7 +282,49 @@ class _LogViewState extends State<LogView> {
     );
   }
 
-  Widget _buildSetRow(Map<String, dynamic> set, int index) {
+  String _formatSetValues(Exercise? exercise, Map<String, dynamic>? values) {
+    if (exercise == null || values == null || values.isEmpty) {
+      return 'No data';
+    }
+
+    // Build display string based on exercise field definitions
+    final parts = <String>[];
+
+    for (final field in exercise.fields) {
+      if (values.containsKey(field.name)) {
+        final value = values[field.name];
+        final unit = field.unit;
+
+        // Format based on field type
+        String formattedValue;
+        if (field.type == FieldTypeEnum.number) {
+          formattedValue = '${value}${unit.isNotEmpty ? " $unit" : ""}';
+        } else if (field.type == FieldTypeEnum.duration) {
+          formattedValue = '${value}${unit.isNotEmpty ? " $unit" : ""}';
+        } else {
+          formattedValue = '$value${unit.isNotEmpty ? " $unit" : ""}';
+        }
+
+        parts.add(formattedValue);
+      }
+    }
+
+    return parts.isEmpty ? 'No data' : parts.join(' × ');
+  }
+
+  Widget _buildSetRow(WorkoutSetWithDetails setWithDetails, int index) {
+    // Calculate set number by counting previous sets of same exercise
+    int setNumber = 1;
+    for (int i = 0; i < index; i++) {
+      if (_sets[i].exerciseName == setWithDetails.exerciseName) {
+        setNumber++;
+      }
+    }
+
+    final displayString = _formatSetValues(
+      setWithDetails.exercise,
+      setWithDetails.workoutSet.values,
+    );
     return Dismissible(
       key: Key('set_$index'),
       background: Container(
@@ -368,7 +414,7 @@ class _LogViewState extends State<LogView> {
               ),
               alignment: Alignment.center,
               child: Text(
-                '${set['setNumber']}',
+                '$setNumber',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w900,
@@ -379,7 +425,7 @@ class _LogViewState extends State<LogView> {
             const SizedBox(width: 16),
             Expanded(
               child: Text(
-                '${set['reps']} reps × ${set['weight'].toInt()} kg',
+                displayString,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
