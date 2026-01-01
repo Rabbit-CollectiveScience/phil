@@ -6,6 +6,7 @@ import '../../../../l2_domain/use_cases/workout_sets/get_workout_sets_by_date_us
 import '../../../../l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart';
 import '../../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
 import '../../../../l2_domain/models/exercise.dart';
+import '../../../../l2_domain/models/exercise_field.dart';
 import '../../../../l2_domain/models/field_type_enum.dart';
 
 class LogView extends StatefulWidget {
@@ -461,227 +462,10 @@ class _LogViewState extends State<LogView> {
   }
 
   void _showAddSetDialog() {
-    final TextEditingController exerciseController = TextEditingController();
-    final TextEditingController repsController = TextEditingController();
-    final TextEditingController weightController = TextEditingController();
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: AppColors.boldGrey,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Add Set',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.offWhite,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _formatDate(_selectedDate),
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.offWhite.withOpacity(0.5),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Exercise name field
-                Text(
-                  'EXERCISE',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.offWhite.withOpacity(0.7),
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: exerciseController,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.offWhite,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'e.g., Bench Press',
-                    hintStyle: TextStyle(
-                      color: AppColors.offWhite.withOpacity(0.3),
-                    ),
-                    filled: true,
-                    fillColor: AppColors.deepCharcoal,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.zero,
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // Reps and Weight row
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'REPS',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.offWhite.withOpacity(0.7),
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            controller: repsController,
-                            keyboardType: TextInputType.number,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.offWhite,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: '10',
-                              hintStyle: TextStyle(
-                                color: AppColors.offWhite.withOpacity(0.3),
-                              ),
-                              filled: true,
-                              fillColor: AppColors.deepCharcoal,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.zero,
-                                borderSide: BorderSide.none,
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'WEIGHT (KG)',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.offWhite.withOpacity(0.7),
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            controller: weightController,
-                            keyboardType: TextInputType.number,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.offWhite,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: '80',
-                              hintStyle: TextStyle(
-                                color: AppColors.offWhite.withOpacity(0.3),
-                              ),
-                              filled: true,
-                              fillColor: AppColors.deepCharcoal,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.zero,
-                                borderSide: BorderSide.none,
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                // Action buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          decoration: BoxDecoration(
-                            color: AppColors.deepCharcoal,
-                            borderRadius: BorderRadius.zero,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.offWhite,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          // TODO: Save the set
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          decoration: BoxDecoration(
-                            color: AppColors.limeGreen,
-                            borderRadius: BorderRadius.zero,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Add Set',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.pureBlack,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
+        return _AddSetDialog(selectedDate: _selectedDate);
       },
     );
   }
@@ -706,6 +490,486 @@ class _LogViewState extends State<LogView> {
                 fontWeight: FontWeight.w600,
                 color: AppColors.offWhite.withOpacity(0.5),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AddSetDialog extends StatefulWidget {
+  final DateTime selectedDate;
+
+  const _AddSetDialog({required this.selectedDate});
+
+  @override
+  State<_AddSetDialog> createState() => _AddSetDialogState();
+}
+
+class _AddSetDialogState extends State<_AddSetDialog> {
+  final TextEditingController _searchController = TextEditingController();
+  Exercise? _selectedExercise;
+  final Map<String, TextEditingController> _fieldControllers = {};
+  bool _showSuggestions = false;
+
+  // Mock exercises with different field configurations
+  final List<Exercise> _mockExercises = [
+    Exercise(
+      id: '1',
+      name: 'Bench Press',
+      description: 'Upper body pushing exercise',
+      categories: ['strength', 'chest'],
+      fields: [
+        ExerciseField(
+          name: 'weight',
+          label: 'Weight',
+          unit: 'kg',
+          type: FieldTypeEnum.number,
+        ),
+        ExerciseField(
+          name: 'reps',
+          label: 'Reps',
+          unit: 'reps',
+          type: FieldTypeEnum.number,
+        ),
+      ],
+    ),
+    Exercise(
+      id: '2',
+      name: 'Squat',
+      description: 'Lower body compound exercise',
+      categories: ['strength', 'legs'],
+      fields: [
+        ExerciseField(
+          name: 'weight',
+          label: 'Weight',
+          unit: 'kg',
+          type: FieldTypeEnum.number,
+        ),
+        ExerciseField(
+          name: 'reps',
+          label: 'Reps',
+          unit: 'reps',
+          type: FieldTypeEnum.number,
+        ),
+      ],
+    ),
+    Exercise(
+      id: '3',
+      name: 'Treadmill Run',
+      description: 'Cardio exercise',
+      categories: ['cardio'],
+      fields: [
+        ExerciseField(
+          name: 'duration',
+          label: 'Duration',
+          unit: 'min',
+          type: FieldTypeEnum.duration,
+        ),
+        ExerciseField(
+          name: 'speed',
+          label: 'Speed',
+          unit: 'km/h',
+          type: FieldTypeEnum.number,
+        ),
+      ],
+    ),
+    Exercise(
+      id: '4',
+      name: 'Deadlift',
+      description: 'Full body compound exercise',
+      categories: ['strength', 'back', 'legs'],
+      fields: [
+        ExerciseField(
+          name: 'weight',
+          label: 'Weight',
+          unit: 'kg',
+          type: FieldTypeEnum.number,
+        ),
+        ExerciseField(
+          name: 'reps',
+          label: 'Reps',
+          unit: 'reps',
+          type: FieldTypeEnum.number,
+        ),
+      ],
+    ),
+    Exercise(
+      id: '5',
+      name: 'Plank',
+      description: 'Core stability exercise',
+      categories: ['core'],
+      fields: [
+        ExerciseField(
+          name: 'duration',
+          label: 'Duration',
+          unit: 'sec',
+          type: FieldTypeEnum.duration,
+        ),
+      ],
+    ),
+  ];
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    for (var controller in _fieldControllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  List<Exercise> get _filteredExercises {
+    final query = _searchController.text.toLowerCase();
+    if (query.isEmpty) return [];
+    return _mockExercises
+        .where((ex) => ex.name.toLowerCase().contains(query))
+        .toList();
+  }
+
+  void _selectExercise(Exercise exercise) {
+    setState(() {
+      _selectedExercise = exercise;
+      _searchController.text = exercise.name;
+      _showSuggestions = false;
+
+      // Create controllers for each field
+      _fieldControllers.clear();
+      for (var field in exercise.fields) {
+        _fieldControllers[field.name] = TextEditingController();
+      }
+    });
+  }
+
+  String _formatDate(DateTime date) {
+    final monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final selectedDay = DateTime(date.year, date.month, date.day);
+
+    if (selectedDay == today) {
+      return 'Today - ${monthNames[date.month - 1]} ${date.day}, ${date.year}';
+    } else if (selectedDay == yesterday) {
+      return 'Yesterday - ${monthNames[date.month - 1]} ${date.day}, ${date.year}';
+    } else {
+      return '${monthNames[date.month - 1]} ${date.day}, ${date.year}';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final canSubmit =
+        _selectedExercise != null &&
+        _fieldControllers.values.every((c) => c.text.isNotEmpty);
+
+    return Dialog(
+      backgroundColor: AppColors.boldGrey,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Text(
+              'Add Set',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                color: AppColors.offWhite,
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _formatDate(widget.selectedDate),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.offWhite.withOpacity(0.5),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Exercise search field
+            Text(
+              'EXERCISE',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w900,
+                color: AppColors.offWhite.withOpacity(0.7),
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _searchController,
+              autofocus: true,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: AppColors.offWhite,
+              ),
+              decoration: InputDecoration(
+                hintText: 'Search exercises...',
+                hintStyle: TextStyle(
+                  color: AppColors.offWhite.withOpacity(0.3),
+                ),
+                filled: true,
+                fillColor: AppColors.deepCharcoal,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.zero,
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.clear,
+                          color: AppColors.offWhite.withOpacity(0.5),
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _searchController.clear();
+                            _selectedExercise = null;
+                            _fieldControllers.clear();
+                            _showSuggestions = false;
+                          });
+                        },
+                      )
+                    : null,
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _showSuggestions = value.isNotEmpty;
+                  if (_selectedExercise != null &&
+                      _selectedExercise!.name != value) {
+                    _selectedExercise = null;
+                    _fieldControllers.clear();
+                  }
+                });
+              },
+            ),
+
+            // Autocomplete suggestions
+            if (_showSuggestions && _filteredExercises.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Container(
+                constraints: BoxConstraints(maxHeight: 200),
+                decoration: BoxDecoration(
+                  color: AppColors.deepCharcoal,
+                  borderRadius: BorderRadius.zero,
+                ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _filteredExercises.length,
+                  itemBuilder: (context, index) {
+                    final exercise = _filteredExercises[index];
+                    final fieldPreview = exercise.fields
+                        .map((f) => f.unit)
+                        .where((u) => u.isNotEmpty)
+                        .join(' · ');
+
+                    return InkWell(
+                      onTap: () => _selectExercise(exercise),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: AppColors.boldGrey.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              exercise.name,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.offWhite,
+                              ),
+                            ),
+                            if (fieldPreview.isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                fieldPreview,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.offWhite.withOpacity(0.5),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+
+            // Dynamic fields based on selected exercise
+            if (_selectedExercise != null) ...[
+              const SizedBox(height: 20),
+              ..._selectedExercise!.fields.map((field) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        field.label.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.offWhite.withOpacity(0.7),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _fieldControllers[field.name],
+                        keyboardType:
+                            field.type == FieldTypeEnum.number ||
+                                field.type == FieldTypeEnum.duration
+                            ? TextInputType.number
+                            : TextInputType.text,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.offWhite,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: field.unit.isNotEmpty
+                              ? 'Enter ${field.unit}'
+                              : 'Enter value',
+                          hintStyle: TextStyle(
+                            color: AppColors.offWhite.withOpacity(0.3),
+                          ),
+                          filled: true,
+                          fillColor: AppColors.deepCharcoal,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.zero,
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          suffixText: field.unit.isNotEmpty ? field.unit : null,
+                          suffixStyle: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.offWhite.withOpacity(0.5),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() {}); // Rebuild to update button state
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ],
+
+            const SizedBox(height: 24),
+
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      decoration: BoxDecoration(
+                        color: AppColors.deepCharcoal,
+                        borderRadius: BorderRadius.zero,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.offWhite,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: canSubmit
+                        ? () {
+                            // TODO: Save the set
+                            final values = <String, dynamic>{};
+                            _fieldControllers.forEach((key, controller) {
+                              values[key] = controller.text;
+                            });
+                            debugPrint(
+                              'Adding set: ${_selectedExercise!.name} with values: $values',
+                            );
+                            Navigator.of(context).pop();
+                          }
+                        : null,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      decoration: BoxDecoration(
+                        color: canSubmit
+                            ? AppColors.limeGreen
+                            : AppColors.limeGreen.withOpacity(0.3),
+                        borderRadius: BorderRadius.zero,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Add Set',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: canSubmit
+                              ? AppColors.pureBlack
+                              : AppColors.pureBlack.withOpacity(0.3),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
