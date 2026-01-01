@@ -239,11 +239,21 @@ class _LogViewState extends State<LogView> {
             ..._buildGroupedSets(),
             const SizedBox(height: 20),
             _buildAddButton(),
-          ] else ...[
-            _buildEmptyState(),
-            const SizedBox(height: 20),
-            _buildAddButton(),
-          ],
+          ] else
+            // Empty state with button at bottom
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 250,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: _buildEmptyState(),
+                    ),
+                  ),
+                  _buildAddButton(),
+                ],
+              ),
+            ),
           const SizedBox(height: 20),
         ],
       ),
@@ -482,29 +492,24 @@ class _LogViewState extends State<LogView> {
   }
 
   Widget _buildEmptyState() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.fitness_center,
-              size: 64,
-              color: AppColors.offWhite.withOpacity(0.3),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No sets logged for this day',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.offWhite.withOpacity(0.5),
-              ),
-            ),
-          ],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.fitness_center,
+          size: 64,
+          color: AppColors.offWhite.withOpacity(0.3),
         ),
-      ),
+        const SizedBox(height: 16),
+        Text(
+          'No sets logged for this day',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.offWhite.withOpacity(0.5),
+          ),
+        ),
+      ],
     );
   }
 }
