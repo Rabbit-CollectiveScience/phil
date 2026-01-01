@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../../l2_domain/use_cases/workout_sets/get_workout_sets_by_date_use_case.dart';
 import '../../../../l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart';
+import '../../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
 import '../../../../l2_domain/models/exercise.dart';
 import '../../../../l2_domain/models/field_type_enum.dart';
 
@@ -329,76 +331,46 @@ class _LogViewState extends State<LogView> {
       setWithDetails.exercise,
       setWithDetails.workoutSet.values,
     );
-    return Dismissible(
-      key: Key('set_$index'),
-      background: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: Colors.blue[400],
-          borderRadius: BorderRadius.zero,
-        ),
-        alignment: Alignment.centerLeft,
-        child: Icon(Icons.edit, color: Colors.white, size: 20),
-      ),
-      secondaryBackground: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: Colors.red[400],
-          borderRadius: BorderRadius.zero,
-        ),
-        alignment: Alignment.centerRight,
-        child: Icon(Icons.delete, color: Colors.white, size: 20),
-      ),
-      confirmDismiss: (direction) async {
-        if (direction == DismissDirection.endToStart) {
-          // Delete - show confirmation
-          return await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                backgroundColor: AppColors.boldGrey,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                title: Text(
-                  'Delete Set',
-                  style: TextStyle(
-                    color: AppColors.offWhite,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                content: Text(
-                  'Are you sure you want to delete this set?',
-                  style: TextStyle(color: AppColors.offWhite),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(color: AppColors.offWhite),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text(
-                      'Delete',
-                      style: TextStyle(color: Colors.red[300]),
-                    ),
-                  ),
-                ],
-              );
+    return Slidable(
+      key: Key('set_${setWithDetails.workoutSet.id}'),
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        extentRatio: 0.25,
+        children: [
+          CustomSlidableAction(
+            onPressed: (context) {
+              // TODO: Open edit dialog
             },
-          );
-        } else {
-          // Edit - just return false to not dismiss
-          // TODO: Open edit dialog
-          return false;
-        }
-      },
-      onDismissed: (direction) {
-        // TODO: Handle actual deletion
-      },
+            backgroundColor: Colors.blue[400]!,
+            borderRadius: BorderRadius.zero,
+            padding: EdgeInsets.zero,
+            child: const Icon(
+              Icons.edit,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+        ],
+      ),
+      endActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        extentRatio: 0.25,
+        children: [
+          CustomSlidableAction(
+            onPressed: (context) async {
+              await _deleteSet(setWithDetails.workoutSet.id);
+            },
+            backgroundColor: AppColors.error,
+            borderRadius: BorderRadius.zero,
+            padding: EdgeInsets.zero,
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+        ],
+      ),
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -472,6 +444,41 @@ class _LogViewState extends State<LogView> {
         ),
       ),
     );
+  }
+
+  Future<void> _deleteSet(String setId) async {
+    try {
+      final removeUseCase = GetIt.instance<RemoveWorkoutSetUseCase>();
+      await removeUseCase.execute(setId);
+
+      // Reload data after deletion
+      await _loadWorkoutSetsForDate();
+
+      // Show success snackbar
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Set deleted',
+              style: TextStyle(color: AppColors.offWhite),
+            ),
+            backgroundColor: AppColors.error,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error deleting workout set: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete set'),
+            backgroundColor: AppColors.error,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
   }
 
   void _showAddSetDialog() {
