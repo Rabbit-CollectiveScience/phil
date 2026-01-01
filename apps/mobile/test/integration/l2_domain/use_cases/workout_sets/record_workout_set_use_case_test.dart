@@ -244,7 +244,9 @@ void main() {
 
       // Assert
       expect(
-        result.completedAt.isAfter(beforeExecution.subtract(Duration(seconds: 1))),
+        result.completedAt.isAfter(
+          beforeExecution.subtract(Duration(seconds: 1)),
+        ),
         isTrue,
       );
       expect(

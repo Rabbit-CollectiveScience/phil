@@ -239,8 +239,11 @@ class _LogViewState extends State<LogView> {
             ..._buildGroupedSets(),
             const SizedBox(height: 20),
             _buildAddButton(),
-          ] else
+          ] else ...[
             _buildEmptyState(),
+            const SizedBox(height: 20),
+            _buildAddButton(),
+          ],
           const SizedBox(height: 20),
         ],
       ),
@@ -510,10 +513,7 @@ class _AddSetDialog extends StatefulWidget {
   final DateTime selectedDate;
   final VoidCallback onSetAdded;
 
-  const _AddSetDialog({
-    required this.selectedDate,
-    required this.onSetAdded,
-  });
+  const _AddSetDialog({required this.selectedDate, required this.onSetAdded});
 
   @override
   State<_AddSetDialog> createState() => _AddSetDialogState();
@@ -617,9 +617,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final canSubmit =
-        _selectedExercise != null &&
-        _fieldControllers.values.every((c) => c.text.isNotEmpty);
+    final canSubmit = _selectedExercise != null;
 
     return Dialog(
       backgroundColor: AppColors.boldGrey,
@@ -946,8 +944,9 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                   SnackBar(
                                     content: Text(
                                       'Set added',
-                                      style:
-                                          TextStyle(color: AppColors.offWhite),
+                                      style: TextStyle(
+                                        color: AppColors.pureBlack,
+                                      ),
                                     ),
                                     backgroundColor: AppColors.limeGreen,
                                     duration: Duration(seconds: 2),

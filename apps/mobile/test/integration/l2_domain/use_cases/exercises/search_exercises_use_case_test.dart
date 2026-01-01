@@ -60,8 +60,9 @@ void main() {
     });
 
     test('returns empty list when no exercises match query', () async {
-      final result =
-          await useCase.execute(searchQuery: 'nonexistentexercise12345');
+      final result = await useCase.execute(
+        searchQuery: 'nonexistentexercise12345',
+      );
 
       expect(result, isEmpty);
     });
