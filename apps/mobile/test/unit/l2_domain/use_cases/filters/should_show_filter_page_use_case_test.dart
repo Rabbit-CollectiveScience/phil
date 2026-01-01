@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:phil/l2_domain/use_cases/filter_use_cases/should_show_filter_page_use_case.dart';
+import 'package:phil/l2_domain/use_cases/filters/should_show_filter_page_use_case.dart';
 import 'package:phil/l3_data/repositories/preferences_repository.dart';
 
 import 'should_show_filter_page_use_case_test.mocks.dart';

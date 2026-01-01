@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:phil/l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
+import 'package:phil/l2_domain/use_cases/exercises/get_recommended_exercises_use_case.dart';
 import 'package:phil/l3_data/repositories/stub_exercise_repository.dart';
 
 void main() {

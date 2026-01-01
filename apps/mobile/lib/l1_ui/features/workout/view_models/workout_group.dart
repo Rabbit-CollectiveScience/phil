@@ -1,4 +1,4 @@
-import '../../../../l2_domain/use_cases/workout_use_cases/get_today_completed_list_use_case.dart';
+import '../../../../l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart';
 
 // View Model: Grouped workout sets for UI display
 //

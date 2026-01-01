@@ -13,12 +13,12 @@ import 'widgets/exercise_filter_type_button.dart';
 import 'completed_list_page.dart';
 import '../stats/stats_page.dart';
 import 'exercise_filter_type_page.dart';
-import '../../../l2_domain/use_cases/workout_use_cases/get_recommended_exercises_use_case.dart';
-import '../../../l2_domain/use_cases/workout_use_cases/record_workout_set_use_case.dart';
-import '../../../l2_domain/use_cases/workout_use_cases/get_today_completed_count_use_case.dart';
-import '../../../l2_domain/use_cases/filter_use_cases/get_last_filter_selection_use_case.dart';
-import '../../../l2_domain/use_cases/filter_use_cases/record_filter_selection_use_case.dart';
-import '../../../l2_domain/use_cases/filter_use_cases/should_show_filter_page_use_case.dart';
+import '../../../l2_domain/use_cases/exercises/get_recommended_exercises_use_case.dart';
+import '../../../l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
+import '../../../l2_domain/use_cases/workout_sets/get_today_completed_count_use_case.dart';
+import '../../../l2_domain/use_cases/filters/get_last_filter_selection_use_case.dart';
+import '../../../l2_domain/use_cases/filters/record_filter_selection_use_case.dart';
+import '../../../l2_domain/use_cases/filters/should_show_filter_page_use_case.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   const WorkoutHomePage({super.key});
@@ -653,10 +653,13 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                         size: _iconSize,
                         onTap: () {
                           // Navigate to PR view if no sets today, TODAY view if has sets
-                          final targetSection = _visualCounterValue == 0 ? 0 : 1;
+                          final targetSection = _visualCounterValue == 0
+                              ? 0
+                              : 1;
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => StatsPage(initialSection: targetSection),
+                              builder: (context) =>
+                                  StatsPage(initialSection: targetSection),
                             ),
                           );
                         },

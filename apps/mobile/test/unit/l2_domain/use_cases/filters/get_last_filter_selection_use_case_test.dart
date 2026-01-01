@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:phil/l2_domain/use_cases/filter_use_cases/get_last_filter_selection_use_case.dart';
+import 'package:phil/l2_domain/use_cases/filters/get_last_filter_selection_use_case.dart';
 import 'package:phil/l3_data/repositories/preferences_repository.dart';
 
 import 'get_last_filter_selection_use_case_test.mocks.dart';

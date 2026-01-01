@@ -3,8 +3,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:vibration/vibration.dart';
 import '../../shared/theme/app_colors.dart';
-import '../../../l2_domain/use_cases/workout_use_cases/get_today_completed_list_use_case.dart';
-import '../../../l2_domain/use_cases/workout_use_cases/remove_workout_set_use_case.dart';
+import '../../../l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart';
+import '../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
 import '../../../l2_domain/models/exercise.dart';
 import 'view_models/workout_group.dart';
 
