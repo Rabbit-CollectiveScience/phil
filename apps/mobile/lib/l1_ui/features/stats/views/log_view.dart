@@ -150,6 +150,31 @@ class _LogViewState extends State<LogView> {
 
     final hasSets = _sets.isNotEmpty;
 
+    // Calculate approximate content height
+    // Each set row ~60px, header ~30px, spacing ~28px per exercise group
+    double estimatedContentHeight = 0;
+    if (hasSets) {
+      String? lastExercise;
+      for (var set in _sets) {
+        if (set.exerciseName != lastExercise) {
+          estimatedContentHeight += 30; // Header
+          estimatedContentHeight += 8; // Spacing after header
+          if (lastExercise != null) {
+            estimatedContentHeight += 20; // Spacing between groups
+          }
+          lastExercise = set.exerciseName;
+        }
+        estimatedContentHeight += 60; // Set row with margin
+      }
+      estimatedContentHeight += 20; // Bottom spacing before button
+    }
+
+    final screenHeight = MediaQuery.of(context).size.height;
+    final availableHeight =
+        screenHeight - 250; // Account for date nav + padding
+    final useBottomLayout =
+        !hasSets || estimatedContentHeight < availableHeight;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -235,21 +260,27 @@ class _LogViewState extends State<LogView> {
           ),
           const SizedBox(height: 24),
           // Sets list or empty state
-          if (hasSets) ...[
-            ..._buildGroupedSets(),
-            const SizedBox(height: 20),
-            _buildAddButton(),
-          ] else
-            // Empty state with button at bottom
+          if (useBottomLayout)
+            // Short list or empty - button at bottom
             SizedBox(
-              height: MediaQuery.of(context).size.height - 250,
+              height: availableHeight,
               child: Column(
                 children: [
-                  Expanded(child: Center(child: _buildEmptyState())),
+                  if (hasSets) ..._buildGroupedSets(),
+                  if (!hasSets)
+                    Expanded(child: Center(child: _buildEmptyState())),
+                  if (hasSets) Expanded(child: SizedBox()),
                   _buildAddButton(),
                 ],
               ),
-            ),
+            )
+          else
+          // Long list - button after list
+          ...[
+            ..._buildGroupedSets(),
+            const SizedBox(height: 20),
+            _buildAddButton(),
+          ],
           const SizedBox(height: 20),
         ],
       ),
