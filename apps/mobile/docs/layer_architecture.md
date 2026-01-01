@@ -21,9 +21,12 @@ lib/
 **Structure:**
 ```
 l1_ui/
-├── pages/              # Full-screen pages
-├── widgets/            # Reusable UI components
-└── view_models/        # UI-specific data structures (grouping, formatting)
+├── features/           # Feature modules
+│   ├── workout/        # Workout feature (pages, widgets, view_models)
+│   └── stats/          # Stats feature (pages, views, widgets)
+└── shared/             # Shared resources
+    ├── widgets/        # Reusable UI components
+    └── theme/          # App colors and styling
 ```
 
 **Key Rules:**
@@ -51,8 +54,10 @@ import '../../l3_data/repositories/hive_workout_set_repository.dart';
 ```
 l2_domain/
 ├── models/                      # Domain entities (Exercise, WorkoutSet)
-└── use_cases/                   # Business workflows
-    └── workout_use_cases/
+└── use_cases/                   # Business workflows organized by entity
+    ├── exercises/               # Exercise catalog operations
+    ├── workout_sets/            # Workout set recording & querying
+    └── filters/                 # Exercise filter preferences
 ```
 
 **Key Rules:**
@@ -62,7 +67,7 @@ l2_domain/
 3. **Use Cases = Business Operations** - One use case per workflow
 
 ```dart
-// Use Case Pattern
+// Use Case Pattern (in l2_domain/use_cases/workout_sets/)
 class RecordWorkoutSetUseCase {
   final WorkoutSetRepository _repository; // Interface, not concrete class
   
@@ -169,14 +174,14 @@ await useCase.execute(...);
 - Business calculations
 
 ```dart
-// ✅ UI Logic in L1
+// ✅ UI Logic in L1 (in l1_ui/features/workout/view_models/)
 class WorkoutGroup {
   static List<WorkoutGroup> groupConsecutive(List<WorkoutSetWithDetails> workouts) {
     // Groups consecutive same exercises for display
   }
 }
 
-// ✅ Domain Logic in L2
+// ✅ Domain Logic in L2 (in l2_domain/use_cases/workout_sets/)
 class GetTodayCompletedCountUseCase {
   Future<int> execute() async {
     final todayWorkouts = await _repository.getTodayWorkoutSets();
@@ -184,7 +189,7 @@ class GetTodayCompletedCountUseCase {
   }
 }
 
-// ✅ Domain Logic in L2 - Search
+// ✅ Domain Logic in L2 - Search (in l2_domain/use_cases/exercises/)
 class GetRecommendedExercisesUseCase {
   Future<List<Exercise>> execute({
     String? filterCategory,
