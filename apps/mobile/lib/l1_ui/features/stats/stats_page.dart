@@ -6,14 +6,23 @@ import 'views/log_view.dart';
 import 'views/pr_view.dart';
 
 class StatsPage extends StatefulWidget {
-  const StatsPage({super.key});
+  const StatsPage({super.key, this.initialSection = 1});
+
+  final int initialSection;
 
   @override
   State<StatsPage> createState() => _StatsPageState();
 }
 
 class _StatsPageState extends State<StatsPage> {
-  String _selectedSection = 'TODAY';
+  late String _selectedSection;
+
+  @override
+  void initState() {
+    super.initState();
+    final sections = ['PR', 'TODAY', 'WEEKLY', 'LOG', 'SETTING'];
+    _selectedSection = sections[widget.initialSection];
+  }
 
   @override
   Widget build(BuildContext context) {
