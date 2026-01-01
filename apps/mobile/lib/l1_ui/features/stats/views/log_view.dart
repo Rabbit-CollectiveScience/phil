@@ -331,48 +331,30 @@ class _LogViewState extends State<LogView> {
       setWithDetails.exercise,
       setWithDetails.workoutSet.values,
     );
-    return Slidable(
-      key: Key('set_${setWithDetails.workoutSet.id}'),
-      startActionPane: ActionPane(
-        motion: const ScrollMotion(),
-        extentRatio: 0.25,
-        children: [
-          CustomSlidableAction(
-            onPressed: (context) {
-              // TODO: Open edit dialog
-            },
-            backgroundColor: Colors.blue[400]!,
-            borderRadius: BorderRadius.zero,
-            padding: EdgeInsets.zero,
-            child: const Icon(
-              Icons.edit,
-              color: Colors.white,
-              size: 20,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Slidable(
+        key: Key('set_${setWithDetails.workoutSet.id}'),
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          extentRatio: 0.25,
+          children: [
+            CustomSlidableAction(
+              onPressed: (context) async {
+                await _deleteSet(setWithDetails.workoutSet.id);
+              },
+              backgroundColor: AppColors.error,
+              borderRadius: BorderRadius.zero,
+              padding: EdgeInsets.zero,
+              child: const Icon(
+                Icons.delete,
+                color: Colors.white,
+                size: 24,
+              ),
             ),
-          ),
-        ],
-      ),
-      endActionPane: ActionPane(
-        motion: const ScrollMotion(),
-        extentRatio: 0.25,
-        children: [
-          CustomSlidableAction(
-            onPressed: (context) async {
-              await _deleteSet(setWithDetails.workoutSet.id);
-            },
-            backgroundColor: AppColors.error,
-            borderRadius: BorderRadius.zero,
-            padding: EdgeInsets.zero,
-            child: const Icon(
-              Icons.delete,
-              color: Colors.white,
-              size: 20,
-            ),
-          ),
-        ],
-      ),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
+          ],
+        ),
+        child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -411,6 +393,7 @@ class _LogViewState extends State<LogView> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
