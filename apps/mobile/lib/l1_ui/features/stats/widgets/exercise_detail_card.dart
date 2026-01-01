@@ -147,7 +147,7 @@ class ExerciseDetailCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white,
+                    color: Colors.black,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -156,15 +156,32 @@ class ExerciseDetailCard extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w900,
-            color: isPR ? AppColors.limeGreen : AppColors.darkText,
-            height: 1.0,
-          ),
-        ),
+        isPR
+            ? Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.limeGreen,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,
+                    height: 1.0,
+                  ),
+                ),
+              )
+            : Text(
+                value,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.darkText,
+                  height: 1.0,
+                ),
+              ),
         if (prValue != null && prValue > 0 && !isPR) ...[
           const SizedBox(height: 2),
           Text(

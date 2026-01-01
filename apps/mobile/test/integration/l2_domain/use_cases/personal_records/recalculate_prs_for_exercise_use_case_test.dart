@@ -59,7 +59,7 @@ void main() {
 
       final weightPR = await prRepo.getCurrentPR(
         benchPress.id,
-        PRType.maxWeight,
+        'maxWeight',
       );
       expect(weightPR, isNotNull);
       expect(weightPR!.value, equals(100.0));
@@ -90,7 +90,7 @@ void main() {
 
       await useCase.execute(pushups.id);
 
-      final repsPR = await prRepo.getCurrentPR(pushups.id, PRType.maxReps);
+      final repsPR = await prRepo.getCurrentPR(pushups.id, 'maxReps');
       expect(repsPR, isNotNull);
       expect(repsPR!.value, equals(50.0));
     });
@@ -104,7 +104,7 @@ void main() {
         PersonalRecord(
           id: 'old_pr',
           exerciseId: squat.id,
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 120.0,
           achievedAt: DateTime(2025, 12, 1),
         ),
@@ -152,7 +152,7 @@ void main() {
 
       await useCase.execute(deadlift.id);
 
-      final weightPR = await prRepo.getCurrentPR(deadlift.id, PRType.maxWeight);
+      final weightPR = await prRepo.getCurrentPR(deadlift.id, 'maxWeight');
       expect(weightPR, isNotNull);
       expect(weightPR!.value, equals(180.0));
     });
@@ -175,7 +175,7 @@ void main() {
       await useCase.execute(benchPress.id);
 
       final allPRs = await prRepo.getPRsByExercise(benchPress.id);
-      expect(allPRs.any((pr) => pr.type == PRType.maxWeight), isTrue);
+      expect(allPRs.any((pr) => pr.type == 'maxWeight'), isTrue);
     });
 
     test('preserves achievedAt date from original set', () async {
@@ -195,7 +195,7 @@ void main() {
 
       final weightPR = await prRepo.getCurrentPR(
         benchPress.id,
-        PRType.maxWeight,
+        'maxWeight',
       );
       expect(weightPR, isNotNull);
       expect(weightPR!.achievedAt, equals(achievedDate));

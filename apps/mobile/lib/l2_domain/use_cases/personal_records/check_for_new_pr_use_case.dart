@@ -4,7 +4,7 @@ import '../../../l3_data/repositories/personal_record_repository.dart';
 /// Result of checking for a new PR
 class PRCheckResult {
   final bool isNewPR;
-  final PRType prType;
+  final String prType;
   final double? oldValue;
   final double newValue;
 
@@ -41,13 +41,13 @@ class CheckForNewPRUseCase {
     if (hasWeight && weight != null && weight > 0) {
       final currentPR = await _repository.getCurrentPR(
         exerciseId,
-        PRType.maxWeight,
+        'maxWeight',
       );
       if (currentPR == null || weight > currentPR.value) {
         results.add(
           PRCheckResult(
             isNewPR: true,
-            prType: PRType.maxWeight,
+            prType: 'maxWeight',
             oldValue: currentPR?.value,
             newValue: weight,
           ),
@@ -59,13 +59,13 @@ class CheckForNewPRUseCase {
     if (!hasWeight && reps != null && reps > 0) {
       final currentPR = await _repository.getCurrentPR(
         exerciseId,
-        PRType.maxReps,
+        'maxReps',
       );
       if (currentPR == null || reps > currentPR.value) {
         results.add(
           PRCheckResult(
             isNewPR: true,
-            prType: PRType.maxReps,
+            prType: 'maxReps',
             oldValue: currentPR?.value,
             newValue: reps,
           ),
@@ -78,13 +78,13 @@ class CheckForNewPRUseCase {
       final volume = weight * reps;
       final currentPR = await _repository.getCurrentPR(
         exerciseId,
-        PRType.maxVolume,
+        'maxVolume',
       );
       if (currentPR == null || volume > currentPR.value) {
         results.add(
           PRCheckResult(
             isNewPR: true,
-            prType: PRType.maxVolume,
+            prType: 'maxVolume',
             oldValue: currentPR?.value,
             newValue: volume,
           ),

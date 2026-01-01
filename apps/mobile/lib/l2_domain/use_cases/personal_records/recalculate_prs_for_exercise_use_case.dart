@@ -86,7 +86,7 @@ class RecalculatePRsForExerciseUseCase {
           PersonalRecord(
             id: 'pr_${exerciseId}_maxWeight_${DateTime.now().millisecondsSinceEpoch}',
             exerciseId: exerciseId,
-            type: PRType.maxWeight,
+            type: 'maxWeight',
             value: maxWeight,
             achievedAt: maxWeightDate,
           ),
@@ -98,7 +98,7 @@ class RecalculatePRsForExerciseUseCase {
           PersonalRecord(
             id: 'pr_${exerciseId}_maxReps_${DateTime.now().millisecondsSinceEpoch}',
             exerciseId: exerciseId,
-            type: PRType.maxReps,
+            type: 'maxReps',
             value: maxReps,
             achievedAt: maxRepsDate,
           ),
@@ -110,7 +110,7 @@ class RecalculatePRsForExerciseUseCase {
           PersonalRecord(
             id: 'pr_${exerciseId}_maxVolume_${DateTime.now().millisecondsSinceEpoch}',
             exerciseId: exerciseId,
-            type: PRType.maxVolume,
+            type: 'maxVolume',
             value: maxVolume,
             achievedAt: maxVolumeDate,
           ),

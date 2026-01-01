@@ -243,7 +243,7 @@ void main() {
         final oldPR = PersonalRecord(
           id: 'pr_1',
           exerciseId: exercise.id,
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100,
           achievedAt: DateTime.now(),
         );
@@ -256,7 +256,7 @@ void main() {
         // Note: This test will fail until RecalculatePRsForExerciseUseCase is called from RemoveWorkoutSetUseCase
         final currentPR = await prRepo.getCurrentPR(
           exercise.id,
-          PRType.maxWeight,
+          'maxWeight',
         );
         expect(currentPR, isNotNull);
         expect(currentPR!.value, 90);
@@ -287,7 +287,7 @@ void main() {
           final pr = PersonalRecord(
             id: 'pr_1',
             exerciseId: exercise.id,
-            type: PRType.maxWeight,
+            type: 'maxWeight',
             value: 120,
             achievedAt: DateTime.now(),
           );
@@ -299,7 +299,7 @@ void main() {
           // Assert - PR should fall back to 100kg
           final updatedPR = await prRepo.getCurrentPR(
             exercise.id,
-            PRType.maxWeight,
+            'maxWeight',
           );
           expect(updatedPR, isNotNull);
           expect(updatedPR!.value, 100);
@@ -338,7 +338,7 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_1',
           exerciseId: exercise.id,
-          type: PRType.maxReps,
+          type: 'maxReps',
           value: 15,
           achievedAt: DateTime.now(),
         );
@@ -350,7 +350,7 @@ void main() {
         // Assert - Should find next best (12 reps)
         final updatedPR = await prRepo.getCurrentPR(
           exercise.id,
-          PRType.maxReps,
+          'maxReps',
         );
         expect(updatedPR, isNotNull);
         expect(updatedPR!.value, 12);
@@ -376,14 +376,14 @@ void main() {
           final weightPR = PersonalRecord(
             id: 'pr_weight',
             exerciseId: exercise.id,
-            type: PRType.maxWeight,
+            type: 'maxWeight',
             value: 150,
             achievedAt: DateTime.now(),
           );
           final volumePR = PersonalRecord(
             id: 'pr_volume',
             exerciseId: exercise.id,
-            type: PRType.maxVolume,
+            type: 'maxVolume',
             value: 750, // 150 * 5
             achievedAt: DateTime.now(),
           );
@@ -396,11 +396,11 @@ void main() {
           // Assert - All PRs should be gone
           final weightPRAfter = await prRepo.getCurrentPR(
             exercise.id,
-            PRType.maxWeight,
+            'maxWeight',
           );
           final volumePRAfter = await prRepo.getCurrentPR(
             exercise.id,
-            PRType.maxVolume,
+            'maxVolume',
           );
           expect(weightPRAfter, isNull);
           expect(volumePRAfter, isNull);

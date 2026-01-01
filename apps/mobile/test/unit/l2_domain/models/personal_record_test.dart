@@ -8,14 +8,14 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 2),
         );
 
         expect(pr.id, equals('pr_1'));
         expect(pr.exerciseId, equals('bench_press'));
-        expect(pr.type, equals(PRType.maxWeight));
+        expect(pr.type, equals('maxWeight'));
         expect(pr.value, equals(100.0));
         expect(pr.achievedAt, equals(DateTime(2026, 1, 2)));
       });
@@ -24,12 +24,12 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_2',
           exerciseId: 'push_ups',
-          type: PRType.maxReps,
+          type: 'maxReps',
           value: 50.0,
           achievedAt: DateTime(2026, 1, 2),
         );
 
-        expect(pr.type, equals(PRType.maxReps));
+        expect(pr.type, equals('maxReps'));
         expect(pr.value, equals(50.0));
       });
 
@@ -37,12 +37,12 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_3',
           exerciseId: 'bench_press',
-          type: PRType.maxVolume,
+          type: 'maxVolume',
           value: 2700.0,
           achievedAt: DateTime(2026, 1, 2),
         );
 
-        expect(pr.type, equals(PRType.maxVolume));
+        expect(pr.type, equals('maxVolume'));
         expect(pr.value, equals(2700.0));
       });
     });
@@ -52,7 +52,7 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 2, 10, 30),
         );
@@ -79,7 +79,7 @@ void main() {
 
         expect(pr.id, equals('pr_1'));
         expect(pr.exerciseId, equals('bench_press'));
-        expect(pr.type, equals(PRType.maxWeight));
+        expect(pr.type, equals('maxWeight'));
         expect(pr.value, equals(100.0));
         expect(pr.achievedAt, equals(DateTime(2026, 1, 2, 10, 30)));
       });
@@ -95,7 +95,7 @@ void main() {
 
         final pr = PersonalRecord.fromJson(json);
 
-        expect(pr.type, equals(PRType.maxReps));
+        expect(pr.type, equals('maxReps'));
       });
 
       test('should handle maxVolume type in JSON', () {
@@ -109,14 +109,14 @@ void main() {
 
         final pr = PersonalRecord.fromJson(json);
 
-        expect(pr.type, equals(PRType.maxVolume));
+        expect(pr.type, equals('maxVolume'));
       });
 
       test('should round-trip through JSON correctly', () {
         final original = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'squat',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 150.5,
           achievedAt: DateTime(2026, 1, 2, 15, 45, 30),
         );
@@ -132,27 +132,12 @@ void main() {
       });
     });
 
-    group('PRType Enum', () {
-      test('should have correct enum values', () {
-        expect(PRType.values.length, equals(3));
-        expect(PRType.values, contains(PRType.maxWeight));
-        expect(PRType.values, contains(PRType.maxReps));
-        expect(PRType.values, contains(PRType.maxVolume));
-      });
-
-      test('should convert enum to string correctly', () {
-        expect(PRType.maxWeight.toString(), contains('maxWeight'));
-        expect(PRType.maxReps.toString(), contains('maxReps'));
-        expect(PRType.maxVolume.toString(), contains('maxVolume'));
-      });
-    });
-
     group('Equality', () {
       test('should be equal when all properties match', () {
         final pr1 = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 2),
         );
@@ -160,7 +145,7 @@ void main() {
         final pr2 = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 2),
         );
@@ -173,7 +158,7 @@ void main() {
         final pr1 = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 2),
         );
@@ -181,7 +166,7 @@ void main() {
         final pr2 = PersonalRecord(
           id: 'pr_2',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 2),
         );
@@ -193,7 +178,7 @@ void main() {
         final pr1 = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 2),
         );
@@ -201,7 +186,7 @@ void main() {
         final pr2 = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 105.0,
           achievedAt: DateTime(2026, 1, 2),
         );
@@ -216,7 +201,7 @@ void main() {
           () => PersonalRecord(
             id: 'pr_1',
             exerciseId: 'bench_press',
-            type: PRType.maxWeight,
+            type: 'maxWeight',
             value: 100.0,
             achievedAt: DateTime(2026, 1, 2),
           ),
@@ -229,7 +214,7 @@ void main() {
           () => PersonalRecord(
             id: 'pr_1',
             exerciseId: 'bench_press',
-            type: PRType.maxWeight,
+            type: 'maxWeight',
             value: 0.0,
             achievedAt: DateTime(2026, 1, 2),
           ),
@@ -241,7 +226,7 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 102.5,
           achievedAt: DateTime(2026, 1, 2),
         );
@@ -255,7 +240,7 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'deadlift',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 999999.99,
           achievedAt: DateTime(2026, 1, 2),
         );
@@ -267,7 +252,7 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'exercise_with_underscores_and_123',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 2),
         );
@@ -280,7 +265,7 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: dateTime,
         );

@@ -25,7 +25,7 @@ void main() {
 
       expect(results.length, greaterThan(0));
       expect(results.first.isNewPR, isTrue);
-      expect(results.first.prType, equals(PRType.maxWeight));
+      expect(results.first.prType, equals('maxWeight'));
       expect(results.first.newValue, equals(100.0));
       expect(results.first.oldValue, isNull);
     });
@@ -35,7 +35,7 @@ void main() {
         PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 95.0,
           achievedAt: DateTime(2026, 1, 1),
         ),
@@ -47,7 +47,7 @@ void main() {
         hasWeight: true,
       );
 
-      final weightPR = results.firstWhere((r) => r.prType == PRType.maxWeight);
+      final weightPR = results.firstWhere((r) => r.prType == 'maxWeight');
       expect(weightPR.isNewPR, isTrue);
       expect(weightPR.newValue, equals(100.0));
       expect(weightPR.oldValue, equals(95.0));
@@ -58,7 +58,7 @@ void main() {
         PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 1),
         ),
@@ -71,7 +71,7 @@ void main() {
       );
 
       final weightPRs = results.where(
-        (r) => r.prType == PRType.maxWeight && r.isNewPR,
+        (r) => r.prType == 'maxWeight' && r.isNewPR,
       );
       expect(weightPRs, isEmpty);
     });
@@ -83,7 +83,7 @@ void main() {
           PersonalRecord(
             id: 'pr_1',
             exerciseId: 'bench_press',
-            type: PRType.maxWeight,
+            type: 'maxWeight',
             value: 100.0,
             achievedAt: DateTime(2026, 1, 1),
           ),
@@ -96,7 +96,7 @@ void main() {
         );
 
         final weightPRs = results.where(
-          (r) => r.prType == PRType.maxWeight && r.isNewPR,
+          (r) => r.prType == 'maxWeight' && r.isNewPR,
         );
         expect(weightPRs, isEmpty);
       },
@@ -111,7 +111,7 @@ void main() {
 
       expect(results.length, greaterThan(0));
       expect(results.first.isNewPR, isTrue);
-      expect(results.first.prType, equals(PRType.maxReps));
+      expect(results.first.prType, equals('maxReps'));
       expect(results.first.newValue, equals(50.0));
     });
 
@@ -125,7 +125,7 @@ void main() {
       expect(results.where((r) => r.isNewPR).length, greaterThanOrEqualTo(1));
 
       final weightPR = results.where(
-        (r) => r.prType == PRType.maxWeight && r.isNewPR,
+        (r) => r.prType == 'maxWeight' && r.isNewPR,
       );
       expect(weightPR, isNotEmpty);
     });

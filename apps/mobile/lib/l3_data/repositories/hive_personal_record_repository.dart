@@ -16,8 +16,8 @@ class HivePersonalRecordRepository implements PersonalRecordRepository {
     return _box!;
   }
 
-  String _makeKey(String exerciseId, PRType type) {
-    return '${exerciseId}_${type.name}';
+  String _makeKey(String exerciseId, String type) {
+    return '${exerciseId}_$type';
   }
 
   @override
@@ -28,7 +28,7 @@ class HivePersonalRecordRepository implements PersonalRecordRepository {
   }
 
   @override
-  Future<PersonalRecord?> getCurrentPR(String exerciseId, PRType type) async {
+  Future<PersonalRecord?> getCurrentPR(String exerciseId, String type) async {
     final box = await _getBox;
     final key = _makeKey(exerciseId, type);
     final data = box.get(key);
@@ -40,23 +40,25 @@ class HivePersonalRecordRepository implements PersonalRecordRepository {
   Future<List<PersonalRecord>> getPRsByExercise(String exerciseId) async {
     final box = await _getBox;
     final prs = <PersonalRecord>[];
-    
-    for (final type in PRType.values) {
+
+    // Check for standard PR types
+    for (final type in ['maxWeight', 'maxReps', 'maxVolume']) {
       final key = _makeKey(exerciseId, type);
       final data = box.get(key);
       if (data != null) {
         prs.add(PersonalRecord.fromJson(Map<String, dynamic>.from(data)));
       }
     }
-    
+
     return prs;
   }
 
   @override
   Future<void> deletePRsForExercise(String exerciseId) async {
     final box = await _getBox;
-    
-    for (final type in PRType.values) {
+
+    // Delete standard PR types
+    for (final type in ['maxWeight', 'maxReps', 'maxVolume']) {
       final key = _makeKey(exerciseId, type);
       await box.delete(key);
     }

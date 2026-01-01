@@ -7,7 +7,7 @@ class GetCurrentPRUseCase {
 
   GetCurrentPRUseCase(this._repository);
 
-  Future<PersonalRecord?> execute(String exerciseId, PRType type) async {
+  Future<PersonalRecord?> execute(String exerciseId, String type) async {
     return await _repository.getCurrentPR(exerciseId, type);
   }
 }

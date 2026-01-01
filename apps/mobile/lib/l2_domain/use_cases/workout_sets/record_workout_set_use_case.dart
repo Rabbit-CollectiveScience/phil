@@ -82,7 +82,7 @@ class RecordWorkoutSetUseCase {
         for (final result in prCheckResults) {
           if (result.isNewPR) {
             final pr = PersonalRecord(
-              id: 'pr_${exerciseId}_${result.prType.toString().split('.').last}_${DateTime.now().millisecondsSinceEpoch}',
+              id: 'pr_${exerciseId}_${result.prType}_${DateTime.now().millisecondsSinceEpoch}',
               exerciseId: exerciseId,
               type: result.prType,
               value: result.newValue,

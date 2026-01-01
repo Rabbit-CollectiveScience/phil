@@ -286,7 +286,7 @@ void main() {
             PersonalRecord(
               id: 'pr_1',
               exerciseId: benchPress.id,
-              type: PRType.maxWeight,
+              type: 'maxWeight',
               value: 95.0,
               achievedAt: DateTime(2026, 1, 1),
             ),
@@ -303,7 +303,7 @@ void main() {
           // Check if new PR was saved
           final currentPR = await prRepo.getCurrentPR(
             benchPress.id,
-            PRType.maxWeight,
+            'maxWeight',
           );
           expect(currentPR, isNotNull);
           expect(currentPR!.value, equals(100.0));
@@ -329,7 +329,7 @@ void main() {
           // Check if PR was saved
           final currentPR = await prRepo.getCurrentPR(
             pushups.id,
-            PRType.maxReps,
+            'maxReps',
           );
           expect(currentPR, isNotNull);
           expect(currentPR!.value, equals(50.0));
@@ -345,7 +345,7 @@ void main() {
           PersonalRecord(
             id: 'pr_1',
             exerciseId: squat.id,
-            type: PRType.maxWeight,
+            type: 'maxWeight',
             value: 150.0,
             achievedAt: DateTime(2026, 1, 1),
           ),
@@ -355,7 +355,7 @@ void main() {
           PersonalRecord(
             id: 'pr_2',
             exerciseId: squat.id,
-            type: PRType.maxVolume,
+            type: 'maxVolume',
             value: 750.0, // 150 * 5
             achievedAt: DateTime(2026, 1, 1),
           ),
@@ -391,7 +391,7 @@ void main() {
         // Check if first PR was saved
         final currentPR = await prRepo.getCurrentPR(
           deadlift.id,
-          PRType.maxWeight,
+          'maxWeight',
         );
         expect(currentPR, isNotNull);
         expect(currentPR!.value, equals(180.0));

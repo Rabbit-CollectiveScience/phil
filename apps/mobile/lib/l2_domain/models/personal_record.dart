@@ -1,9 +1,7 @@
-enum PRType { maxWeight, maxReps, maxVolume }
-
 class PersonalRecord {
   final String id;
   final String exerciseId;
-  final PRType type;
+  final String type;
   final double value;
   final DateTime achievedAt;
 
@@ -19,7 +17,7 @@ class PersonalRecord {
     return {
       'id': id,
       'exerciseId': exerciseId,
-      'type': type.name,
+      'type': type,
       'value': value,
       'achievedAt': achievedAt.toIso8601String(),
     };
@@ -29,7 +27,7 @@ class PersonalRecord {
     return PersonalRecord(
       id: json['id'] as String,
       exerciseId: json['exerciseId'] as String,
-      type: PRType.values.firstWhere((e) => e.name == json['type']),
+      type: json['type'] as String,
       value: (json['value'] as num).toDouble(),
       achievedAt: DateTime.parse(json['achievedAt'] as String),
     );

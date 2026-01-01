@@ -19,7 +19,7 @@ void main() {
     test('returns null when no PR exists for exercise', () async {
       final result = await useCase.execute(
         'nonexistent_exercise',
-        PRType.maxWeight,
+        'maxWeight',
       );
 
       expect(result, isNull);
@@ -29,51 +29,51 @@ void main() {
       final pr = PersonalRecord(
         id: 'pr_1',
         exerciseId: 'bench_press',
-        type: PRType.maxWeight,
+        type: 'maxWeight',
         value: 100.0,
         achievedAt: DateTime(2026, 1, 1),
       );
       await prRepo.save(pr);
 
-      final result = await useCase.execute('bench_press', PRType.maxWeight);
+      final result = await useCase.execute('bench_press', 'maxWeight');
 
       expect(result, isNotNull);
       expect(result!.value, equals(100.0));
-      expect(result.type, equals(PRType.maxWeight));
+      expect(result.type, equals('maxWeight'));
     });
 
     test('returns maxReps PR when it exists', () async {
       final pr = PersonalRecord(
         id: 'pr_2',
         exerciseId: 'push_ups',
-        type: PRType.maxReps,
+        type: 'maxReps',
         value: 50.0,
         achievedAt: DateTime(2026, 1, 1),
       );
       await prRepo.save(pr);
 
-      final result = await useCase.execute('push_ups', PRType.maxReps);
+      final result = await useCase.execute('push_ups', 'maxReps');
 
       expect(result, isNotNull);
       expect(result!.value, equals(50.0));
-      expect(result.type, equals(PRType.maxReps));
+      expect(result.type, equals('maxReps'));
     });
 
     test('returns maxVolume PR when it exists', () async {
       final pr = PersonalRecord(
         id: 'pr_3',
         exerciseId: 'squat',
-        type: PRType.maxVolume,
+        type: 'maxVolume',
         value: 2700.0,
         achievedAt: DateTime(2026, 1, 1),
       );
       await prRepo.save(pr);
 
-      final result = await useCase.execute('squat', PRType.maxVolume);
+      final result = await useCase.execute('squat', 'maxVolume');
 
       expect(result, isNotNull);
       expect(result!.value, equals(2700.0));
-      expect(result.type, equals(PRType.maxVolume));
+      expect(result.type, equals('maxVolume'));
     });
 
     test('returns the highest value when multiple PRs exist', () async {
@@ -81,7 +81,7 @@ void main() {
         PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 95.0,
           achievedAt: DateTime(2025, 12, 1),
         ),
@@ -90,7 +90,7 @@ void main() {
         PersonalRecord(
           id: 'pr_2',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 1),
         ),
@@ -99,13 +99,13 @@ void main() {
         PersonalRecord(
           id: 'pr_3',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 97.5,
           achievedAt: DateTime(2025, 11, 1),
         ),
       );
 
-      final result = await useCase.execute('bench_press', PRType.maxWeight);
+      final result = await useCase.execute('bench_press', 'maxWeight');
 
       expect(result, isNotNull);
       expect(result!.value, equals(100.0));
@@ -117,7 +117,7 @@ void main() {
         PersonalRecord(
           id: 'pr_1',
           exerciseId: 'deadlift',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 150.0,
           achievedAt: DateTime(2025, 12, 1),
         ),
@@ -126,13 +126,13 @@ void main() {
         PersonalRecord(
           id: 'pr_2',
           exerciseId: 'deadlift',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 150.0,
           achievedAt: DateTime(2026, 1, 2),
         ),
       );
 
-      final result = await useCase.execute('deadlift', PRType.maxWeight);
+      final result = await useCase.execute('deadlift', 'maxWeight');
 
       expect(result, isNotNull);
       expect(result!.value, equals(150.0));

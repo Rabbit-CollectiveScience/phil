@@ -6,7 +6,7 @@ abstract class PersonalRecordRepository {
   Future<void> save(PersonalRecord pr);
 
   /// Get the current best PR for an exercise and type
-  Future<PersonalRecord?> getCurrentPR(String exerciseId, PRType type);
+  Future<PersonalRecord?> getCurrentPR(String exerciseId, String type);
 
   /// Get all PRs for a specific exercise
   Future<List<PersonalRecord>> getPRsByExercise(String exerciseId);

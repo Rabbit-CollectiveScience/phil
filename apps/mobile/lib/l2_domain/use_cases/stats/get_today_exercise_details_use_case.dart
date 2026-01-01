@@ -83,7 +83,7 @@ class GetTodayExerciseDetailsUseCase {
         final getPRUseCase = GetCurrentPRUseCase(_prRepository!);
         final currentPR = await getPRUseCase.execute(
           exerciseId,
-          PRType.maxWeight,
+          'maxWeight',
         );
         if (currentPR != null) {
           prMaxWeight = currentPR.value;

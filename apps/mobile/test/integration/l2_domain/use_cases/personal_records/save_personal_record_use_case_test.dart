@@ -20,7 +20,7 @@ void main() {
       final pr = PersonalRecord(
         id: 'pr_1',
         exerciseId: 'bench_press',
-        type: PRType.maxWeight,
+        type: 'maxWeight',
         value: 100.0,
         achievedAt: DateTime(2026, 1, 2),
       );
@@ -38,7 +38,7 @@ void main() {
         PersonalRecord(
           id: 'pr_1',
           exerciseId: 'bench_press',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 100.0,
           achievedAt: DateTime(2026, 1, 2),
         ),
@@ -48,7 +48,7 @@ void main() {
         PersonalRecord(
           id: 'pr_2',
           exerciseId: 'squat',
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 150.0,
           achievedAt: DateTime(2026, 1, 2),
         ),
@@ -62,7 +62,7 @@ void main() {
       final pr = PersonalRecord(
         id: 'pr_test',
         exerciseId: 'deadlift',
-        type: PRType.maxWeight,
+        type: 'maxWeight',
         value: 180.5,
         achievedAt: date,
       );
@@ -71,7 +71,7 @@ void main() {
 
       expect(result.id, equals('pr_test'));
       expect(result.exerciseId, equals('deadlift'));
-      expect(result.type, equals(PRType.maxWeight));
+      expect(result.type, equals('maxWeight'));
       expect(result.value, equals(180.5));
       expect(result.achievedAt, equals(date));
     });
@@ -80,42 +80,42 @@ void main() {
       final pr = PersonalRecord(
         id: 'pr_1',
         exerciseId: 'bench_press',
-        type: PRType.maxWeight,
+        type: 'maxWeight',
         value: 100.0,
         achievedAt: DateTime(2026, 1, 2),
       );
 
       final result = await useCase.execute(pr);
 
-      expect(result.type, equals(PRType.maxWeight));
+      expect(result.type, equals('maxWeight'));
     });
 
     test('saves maxReps PR correctly', () async {
       final pr = PersonalRecord(
         id: 'pr_2',
         exerciseId: 'push_ups',
-        type: PRType.maxReps,
+        type: 'maxReps',
         value: 50.0,
         achievedAt: DateTime(2026, 1, 2),
       );
 
       final result = await useCase.execute(pr);
 
-      expect(result.type, equals(PRType.maxReps));
+      expect(result.type, equals('maxReps'));
     });
 
     test('saves maxVolume PR correctly', () async {
       final pr = PersonalRecord(
         id: 'pr_3',
         exerciseId: 'squat',
-        type: PRType.maxVolume,
+        type: 'maxVolume',
         value: 2700.0,
         achievedAt: DateTime(2026, 1, 2),
       );
 
       final result = await useCase.execute(pr);
 
-      expect(result.type, equals(PRType.maxVolume));
+      expect(result.type, equals('maxVolume'));
     });
   });
 }

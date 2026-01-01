@@ -195,7 +195,7 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_1',
           exerciseId: benchPress.id,
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 120,
           achievedAt: DateTime.now().subtract(const Duration(days: 7)),
         );
@@ -225,7 +225,7 @@ void main() {
         final pr = PersonalRecord(
           id: 'pr_today',
           exerciseId: squat.id,
-          type: PRType.maxWeight,
+          type: 'maxWeight',
           value: 150,
           achievedAt: DateTime.now(),
         );
@@ -260,7 +260,7 @@ void main() {
           final pr = PersonalRecord(
             id: 'pr_old',
             exerciseId: deadlift.id,
-            type: PRType.maxWeight,
+            type: 'maxWeight',
             value: 200,
             achievedAt: oldDate,
           );
