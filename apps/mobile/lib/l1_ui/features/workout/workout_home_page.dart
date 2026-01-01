@@ -662,7 +662,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                   StatsPage(initialSection: targetSection),
                             ),
                           );
-                          
+
                           // User returned - reload counter from database
                           await _loadTodayCount();
                         },

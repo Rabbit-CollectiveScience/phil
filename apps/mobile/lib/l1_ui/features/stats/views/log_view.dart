@@ -346,54 +346,50 @@ class _LogViewState extends State<LogView> {
               backgroundColor: AppColors.error,
               borderRadius: BorderRadius.zero,
               padding: EdgeInsets.zero,
-              child: const Icon(
-                Icons.delete,
-                color: Colors.white,
-                size: 24,
-              ),
+              child: const Icon(Icons.delete, color: Colors.white, size: 24),
             ),
           ],
         ),
         child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.zero,
-          border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: AppColors.limeGreen.withOpacity(0.15),
-                borderRadius: BorderRadius.zero,
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                '$setNumber',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.darkText,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.zero,
+            border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.limeGreen.withOpacity(0.15),
+                  borderRadius: BorderRadius.zero,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  '$setNumber',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.darkText,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                displayString,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.darkText,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  displayString,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.darkText,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
