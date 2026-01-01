@@ -1,11 +1,18 @@
 import '../workout_sets/get_workout_sets_by_date_use_case.dart';
+import '../../../l3_data/repositories/personal_record_repository.dart';
+import '../personal_records/get_current_pr_use_case.dart';
+import '../../models/personal_record.dart';
 
 /// Use case to get detailed statistics for each exercise performed today.
 /// Groups workout sets by exercise and calculates aggregated metrics.
 class GetTodayExerciseDetailsUseCase {
   final GetWorkoutSetsByDateUseCase _getWorkoutSetsByDateUseCase;
+  final PersonalRecordRepository? _prRepository;
 
-  GetTodayExerciseDetailsUseCase(this._getWorkoutSetsByDateUseCase);
+  GetTodayExerciseDetailsUseCase(
+    this._getWorkoutSetsByDateUseCase, {
+    PersonalRecordRepository? prRepository,
+  }) : _prRepository = prRepository;
 
   /// Executes the use case to get exercise details for today.
   ///
@@ -69,11 +76,30 @@ class GetTodayExerciseDetailsUseCase {
         }
       }
 
+      // Get PR data if repository is provided
+      double? prMaxWeight;
+      bool isPRToday = false;
+      if (_prRepository != null) {
+        final getPRUseCase = GetCurrentPRUseCase(_prRepository!);
+        final currentPR = await getPRUseCase.execute(exerciseId, PRType.maxWeight);
+        if (currentPR != null) {
+          prMaxWeight = currentPR.value;
+          // Check if PR was achieved today
+          final prDate = currentPR.achievedAt;
+          final now = DateTime.now();
+          isPRToday = prDate.year == now.year &&
+              prDate.month == now.month &&
+              prDate.day == now.day;
+        }
+      }
+
       exerciseDetails.add({
         'name': exerciseName,
         'sets': setsCount,
         'volumeToday': volumeToday,
         'maxWeightToday': maxWeightToday,
+        'prMaxWeight': prMaxWeight,
+        'isPRToday': isPRToday,
       });
     }
 

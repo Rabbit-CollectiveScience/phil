@@ -1,7 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
 import 'package:phil/l3_data/repositories/stub_workout_set_repository.dart';
+import 'package:phil/l3_data/repositories/stub_personal_record_repository.dart';
+import 'package:phil/l3_data/repositories/stub_exercise_repository.dart';
 import 'package:phil/l2_domain/models/workout_set.dart';
+import 'package:phil/l2_domain/models/personal_record.dart';
 
 void main() {
   // Initialize Flutter bindings for testing
@@ -253,6 +256,122 @@ void main() {
         result.completedAt.isBefore(afterExecution.add(Duration(seconds: 1))),
         isTrue,
       );
+    });
+
+    group('Personal Record Detection', () {
+      late StubPersonalRecordRepository prRepo;
+      late StubExerciseRepository exerciseRepo;
+      late RecordWorkoutSetUseCase useCaseWithPR;
+
+      setUp(() async {
+        prRepo = StubPersonalRecordRepository();
+        exerciseRepo = StubExerciseRepository();
+        useCaseWithPR = RecordWorkoutSetUseCase(
+          repository,
+          prRepository: prRepo,
+          exerciseRepository: exerciseRepo,
+        );
+      });
+
+      test('should detect and save new maxWeight PR when weight exceeds current',
+          () async {
+        final exercises = await exerciseRepo.getAllExercises();
+        final benchPress = exercises.firstWhere((e) => e.name.contains('Bench Press'));
+
+        // Save existing PR
+        await prRepo.save(PersonalRecord(
+          id: 'pr_1',
+          exerciseId: benchPress.id,
+          type: PRType.maxWeight,
+          value: 95.0,
+          achievedAt: DateTime(2026, 1, 1),
+        ));
+
+        // Record new set with higher weight
+        final result = await useCaseWithPR.execute(
+          exerciseId: benchPress.id,
+          values: {'weight': 100.0, 'reps': 10},
+        );
+
+        expect(result, isNotNull);
+        
+        // Check if new PR was saved
+        final currentPR = await prRepo.getCurrentPR(benchPress.id, PRType.maxWeight);
+        expect(currentPR, isNotNull);
+        expect(currentPR!.value, equals(100.0));
+      });
+
+      test('should detect and save new maxReps PR for bodyweight exercise',
+          () async {
+        final exercises = await exerciseRepo.getAllExercises();
+        final pushups = exercises.firstWhere((e) => e.name.contains('Push') && e.name.contains('Up'));
+
+        // Record set with reps only (bodyweight)
+        final result = await useCaseWithPR.execute(
+          exerciseId: pushups.id,
+          values: {'reps': 50},
+        );
+
+        expect(result, isNotNull);
+        
+        // Check if PR was saved
+        final currentPR = await prRepo.getCurrentPR(pushups.id, PRType.maxReps);
+        expect(currentPR, isNotNull);
+        expect(currentPR!.value, equals(50.0));
+      });
+
+      test('should not save PR when value doesn\'t exceed current PR',
+          () async {
+        final exercises = await exerciseRepo.getAllExercises();
+        final squat = exercises.firstWhere((e) => e.name.contains('Squat'));
+
+        // Save existing PRs - both weight and volume
+        await prRepo.save(PersonalRecord(
+          id: 'pr_1',
+          exerciseId: squat.id,
+          type: PRType.maxWeight,
+          value: 150.0,
+          achievedAt: DateTime(2026, 1, 1),
+        ));
+        
+        await prRepo.save(PersonalRecord(
+          id: 'pr_2',
+          exerciseId: squat.id,
+          type: PRType.maxVolume,
+          value: 750.0, // 150 * 5
+          achievedAt: DateTime(2026, 1, 1),
+        ));
+
+        final prsBefore = await prRepo.getPRsByExercise(squat.id);
+        final countBefore = prsBefore.length;
+
+        // Record set with lower weight and same reps - neither weight (140 < 150) nor volume (700 < 750) is a PR
+        await useCaseWithPR.execute(
+          exerciseId: squat.id,
+          values: {'weight': 140.0, 'reps': 5},
+        );
+
+        final prsAfter = await prRepo.getPRsByExercise(squat.id);
+        expect(prsAfter.length, equals(countBefore));
+      });
+
+      test('should save first PR when no existing PR for exercise', () async {
+        final exercises = await exerciseRepo.getAllExercises();
+        final deadlift = exercises.firstWhere((e) => e.name.contains('Deadlift'));
+
+        // Record first set ever
+        final result = await useCaseWithPR.execute(
+          exerciseId: deadlift.id,
+          values: {'weight': 180.0, 'reps': 5},
+        );
+
+        expect(result, isNotNull);
+        
+        // Check if first PR was saved
+        final currentPR = await prRepo.getCurrentPR(deadlift.id, PRType.maxWeight);
+        expect(currentPR, isNotNull);
+        expect(currentPR!.value, equals(180.0));
+      });
     });
   });
 }

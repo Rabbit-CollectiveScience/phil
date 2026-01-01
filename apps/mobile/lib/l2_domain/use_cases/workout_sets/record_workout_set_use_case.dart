@@ -1,6 +1,11 @@
 import 'package:uuid/uuid.dart';
 import '../../models/workout_set.dart';
 import '../../../l3_data/repositories/workout_set_repository.dart';
+import '../../../l3_data/repositories/personal_record_repository.dart';
+import '../../../l3_data/repositories/exercise_repository.dart';
+import '../personal_records/check_for_new_pr_use_case.dart';
+import '../personal_records/save_personal_record_use_case.dart';
+import '../../models/personal_record.dart';
 
 // Use Case: Record a completed workout set
 //
@@ -14,9 +19,16 @@ import '../../../l3_data/repositories/workout_set_repository.dart';
 
 class RecordWorkoutSetUseCase {
   final WorkoutSetRepository _repository;
+  final PersonalRecordRepository? _prRepository;
+  final ExerciseRepository? _exerciseRepository;
   final _uuid = const Uuid();
 
-  RecordWorkoutSetUseCase(this._repository);
+  RecordWorkoutSetUseCase(
+    this._repository, {
+    PersonalRecordRepository? prRepository,
+    ExerciseRepository? exerciseRepository,
+  })  : _prRepository = prRepository,
+        _exerciseRepository = exerciseRepository;
 
   Future<WorkoutSet> execute({
     required String exerciseId,
@@ -34,6 +46,55 @@ class RecordWorkoutSetUseCase {
     // Save to repository
     final savedSet = await _repository.saveWorkoutSet(workoutSet);
 
+    // Check for new PRs if repositories are provided
+    if (_prRepository != null && _exerciseRepository != null) {
+      await _checkAndSavePRs(exerciseId, values, completedAt ?? DateTime.now());
+    }
+
     return savedSet;
+  }
+
+  Future<void> _checkAndSavePRs(
+    String exerciseId,
+    Map<String, dynamic>? values,
+    DateTime achievedAt,
+  ) async {
+    if (_prRepository == null || _exerciseRepository == null) return;
+
+    try {
+      // Get exercise info to determine if it has weight
+      final exercise = await _exerciseRepository!.getExerciseById(exerciseId);
+
+      // Check if exercise has a weight field
+      final hasWeight = exercise.fields.any((field) => field.name == 'weight');
+
+      // Check for new PRs
+      final checkUseCase = CheckForNewPRUseCase(_prRepository!);
+      final prCheckResults = await checkUseCase.execute(
+        exerciseId: exerciseId,
+        values: values,
+        hasWeight: hasWeight,
+      );
+
+      // Save new PRs
+      if (prCheckResults.isNotEmpty) {
+        final saveUseCase = SavePersonalRecordUseCase(_prRepository!);
+        for (final result in prCheckResults) {
+          if (result.isNewPR) {
+            final pr = PersonalRecord(
+              id: 'pr_${exerciseId}_${result.prType.toString().split('.').last}_${DateTime.now().millisecondsSinceEpoch}',
+              exerciseId: exerciseId,
+              type: result.prType,
+              value: result.newValue,
+              achievedAt: achievedAt,
+            );
+            await saveUseCase.execute(pr);
+          }
+        }
+      }
+    } catch (e) {
+      // Exercise not found - skip PR checking
+      return;
+    }
   }
 }

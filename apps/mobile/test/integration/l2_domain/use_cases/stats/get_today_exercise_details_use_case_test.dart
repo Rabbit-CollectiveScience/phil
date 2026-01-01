@@ -4,6 +4,8 @@ import 'package:phil/l2_domain/use_cases/workout_sets/get_workout_sets_by_date_u
 import 'package:phil/l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
 import 'package:phil/l3_data/repositories/stub_workout_set_repository.dart';
 import 'package:phil/l3_data/repositories/stub_exercise_repository.dart';
+import 'package:phil/l3_data/repositories/stub_personal_record_repository.dart';
+import 'package:phil/l2_domain/models/personal_record.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -156,6 +158,145 @@ void main() {
       expect(result.length, equals(1));
       expect(result[0]['sets'], equals(2));
       expect(result[0]['volumeToday'], equals(0.0));
+    });
+
+    group('Personal Record Integration', () {
+      late StubPersonalRecordRepository prRepo;
+      late GetTodayExerciseDetailsUseCase useCaseWithPR;
+
+      setUp(() async {
+        prRepo = StubPersonalRecordRepository();
+        
+        final getWorkoutSetsByDateUseCase = GetWorkoutSetsByDateUseCase(
+          workoutSetRepo,
+          exerciseRepo,
+        );
+        
+        useCaseWithPR = GetTodayExerciseDetailsUseCase(
+          getWorkoutSetsByDateUseCase,
+          prRepository: prRepo,
+        );
+      });
+
+      test('should include prMaxWeight in exercise details', () async {
+        // Arrange
+        final exercises = await exerciseRepo.getAllExercises();
+        final benchPress = exercises.firstWhere(
+          (e) => e.name.contains('Bench Press'),
+        );
+
+        // Record a set today
+        await recordUseCase.execute(
+          exerciseId: benchPress.id,
+          values: {'weight': 100, 'reps': 10},
+        );
+
+        // Simulate existing PR
+        final pr = PersonalRecord(
+          id: 'pr_1',
+          exerciseId: benchPress.id,
+          type: PRType.maxWeight,
+          value: 120,
+          achievedAt: DateTime.now().subtract(const Duration(days: 7)),
+        );
+        await prRepo.save(pr);
+
+        // Act
+        final result = await useCaseWithPR.execute();
+
+        // Assert - This will fail until GetCurrentPRUseCase is integrated
+        expect(result.length, equals(1));
+        expect(result[0]['prMaxWeight'], equals(120.0));
+        expect(result[0]['isPRToday'], isFalse);
+      });
+
+      test('should mark isPRToday=true when PR achieved today', () async {
+        // Arrange
+        final exercises = await exerciseRepo.getAllExercises();
+        final squat = exercises.firstWhere(
+          (e) => e.name.contains('Squat'),
+        );
+
+        // Record a set today
+        await recordUseCase.execute(
+          exerciseId: squat.id,
+          values: {'weight': 150, 'reps': 5},
+        );
+
+        // Simulate PR achieved today
+        final pr = PersonalRecord(
+          id: 'pr_today',
+          exerciseId: squat.id,
+          type: PRType.maxWeight,
+          value: 150,
+          achievedAt: DateTime.now(),
+        );
+        await prRepo.save(pr);
+
+        // Act
+        final result = await useCaseWithPR.execute();
+
+        // Assert
+        expect(result.length, equals(1));
+        expect(result[0]['prMaxWeight'], equals(150.0));
+        expect(result[0]['isPRToday'], isTrue);
+      });
+
+      test('should mark isPRToday=false when PR is from previous date', () async {
+        // Arrange
+        final exercises = await exerciseRepo.getAllExercises();
+        final deadlift = exercises.firstWhere(
+          (e) => e.name.contains('Deadlift'),
+        );
+
+        // Record a set today
+        await recordUseCase.execute(
+          exerciseId: deadlift.id,
+          values: {'weight': 180, 'reps': 3},
+        );
+
+        // Simulate old PR
+        final oldDate = DateTime(2024, 1, 1);
+        final pr = PersonalRecord(
+          id: 'pr_old',
+          exerciseId: deadlift.id,
+          type: PRType.maxWeight,
+          value: 200,
+          achievedAt: oldDate,
+        );
+        await prRepo.save(pr);
+
+        // Act
+        final result = await useCaseWithPR.execute();
+
+        // Assert
+        expect(result.length, equals(1));
+        expect(result[0]['prMaxWeight'], equals(200.0));
+        expect(result[0]['isPRToday'], isFalse);
+      });
+
+      test('should return null prMaxWeight when no PR exists for exercise', () async {
+        // Arrange
+        final exercises = await exerciseRepo.getAllExercises();
+        final pullUp = exercises.firstWhere(
+          (e) => e.name.contains('Pull'),
+        );
+
+        // Record a set today (no existing PR)
+        await recordUseCase.execute(
+          exerciseId: pullUp.id,
+          values: {'reps': 10},
+        );
+
+        // Act
+        final result = await useCaseWithPR.execute();
+
+        // Assert
+        expect(result.length, equals(1));
+        expect(result[0].containsKey('prMaxWeight'), isTrue);
+        expect(result[0]['prMaxWeight'], isNull);
+        expect(result[0]['isPRToday'], isFalse);
+      });
     });
   });
 }

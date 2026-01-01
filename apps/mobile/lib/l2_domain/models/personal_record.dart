@@ -1,8 +1,4 @@
-enum PRType {
-  maxWeight,
-  maxReps,
-  maxVolume,
-}
+enum PRType { maxWeight, maxReps, maxVolume }
 
 class PersonalRecord {
   final String id;
@@ -33,9 +29,7 @@ class PersonalRecord {
     return PersonalRecord(
       id: json['id'] as String,
       exerciseId: json['exerciseId'] as String,
-      type: PRType.values.firstWhere(
-        (e) => e.name == json['type'],
-      ),
+      type: PRType.values.firstWhere((e) => e.name == json['type']),
       value: (json['value'] as num).toDouble(),
       achievedAt: DateTime.parse(json['achievedAt'] as String),
     );
@@ -55,13 +49,7 @@ class PersonalRecord {
 
   @override
   int get hashCode {
-    return Object.hash(
-      id,
-      exerciseId,
-      type,
-      value,
-      achievedAt,
-    );
+    return Object.hash(id, exerciseId, type, value, achievedAt);
   }
 
   @override

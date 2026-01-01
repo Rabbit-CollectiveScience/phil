@@ -2,6 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
 import 'package:phil/l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
 import 'package:phil/l3_data/repositories/stub_workout_set_repository.dart';
+import 'package:phil/l3_data/repositories/stub_personal_record_repository.dart';
+import 'package:phil/l3_data/repositories/stub_exercise_repository.dart';
+import 'package:phil/l2_domain/models/personal_record.dart';
 
 void main() {
   // Initialize Flutter bindings for testing
@@ -187,6 +190,190 @@ void main() {
       expect(allSets.first.id, isNot(equals(firstSet.id)));
       expect(allSets.first.exerciseId, 'exercise_2');
       expect(allSets.first.values, equals({'reps': 15}));
+    });
+
+    group('Personal Record Recalculation', () {
+      late StubPersonalRecordRepository prRepo;
+      late StubExerciseRepository exerciseRepo;
+      late List<dynamic> exercises;
+      late RemoveWorkoutSetUseCase useCaseWithPR;
+      late RecordWorkoutSetUseCase recordUseCaseWithPR;
+
+      setUp(() async {
+        prRepo = StubPersonalRecordRepository();
+        exerciseRepo = StubExerciseRepository();
+        exercises = await exerciseRepo.getAllExercises();
+        useCaseWithPR = RemoveWorkoutSetUseCase(
+          repository,
+          prRepository: prRepo,
+          exerciseRepository: exerciseRepo,
+        );
+        recordUseCaseWithPR = RecordWorkoutSetUseCase(
+          repository,
+          prRepository: prRepo,
+          exerciseRepository: exerciseRepo,
+        );
+      });
+
+      test('should recalculate PRs after deleting a workout set', () async {
+        // Arrange - Get a weighted exercise
+        final exercise = exercises.firstWhere(
+          (e) => e.name.contains('Bench Press') && e.fields.any((f) => f.name == 'weight'),
+        );
+
+        // Record multiple sets for the exercise
+        await recordUseCaseWithPR.execute(
+          exerciseId: exercise.id,
+          values: {'weight': 80, 'reps': 10},
+        );
+        
+        final setToDelete = await recordUseCaseWithPR.execute(
+          exerciseId: exercise.id,
+          values: {'weight': 100, 'reps': 8},
+        );
+
+        await recordUseCaseWithPR.execute(
+          exerciseId: exercise.id,
+          values: {'weight': 90, 'reps': 9},
+        );
+
+        // Simulate PR being saved for the 100kg set
+        final oldPR = PersonalRecord(
+          id: 'pr_1',
+          exerciseId: exercise.id,
+          type: PRType.maxWeight,
+          value: 100,
+          achievedAt: DateTime.now(),
+        );
+        await prRepo.save(oldPR);
+
+        // Act - Delete the set that was the PR
+        await useCaseWithPR.execute(setToDelete.id);
+
+        // Assert - Should recalculate and find new PR (90kg)
+        // Note: This test will fail until RecalculatePRsForExerciseUseCase is called from RemoveWorkoutSetUseCase
+        final currentPR = await prRepo.getCurrentPR(exercise.id, PRType.maxWeight);
+        expect(currentPR, isNotNull);
+        expect(currentPR!.value, 90);
+      });
+
+      test('should update maxWeight PR when deleted set was current PR', () async {
+        // Arrange
+        final exercise = exercises.firstWhere(
+          (e) => e.name.contains('Squat') && e.fields.any((f) => f.name == 'weight'),
+        );
+
+        // Record sets with increasing weights
+        await recordUseCaseWithPR.execute(
+          exerciseId: exercise.id,
+          values: {'weight': 100, 'reps': 5},
+        );
+
+        final prSet = await recordUseCaseWithPR.execute(
+          exerciseId: exercise.id,
+          values: {'weight': 120, 'reps': 5},
+        );
+
+        // Simulate PR
+        final pr = PersonalRecord(
+          id: 'pr_1',
+          exerciseId: exercise.id,
+          type: PRType.maxWeight,
+          value: 120,
+          achievedAt: DateTime.now(),
+        );
+        await prRepo.save(pr);
+
+        // Act - Delete the PR set
+        await useCaseWithPR.execute(prSet.id);
+
+        // Assert - PR should fall back to 100kg
+        final updatedPR = await prRepo.getCurrentPR(exercise.id, PRType.maxWeight);
+        expect(updatedPR, isNotNull);
+        expect(updatedPR!.value, 100);
+        expect(updatedPR.id, isNot(equals(pr.id))); // Should be a new PR record
+      });
+
+      test('should find next best PR value after deletion', () async {
+        // Arrange
+        final exercise = exercises.firstWhere(
+          (e) => e.name.contains('Pull') && !e.fields.any((f) => f.name == 'weight'),
+        );
+
+        // Record multiple sets with different rep counts
+        await recordUseCaseWithPR.execute(
+          exerciseId: exercise.id,
+          values: {'reps': 10},
+        );
+
+        final maxRepsSet = await recordUseCaseWithPR.execute(
+          exerciseId: exercise.id,
+          values: {'reps': 15},
+        );
+
+        await recordUseCaseWithPR.execute(
+          exerciseId: exercise.id,
+          values: {'reps': 12},
+        );
+
+        // Simulate maxReps PR
+        final pr = PersonalRecord(
+          id: 'pr_1',
+          exerciseId: exercise.id,
+          type: PRType.maxReps,
+          value: 15,
+          achievedAt: DateTime.now(),
+        );
+        await prRepo.save(pr);
+
+        // Act - Delete the max reps set
+        await useCaseWithPR.execute(maxRepsSet.id);
+
+        // Assert - Should find next best (12 reps)
+        final updatedPR = await prRepo.getCurrentPR(exercise.id, PRType.maxReps);
+        expect(updatedPR, isNotNull);
+        expect(updatedPR!.value, 12);
+      });
+
+      test('should delete all PRs when last set for exercise is removed', () async {
+        // Arrange
+        final exercise = exercises.firstWhere(
+          (e) => e.name.contains('Deadlift') && e.fields.any((f) => f.name == 'weight'),
+        );
+
+        // Record a single set
+        final onlySet = await recordUseCaseWithPR.execute(
+          exerciseId: exercise.id,
+          values: {'weight': 150, 'reps': 5},
+        );
+
+        // Simulate PRs being created
+        final weightPR = PersonalRecord(
+          id: 'pr_weight',
+          exerciseId: exercise.id,
+          type: PRType.maxWeight,
+          value: 150,
+          achievedAt: DateTime.now(),
+        );
+        final volumePR = PersonalRecord(
+          id: 'pr_volume',
+          exerciseId: exercise.id,
+          type: PRType.maxVolume,
+          value: 750, // 150 * 5
+          achievedAt: DateTime.now(),
+        );
+        await prRepo.save(weightPR);
+        await prRepo.save(volumePR);
+
+        // Act - Delete the only set
+        await useCaseWithPR.execute(onlySet.id);
+
+        // Assert - All PRs should be gone
+        final weightPRAfter = await prRepo.getCurrentPR(exercise.id, PRType.maxWeight);
+        final volumePRAfter = await prRepo.getCurrentPR(exercise.id, PRType.maxVolume);
+        expect(weightPRAfter, isNull);
+        expect(volumePRAfter, isNull);
+      });
     });
   });
 }
