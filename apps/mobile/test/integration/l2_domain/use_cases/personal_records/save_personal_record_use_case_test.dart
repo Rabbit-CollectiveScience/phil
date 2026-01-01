@@ -34,21 +34,25 @@ void main() {
     });
 
     test('generates unique ID for new PR', () async {
-      final pr1 = await useCase.execute(PersonalRecord(
-        id: 'pr_1',
-        exerciseId: 'bench_press',
-        type: PRType.maxWeight,
-        value: 100.0,
-        achievedAt: DateTime(2026, 1, 2),
-      ));
+      final pr1 = await useCase.execute(
+        PersonalRecord(
+          id: 'pr_1',
+          exerciseId: 'bench_press',
+          type: PRType.maxWeight,
+          value: 100.0,
+          achievedAt: DateTime(2026, 1, 2),
+        ),
+      );
 
-      final pr2 = await useCase.execute(PersonalRecord(
-        id: 'pr_2',
-        exerciseId: 'squat',
-        type: PRType.maxWeight,
-        value: 150.0,
-        achievedAt: DateTime(2026, 1, 2),
-      ));
+      final pr2 = await useCase.execute(
+        PersonalRecord(
+          id: 'pr_2',
+          exerciseId: 'squat',
+          type: PRType.maxWeight,
+          value: 150.0,
+          achievedAt: DateTime(2026, 1, 2),
+        ),
+      );
 
       expect(pr1.id, isNot(equals(pr2.id)));
     });

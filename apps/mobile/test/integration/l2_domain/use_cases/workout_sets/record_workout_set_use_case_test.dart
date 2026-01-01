@@ -273,74 +273,93 @@ void main() {
         );
       });
 
-      test('should detect and save new maxWeight PR when weight exceeds current',
-          () async {
-        final exercises = await exerciseRepo.getAllExercises();
-        final benchPress = exercises.firstWhere((e) => e.name.contains('Bench Press'));
+      test(
+        'should detect and save new maxWeight PR when weight exceeds current',
+        () async {
+          final exercises = await exerciseRepo.getAllExercises();
+          final benchPress = exercises.firstWhere(
+            (e) => e.name.contains('Bench Press'),
+          );
 
-        // Save existing PR
-        await prRepo.save(PersonalRecord(
-          id: 'pr_1',
-          exerciseId: benchPress.id,
-          type: PRType.maxWeight,
-          value: 95.0,
-          achievedAt: DateTime(2026, 1, 1),
-        ));
+          // Save existing PR
+          await prRepo.save(
+            PersonalRecord(
+              id: 'pr_1',
+              exerciseId: benchPress.id,
+              type: PRType.maxWeight,
+              value: 95.0,
+              achievedAt: DateTime(2026, 1, 1),
+            ),
+          );
 
-        // Record new set with higher weight
-        final result = await useCaseWithPR.execute(
-          exerciseId: benchPress.id,
-          values: {'weight': 100.0, 'reps': 10},
-        );
+          // Record new set with higher weight
+          final result = await useCaseWithPR.execute(
+            exerciseId: benchPress.id,
+            values: {'weight': 100.0, 'reps': 10},
+          );
 
-        expect(result, isNotNull);
-        
-        // Check if new PR was saved
-        final currentPR = await prRepo.getCurrentPR(benchPress.id, PRType.maxWeight);
-        expect(currentPR, isNotNull);
-        expect(currentPR!.value, equals(100.0));
-      });
+          expect(result, isNotNull);
 
-      test('should detect and save new maxReps PR for bodyweight exercise',
-          () async {
-        final exercises = await exerciseRepo.getAllExercises();
-        final pushups = exercises.firstWhere((e) => e.name.contains('Push') && e.name.contains('Up'));
+          // Check if new PR was saved
+          final currentPR = await prRepo.getCurrentPR(
+            benchPress.id,
+            PRType.maxWeight,
+          );
+          expect(currentPR, isNotNull);
+          expect(currentPR!.value, equals(100.0));
+        },
+      );
 
-        // Record set with reps only (bodyweight)
-        final result = await useCaseWithPR.execute(
-          exerciseId: pushups.id,
-          values: {'reps': 50},
-        );
+      test(
+        'should detect and save new maxReps PR for bodyweight exercise',
+        () async {
+          final exercises = await exerciseRepo.getAllExercises();
+          final pushups = exercises.firstWhere(
+            (e) => e.name.contains('Push') && e.name.contains('Up'),
+          );
 
-        expect(result, isNotNull);
-        
-        // Check if PR was saved
-        final currentPR = await prRepo.getCurrentPR(pushups.id, PRType.maxReps);
-        expect(currentPR, isNotNull);
-        expect(currentPR!.value, equals(50.0));
-      });
+          // Record set with reps only (bodyweight)
+          final result = await useCaseWithPR.execute(
+            exerciseId: pushups.id,
+            values: {'reps': 50},
+          );
 
-      test('should not save PR when value doesn\'t exceed current PR',
-          () async {
+          expect(result, isNotNull);
+
+          // Check if PR was saved
+          final currentPR = await prRepo.getCurrentPR(
+            pushups.id,
+            PRType.maxReps,
+          );
+          expect(currentPR, isNotNull);
+          expect(currentPR!.value, equals(50.0));
+        },
+      );
+
+      test('should not save PR when value doesn\'t exceed current PR', () async {
         final exercises = await exerciseRepo.getAllExercises();
         final squat = exercises.firstWhere((e) => e.name.contains('Squat'));
 
         // Save existing PRs - both weight and volume
-        await prRepo.save(PersonalRecord(
-          id: 'pr_1',
-          exerciseId: squat.id,
-          type: PRType.maxWeight,
-          value: 150.0,
-          achievedAt: DateTime(2026, 1, 1),
-        ));
-        
-        await prRepo.save(PersonalRecord(
-          id: 'pr_2',
-          exerciseId: squat.id,
-          type: PRType.maxVolume,
-          value: 750.0, // 150 * 5
-          achievedAt: DateTime(2026, 1, 1),
-        ));
+        await prRepo.save(
+          PersonalRecord(
+            id: 'pr_1',
+            exerciseId: squat.id,
+            type: PRType.maxWeight,
+            value: 150.0,
+            achievedAt: DateTime(2026, 1, 1),
+          ),
+        );
+
+        await prRepo.save(
+          PersonalRecord(
+            id: 'pr_2',
+            exerciseId: squat.id,
+            type: PRType.maxVolume,
+            value: 750.0, // 150 * 5
+            achievedAt: DateTime(2026, 1, 1),
+          ),
+        );
 
         final prsBefore = await prRepo.getPRsByExercise(squat.id);
         final countBefore = prsBefore.length;
@@ -357,7 +376,9 @@ void main() {
 
       test('should save first PR when no existing PR for exercise', () async {
         final exercises = await exerciseRepo.getAllExercises();
-        final deadlift = exercises.firstWhere((e) => e.name.contains('Deadlift'));
+        final deadlift = exercises.firstWhere(
+          (e) => e.name.contains('Deadlift'),
+        );
 
         // Record first set ever
         final result = await useCaseWithPR.execute(
@@ -366,9 +387,12 @@ void main() {
         );
 
         expect(result, isNotNull);
-        
+
         // Check if first PR was saved
-        final currentPR = await prRepo.getCurrentPR(deadlift.id, PRType.maxWeight);
+        final currentPR = await prRepo.getCurrentPR(
+          deadlift.id,
+          PRType.maxWeight,
+        );
         expect(currentPR, isNotNull);
         expect(currentPR!.value, equals(180.0));
       });

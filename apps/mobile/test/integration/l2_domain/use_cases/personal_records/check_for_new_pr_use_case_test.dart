@@ -31,13 +31,15 @@ void main() {
     });
 
     test('returns isNewPR=true when new weight exceeds current PR', () async {
-      await prRepo.save(PersonalRecord(
-        id: 'pr_1',
-        exerciseId: 'bench_press',
-        type: PRType.maxWeight,
-        value: 95.0,
-        achievedAt: DateTime(2026, 1, 1),
-      ));
+      await prRepo.save(
+        PersonalRecord(
+          id: 'pr_1',
+          exerciseId: 'bench_press',
+          type: PRType.maxWeight,
+          value: 95.0,
+          achievedAt: DateTime(2026, 1, 1),
+        ),
+      );
 
       final results = await useCase.execute(
         exerciseId: 'bench_press',
@@ -52,13 +54,15 @@ void main() {
     });
 
     test('returns isNewPR=false when new weight equals current PR', () async {
-      await prRepo.save(PersonalRecord(
-        id: 'pr_1',
-        exerciseId: 'bench_press',
-        type: PRType.maxWeight,
-        value: 100.0,
-        achievedAt: DateTime(2026, 1, 1),
-      ));
+      await prRepo.save(
+        PersonalRecord(
+          id: 'pr_1',
+          exerciseId: 'bench_press',
+          type: PRType.maxWeight,
+          value: 100.0,
+          achievedAt: DateTime(2026, 1, 1),
+        ),
+      );
 
       final results = await useCase.execute(
         exerciseId: 'bench_press',
@@ -66,28 +70,37 @@ void main() {
         hasWeight: true,
       );
 
-      final weightPRs = results.where((r) => r.prType == PRType.maxWeight && r.isNewPR);
-      expect(weightPRs, isEmpty);
-    });
-
-    test('returns isNewPR=false when new weight is less than current PR', () async {
-      await prRepo.save(PersonalRecord(
-        id: 'pr_1',
-        exerciseId: 'bench_press',
-        type: PRType.maxWeight,
-        value: 100.0,
-        achievedAt: DateTime(2026, 1, 1),
-      ));
-
-      final results = await useCase.execute(
-        exerciseId: 'bench_press',
-        values: {'weight': 95.0, 'reps': 10},
-        hasWeight: true,
+      final weightPRs = results.where(
+        (r) => r.prType == PRType.maxWeight && r.isNewPR,
       );
-
-      final weightPRs = results.where((r) => r.prType == PRType.maxWeight && r.isNewPR);
       expect(weightPRs, isEmpty);
     });
+
+    test(
+      'returns isNewPR=false when new weight is less than current PR',
+      () async {
+        await prRepo.save(
+          PersonalRecord(
+            id: 'pr_1',
+            exerciseId: 'bench_press',
+            type: PRType.maxWeight,
+            value: 100.0,
+            achievedAt: DateTime(2026, 1, 1),
+          ),
+        );
+
+        final results = await useCase.execute(
+          exerciseId: 'bench_press',
+          values: {'weight': 95.0, 'reps': 10},
+          hasWeight: true,
+        );
+
+        final weightPRs = results.where(
+          (r) => r.prType == PRType.maxWeight && r.isNewPR,
+        );
+        expect(weightPRs, isEmpty);
+      },
+    );
 
     test('detects new maxReps PR for bodyweight exercises', () async {
       final results = await useCase.execute(
@@ -110,8 +123,10 @@ void main() {
       );
 
       expect(results.where((r) => r.isNewPR).length, greaterThanOrEqualTo(1));
-      
-      final weightPR = results.where((r) => r.prType == PRType.maxWeight && r.isNewPR);
+
+      final weightPR = results.where(
+        (r) => r.prType == PRType.maxWeight && r.isNewPR,
+      );
       expect(weightPR, isNotEmpty);
     });
 

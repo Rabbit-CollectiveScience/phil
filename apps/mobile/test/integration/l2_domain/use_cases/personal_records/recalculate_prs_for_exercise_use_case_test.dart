@@ -20,7 +20,11 @@ void main() {
     prRepo = StubPersonalRecordRepository();
     workoutSetRepo = StubWorkoutSetRepository();
     exerciseRepo = StubExerciseRepository();
-    useCase = RecalculatePRsForExerciseUseCase(prRepo, workoutSetRepo, exerciseRepo);
+    useCase = RecalculatePRsForExerciseUseCase(
+      prRepo,
+      workoutSetRepo,
+      exerciseRepo,
+    );
     recordUseCase = RecordWorkoutSetUseCase(workoutSetRepo);
   });
 
@@ -31,7 +35,9 @@ void main() {
   group('RecalculatePRsForExerciseUseCase', () {
     test('recalculates maxWeight PR from all historical sets', () async {
       final exercises = await exerciseRepo.getAllExercises();
-      final benchPress = exercises.firstWhere((e) => e.name.contains('Bench Press'));
+      final benchPress = exercises.firstWhere(
+        (e) => e.name.contains('Bench Press'),
+      );
 
       await recordUseCase.execute(
         exerciseId: benchPress.id,
@@ -51,7 +57,10 @@ void main() {
 
       await useCase.execute(benchPress.id);
 
-      final weightPR = await prRepo.getCurrentPR(benchPress.id, PRType.maxWeight);
+      final weightPR = await prRepo.getCurrentPR(
+        benchPress.id,
+        PRType.maxWeight,
+      );
       expect(weightPR, isNotNull);
       expect(weightPR!.value, equals(100.0));
       expect(weightPR.exerciseId, equals(benchPress.id));
@@ -59,7 +68,9 @@ void main() {
 
     test('recalculates maxReps PR from all historical sets', () async {
       final exercises = await exerciseRepo.getAllExercises();
-      final pushups = exercises.firstWhere((e) => e.name.contains('Push') && e.name.contains('Up'));
+      final pushups = exercises.firstWhere(
+        (e) => e.name.contains('Push') && e.name.contains('Up'),
+      );
 
       await recordUseCase.execute(
         exerciseId: pushups.id,
@@ -89,13 +100,15 @@ void main() {
       final squat = exercises.firstWhere((e) => e.name.contains('Squat'));
 
       // Save old PR
-      await prRepo.save(PersonalRecord(
-        id: 'old_pr',
-        exerciseId: squat.id,
-        type: PRType.maxWeight,
-        value: 120.0,
-        achievedAt: DateTime(2025, 12, 1),
-      ));
+      await prRepo.save(
+        PersonalRecord(
+          id: 'old_pr',
+          exerciseId: squat.id,
+          type: PRType.maxWeight,
+          value: 120.0,
+          achievedAt: DateTime(2025, 12, 1),
+        ),
+      );
 
       // Record new sets
       await recordUseCase.execute(
@@ -146,7 +159,9 @@ void main() {
 
     test('handles multiple PR types simultaneously', () async {
       final exercises = await exerciseRepo.getAllExercises();
-      final benchPress = exercises.firstWhere((e) => e.name.contains('Bench Press'));
+      final benchPress = exercises.firstWhere(
+        (e) => e.name.contains('Bench Press'),
+      );
 
       await recordUseCase.execute(
         exerciseId: benchPress.id,
@@ -165,7 +180,9 @@ void main() {
 
     test('preserves achievedAt date from original set', () async {
       final exercises = await exerciseRepo.getAllExercises();
-      final benchPress = exercises.firstWhere((e) => e.name.contains('Bench Press'));
+      final benchPress = exercises.firstWhere(
+        (e) => e.name.contains('Bench Press'),
+      );
       final achievedDate = DateTime(2026, 1, 1, 10, 30);
 
       await recordUseCase.execute(
@@ -176,7 +193,10 @@ void main() {
 
       await useCase.execute(benchPress.id);
 
-      final weightPR = await prRepo.getCurrentPR(benchPress.id, PRType.maxWeight);
+      final weightPR = await prRepo.getCurrentPR(
+        benchPress.id,
+        PRType.maxWeight,
+      );
       expect(weightPR, isNotNull);
       expect(weightPR!.achievedAt, equals(achievedDate));
     });

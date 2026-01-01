@@ -14,9 +14,9 @@ class StubPersonalRecordRepository implements PersonalRecordRepository {
 
   @override
   Future<PersonalRecord?> getCurrentPR(String exerciseId, PRType type) async {
-    final prsForExercise = _prs.where(
-      (pr) => pr.exerciseId == exerciseId && pr.type == type,
-    ).toList();
+    final prsForExercise = _prs
+        .where((pr) => pr.exerciseId == exerciseId && pr.type == type)
+        .toList();
 
     if (prsForExercise.isEmpty) return null;
 

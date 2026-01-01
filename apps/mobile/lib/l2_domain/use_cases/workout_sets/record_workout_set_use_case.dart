@@ -27,8 +27,8 @@ class RecordWorkoutSetUseCase {
     this._repository, {
     PersonalRecordRepository? prRepository,
     ExerciseRepository? exerciseRepository,
-  })  : _prRepository = prRepository,
-        _exerciseRepository = exerciseRepository;
+  }) : _prRepository = prRepository,
+       _exerciseRepository = exerciseRepository;
 
   Future<WorkoutSet> execute({
     required String exerciseId,

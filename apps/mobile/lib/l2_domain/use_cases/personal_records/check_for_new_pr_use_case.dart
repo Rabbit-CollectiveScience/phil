@@ -32,48 +32,63 @@ class CheckForNewPRUseCase {
     }
 
     final results = <PRCheckResult>[];
-    
+
     // Convert to double, handling both int and double types
     final weight = (values['weight'] as num?)?.toDouble();
     final reps = (values['reps'] as num?)?.toDouble();
 
     // Check maxWeight PR (for exercises with weight)
     if (hasWeight && weight != null && weight > 0) {
-      final currentPR = await _repository.getCurrentPR(exerciseId, PRType.maxWeight);
+      final currentPR = await _repository.getCurrentPR(
+        exerciseId,
+        PRType.maxWeight,
+      );
       if (currentPR == null || weight > currentPR.value) {
-        results.add(PRCheckResult(
-          isNewPR: true,
-          prType: PRType.maxWeight,
-          oldValue: currentPR?.value,
-          newValue: weight,
-        ));
+        results.add(
+          PRCheckResult(
+            isNewPR: true,
+            prType: PRType.maxWeight,
+            oldValue: currentPR?.value,
+            newValue: weight,
+          ),
+        );
       }
     }
 
     // Check maxReps PR (for bodyweight exercises)
     if (!hasWeight && reps != null && reps > 0) {
-      final currentPR = await _repository.getCurrentPR(exerciseId, PRType.maxReps);
+      final currentPR = await _repository.getCurrentPR(
+        exerciseId,
+        PRType.maxReps,
+      );
       if (currentPR == null || reps > currentPR.value) {
-        results.add(PRCheckResult(
-          isNewPR: true,
-          prType: PRType.maxReps,
-          oldValue: currentPR?.value,
-          newValue: reps,
-        ));
+        results.add(
+          PRCheckResult(
+            isNewPR: true,
+            prType: PRType.maxReps,
+            oldValue: currentPR?.value,
+            newValue: reps,
+          ),
+        );
       }
     }
 
     // Check maxVolume PR (weight * reps)
     if (hasWeight && weight != null && weight > 0 && reps != null && reps > 0) {
       final volume = weight * reps;
-      final currentPR = await _repository.getCurrentPR(exerciseId, PRType.maxVolume);
+      final currentPR = await _repository.getCurrentPR(
+        exerciseId,
+        PRType.maxVolume,
+      );
       if (currentPR == null || volume > currentPR.value) {
-        results.add(PRCheckResult(
-          isNewPR: true,
-          prType: PRType.maxVolume,
-          oldValue: currentPR?.value,
-          newValue: volume,
-        ));
+        results.add(
+          PRCheckResult(
+            isNewPR: true,
+            prType: PRType.maxVolume,
+            oldValue: currentPR?.value,
+            newValue: volume,
+          ),
+        );
       }
     }
 

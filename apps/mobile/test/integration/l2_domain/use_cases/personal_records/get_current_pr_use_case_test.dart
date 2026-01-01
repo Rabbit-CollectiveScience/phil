@@ -77,27 +77,33 @@ void main() {
     });
 
     test('returns the highest value when multiple PRs exist', () async {
-      await prRepo.save(PersonalRecord(
-        id: 'pr_1',
-        exerciseId: 'bench_press',
-        type: PRType.maxWeight,
-        value: 95.0,
-        achievedAt: DateTime(2025, 12, 1),
-      ));
-      await prRepo.save(PersonalRecord(
-        id: 'pr_2',
-        exerciseId: 'bench_press',
-        type: PRType.maxWeight,
-        value: 100.0,
-        achievedAt: DateTime(2026, 1, 1),
-      ));
-      await prRepo.save(PersonalRecord(
-        id: 'pr_3',
-        exerciseId: 'bench_press',
-        type: PRType.maxWeight,
-        value: 97.5,
-        achievedAt: DateTime(2025, 11, 1),
-      ));
+      await prRepo.save(
+        PersonalRecord(
+          id: 'pr_1',
+          exerciseId: 'bench_press',
+          type: PRType.maxWeight,
+          value: 95.0,
+          achievedAt: DateTime(2025, 12, 1),
+        ),
+      );
+      await prRepo.save(
+        PersonalRecord(
+          id: 'pr_2',
+          exerciseId: 'bench_press',
+          type: PRType.maxWeight,
+          value: 100.0,
+          achievedAt: DateTime(2026, 1, 1),
+        ),
+      );
+      await prRepo.save(
+        PersonalRecord(
+          id: 'pr_3',
+          exerciseId: 'bench_press',
+          type: PRType.maxWeight,
+          value: 97.5,
+          achievedAt: DateTime(2025, 11, 1),
+        ),
+      );
 
       final result = await useCase.execute('bench_press', PRType.maxWeight);
 
@@ -107,20 +113,24 @@ void main() {
     });
 
     test('returns most recent PR when values are equal', () async {
-      await prRepo.save(PersonalRecord(
-        id: 'pr_1',
-        exerciseId: 'deadlift',
-        type: PRType.maxWeight,
-        value: 150.0,
-        achievedAt: DateTime(2025, 12, 1),
-      ));
-      await prRepo.save(PersonalRecord(
-        id: 'pr_2',
-        exerciseId: 'deadlift',
-        type: PRType.maxWeight,
-        value: 150.0,
-        achievedAt: DateTime(2026, 1, 2),
-      ));
+      await prRepo.save(
+        PersonalRecord(
+          id: 'pr_1',
+          exerciseId: 'deadlift',
+          type: PRType.maxWeight,
+          value: 150.0,
+          achievedAt: DateTime(2025, 12, 1),
+        ),
+      );
+      await prRepo.save(
+        PersonalRecord(
+          id: 'pr_2',
+          exerciseId: 'deadlift',
+          type: PRType.maxWeight,
+          value: 150.0,
+          achievedAt: DateTime(2026, 1, 2),
+        ),
+      );
 
       final result = await useCase.execute('deadlift', PRType.maxWeight);
 

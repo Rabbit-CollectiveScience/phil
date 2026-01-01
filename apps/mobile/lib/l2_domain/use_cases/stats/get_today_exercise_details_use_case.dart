@@ -81,13 +81,17 @@ class GetTodayExerciseDetailsUseCase {
       bool isPRToday = false;
       if (_prRepository != null) {
         final getPRUseCase = GetCurrentPRUseCase(_prRepository!);
-        final currentPR = await getPRUseCase.execute(exerciseId, PRType.maxWeight);
+        final currentPR = await getPRUseCase.execute(
+          exerciseId,
+          PRType.maxWeight,
+        );
         if (currentPR != null) {
           prMaxWeight = currentPR.value;
           // Check if PR was achieved today
           final prDate = currentPR.achievedAt;
           final now = DateTime.now();
-          isPRToday = prDate.year == now.year &&
+          isPRToday =
+              prDate.year == now.year &&
               prDate.month == now.month &&
               prDate.day == now.day;
         }

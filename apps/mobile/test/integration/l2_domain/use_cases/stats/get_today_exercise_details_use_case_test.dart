@@ -166,12 +166,12 @@ void main() {
 
       setUp(() async {
         prRepo = StubPersonalRecordRepository();
-        
+
         final getWorkoutSetsByDateUseCase = GetWorkoutSetsByDateUseCase(
           workoutSetRepo,
           exerciseRepo,
         );
-        
+
         useCaseWithPR = GetTodayExerciseDetailsUseCase(
           getWorkoutSetsByDateUseCase,
           prRepository: prRepo,
@@ -213,9 +213,7 @@ void main() {
       test('should mark isPRToday=true when PR achieved today', () async {
         // Arrange
         final exercises = await exerciseRepo.getAllExercises();
-        final squat = exercises.firstWhere(
-          (e) => e.name.contains('Squat'),
-        );
+        final squat = exercises.firstWhere((e) => e.name.contains('Squat'));
 
         // Record a set today
         await recordUseCase.execute(
@@ -242,61 +240,65 @@ void main() {
         expect(result[0]['isPRToday'], isTrue);
       });
 
-      test('should mark isPRToday=false when PR is from previous date', () async {
-        // Arrange
-        final exercises = await exerciseRepo.getAllExercises();
-        final deadlift = exercises.firstWhere(
-          (e) => e.name.contains('Deadlift'),
-        );
+      test(
+        'should mark isPRToday=false when PR is from previous date',
+        () async {
+          // Arrange
+          final exercises = await exerciseRepo.getAllExercises();
+          final deadlift = exercises.firstWhere(
+            (e) => e.name.contains('Deadlift'),
+          );
 
-        // Record a set today
-        await recordUseCase.execute(
-          exerciseId: deadlift.id,
-          values: {'weight': 180, 'reps': 3},
-        );
+          // Record a set today
+          await recordUseCase.execute(
+            exerciseId: deadlift.id,
+            values: {'weight': 180, 'reps': 3},
+          );
 
-        // Simulate old PR
-        final oldDate = DateTime(2024, 1, 1);
-        final pr = PersonalRecord(
-          id: 'pr_old',
-          exerciseId: deadlift.id,
-          type: PRType.maxWeight,
-          value: 200,
-          achievedAt: oldDate,
-        );
-        await prRepo.save(pr);
+          // Simulate old PR
+          final oldDate = DateTime(2024, 1, 1);
+          final pr = PersonalRecord(
+            id: 'pr_old',
+            exerciseId: deadlift.id,
+            type: PRType.maxWeight,
+            value: 200,
+            achievedAt: oldDate,
+          );
+          await prRepo.save(pr);
 
-        // Act
-        final result = await useCaseWithPR.execute();
+          // Act
+          final result = await useCaseWithPR.execute();
 
-        // Assert
-        expect(result.length, equals(1));
-        expect(result[0]['prMaxWeight'], equals(200.0));
-        expect(result[0]['isPRToday'], isFalse);
-      });
+          // Assert
+          expect(result.length, equals(1));
+          expect(result[0]['prMaxWeight'], equals(200.0));
+          expect(result[0]['isPRToday'], isFalse);
+        },
+      );
 
-      test('should return null prMaxWeight when no PR exists for exercise', () async {
-        // Arrange
-        final exercises = await exerciseRepo.getAllExercises();
-        final pullUp = exercises.firstWhere(
-          (e) => e.name.contains('Pull'),
-        );
+      test(
+        'should return null prMaxWeight when no PR exists for exercise',
+        () async {
+          // Arrange
+          final exercises = await exerciseRepo.getAllExercises();
+          final pullUp = exercises.firstWhere((e) => e.name.contains('Pull'));
 
-        // Record a set today (no existing PR)
-        await recordUseCase.execute(
-          exerciseId: pullUp.id,
-          values: {'reps': 10},
-        );
+          // Record a set today (no existing PR)
+          await recordUseCase.execute(
+            exerciseId: pullUp.id,
+            values: {'reps': 10},
+          );
 
-        // Act
-        final result = await useCaseWithPR.execute();
+          // Act
+          final result = await useCaseWithPR.execute();
 
-        // Assert
-        expect(result.length, equals(1));
-        expect(result[0].containsKey('prMaxWeight'), isTrue);
-        expect(result[0]['prMaxWeight'], isNull);
-        expect(result[0]['isPRToday'], isFalse);
-      });
+          // Assert
+          expect(result.length, equals(1));
+          expect(result[0].containsKey('prMaxWeight'), isTrue);
+          expect(result[0]['prMaxWeight'], isNull);
+          expect(result[0]['isPRToday'], isFalse);
+        },
+      );
     });
   });
 }

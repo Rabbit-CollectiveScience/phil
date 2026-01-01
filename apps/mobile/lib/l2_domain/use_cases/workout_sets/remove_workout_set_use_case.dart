@@ -20,8 +20,8 @@ class RemoveWorkoutSetUseCase {
     this._repository, {
     PersonalRecordRepository? prRepository,
     ExerciseRepository? exerciseRepository,
-  })  : _prRepository = prRepository,
-        _exerciseRepository = exerciseRepository;
+  }) : _prRepository = prRepository,
+       _exerciseRepository = exerciseRepository;
 
   Future<void> execute(String workoutSetId) async {
     // Get the set before deleting to know which exercise it was for
