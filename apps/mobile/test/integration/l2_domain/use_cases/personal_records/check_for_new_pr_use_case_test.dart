@@ -1,4 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:phil/l2_domain/models/exercise.dart';
+import 'package:phil/l2_domain/models/exercise_field.dart';
+import 'package:phil/l2_domain/models/field_type_enum.dart';
 import 'package:phil/l2_domain/models/personal_record.dart';
 import 'package:phil/l2_domain/use_cases/personal_records/check_for_new_pr_use_case.dart';
 import 'package:phil/l3_data/repositories/personal_record_repository.dart';
@@ -17,10 +20,31 @@ void main() {
 
   group('CheckForNewPRUseCase', () {
     test('returns isNewPR=true when no existing PR', () async {
+      final exercise = Exercise(
+        id: 'bench_press',
+        name: 'Bench Press',
+        description: 'Barbell bench press',
+        categories: ['strength', 'chest'],
+        fields: [
+          ExerciseField(
+            name: 'weight',
+            label: 'Weight',
+            unit: 'kg',
+            type: FieldTypeEnum.number,
+          ),
+          ExerciseField(
+            name: 'reps',
+            label: 'Reps',
+            unit: 'reps',
+            type: FieldTypeEnum.number,
+          ),
+        ],
+      );
+
       final results = await useCase.execute(
         exerciseId: 'bench_press',
+        exercise: exercise,
         values: {'weight': 100.0, 'reps': 10},
-        hasWeight: true,
       );
 
       expect(results.length, greaterThan(0));
@@ -31,6 +55,27 @@ void main() {
     });
 
     test('returns isNewPR=true when new weight exceeds current PR', () async {
+      final exercise = Exercise(
+        id: 'bench_press',
+        name: 'Bench Press',
+        description: 'Barbell bench press',
+        categories: ['strength', 'chest'],
+        fields: [
+          ExerciseField(
+            name: 'weight',
+            label: 'Weight',
+            unit: 'kg',
+            type: FieldTypeEnum.number,
+          ),
+          ExerciseField(
+            name: 'reps',
+            label: 'Reps',
+            unit: 'reps',
+            type: FieldTypeEnum.number,
+          ),
+        ],
+      );
+
       await prRepo.save(
         PersonalRecord(
           id: 'pr_1',
@@ -43,8 +88,8 @@ void main() {
 
       final results = await useCase.execute(
         exerciseId: 'bench_press',
+        exercise: exercise,
         values: {'weight': 100.0, 'reps': 10},
-        hasWeight: true,
       );
 
       final weightPR = results.firstWhere((r) => r.prType == 'maxWeight');
@@ -54,6 +99,27 @@ void main() {
     });
 
     test('returns isNewPR=false when new weight equals current PR', () async {
+      final exercise = Exercise(
+        id: 'bench_press',
+        name: 'Bench Press',
+        description: 'Barbell bench press',
+        categories: ['strength', 'chest'],
+        fields: [
+          ExerciseField(
+            name: 'weight',
+            label: 'Weight',
+            unit: 'kg',
+            type: FieldTypeEnum.number,
+          ),
+          ExerciseField(
+            name: 'reps',
+            label: 'Reps',
+            unit: 'reps',
+            type: FieldTypeEnum.number,
+          ),
+        ],
+      );
+
       await prRepo.save(
         PersonalRecord(
           id: 'pr_1',
@@ -66,8 +132,8 @@ void main() {
 
       final results = await useCase.execute(
         exerciseId: 'bench_press',
+        exercise: exercise,
         values: {'weight': 100.0, 'reps': 10},
-        hasWeight: true,
       );
 
       final weightPRs = results.where(
@@ -79,6 +145,27 @@ void main() {
     test(
       'returns isNewPR=false when new weight is less than current PR',
       () async {
+        final exercise = Exercise(
+          id: 'bench_press',
+          name: 'Bench Press',
+          description: 'Barbell bench press',
+          categories: ['strength', 'chest'],
+          fields: [
+            ExerciseField(
+              name: 'weight',
+              label: 'Weight',
+              unit: 'kg',
+              type: FieldTypeEnum.number,
+            ),
+            ExerciseField(
+              name: 'reps',
+              label: 'Reps',
+              unit: 'reps',
+              type: FieldTypeEnum.number,
+            ),
+          ],
+        );
+
         await prRepo.save(
           PersonalRecord(
             id: 'pr_1',
@@ -91,8 +178,8 @@ void main() {
 
         final results = await useCase.execute(
           exerciseId: 'bench_press',
+          exercise: exercise,
           values: {'weight': 95.0, 'reps': 10},
-          hasWeight: true,
         );
 
         final weightPRs = results.where(
@@ -103,10 +190,25 @@ void main() {
     );
 
     test('detects new maxReps PR for bodyweight exercises', () async {
+      final exercise = Exercise(
+        id: 'push_ups',
+        name: 'Push-ups',
+        description: 'Standard push-ups',
+        categories: ['strength', 'chest'],
+        fields: [
+          ExerciseField(
+            name: 'reps',
+            label: 'Reps',
+            unit: 'reps',
+            type: FieldTypeEnum.number,
+          ),
+        ],
+      );
+
       final results = await useCase.execute(
         exerciseId: 'push_ups',
+        exercise: exercise,
         values: {'reps': 50},
-        hasWeight: false,
       );
 
       expect(results.length, greaterThan(0));
@@ -116,10 +218,31 @@ void main() {
     });
 
     test('detects multiple PRs in one set (weight + volume)', () async {
+      final exercise = Exercise(
+        id: 'squat',
+        name: 'Squat',
+        description: 'Barbell squat',
+        categories: ['strength', 'legs'],
+        fields: [
+          ExerciseField(
+            name: 'weight',
+            label: 'Weight',
+            unit: 'kg',
+            type: FieldTypeEnum.number,
+          ),
+          ExerciseField(
+            name: 'reps',
+            label: 'Reps',
+            unit: 'reps',
+            type: FieldTypeEnum.number,
+          ),
+        ],
+      );
+
       final results = await useCase.execute(
         exerciseId: 'squat',
+        exercise: exercise,
         values: {'weight': 150.0, 'reps': 10},
-        hasWeight: true,
       );
 
       expect(results.where((r) => r.isNewPR).length, greaterThanOrEqualTo(1));
@@ -131,17 +254,38 @@ void main() {
     });
 
     test('returns empty list when values are null/empty', () async {
+      final exercise = Exercise(
+        id: 'bench_press',
+        name: 'Bench Press',
+        description: 'Barbell bench press',
+        categories: ['strength', 'chest'],
+        fields: [
+          ExerciseField(
+            name: 'weight',
+            label: 'Weight',
+            unit: 'kg',
+            type: FieldTypeEnum.number,
+          ),
+          ExerciseField(
+            name: 'reps',
+            label: 'Reps',
+            unit: 'reps',
+            type: FieldTypeEnum.number,
+          ),
+        ],
+      );
+
       final results = await useCase.execute(
         exerciseId: 'bench_press',
+        exercise: exercise,
         values: null,
-        hasWeight: true,
       );
       expect(results, isEmpty);
 
       final results2 = await useCase.execute(
         exerciseId: 'bench_press',
+        exercise: exercise,
         values: {},
-        hasWeight: true,
       );
       expect(results2, isEmpty);
     });

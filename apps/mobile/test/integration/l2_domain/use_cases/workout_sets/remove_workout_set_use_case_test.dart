@@ -254,10 +254,7 @@ void main() {
 
         // Assert - Should recalculate and find new PR (90kg)
         // Note: This test will fail until RecalculatePRsForExerciseUseCase is called from RemoveWorkoutSetUseCase
-        final currentPR = await prRepo.getCurrentPR(
-          exercise.id,
-          'maxWeight',
-        );
+        final currentPR = await prRepo.getCurrentPR(exercise.id, 'maxWeight');
         expect(currentPR, isNotNull);
         expect(currentPR!.value, 90);
       });
@@ -297,10 +294,7 @@ void main() {
           await useCaseWithPR.execute(prSet.id);
 
           // Assert - PR should fall back to 100kg
-          final updatedPR = await prRepo.getCurrentPR(
-            exercise.id,
-            'maxWeight',
-          );
+          final updatedPR = await prRepo.getCurrentPR(exercise.id, 'maxWeight');
           expect(updatedPR, isNotNull);
           expect(updatedPR!.value, 100);
           expect(
@@ -348,10 +342,7 @@ void main() {
         await useCaseWithPR.execute(maxRepsSet.id);
 
         // Assert - Should find next best (12 reps)
-        final updatedPR = await prRepo.getCurrentPR(
-          exercise.id,
-          'maxReps',
-        );
+        final updatedPR = await prRepo.getCurrentPR(exercise.id, 'maxReps');
         expect(updatedPR, isNotNull);
         expect(updatedPR!.value, 12);
       });

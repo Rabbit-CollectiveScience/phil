@@ -62,18 +62,15 @@ class RecordWorkoutSetUseCase {
     if (_prRepository == null || _exerciseRepository == null) return;
 
     try {
-      // Get exercise info to determine if it has weight
+      // Get exercise info for dynamic PR checking
       final exercise = await _exerciseRepository!.getExerciseById(exerciseId);
 
-      // Check if exercise has a weight field
-      final hasWeight = exercise.fields.any((field) => field.name == 'weight');
-
-      // Check for new PRs
+      // Check for new PRs using dynamic field-based logic
       final checkUseCase = CheckForNewPRUseCase(_prRepository!);
       final prCheckResults = await checkUseCase.execute(
         exerciseId: exerciseId,
+        exercise: exercise,
         values: values,
-        hasWeight: hasWeight,
       );
 
       // Save new PRs

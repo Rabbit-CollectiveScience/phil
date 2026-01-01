@@ -57,10 +57,7 @@ void main() {
 
       await useCase.execute(benchPress.id);
 
-      final weightPR = await prRepo.getCurrentPR(
-        benchPress.id,
-        'maxWeight',
-      );
+      final weightPR = await prRepo.getCurrentPR(benchPress.id, 'maxWeight');
       expect(weightPR, isNotNull);
       expect(weightPR!.value, equals(100.0));
       expect(weightPR.exerciseId, equals(benchPress.id));
@@ -193,10 +190,7 @@ void main() {
 
       await useCase.execute(benchPress.id);
 
-      final weightPR = await prRepo.getCurrentPR(
-        benchPress.id,
-        'maxWeight',
-      );
+      final weightPR = await prRepo.getCurrentPR(benchPress.id, 'maxWeight');
       expect(weightPR, isNotNull);
       expect(weightPR!.achievedAt, equals(achievedDate));
     });

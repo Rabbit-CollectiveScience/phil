@@ -327,10 +327,7 @@ void main() {
           expect(result, isNotNull);
 
           // Check if PR was saved
-          final currentPR = await prRepo.getCurrentPR(
-            pushups.id,
-            'maxReps',
-          );
+          final currentPR = await prRepo.getCurrentPR(pushups.id, 'maxReps');
           expect(currentPR, isNotNull);
           expect(currentPR!.value, equals(50.0));
         },
@@ -340,7 +337,7 @@ void main() {
         final exercises = await exerciseRepo.getAllExercises();
         final squat = exercises.firstWhere((e) => e.name.contains('Squat'));
 
-        // Save existing PRs - both weight and volume
+        // Save existing PRs - weight, reps, and volume
         await prRepo.save(
           PersonalRecord(
             id: 'pr_1',
@@ -355,6 +352,16 @@ void main() {
           PersonalRecord(
             id: 'pr_2',
             exerciseId: squat.id,
+            type: 'maxReps',
+            value: 10.0, // Higher than the 5 we'll test
+            achievedAt: DateTime(2026, 1, 1),
+          ),
+        );
+
+        await prRepo.save(
+          PersonalRecord(
+            id: 'pr_3',
+            exerciseId: squat.id,
             type: 'maxVolume',
             value: 750.0, // 150 * 5
             achievedAt: DateTime(2026, 1, 1),
@@ -364,7 +371,7 @@ void main() {
         final prsBefore = await prRepo.getPRsByExercise(squat.id);
         final countBefore = prsBefore.length;
 
-        // Record set with lower weight and same reps - neither weight (140 < 150) nor volume (700 < 750) is a PR
+        // Record set with lower weight and same reps - neither weight (140 < 150) nor reps (5 < 10) nor volume (700 < 750) is a PR
         await useCaseWithPR.execute(
           exerciseId: squat.id,
           values: {'weight': 140.0, 'reps': 5},
@@ -389,10 +396,7 @@ void main() {
         expect(result, isNotNull);
 
         // Check if first PR was saved
-        final currentPR = await prRepo.getCurrentPR(
-          deadlift.id,
-          'maxWeight',
-        );
+        final currentPR = await prRepo.getCurrentPR(deadlift.id, 'maxWeight');
         expect(currentPR, isNotNull);
         expect(currentPR!.value, equals(180.0));
       });

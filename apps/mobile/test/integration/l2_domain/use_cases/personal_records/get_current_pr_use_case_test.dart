@@ -17,10 +17,7 @@ void main() {
 
   group('GetCurrentPRUseCase', () {
     test('returns null when no PR exists for exercise', () async {
-      final result = await useCase.execute(
-        'nonexistent_exercise',
-        'maxWeight',
-      );
+      final result = await useCase.execute('nonexistent_exercise', 'maxWeight');
 
       expect(result, isNull);
     });

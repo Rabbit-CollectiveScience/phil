@@ -81,10 +81,7 @@ class GetTodayExerciseDetailsUseCase {
       bool isPRToday = false;
       if (_prRepository != null) {
         final getPRUseCase = GetCurrentPRUseCase(_prRepository!);
-        final currentPR = await getPRUseCase.execute(
-          exerciseId,
-          'maxWeight',
-        );
+        final currentPR = await getPRUseCase.execute(exerciseId, 'maxWeight');
         if (currentPR != null) {
           prMaxWeight = currentPR.value;
           // Check if PR was achieved today
