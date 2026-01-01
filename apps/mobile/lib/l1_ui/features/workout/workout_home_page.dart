@@ -651,17 +651,20 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                       right: _iconPadding,
                       child: DashboardIconButton(
                         size: _iconSize,
-                        onTap: () {
+                        onTap: () async {
                           // Navigate to PR view if no sets today, TODAY view if has sets
                           final targetSection = _visualCounterValue == 0
                               ? 0
                               : 1;
-                          Navigator.of(context).push(
+                          await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) =>
                                   StatsPage(initialSection: targetSection),
                             ),
                           );
+                          
+                          // User returned - reload counter from database
+                          await _loadTodayCount();
                         },
                       ),
                     ),
