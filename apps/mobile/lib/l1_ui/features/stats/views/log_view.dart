@@ -283,7 +283,7 @@ class _LogViewState extends State<LogView> {
   }
 
   String _formatSetValues(Exercise? exercise, Map<String, dynamic>? values) {
-    if (exercise == null || values == null || values.isEmpty) {
+    if (exercise == null) {
       return 'No data';
     }
 
@@ -291,12 +291,13 @@ class _LogViewState extends State<LogView> {
     final parts = <String>[];
 
     for (final field in exercise.fields) {
-      if (values.containsKey(field.name)) {
-        final value = values[field.name];
-        final unit = field.unit;
+      final value = values?[field.name];
+      final unit = field.unit;
 
-        // Format based on field type
-        String formattedValue;
+      // Format based on field type, show placeholder if no value
+      String formattedValue;
+      if (value != null) {
+        // Has value - display it with unit
         if (field.type == FieldTypeEnum.number) {
           formattedValue = '${value}${unit.isNotEmpty ? " $unit" : ""}';
         } else if (field.type == FieldTypeEnum.duration) {
@@ -304,12 +305,15 @@ class _LogViewState extends State<LogView> {
         } else {
           formattedValue = '$value${unit.isNotEmpty ? " $unit" : ""}';
         }
-
-        parts.add(formattedValue);
+      } else {
+        // No value - show placeholder with unit
+        formattedValue = '-${unit.isNotEmpty ? " $unit" : ""}';
       }
+
+      parts.add(formattedValue);
     }
 
-    return parts.isEmpty ? 'No data' : parts.join(' × ');
+    return parts.isEmpty ? 'No data' : parts.join(' · ');
   }
 
   Widget _buildSetRow(WorkoutSetWithDetails setWithDetails, int index) {
