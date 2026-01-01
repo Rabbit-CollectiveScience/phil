@@ -83,8 +83,8 @@ class ExerciseDetailCard extends StatelessWidget {
                   volumeToday > 0
                       ? '${volumeToday.toInt()} kg'
                       : volumeToday == 0
-                          ? '-'
-                          : '${volumeToday.toInt()} reps',
+                      ? '-'
+                      : '${volumeToday.toInt()} reps',
                 ),
               ),
               Container(
