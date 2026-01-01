@@ -204,10 +204,10 @@ void main() {
         // Act
         final result = await useCaseWithPR.execute();
 
-        // Assert - This will fail until GetCurrentPRUseCase is integrated
+        // Assert - Check that prsToday is empty since PR is old
         expect(result.length, equals(1));
-        expect(result[0]['prMaxWeight'], equals(120.0));
-        expect(result[0]['isPRToday'], isFalse);
+        expect(result[0]['prsToday'], isA<List>());
+        expect((result[0]['prsToday'] as List).isEmpty, isTrue);
       });
 
       test('should mark isPRToday=true when PR achieved today', () async {
@@ -234,10 +234,18 @@ void main() {
         // Act
         final result = await useCaseWithPR.execute();
 
-        // Assert
+        // Assert - Check that prsToday contains the weight PR
         expect(result.length, equals(1));
-        expect(result[0]['prMaxWeight'], equals(150.0));
-        expect(result[0]['isPRToday'], isTrue);
+        expect(result[0]['prsToday'], isA<List>());
+        final prs = result[0]['prsToday'] as List;
+        expect(prs.isNotEmpty, isTrue);
+
+        // Should have maxWeight PR
+        final weightPR = prs.any((pr) => pr['type'] == 'maxWeight');
+        expect(weightPR, isTrue);
+
+        final weightPRValue = prs.firstWhere((pr) => pr['type'] == 'maxWeight');
+        expect(weightPRValue['value'], equals(150.0));
       });
 
       test(
@@ -269,10 +277,10 @@ void main() {
           // Act
           final result = await useCaseWithPR.execute();
 
-          // Assert
+          // Assert - PR is old, so prsToday should be empty
           expect(result.length, equals(1));
-          expect(result[0]['prMaxWeight'], equals(200.0));
-          expect(result[0]['isPRToday'], isFalse);
+          expect(result[0]['prsToday'], isA<List>());
+          expect((result[0]['prsToday'] as List).isEmpty, isTrue);
         },
       );
 
@@ -292,11 +300,10 @@ void main() {
           // Act
           final result = await useCaseWithPR.execute();
 
-          // Assert
+          // Assert - No PRs, so prsToday should be empty
           expect(result.length, equals(1));
-          expect(result[0].containsKey('prMaxWeight'), isTrue);
-          expect(result[0]['prMaxWeight'], isNull);
-          expect(result[0]['isPRToday'], isFalse);
+          expect(result[0]['prsToday'], isA<List>());
+          expect((result[0]['prsToday'] as List).isEmpty, isTrue);
         },
       );
     });

@@ -76,22 +76,23 @@ class GetTodayExerciseDetailsUseCase {
         }
       }
 
-      // Get PR data if repository is provided
-      double? prMaxWeight;
-      bool isPRToday = false;
+      // Get all PRs for this exercise
+      List<Map<String, dynamic>> prsToday = [];
       if (_prRepository != null) {
-        final getPRUseCase = GetCurrentPRUseCase(_prRepository!);
-        final currentPR = await getPRUseCase.execute(exerciseId, 'maxWeight');
-        if (currentPR != null) {
-          prMaxWeight = currentPR.value;
-          // Check if PR was achieved today
-          final prDate = currentPR.achievedAt;
-          final now = DateTime.now();
-          isPRToday =
-              prDate.year == now.year &&
-              prDate.month == now.month &&
-              prDate.day == now.day;
-        }
+        final allPRs = await _prRepository!.getPRsByExercise(exerciseId);
+
+        // Filter to only PRs achieved today
+        final today = DateTime.now();
+        final todayPRs = allPRs.where((pr) {
+          return pr.achievedAt.year == today.year &&
+              pr.achievedAt.month == today.month &&
+              pr.achievedAt.day == today.day;
+        }).toList();
+
+        // Convert to maps for easy JSON serialization
+        prsToday = todayPRs
+            .map((pr) => {'type': pr.type, 'value': pr.value})
+            .toList();
       }
 
       exerciseDetails.add({
@@ -99,8 +100,7 @@ class GetTodayExerciseDetailsUseCase {
         'sets': setsCount,
         'volumeToday': volumeToday,
         'maxWeightToday': maxWeightToday,
-        'prMaxWeight': prMaxWeight,
-        'isPRToday': isPRToday,
+        'prsToday': prsToday,
       });
     }
 

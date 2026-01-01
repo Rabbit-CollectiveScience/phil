@@ -1,21 +1,38 @@
+class PRToday {
+  final String type;
+  final double value;
+
+  PRToday({required this.type, required this.value});
+
+  factory PRToday.fromMap(Map<String, dynamic> map) {
+    return PRToday(
+      type: map['type'] as String,
+      value: (map['value'] as num).toDouble(),
+    );
+  }
+}
+
 class ExerciseDetailToday {
   final String name;
   final int sets;
   final double volumeToday;
   final double? maxWeightToday;
-  final double? prMaxWeight;
-  final bool isPRToday;
+  final List<PRToday> prsToday;
 
   ExerciseDetailToday({
     required this.name,
     required this.sets,
     required this.volumeToday,
     this.maxWeightToday,
-    this.prMaxWeight,
-    this.isPRToday = false,
+    this.prsToday = const [],
   });
 
   factory ExerciseDetailToday.fromMap(Map<String, dynamic> map) {
+    final prsData = map['prsToday'] as List<dynamic>? ?? [];
+    final prs = prsData
+        .map((pr) => PRToday.fromMap(pr as Map<String, dynamic>))
+        .toList();
+
     return ExerciseDetailToday(
       name: map['name'] as String,
       sets: map['sets'] as int,
@@ -23,10 +40,7 @@ class ExerciseDetailToday {
       maxWeightToday: map['maxWeightToday'] != null
           ? (map['maxWeightToday'] as num).toDouble()
           : null,
-      prMaxWeight: map['prMaxWeight'] != null
-          ? (map['prMaxWeight'] as num).toDouble()
-          : null,
-      isPRToday: map['isPRToday'] == true,
+      prsToday: prs,
     );
   }
 }

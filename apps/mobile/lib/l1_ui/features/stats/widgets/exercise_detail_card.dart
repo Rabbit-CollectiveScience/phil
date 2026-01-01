@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../shared/theme/app_colors.dart';
+import '../view_models/exercise_detail_today.dart';
 
 /// Detail card for individual exercise stats with PR tracking
 class ExerciseDetailCard extends StatelessWidget {
@@ -7,8 +8,7 @@ class ExerciseDetailCard extends StatelessWidget {
   final int sets;
   final double volumeToday;
   final double? maxWeightToday;
-  final double? prMaxWeight;
-  final bool isPRToday;
+  final List<PRToday> prsToday;
 
   const ExerciseDetailCard({
     super.key,
@@ -16,8 +16,7 @@ class ExerciseDetailCard extends StatelessWidget {
     required this.sets,
     required this.volumeToday,
     this.maxWeightToday,
-    this.prMaxWeight,
-    this.isPRToday = false,
+    this.prsToday = const [],
   });
 
   @override
@@ -78,6 +77,35 @@ class ExerciseDetailCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
+          // PR badges (if any)
+          if (prsToday.isNotEmpty) ...[
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: prsToday.map((pr) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.limeGreen,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    '${_formatPRType(pr.type)}: ${_formatPRValue(pr.type, pr.value)}',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+          ],
           // Metrics grid
           Row(
             children: [
@@ -103,8 +131,6 @@ class ExerciseDetailCard extends StatelessWidget {
                   (maxWeightToday != null && maxWeightToday! > 0)
                       ? '${maxWeightToday!.toInt()} kg'
                       : '-',
-                  isPR: isPRToday,
-                  prValue: prMaxWeight,
                 ),
               ),
             ],
@@ -114,87 +140,54 @@ class ExerciseDetailCard extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricColumn(
-    String label,
-    String value, {
-    bool isPR = false,
-    double? prValue,
-  }) {
+  Widget _buildMetricColumn(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: AppColors.darkText.withOpacity(0.5),
-                letterSpacing: 0.5,
-              ),
-            ),
-            if (isPR) ...[
-              const SizedBox(width: 6),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: AppColors.limeGreen,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  'PR!',
-                  style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
-            ],
-          ],
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            color: AppColors.darkText.withOpacity(0.5),
+            letterSpacing: 0.5,
+          ),
         ),
         const SizedBox(height: 4),
-        isPR
-            ? Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: AppColors.limeGreen,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black,
-                    height: 1.0,
-                  ),
-                ),
-              )
-            : Text(
-                value,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.darkText,
-                  height: 1.0,
-                ),
-              ),
-        if (prValue != null && prValue > 0 && !isPR) ...[
-          const SizedBox(height: 2),
-          Text(
-            'Best: ${prValue.toInt()} kg',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              color: AppColors.darkText.withOpacity(0.4),
-              height: 1.0,
-            ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w900,
+            color: AppColors.darkText,
+            height: 1.0,
           ),
-        ],
+        ),
       ],
     );
+  }
+
+  String _formatPRType(String type) {
+    // Convert 'maxWeight' to 'Max Weight', 'maxReps' to 'Max Reps', etc.
+    final withoutMax = type.substring(3); // Remove 'max' prefix
+    // Add space before capital letters
+    final spaced = withoutMax
+        .replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(0)}')
+        .trim();
+    return 'PR ${spaced.toUpperCase()}';
+  }
+
+  String _formatPRValue(String type, double value) {
+    // Format based on PR type
+    if (type == 'maxWeight' || type == 'maxVolume') {
+      return '${value.toInt()} kg';
+    } else if (type == 'maxReps') {
+      return '${value.toInt()} reps';
+    } else if (type == 'maxDistance') {
+      return '${value.toInt()} m';
+    } else if (type == 'maxDuration') {
+      return '${value.toInt()} s';
+    }
+    return value.toStringAsFixed(1);
   }
 }

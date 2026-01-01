@@ -86,7 +86,10 @@ class CheckForNewPRUseCase {
 
       if (weight != null && weight > 0 && reps != null && reps > 0) {
         final volume = weight * reps;
-        final currentPR = await _repository.getCurrentPR(exerciseId, 'maxVolume');
+        final currentPR = await _repository.getCurrentPR(
+          exerciseId,
+          'maxVolume',
+        );
 
         if (currentPR == null || volume > currentPR.value) {
           results.add(
