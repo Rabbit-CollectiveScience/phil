@@ -3,12 +3,16 @@ class ExerciseDetailToday {
   final int sets;
   final double volumeToday;
   final double? maxWeightToday;
+  final double? prMaxWeight;
+  final bool isPRToday;
 
   ExerciseDetailToday({
     required this.name,
     required this.sets,
     required this.volumeToday,
     this.maxWeightToday,
+    this.prMaxWeight,
+    this.isPRToday = false,
   });
 
   factory ExerciseDetailToday.fromMap(Map<String, dynamic> map) {
@@ -19,6 +23,10 @@ class ExerciseDetailToday {
       maxWeightToday: map['maxWeightToday'] != null
           ? (map['maxWeightToday'] as num).toDouble()
           : null,
+      prMaxWeight: map['prMaxWeight'] != null
+          ? (map['prMaxWeight'] as num).toDouble()
+          : null,
+      isPRToday: map['isPRToday'] == true,
     );
   }
 }

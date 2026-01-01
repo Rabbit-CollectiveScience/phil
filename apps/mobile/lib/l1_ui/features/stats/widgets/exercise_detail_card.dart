@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../../shared/theme/app_colors.dart';
 
-/// Detail card for individual exercise stats (Phase 1: No PRs)
+/// Detail card for individual exercise stats with PR tracking
 class ExerciseDetailCard extends StatelessWidget {
   final String exerciseName;
   final int sets;
   final double volumeToday;
   final double? maxWeightToday;
+  final double? prMaxWeight;
+  final bool isPRToday;
 
   const ExerciseDetailCard({
     super.key,
@@ -14,6 +16,8 @@ class ExerciseDetailCard extends StatelessWidget {
     required this.sets,
     required this.volumeToday,
     this.maxWeightToday,
+    this.prMaxWeight,
+    this.isPRToday = false,
   });
 
   @override
@@ -99,6 +103,8 @@ class ExerciseDetailCard extends StatelessWidget {
                   (maxWeightToday != null && maxWeightToday! > 0)
                       ? '${maxWeightToday!.toInt()} kg'
                       : '-',
+                  isPR: isPRToday,
+                  prValue: prMaxWeight,
                 ),
               ),
             ],
@@ -108,18 +114,46 @@ class ExerciseDetailCard extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricColumn(String label, String value) {
+  Widget _buildMetricColumn(
+    String label,
+    String value, {
+    bool isPR = false,
+    double? prValue,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: AppColors.darkText.withOpacity(0.5),
-            letterSpacing: 0.5,
-          ),
+        Row(
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AppColors.darkText.withOpacity(0.5),
+                letterSpacing: 0.5,
+              ),
+            ),
+            if (isPR) ...[
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.limeGreen,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  'PR!',
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
         const SizedBox(height: 4),
         Text(
@@ -127,10 +161,22 @@ class ExerciseDetailCard extends StatelessWidget {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w900,
-            color: AppColors.darkText,
+            color: isPR ? AppColors.limeGreen : AppColors.darkText,
             height: 1.0,
           ),
         ),
+        if (prValue != null && prValue > 0 && !isPR) ...[
+          const SizedBox(height: 2),
+          Text(
+            'Best: ${prValue.toInt()} kg',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: AppColors.darkText.withOpacity(0.4),
+              height: 1.0,
+            ),
+          ),
+        ],
       ],
     );
   }

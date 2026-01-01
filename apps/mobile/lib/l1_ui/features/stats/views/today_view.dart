@@ -67,6 +67,8 @@ class TodayView extends StatelessWidget {
                   sets: exercise.sets,
                   volumeToday: exercise.volumeToday,
                   maxWeightToday: exercise.maxWeightToday,
+                  prMaxWeight: exercise.prMaxWeight,
+                  isPRToday: exercise.isPRToday,
                 ),
               );
             }).toList(),

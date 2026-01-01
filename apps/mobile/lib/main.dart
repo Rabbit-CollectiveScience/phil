@@ -23,6 +23,8 @@ import 'l3_data/repositories/workout_set_repository.dart';
 import 'l3_data/repositories/hive_workout_set_repository.dart';
 import 'l3_data/repositories/preferences_repository.dart';
 import 'l3_data/repositories/local_preferences_repository.dart';
+import 'l3_data/repositories/personal_record_repository.dart';
+import 'l3_data/repositories/hive_personal_record_repository.dart';
 
 // Global GetIt instance for dependency injection
 final getIt = GetIt.instance;
@@ -54,6 +56,9 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
   // Register L3 - Data Layer (Repositories)
   getIt.registerSingleton<ExerciseRepository>(StubExerciseRepository());
   getIt.registerSingleton<WorkoutSetRepository>(HiveWorkoutSetRepository());
+  getIt.registerSingleton<PersonalRecordRepository>(
+    HivePersonalRecordRepository(),
+  );
   getIt.registerSingleton<PreferencesRepository>(
     LocalPreferencesRepository(sharedPreferences),
   );
@@ -66,10 +71,18 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
     () => SearchExercisesUseCase(getIt<ExerciseRepository>()),
   );
   getIt.registerFactory<RecordWorkoutSetUseCase>(
-    () => RecordWorkoutSetUseCase(getIt<WorkoutSetRepository>()),
+    () => RecordWorkoutSetUseCase(
+      getIt<WorkoutSetRepository>(),
+      prRepository: getIt<PersonalRecordRepository>(),
+      exerciseRepository: getIt<ExerciseRepository>(),
+    ),
   );
   getIt.registerFactory<RemoveWorkoutSetUseCase>(
-    () => RemoveWorkoutSetUseCase(getIt<WorkoutSetRepository>()),
+    () => RemoveWorkoutSetUseCase(
+      getIt<WorkoutSetRepository>(),
+      prRepository: getIt<PersonalRecordRepository>(),
+      exerciseRepository: getIt<ExerciseRepository>(),
+    ),
   );
   getIt.registerFactory<GetTodayCompletedCountUseCase>(
     () => GetTodayCompletedCountUseCase(getIt<WorkoutSetRepository>()),
@@ -95,7 +108,10 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
     ),
   );
   getIt.registerFactory<GetTodayExerciseDetailsUseCase>(
-    () => GetTodayExerciseDetailsUseCase(getIt<GetWorkoutSetsByDateUseCase>()),
+    () => GetTodayExerciseDetailsUseCase(
+      getIt<GetWorkoutSetsByDateUseCase>(),
+      prRepository: getIt<PersonalRecordRepository>(),
+    ),
   );
 
   // Filter use cases
