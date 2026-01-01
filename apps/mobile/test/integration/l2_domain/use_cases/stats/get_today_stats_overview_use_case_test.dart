@@ -16,14 +16,14 @@ void main() {
   setUp(() {
     workoutSetRepo = StubWorkoutSetRepository();
     exerciseRepo = StubExerciseRepository();
-    
+
     final getWorkoutSetsByDateUseCase = GetWorkoutSetsByDateUseCase(
       workoutSetRepo,
       exerciseRepo,
     );
-    
+
     recordUseCase = RecordWorkoutSetUseCase(workoutSetRepo);
-    
+
     useCase = GetTodayStatsOverviewUseCase(
       getWorkoutSetsByDateUseCase,
       exerciseRepo,
@@ -46,34 +46,41 @@ void main() {
       expect(result['exerciseTypes'], isEmpty);
     });
 
-    test('returns correct stats for single exercise with multiple sets', () async {
-      // Arrange
-      final exercises = await exerciseRepo.getAllExercises();
-      final benchPress = exercises.firstWhere((e) => e.name.contains('Bench Press'));
+    test(
+      'returns correct stats for single exercise with multiple sets',
+      () async {
+        // Arrange
+        final exercises = await exerciseRepo.getAllExercises();
+        final benchPress = exercises.firstWhere(
+          (e) => e.name.contains('Bench Press'),
+        );
 
-      await recordUseCase.execute(
-        exerciseId: benchPress.id,
-        values: {'weight': 100, 'reps': 10},
-      );
-      await recordUseCase.execute(
-        exerciseId: benchPress.id,
-        values: {'weight': 100, 'reps': 8},
-      );
+        await recordUseCase.execute(
+          exerciseId: benchPress.id,
+          values: {'weight': 100, 'reps': 10},
+        );
+        await recordUseCase.execute(
+          exerciseId: benchPress.id,
+          values: {'weight': 100, 'reps': 8},
+        );
 
-      // Act
-      final result = await useCase.execute();
+        // Act
+        final result = await useCase.execute();
 
-      // Assert
-      expect(result['setsCount'], equals(2));
-      expect(result['exercisesCount'], equals(1));
-      expect(result['totalVolume'], equals(1800.0)); // (100*10) + (100*8)
-      expect(result['exerciseTypes'], isNotEmpty);
-    });
+        // Assert
+        expect(result['setsCount'], equals(2));
+        expect(result['exercisesCount'], equals(1));
+        expect(result['totalVolume'], equals(1800.0)); // (100*10) + (100*8)
+        expect(result['exerciseTypes'], isNotEmpty);
+      },
+    );
 
     test('returns correct stats for multiple exercises', () async {
       // Arrange
       final exercises = await exerciseRepo.getAllExercises();
-      final benchPress = exercises.firstWhere((e) => e.name.contains('Bench Press'));
+      final benchPress = exercises.firstWhere(
+        (e) => e.name.contains('Bench Press'),
+      );
       final squat = exercises.firstWhere((e) => e.name.contains('Squat'));
 
       await recordUseCase.execute(
@@ -98,12 +105,11 @@ void main() {
     test('handles exercises with only reps (no weight)', () async {
       // Arrange
       final exercises = await exerciseRepo.getAllExercises();
-      final pushup = exercises.firstWhere((e) => e.name.contains('Push') && e.name.contains('Up'));
-
-      await recordUseCase.execute(
-        exerciseId: pushup.id,
-        values: {'reps': 20},
+      final pushup = exercises.firstWhere(
+        (e) => e.name.contains('Push') && e.name.contains('Up'),
       );
+
+      await recordUseCase.execute(exerciseId: pushup.id, values: {'reps': 20});
 
       // Act
       final result = await useCase.execute();
@@ -119,14 +125,8 @@ void main() {
       final exercises = await exerciseRepo.getAllExercises();
       final firstExercise = exercises.first;
 
-      await recordUseCase.execute(
-        exerciseId: firstExercise.id,
-        values: null,
-      );
-      await recordUseCase.execute(
-        exerciseId: firstExercise.id,
-        values: {},
-      );
+      await recordUseCase.execute(exerciseId: firstExercise.id, values: null);
+      await recordUseCase.execute(exerciseId: firstExercise.id, values: {});
 
       // Act
       final result = await useCase.execute();

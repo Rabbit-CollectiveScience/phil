@@ -82,23 +82,25 @@ class ExerciseDetailCard extends StatelessWidget {
                   'Volume',
                   volumeToday > 0
                       ? '${volumeToday.toInt()} kg'
-                      : '${volumeToday.toInt()} reps',
+                      : volumeToday == 0
+                          ? '-'
+                          : '${volumeToday.toInt()} reps',
                 ),
               ),
-              if (maxWeightToday != null && maxWeightToday! > 0) ...[
-                Container(
-                  width: 1,
-                  height: 50,
-                  color: AppColors.darkGrey.withOpacity(0.2),
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
+              Container(
+                width: 1,
+                height: 50,
+                color: AppColors.darkGrey.withOpacity(0.2),
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+              ),
+              Expanded(
+                child: _buildMetricColumn(
+                  'Max Weight',
+                  (maxWeightToday != null && maxWeightToday! > 0)
+                      ? '${maxWeightToday!.toInt()} kg'
+                      : '-',
                 ),
-                Expanded(
-                  child: _buildMetricColumn(
-                    'Max Weight',
-                    '${maxWeightToday!.toInt()} kg',
-                  ),
-                ),
-              ],
+              ),
             ],
           ),
         ],
