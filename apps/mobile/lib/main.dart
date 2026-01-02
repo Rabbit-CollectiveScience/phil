@@ -17,6 +17,7 @@ import 'l2_domain/use_cases/stats/get_today_exercise_details_use_case.dart';
 import 'l2_domain/use_cases/filters/get_last_filter_selection_use_case.dart';
 import 'l2_domain/use_cases/filters/record_filter_selection_use_case.dart';
 import 'l2_domain/use_cases/filters/should_show_filter_page_use_case.dart';
+import 'l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
 import 'l3_data/repositories/exercise_repository.dart';
 import 'l3_data/repositories/stub_exercise_repository.dart';
 import 'l3_data/repositories/workout_set_repository.dart';
@@ -123,6 +124,14 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
   );
   getIt.registerFactory<ShouldShowFilterPageUseCase>(
     () => ShouldShowFilterPageUseCase(getIt<PreferencesRepository>()),
+  );
+
+  // Personal Record use cases
+  getIt.registerFactory<GetAllPRsUseCase>(
+    () => GetAllPRsUseCase(
+      getIt<PersonalRecordRepository>(),
+      getIt<ExerciseRepository>(),
+    ),
   );
 }
 

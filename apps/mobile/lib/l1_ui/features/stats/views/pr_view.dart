@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import '../../../shared/theme/app_colors.dart';
+import '../../../../l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
+import '../view_models/pr_summary.dart';
 
 class PRView extends StatefulWidget {
   const PRView({super.key});
@@ -9,159 +12,80 @@ class PRView extends StatefulWidget {
 }
 
 class _PRViewState extends State<PRView> {
-  // Mock PR data grouped by exercise type
-  final Map<String, List<Map<String, dynamic>>> _prsByType = {
-    'CHEST': [
-      {
-        'exercise': 'BENCH PRESS',
-        'value': '120 kg',
-        'date': 'Dec 28, 2025',
-        'daysAgo': 4,
-      },
-      {
-        'exercise': 'INCLINE BENCH',
-        'value': '100 kg',
-        'date': 'Dec 20, 2025',
-        'daysAgo': 12,
-      },
-      {
-        'exercise': 'DUMBBELL PRESS',
-        'value': '45 kg',
-        'date': 'Dec 15, 2025',
-        'daysAgo': 17,
-      },
-      {
-        'exercise': 'CABLE FLYES',
-        'value': '30 kg × 15',
-        'date': 'Dec 10, 2025',
-        'daysAgo': 22,
-      },
-    ],
-    'BACK': [
-      {
-        'exercise': 'DEADLIFT',
-        'value': '180 kg',
-        'date': 'Dec 25, 2025',
-        'daysAgo': 7,
-      },
-      {
-        'exercise': 'PULL-UPS',
-        'value': 'BW+25 kg × 8',
-        'date': 'Dec 22, 2025',
-        'daysAgo': 10,
-      },
-      {
-        'exercise': 'BARBELL ROW',
-        'value': '110 kg',
-        'date': 'Dec 18, 2025',
-        'daysAgo': 14,
-      },
-      {
-        'exercise': 'LAT PULLDOWN',
-        'value': '90 kg × 10',
-        'date': 'Dec 12, 2025',
-        'daysAgo': 20,
-      },
-    ],
-    'LEGS': [
-      {
-        'exercise': 'SQUAT',
-        'value': '160 kg',
-        'date': 'Dec 26, 2025',
-        'daysAgo': 6,
-      },
-      {
-        'exercise': 'FRONT SQUAT',
-        'value': '120 kg',
-        'date': 'Dec 19, 2025',
-        'daysAgo': 13,
-      },
-      {
-        'exercise': 'LEG PRESS',
-        'value': '300 kg',
-        'date': 'Dec 14, 2025',
-        'daysAgo': 18,
-      },
-      {
-        'exercise': 'ROMANIAN DEADLIFT',
-        'value': '140 kg',
-        'date': 'Dec 8, 2025',
-        'daysAgo': 24,
-      },
-    ],
-    'SHOULDERS': [
-      {
-        'exercise': 'OVERHEAD PRESS',
-        'value': '80 kg',
-        'date': 'Dec 23, 2025',
-        'daysAgo': 9,
-      },
-      {
-        'exercise': 'DUMBBELL SHOULDER PRESS',
-        'value': '35 kg',
-        'date': 'Dec 16, 2025',
-        'daysAgo': 16,
-      },
-      {
-        'exercise': 'LATERAL RAISE',
-        'value': '20 kg × 12',
-        'date': 'Dec 11, 2025',
-        'daysAgo': 21,
-      },
-    ],
-    'ARMS': [
-      {
-        'exercise': 'BARBELL CURL',
-        'value': '50 kg',
-        'date': 'Dec 21, 2025',
-        'daysAgo': 11,
-      },
-      {
-        'exercise': 'CLOSE GRIP BENCH',
-        'value': '90 kg',
-        'date': 'Dec 17, 2025',
-        'daysAgo': 15,
-      },
-      {
-        'exercise': 'HAMMER CURL',
-        'value': '25 kg × 10',
-        'date': 'Dec 9, 2025',
-        'daysAgo': 23,
-      },
-    ],
-  };
-
+  PRSummary _summary = PRSummary.empty();
+  bool _isLoading = true;
   Set<String> _expandedTypes = {};
 
-  int get _totalPRs {
-    return _prsByType.values.fold(0, (sum, list) => sum + list.length);
+  @override
+  void initState() {
+    super.initState();
+    _loadPRs();
   }
 
-  int get _daysSinceLastPR {
-    int minDays = 999;
-    for (var prs in _prsByType.values) {
-      for (var pr in prs) {
-        if (pr['daysAgo'] < minDays) {
-          minDays = pr['daysAgo'];
-        }
-      }
+  Future<void> _loadPRs() async {
+    setState(() => _isLoading = true);
+    
+    try {
+      final useCase = GetIt.instance<GetAllPRsUseCase>();
+      final allPRs = await useCase.execute();
+      
+      setState(() {
+        _summary = PRSummary.fromPRList(allPRs);
+        _isLoading = false;
+      });
+    } catch (e) {
+      debugPrint('Error loading PRs: $e');
+      setState(() {
+        _summary = PRSummary.empty();
+        _isLoading = false;
+      });
     }
-    return minDays;
-  }
-
-  List<Map<String, dynamic>> get _recentPRs {
-    List<Map<String, dynamic>> allPRs = [];
-    _prsByType.forEach((type, prs) {
-      for (var pr in prs) {
-        allPRs.add({...pr, 'type': type});
-      }
-    });
-    allPRs.sort((a, b) => a['daysAgo'].compareTo(b['daysAgo']));
-    return allPRs.take(5).toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Center(
+        child: CircularProgressIndicator(
+          color: AppColors.limeGreen,
+        ),
+      );
+    }
+
+    if (_summary.totalPRs == 0) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.emoji_events_outlined,
+              size: 64,
+              color: AppColors.offWhite.withOpacity(0.3),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'NO PERSONAL RECORDS YET',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+                color: AppColors.offWhite.withOpacity(0.5),
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Complete workouts to set your first PRs',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.offWhite.withOpacity(0.3),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -197,7 +121,7 @@ class _PRViewState extends State<PRView> {
             child: Column(
               children: [
                 Text(
-                  '$_totalPRs',
+                  '${_summary.totalPRs}',
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.w900,
@@ -229,7 +153,7 @@ class _PRViewState extends State<PRView> {
             child: Column(
               children: [
                 Text(
-                  '$_daysSinceLastPR',
+                  '${_summary.daysSinceLastPR}',
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.w900,
@@ -281,7 +205,7 @@ class _PRViewState extends State<PRView> {
             ],
           ),
           const SizedBox(height: 16),
-          ..._recentPRs.map((pr) {
+          ..._summary.recentPRs.map((pr) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Row(
@@ -300,7 +224,7 @@ class _PRViewState extends State<PRView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          pr['exercise'],
+                          pr.exerciseName.toUpperCase(),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w900,
@@ -310,7 +234,7 @@ class _PRViewState extends State<PRView> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          pr['date'],
+                          pr.formattedDate,
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
@@ -320,13 +244,26 @@ class _PRViewState extends State<PRView> {
                       ],
                     ),
                   ),
-                  Text(
-                    pr['value'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.darkText,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        pr.formattedValue,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.darkText,
+                        ),
+                      ),
+                      Text(
+                        pr.formattedType,
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.darkText.withOpacity(0.4),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -354,7 +291,7 @@ class _PRViewState extends State<PRView> {
           ),
         ),
         const SizedBox(height: 12),
-        ..._prsByType.entries.map((entry) {
+        ..._summary.prsByCategory.entries.map((entry) {
           final type = entry.key;
           final prs = entry.value;
           final isExpanded = _expandedTypes.contains(type);
@@ -455,7 +392,7 @@ class _PRViewState extends State<PRView> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        pr['exercise'],
+                                        pr.exerciseName.toUpperCase(),
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w700,
@@ -463,15 +400,28 @@ class _PRViewState extends State<PRView> {
                                         ),
                                       ),
                                       const SizedBox(height: 2),
-                                      Text(
-                                        pr['date'],
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.darkText.withOpacity(
-                                            0.5,
+                                      Row(
+                                        children: [
+                                          Text(
+                                            pr.formattedDate,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.darkText
+                                                  .withOpacity(0.5),
+                                            ),
                                           ),
-                                        ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            '• ${pr.formattedType}',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.darkText
+                                                  .withOpacity(0.4),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -479,7 +429,7 @@ class _PRViewState extends State<PRView> {
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    pr['value'],
+                                    pr.formattedValue,
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                       fontSize: 14,
