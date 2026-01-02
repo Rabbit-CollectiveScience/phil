@@ -11,6 +11,9 @@ abstract class PersonalRecordRepository {
   /// Get all PRs for a specific exercise
   Future<List<PersonalRecord>> getPRsByExercise(String exerciseId);
 
+  /// Get all PRs across all exercises
+  Future<List<PersonalRecord>> getAllPRs();
+
   /// Delete all PRs for a specific exercise
   Future<void> deletePRsForExercise(String exerciseId);
 }

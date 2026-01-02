@@ -54,6 +54,18 @@ class HivePersonalRecordRepository implements PersonalRecordRepository {
   }
 
   @override
+  Future<List<PersonalRecord>> getAllPRs() async {
+    final box = await _getBox;
+    final prs = <PersonalRecord>[];
+
+    for (var data in box.values) {
+      prs.add(PersonalRecord.fromJson(Map<String, dynamic>.from(data)));
+    }
+
+    return prs;
+  }
+
+  @override
   Future<void> deletePRsForExercise(String exerciseId) async {
     final box = await _getBox;
 

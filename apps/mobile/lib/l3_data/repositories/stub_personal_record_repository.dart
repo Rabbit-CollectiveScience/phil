@@ -36,6 +36,11 @@ class StubPersonalRecordRepository implements PersonalRecordRepository {
   }
 
   @override
+  Future<List<PersonalRecord>> getAllPRs() async {
+    return List<PersonalRecord>.from(_prs);
+  }
+
+  @override
   Future<void> deletePRsForExercise(String exerciseId) async {
     _prs.removeWhere((pr) => pr.exerciseId == exerciseId);
   }
