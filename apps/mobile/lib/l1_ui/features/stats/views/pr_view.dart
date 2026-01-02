@@ -24,11 +24,11 @@ class _PRViewState extends State<PRView> {
 
   Future<void> _loadPRs() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final useCase = GetIt.instance<GetAllPRsUseCase>();
       final allPRs = await useCase.execute();
-      
+
       setState(() {
         _summary = PRSummary.fromPRList(allPRs);
         _isLoading = false;
@@ -46,9 +46,7 @@ class _PRViewState extends State<PRView> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Center(
-        child: CircularProgressIndicator(
-          color: AppColors.limeGreen,
-        ),
+        child: CircularProgressIndicator(color: AppColors.limeGreen),
       );
     }
 
@@ -108,73 +106,94 @@ class _PRViewState extends State<PRView> {
   }
 
   Widget _buildSummarySection() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.zero,
-              border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  '${_summary.totalPRs}',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.darkText,
+    return IntrinsicHeight(
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.zero,
+                border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 36,
+                    child: Align(
+                      alignment: Alignment(0, 0.3),
+                      child: Text(
+                        '${_summary.totalPRs}',
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.darkText,
+                          height: 1.0,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'TOTAL PRs',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.darkText.withOpacity(0.5),
-                    letterSpacing: 0.5,
+                  const SizedBox(height: 4),
+                  Text(
+                    'TOTAL PRs',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.darkText.withOpacity(0.5),
+                      letterSpacing: 0.5,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppColors.limeGreen,
-              borderRadius: BorderRadius.zero,
-            ),
-            child: Column(
-              children: [
-                Text(
-                  '${_summary.daysSinceLastPR}',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.pureBlack,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'DAYS AGO',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.pureBlack.withOpacity(0.7),
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+          const SizedBox(width: 12),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppColors.limeGreen,
+                borderRadius: BorderRadius.zero,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 36,
+                    child: Align(
+                      alignment: Alignment(0, 0.3),
+                      child: Text(
+                        _summary.lastPRDate,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.pureBlack,
+                          height: 1.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'MOST RECENT PR',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.pureBlack.withOpacity(0.7),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

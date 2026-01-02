@@ -3,13 +3,13 @@ import '../../../../l2_domain/models/pr_item_with_exercise.dart';
 /// Summary data for the PR view
 class PRSummary {
   final int totalPRs;
-  final int daysSinceLastPR;
+  final String lastPRDate;
   final List<PRItemWithExercise> recentPRs;
   final Map<String, List<PRItemWithExercise>> prsByCategory;
 
   PRSummary({
     required this.totalPRs,
-    required this.daysSinceLastPR,
+    required this.lastPRDate,
     required this.recentPRs,
     required this.prsByCategory,
   });
@@ -19,10 +19,10 @@ class PRSummary {
   factory PRSummary.fromPRList(List<PRItemWithExercise> prs) {
     final totalPRs = prs.length;
 
-    // Calculate days since last PR
-    int daysSinceLastPR = 999;
+    // Get formatted date of last PR
+    String lastPRDate = 'Never';
     if (prs.isNotEmpty) {
-      daysSinceLastPR = prs.first.daysAgo;
+      lastPRDate = prs.first.formattedDate;
     }
 
     // Get 5 most recent PRs (already sorted)
@@ -49,7 +49,7 @@ class PRSummary {
 
     return PRSummary(
       totalPRs: totalPRs,
-      daysSinceLastPR: daysSinceLastPR,
+      lastPRDate: lastPRDate,
       recentPRs: recentPRs,
       prsByCategory: sortedCategories,
     );
@@ -59,7 +59,7 @@ class PRSummary {
   factory PRSummary.empty() {
     return PRSummary(
       totalPRs: 0,
-      daysSinceLastPR: 999,
+      lastPRDate: 'Never',
       recentPRs: [],
       prsByCategory: {},
     );
