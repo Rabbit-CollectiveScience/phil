@@ -35,15 +35,6 @@ class _StatsPageState extends State<StatsPage> {
     }
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Reload today data when returning to this page
-    if (_selectedSection == 'TODAY') {
-      _loadTodayData();
-    }
-  }
-
   Future<void> _loadTodayData() async {
     setState(() => _isLoading = true);
 
@@ -125,11 +116,11 @@ class _StatsPageState extends State<StatsPage> {
                           onSelected: (selected) {
                             setState(() {
                               _selectedSection = selected;
-                              if (selected == 'TODAY' &&
-                                  _todayOverview == null) {
-                                _loadTodayData();
-                              }
                             });
+                            // Reload data when switching to TODAY section
+                            if (selected == 'TODAY') {
+                              _loadTodayData();
+                            }
                           },
                           offset: const Offset(0, 50),
                           color: AppColors.boldGrey,
