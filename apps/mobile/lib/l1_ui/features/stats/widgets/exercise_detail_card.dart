@@ -127,11 +127,7 @@ class ExerciseDetailCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.emoji_events,
-                        size: 14,
-                        color: Colors.black,
-                      ),
+                      Icon(Icons.emoji_events, size: 14, color: Colors.black),
                       const SizedBox(width: 4),
                       Text(
                         _formatPRType(pr.type),

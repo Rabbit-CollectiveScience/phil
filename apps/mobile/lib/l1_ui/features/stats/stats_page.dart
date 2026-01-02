@@ -35,6 +35,15 @@ class _StatsPageState extends State<StatsPage> {
     }
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload today data when returning to this page
+    if (_selectedSection == 'TODAY') {
+      _loadTodayData();
+    }
+  }
+
   Future<void> _loadTodayData() async {
     setState(() => _isLoading = true);
 
