@@ -168,47 +168,48 @@ class _TodayViewState extends State<TodayView> {
               setsCount: _overview?.setsCount ?? 0,
               exercisesCount: _overview?.exercisesCount ?? 0,
               totalVolume: _overview?.totalVolume ?? 0.0,
+              avgReps: _overview?.avgReps ?? 0.0,
               exerciseTypes: _overview?.exerciseTypes ?? [],
             ),
             const SizedBox(height: 32),
             // Section title
             Text(
-            'TODAY\'S EXERCISES',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: AppColors.offWhite,
-              letterSpacing: 1.2,
+              'TODAY\'S EXERCISES',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                color: AppColors.offWhite,
+                letterSpacing: 1.2,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          // Exercise details list or empty state
-          if (!hasData)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
-                child: Text(
-                  'No workouts recorded',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.offWhite.withOpacity(0.5),
+            const SizedBox(height: 16),
+            // Exercise details list or empty state
+            if (!hasData)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  child: Text(
+                    'No workouts recorded',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.offWhite.withOpacity(0.5),
+                    ),
                   ),
                 ),
-              ),
-            )
-          else
-            ...(_exerciseDetails ?? []).map((exercise) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ExerciseDetailCard(
-                  exerciseName: exercise.name,
-                  sets: exercise.sets,
-                  volumeToday: exercise.volumeToday,
-                  maxWeightToday: exercise.maxWeightToday,
-                  prsToday: exercise.prsToday,
-                ),
-              );
-            }),
+              )
+            else
+              ...(_exerciseDetails ?? []).map((exercise) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: ExerciseDetailCard(
+                    exerciseName: exercise.name,
+                    sets: exercise.sets,
+                    volumeToday: exercise.volumeToday,
+                    maxWeightToday: exercise.maxWeightToday,
+                    prsToday: exercise.prsToday,
+                  ),
+                );
+              }),
             const SizedBox(height: 20),
           ],
         ],

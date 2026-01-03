@@ -33,6 +33,7 @@ class GetTodayStatsOverviewUseCase {
         'setsCount': 0,
         'exercisesCount': 0,
         'totalVolume': 0.0,
+        'avgReps': 0.0,
         'exerciseTypes': <String>[],
       };
     }
@@ -56,6 +57,21 @@ class GetTodayStatsOverviewUseCase {
       totalVolume += volume;
     }
 
+    // Calculate average reps
+    int totalReps = 0;
+    int setsWithReps = 0;
+    for (final setWithDetails in workoutSetsWithDetails) {
+      final values = setWithDetails.workoutSet.values;
+      if (values != null && values.containsKey('reps')) {
+        final reps = values['reps'];
+        if (reps != null) {
+          totalReps += (reps as num).toInt();
+          setsWithReps++;
+        }
+      }
+    }
+    final avgReps = setsWithReps > 0 ? totalReps / setsWithReps : 0.0;
+
     // Collect unique exercise categories
     final exerciseTypesSet = <String>{};
     for (final exerciseId in uniqueExerciseIds) {
@@ -69,6 +85,7 @@ class GetTodayStatsOverviewUseCase {
       'setsCount': setsCount,
       'exercisesCount': exercisesCount,
       'totalVolume': totalVolume,
+      'avgReps': avgReps,
       'exerciseTypes': exerciseTypesSet.toList(),
     };
   }

@@ -199,5 +199,81 @@ void main() {
       expect(result['exercisesCount'], equals(1));
       expect(result['totalVolume'], equals(1550.0)); // (150*5) + (160*5)
     });
+
+    test('calculates average reps correctly', () async {
+      // Arrange
+      final exercises = await exerciseRepo.getAllExercises();
+      final benchPress = exercises.firstWhere(
+        (e) => e.name.contains('Bench Press'),
+      );
+
+      await recordUseCase.execute(
+        exerciseId: benchPress.id,
+        values: {'weight': 100, 'reps': 10},
+      );
+      await recordUseCase.execute(
+        exerciseId: benchPress.id,
+        values: {'weight': 100, 'reps': 8},
+      );
+      await recordUseCase.execute(
+        exerciseId: benchPress.id,
+        values: {'weight': 100, 'reps': 12},
+      );
+
+      // Act
+      final result = await useCase.execute();
+
+      // Assert
+      expect(result['avgReps'], equals(10.0)); // (10+8+12)/3 = 10.0
+    });
+
+    test('handles mixed strength and cardio for avg reps', () async {
+      // Arrange
+      final exercises = await exerciseRepo.getAllExercises();
+      final benchPress = exercises.firstWhere(
+        (e) => e.name.contains('Bench Press'),
+      );
+      final treadmill = exercises.firstWhere(
+        (e) => e.name.toLowerCase().contains('treadmill'),
+      );
+
+      await recordUseCase.execute(
+        exerciseId: benchPress.id,
+        values: {'weight': 100, 'reps': 10},
+      );
+      await recordUseCase.execute(
+        exerciseId: benchPress.id,
+        values: {'weight': 100, 'reps': 8},
+      );
+      await recordUseCase.execute(
+        exerciseId: treadmill.id,
+        values: {'durationInSeconds': 600, 'distance': 2.0},
+      );
+
+      // Act
+      final result = await useCase.execute();
+
+      // Assert
+      expect(result['avgReps'], equals(9.0)); // Only counts sets with reps: (10+8)/2
+    });
+
+    test('returns 0 avg reps when no sets have reps', () async {
+      // Arrange
+      final exercises = await exerciseRepo.getAllExercises();
+      final treadmill = exercises.firstWhere(
+        (e) => e.name.toLowerCase().contains('treadmill'),
+      );
+
+      await recordUseCase.execute(
+        exerciseId: treadmill.id,
+        values: {'durationInSeconds': 600, 'distance': 2.0},
+      );
+
+      // Act
+      final result = await useCase.execute();
+
+      // Assert
+      expect(result['avgReps'], equals(0.0));
+    });
   });
 }

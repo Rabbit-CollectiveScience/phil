@@ -8,6 +8,7 @@ class StatsOverviewCard extends StatelessWidget {
   final int setsCount;
   final int exercisesCount;
   final double totalVolume;
+  final double avgReps;
   final List<String> exerciseTypes;
 
   const StatsOverviewCard({
@@ -15,6 +16,7 @@ class StatsOverviewCard extends StatelessWidget {
     required this.setsCount,
     required this.exercisesCount,
     required this.totalVolume,
+    required this.avgReps,
     required this.exerciseTypes,
   });
 
@@ -47,12 +49,9 @@ class StatsOverviewCard extends StatelessWidget {
             childAspectRatio: 1.5,
             children: [
               MetricTile(value: setsCount.toString(), label: 'SETS'),
-              MetricTile(
-                value: exercisesCount.toString(),
-                label: 'EXERCISES',
-              ),
-              MetricTile(value: '2000', label: 'VOLUME'),
-              MetricTile(value: '12', label: 'AVG REPS'),
+              MetricTile(value: exercisesCount.toString(), label: 'EXERCISES'),
+              MetricTile(value: '${totalVolume.toInt()}', label: 'VOLUME (KG)'),
+              MetricTile(value: avgReps.toStringAsFixed(1), label: 'AVG REPS'),
             ],
           ),
           if (exerciseTypes.isNotEmpty) ...[
