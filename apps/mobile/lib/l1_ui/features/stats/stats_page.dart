@@ -7,6 +7,7 @@ import 'views/today_view.dart';
 import 'views/weekly_view.dart';
 import 'views/log_view.dart';
 import 'views/pr_view.dart';
+import '../settings/settings_page.dart';
 import 'view_models/today_stats_overview.dart';
 import 'view_models/exercise_detail_today.dart';
 
@@ -114,6 +115,17 @@ class _StatsPageState extends State<StatsPage> {
                         ),
                         PopupMenuButton<String>(
                           onSelected: (selected) {
+                            // Navigate to Settings instead of switching view
+                            if (selected == 'SETTING') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingsPage(),
+                                ),
+                              );
+                              return;
+                            }
+                            
                             setState(() {
                               _selectedSection = selected;
                             });

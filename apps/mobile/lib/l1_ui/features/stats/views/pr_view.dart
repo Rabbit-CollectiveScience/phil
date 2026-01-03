@@ -70,10 +70,19 @@ class _PRViewState extends State<PRView> {
 
       // Convert to list format and sort
       final result = <String, List<Map<String, dynamic>>>{};
-      
+
       // Always include all muscle groups
-      final allMuscleGroups = ['CHEST', 'BACK', 'LEGS', 'SHOULDERS', 'ARMS', 'CORE', 'CARDIO', 'FLEXIBILITY'];
-      
+      final allMuscleGroups = [
+        'CHEST',
+        'BACK',
+        'LEGS',
+        'SHOULDERS',
+        'ARMS',
+        'CORE',
+        'CARDIO',
+        'FLEXIBILITY',
+      ];
+
       for (var muscleGroup in allMuscleGroups) {
         if (grouped.containsKey(muscleGroup)) {
           final exercises = grouped[muscleGroup]!.values
@@ -294,33 +303,32 @@ class _PRViewState extends State<PRView> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                    Text(
-                                      pr['value'] ?? '—',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w900,
-                                        color: AppColors.darkText,
-                                      ),
-                                    ),
-                                    if (daysText.isNotEmpty) ...[
-                                      const SizedBox(height: 2),
                                       Text(
-                                        daysText,
+                                        pr['value'] ?? '—',
                                         style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.darkText.withOpacity(
-                                            0.5,
-                                          ),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w900,
+                                          color: AppColors.darkText,
                                         ),
                                       ),
+                                      if (daysText.isNotEmpty) ...[
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          daysText,
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.darkText
+                                                .withOpacity(0.5),
+                                          ),
+                                        ),
+                                      ],
                                     ],
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
                         ),
                     ],
                   ],
