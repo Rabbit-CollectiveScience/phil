@@ -111,7 +111,7 @@ class TypeCard extends StatelessWidget {
                 value: isCardioOrFlexibility
                     ? '${(duration ?? 0).toInt()}'
                     : '${volume.toInt()}',
-                label: isCardioOrFlexibility ? 'min' : 'kg',
+                label: isCardioOrFlexibility ? 'Duration (min)' : 'Volume (kg)',
                 hasData: hasData,
               ),
             ],
