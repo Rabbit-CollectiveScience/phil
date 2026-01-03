@@ -38,26 +38,22 @@ class StatsOverviewCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 2x2 Grid of metrics
-          SizedBox(
-            height: 140,
-            child: GridView.count(
-              crossAxisCount: 2,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              children: [
-                MetricTile(value: setsCount.toString(), label: 'SETS'),
-                MetricTile(
-                  value: exercisesCount.toString(),
-                  label: 'EXERCISES',
-                ),
-                MetricTile(value: '${totalVolume.toInt()}', label: 'KG'),
-                MetricTile(
-                  value: exerciseTypes.length.toString(),
-                  label: 'TYPES',
-                ),
-              ],
-            ),
+          GridView.count(
+            shrinkWrap: true,
+            crossAxisCount: 2,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            childAspectRatio: 1.5,
+            children: [
+              MetricTile(value: setsCount.toString(), label: 'SETS'),
+              MetricTile(
+                value: exercisesCount.toString(),
+                label: 'EXERCISES',
+              ),
+              MetricTile(value: '2000', label: 'VOLUME'),
+              MetricTile(value: '12', label: 'AVG REPS'),
+            ],
           ),
           if (exerciseTypes.isNotEmpty) ...[
             const SizedBox(height: 16),

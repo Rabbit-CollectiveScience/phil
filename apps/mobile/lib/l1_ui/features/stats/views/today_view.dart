@@ -170,9 +170,9 @@ class _TodayViewState extends State<TodayView> {
               totalVolume: _overview?.totalVolume ?? 0.0,
               exerciseTypes: _overview?.exerciseTypes ?? [],
             ),
-          const SizedBox(height: 32),
-          // Section title
-          Text(
+            const SizedBox(height: 32),
+            // Section title
+            Text(
             'TODAY\'S EXERCISES',
             style: TextStyle(
               fontSize: 16,
