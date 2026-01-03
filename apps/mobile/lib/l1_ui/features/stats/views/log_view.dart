@@ -344,11 +344,43 @@ class _LogViewState extends State<LogView> {
       if (value != null) {
         // Has value - display it with unit
         if (field.type == FieldTypeEnum.number) {
-          formattedValue = '${value}${unit.isNotEmpty ? " $unit" : ""}';
+          // Round decimal numbers to 1 decimal place
+          final numValue = value is num ? value.toDouble() : double.tryParse(value.toString());
+          if (numValue != null) {
+            formattedValue = '${numValue.toStringAsFixed(1)}${unit.isNotEmpty ? " $unit" : ""}';
+          } else {
+            formattedValue = '${value}${unit.isNotEmpty ? " $unit" : ""}';
+          }
         } else if (field.type == FieldTypeEnum.duration) {
-          formattedValue = '${value}${unit.isNotEmpty ? " $unit" : ""}';
+          // Format duration as minutes
+          final seconds = value is num ? value.toInt() : int.tryParse(value.toString());
+          if (seconds != null) {
+            final minutes = (seconds / 60).floor();
+            final remainingSecs = seconds % 60;
+            if (minutes > 0 && remainingSecs > 0) {
+              formattedValue = '$minutes min $remainingSecs sec';
+            } else if (minutes > 0) {
+              formattedValue = '$minutes min';
+            } else {
+              formattedValue = '$remainingSecs sec';
+            }
+          } else {
+            formattedValue = '${value}${unit.isNotEmpty ? " $unit" : ""}';
+          }
         } else {
-          formattedValue = '$value${unit.isNotEmpty ? " $unit" : ""}';
+          // For other types, format based on field name
+          if (field.name.toLowerCase().contains('incline') || 
+              field.name.toLowerCase().contains('percentage')) {
+            // Format percentages without space
+            final numValue = value is num ? value.toDouble() : double.tryParse(value.toString());
+            if (numValue != null) {
+              formattedValue = '${numValue.toStringAsFixed(1)}%';
+            } else {
+              formattedValue = '$value${unit.isNotEmpty ? unit : ""}';
+            }
+          } else {
+            formattedValue = '$value${unit.isNotEmpty ? " $unit" : ""}';
+          }
         }
       } else {
         // No value - show placeholder with unit
