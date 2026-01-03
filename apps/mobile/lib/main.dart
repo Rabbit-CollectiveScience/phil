@@ -18,6 +18,8 @@ import 'l2_domain/use_cases/filters/get_last_filter_selection_use_case.dart';
 import 'l2_domain/use_cases/filters/record_filter_selection_use_case.dart';
 import 'l2_domain/use_cases/filters/should_show_filter_page_use_case.dart';
 import 'l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
+import 'l2_domain/use_cases/personal_records/recalculate_prs_for_exercise_use_case.dart';
+import 'l2_domain/use_cases/dev/add_mock_data_use_case.dart';
 import 'l3_data/repositories/exercise_repository.dart';
 import 'l3_data/repositories/stub_exercise_repository.dart';
 import 'l3_data/repositories/workout_set_repository.dart';
@@ -131,6 +133,22 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
     () => GetAllPRsUseCase(
       getIt<PersonalRecordRepository>(),
       getIt<ExerciseRepository>(),
+    ),
+  );
+  getIt.registerFactory<RecalculatePRsForExerciseUseCase>(
+    () => RecalculatePRsForExerciseUseCase(
+      getIt<PersonalRecordRepository>(),
+      getIt<WorkoutSetRepository>(),
+      getIt<ExerciseRepository>(),
+    ),
+  );
+
+  // Dev tools use cases
+  getIt.registerFactory<AddMockDataUseCase>(
+    () => AddMockDataUseCase(
+      getIt<WorkoutSetRepository>(),
+      getIt<ExerciseRepository>(),
+      getIt<RecalculatePRsForExerciseUseCase>(),
     ),
   );
 }
