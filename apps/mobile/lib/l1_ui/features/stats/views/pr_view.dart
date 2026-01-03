@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import '../../../shared/theme/app_colors.dart';
+import '../../../../l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
 
 class PRView extends StatefulWidget {
   const PRView({super.key});
@@ -9,660 +11,326 @@ class PRView extends StatefulWidget {
 }
 
 class _PRViewState extends State<PRView> {
-  // Mock PR data grouped by exercise type
-  final Map<String, List<Map<String, dynamic>>> _prsByType = {
-    'CHEST': [
-      {
-        'exercise': 'BENCH PRESS',
-        'value': '120 kg',
-        'date': 'Dec 28, 2025',
-        'daysAgo': 4,
-      },
-      {
-        'exercise': 'INCLINE BENCH',
-        'value': '100 kg',
-        'date': 'Dec 20, 2025',
-        'daysAgo': 12,
-      },
-      {
-        'exercise': 'DUMBBELL PRESS',
-        'value': '45 kg',
-        'date': 'Dec 15, 2025',
-        'daysAgo': 17,
-      },
-      {
-        'exercise': 'CABLE FLYES',
-        'value': '30 kg × 15',
-        'date': 'Dec 10, 2025',
-        'daysAgo': 22,
-      },
-    ],
-    'BACK': [
-      {
-        'exercise': 'DEADLIFT',
-        'value': '180 kg',
-        'date': 'Dec 25, 2025',
-        'daysAgo': 7,
-      },
-      {
-        'exercise': 'PULL-UPS',
-        'value': 'BW+25 kg × 8',
-        'date': 'Dec 22, 2025',
-        'daysAgo': 10,
-      },
-      {
-        'exercise': 'BARBELL ROW',
-        'value': '110 kg',
-        'date': 'Dec 18, 2025',
-        'daysAgo': 14,
-      },
-      {
-        'exercise': 'LAT PULLDOWN',
-        'value': '90 kg × 10',
-        'date': 'Dec 12, 2025',
-        'daysAgo': 20,
-      },
-    ],
-    'LEGS': [
-      {
-        'exercise': 'SQUAT',
-        'value': '160 kg',
-        'date': 'Dec 26, 2025',
-        'daysAgo': 6,
-      },
-      {
-        'exercise': 'FRONT SQUAT',
-        'value': '120 kg',
-        'date': 'Dec 19, 2025',
-        'daysAgo': 13,
-      },
-      {
-        'exercise': 'LEG PRESS',
-        'value': '300 kg',
-        'date': 'Dec 14, 2025',
-        'daysAgo': 18,
-      },
-      {
-        'exercise': 'ROMANIAN DEADLIFT',
-        'value': '140 kg',
-        'date': 'Dec 8, 2025',
-        'daysAgo': 24,
-      },
-    ],
-    'SHOULDERS': [
-      {
-        'exercise': 'OVERHEAD PRESS',
-        'value': '80 kg',
-        'date': 'Dec 23, 2025',
-        'daysAgo': 9,
-      },
-      {
-        'exercise': 'DUMBBELL SHOULDER PRESS',
-        'value': '35 kg',
-        'date': 'Dec 16, 2025',
-        'daysAgo': 16,
-      },
-      {
-        'exercise': 'LATERAL RAISE',
-        'value': '20 kg × 12',
-        'date': 'Dec 11, 2025',
-        'daysAgo': 21,
-      },
-    ],
-    'ARMS': [
-      {
-        'exercise': 'BARBELL CURL',
-        'value': '50 kg',
-        'date': 'Dec 21, 2025',
-        'daysAgo': 11,
-      },
-      {
-        'exercise': 'CLOSE GRIP BENCH',
-        'value': '90 kg',
-        'date': 'Dec 17, 2025',
-        'daysAgo': 15,
-      },
-      {
-        'exercise': 'HAMMER CURL',
-        'value': '25 kg × 10',
-        'date': 'Dec 9, 2025',
-        'daysAgo': 23,
-      },
-    ],
-  };
-
+  Map<String, List<Map<String, dynamic>>> _prsByMuscleGroup = {};
+  bool _isLoading = true;
   Set<String> _expandedTypes = {};
 
-  int get _totalPRs {
-    return _prsByType.values.fold(0, (sum, list) => sum + list.length);
+  @override
+  void initState() {
+    super.initState();
+    _loadPRs();
   }
 
-  int get _daysSinceLastPR {
-    int minDays = 999;
-    for (var prs in _prsByType.values) {
-      for (var pr in prs) {
-        if (pr['daysAgo'] < minDays) {
-          minDays = pr['daysAgo'];
+  Future<void> _loadPRs() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final useCase = GetIt.instance<GetAllPRsUseCase>();
+      final allPRs = await useCase.execute();
+
+      // Group PRs by muscle group and exercise
+      final grouped = <String, Map<String, Map<String, dynamic>>>{};
+
+      for (var pr in allPRs) {
+        // Map category to muscle group
+        final muscleGroup = _mapCategoryToMuscleGroup(pr.exerciseCategories);
+        if (muscleGroup == null) continue;
+
+        // Initialize muscle group if needed
+        if (!grouped.containsKey(muscleGroup)) {
+          grouped[muscleGroup] = {};
+        }
+
+        // Initialize exercise if needed
+        if (!grouped[muscleGroup]!.containsKey(pr.exerciseName)) {
+          grouped[muscleGroup]![pr.exerciseName] = {
+            'exercise': pr.exerciseName,
+            'value': null,
+            'daysAgo': null,
+            'hasWeight': false,
+          };
+        }
+
+        final exercise = grouped[muscleGroup]![pr.exerciseName]!;
+
+        // Determine if this is a weighted exercise
+        if (pr.prRecord.type == 'maxWeight') {
+          exercise['hasWeight'] = true;
+        }
+
+        // Choose which PR to display: maxWeight for weighted, maxReps for bodyweight
+        if (pr.prRecord.type == 'maxWeight') {
+          exercise['value'] = pr.formattedValue;
+          exercise['daysAgo'] = pr.daysAgo;
+        } else if (pr.prRecord.type == 'maxReps' && !exercise['hasWeight']) {
+          exercise['value'] = pr.formattedValue;
+          exercise['daysAgo'] = pr.daysAgo;
         }
       }
+
+      // Convert to list format and sort
+      final result = <String, List<Map<String, dynamic>>>{};
+      
+      // Always include all muscle groups
+      final allMuscleGroups = ['CHEST', 'BACK', 'LEGS', 'SHOULDERS', 'ARMS', 'CORE', 'CARDIO', 'FLEXIBILITY'];
+      
+      for (var muscleGroup in allMuscleGroups) {
+        if (grouped.containsKey(muscleGroup)) {
+          final exercises = grouped[muscleGroup]!.values
+              .where((ex) => ex['value'] != null) // Only exercises with PRs
+              .toList();
+
+          // Sort by days ago (most recent first)
+          exercises.sort((a, b) {
+            final daysA = a['daysAgo'] as int?;
+            final daysB = b['daysAgo'] as int?;
+            if (daysA == null && daysB == null) return 0;
+            if (daysA == null) return 1;
+            if (daysB == null) return -1;
+            return daysA.compareTo(daysB);
+          });
+
+          result[muscleGroup] = exercises;
+        } else {
+          // Empty list for muscle groups without any PRs
+          result[muscleGroup] = [];
+        }
+      }
+
+      // Expand only groups with data
+      final expandedGroups = result.entries
+          .where((entry) => entry.value.isNotEmpty)
+          .map((entry) => entry.key)
+          .toSet();
+
+      setState(() {
+        _prsByMuscleGroup = result;
+        _expandedTypes = expandedGroups;
+        _isLoading = false;
+      });
+    } catch (e) {
+      debugPrint('Error loading PRs: $e');
+      setState(() {
+        _prsByMuscleGroup = {};
+        _isLoading = false;
+      });
     }
-    return minDays;
   }
 
-  List<Map<String, dynamic>> get _recentPRs {
-    List<Map<String, dynamic>> allPRs = [];
-    _prsByType.forEach((type, prs) {
-      for (var pr in prs) {
-        allPRs.add({...pr, 'type': type});
-      }
-    });
-    allPRs.sort((a, b) => a['daysAgo'].compareTo(b['daysAgo']));
-    return allPRs.take(5).toList();
+  String? _mapCategoryToMuscleGroup(List<String> categories) {
+    // Map exercise categories to muscle groups
+    if (categories.contains('chest')) return 'CHEST';
+    if (categories.contains('back')) return 'BACK';
+    if (categories.contains('legs')) return 'LEGS';
+    if (categories.contains('shoulders')) return 'SHOULDERS';
+    if (categories.contains('arms')) return 'ARMS';
+    if (categories.contains('core')) return 'CORE';
+    if (categories.contains('cardio')) return 'CARDIO';
+    if (categories.contains('flexibility')) return 'FLEXIBILITY';
+    return null; // Skip 'strength' category as it's redundant
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Center(
+        child: CircularProgressIndicator(color: AppColors.limeGreen),
+      );
+    }
+
+    if (_prsByMuscleGroup.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.emoji_events_outlined,
+              size: 64,
+              color: AppColors.offWhite.withOpacity(0.3),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'NO PERSONAL RECORDS YET',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+                color: AppColors.offWhite.withOpacity(0.5),
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Complete workouts to set your first PRs',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.offWhite.withOpacity(0.3),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Summary stats
-          _buildSummarySection(),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
+          // PRs by muscle group
+          ..._prsByMuscleGroup.entries.map((entry) {
+            final type = entry.key;
+            final prs = entry.value;
+            final isExpanded = _expandedTypes.contains(type);
 
-          // Recent PRs
-          _buildRecentPRsSection(),
-          const SizedBox(height: 24),
-
-          // All PRs by type
-          _buildAllPRsSection(),
-          const SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSummarySection() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.zero,
-              border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  '$_totalPRs',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.darkText,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'TOTAL PRs',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.darkText.withOpacity(0.5),
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppColors.limeGreen,
-              borderRadius: BorderRadius.zero,
-            ),
-            child: Column(
-              children: [
-                Text(
-                  '$_daysSinceLastPR',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.pureBlack,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'DAYS AGO',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.pureBlack.withOpacity(0.7),
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRecentPRsSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.zero,
-        border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.emoji_events, size: 20, color: AppColors.limeGreen),
-              const SizedBox(width: 8),
-              Text(
-                'RECENT PRs',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.darkText,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          ..._recentPRs.map((pr) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Row(
-                children: [
-                  Container(
-                    width: 4,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: AppColors.limeGreen,
-                      borderRadius: BorderRadius.zero,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          pr['exercise'],
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.darkText,
-                            letterSpacing: 0.5,
-                          ),
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.zero,
+                  border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+                ),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isExpanded) {
+                            _expandedTypes.remove(type);
+                          } else {
+                            _expandedTypes.add(type);
+                          }
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        color: Colors.transparent,
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/exercise_types/${type.toLowerCase()}.png',
+                              width: 24,
+                              height: 24,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.fitness_center,
+                                  size: 24,
+                                  color: AppColors.darkText,
+                                );
+                              },
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                type,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.darkText,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              isExpanded
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down,
+                              color: AppColors.darkText,
+                              size: 20,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          pr['date'],
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.darkText.withOpacity(0.5),
+                      ),
+                    ),
+                    if (isExpanded) ...[
+                      Container(height: 1, color: const Color(0xFFE0E0E0)),
+                      if (prs.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Center(
+                            child: Text(
+                              'NO PRs YET',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.darkText.withOpacity(0.3),
+                                letterSpacing: 0.5,
+                              ),
+                            ),
                           ),
+                        )
+                      else
+                        Column(
+                          children: prs.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final pr = entry.value;
+                            final daysAgo = pr['daysAgo'];
+                            final daysText = daysAgo == null
+                                ? ''
+                                : '$daysAgo ${daysAgo == 1 ? 'day' : 'days'} ago';
+
+                            return Container(
+                              color: index.isEven
+                                  ? Colors.transparent
+                                  : AppColors.darkText.withOpacity(0.075),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      pr['exercise'],
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.darkText,
+                                      ),
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                    Text(
+                                      pr['value'] ?? '—',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w900,
+                                        color: AppColors.darkText,
+                                      ),
+                                    ),
+                                    if (daysText.isNotEmpty) ...[
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        daysText,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.darkText.withOpacity(
+                                            0.5,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
                         ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    pr['value'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.darkText,
-                    ),
-                  ),
-                ],
+                    ],
+                  ],
+                ),
               ),
             );
           }).toList(),
+          const SizedBox(height: 20),
         ],
       ),
-    );
-  }
-
-  Widget _buildAllPRsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Text(
-            'ALL PERSONAL RECORDS',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w900,
-              color: AppColors.offWhite,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        ..._prsByType.entries.map((entry) {
-          final type = entry.key;
-          final prs = entry.value;
-          final isExpanded = _expandedTypes.contains(type);
-
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.zero,
-                border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-              ),
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isExpanded) {
-                          _expandedTypes.remove(type);
-                        } else {
-                          _expandedTypes.add(type);
-                        }
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      color: Colors.transparent,
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            'assets/images/exercise_types/${type.toLowerCase()}.png',
-                            width: 24,
-                            height: 24,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(
-                                Icons.fitness_center,
-                                size: 24,
-                                color: AppColors.darkText,
-                              );
-                            },
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              type,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.darkText,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.limeGreen.withOpacity(0.15),
-                              borderRadius: BorderRadius.zero,
-                            ),
-                            child: Text(
-                              '${prs.length}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.darkText,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Icon(
-                            isExpanded
-                                ? Icons.keyboard_arrow_up
-                                : Icons.keyboard_arrow_down,
-                            color: AppColors.darkText,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (isExpanded) ...[
-                    Container(height: 1, color: const Color(0xFFE0E0E0)),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: prs.map((pr) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        pr['exercise'],
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w700,
-                                          color: AppColors.darkText,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        pr['date'],
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.darkText.withOpacity(
-                                            0.5,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    pr['value'],
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.darkText,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ],
-    );
-  }
-
-  Widget _buildAllPRsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Text(
-            'ALL PERSONAL RECORDS',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w900,
-              color: AppColors.offWhite,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        ..._summary.prsByCategory.entries.map((entry) {
-          final type = entry.key;
-          final prs = entry.value;
-          final isExpanded = _expandedTypes.contains(type);
-
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.zero,
-                border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-              ),
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isExpanded) {
-                          _expandedTypes.remove(type);
-                        } else {
-                          _expandedTypes.add(type);
-                        }
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      color: Colors.transparent,
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            'assets/images/exercise_types/${type.toLowerCase()}.png',
-                            width: 24,
-                            height: 24,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(
-                                Icons.fitness_center,
-                                size: 24,
-                                color: AppColors.darkText,
-                              );
-                            },
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              type,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.darkText,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.limeGreen.withOpacity(0.15),
-                              borderRadius: BorderRadius.zero,
-                            ),
-                            child: Text(
-                              '${prs.length}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.darkText,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Icon(
-                            isExpanded
-                                ? Icons.keyboard_arrow_up
-                                : Icons.keyboard_arrow_down,
-                            color: AppColors.darkText,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (isExpanded) ...[
-                    Container(height: 1, color: const Color(0xFFE0E0E0)),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: prs.map((pr) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        pr['exercise'],
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w700,
-                                          color: AppColors.darkText,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        pr['date'],
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.darkText.withOpacity(
-                                            0.5,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    pr['value'],
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.darkText,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-            ),
-          );
-        }).toList(),
-      ],
     );
   }
 }

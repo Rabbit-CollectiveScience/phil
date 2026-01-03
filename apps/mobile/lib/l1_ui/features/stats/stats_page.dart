@@ -6,7 +6,7 @@ import '../../shared/theme/app_colors.dart';
 import 'views/today_view.dart';
 import 'views/weekly_view.dart';
 import 'views/log_view.dart';
-import 'views/pr_view_reference.dart';
+import 'views/pr_view.dart';
 import 'view_models/today_stats_overview.dart';
 import 'view_models/exercise_detail_today.dart';
 
