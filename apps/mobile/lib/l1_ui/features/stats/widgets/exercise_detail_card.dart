@@ -22,7 +22,7 @@ class ExerciseDetailCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasPRs = prsToday.isNotEmpty;
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
