@@ -17,11 +17,8 @@ class RecalculatePRsForExerciseUseCase {
 
   Future<void> execute(String exerciseId) async {
     try {
-      // 1. Get exercise info to determine hasWeight
+      // 1. Get exercise info
       final exercise = await _exerciseRepository.getExerciseById(exerciseId);
-
-      // Check if exercise has a weight field
-      final hasWeight = exercise.fields.any((field) => field.name == 'weight');
 
       // 2. Get all workout sets for this exercise
       final allSets = await _workoutSetRepository.getWorkoutSets();
@@ -35,84 +32,63 @@ class RecalculatePRsForExerciseUseCase {
       // If no sets remain, we're done
       if (setsForExercise.isEmpty) return;
 
-      // 4. Calculate max values
-      double? maxWeight;
-      DateTime? maxWeightDate;
-      double? maxReps;
-      DateTime? maxRepsDate;
-      double? maxVolume;
-      DateTime? maxVolumeDate;
+      // 4. Calculate max values for each field dynamically
+      final maxValues = <String, Map<String, dynamic>>{};
 
       for (final set in setsForExercise) {
         if (set.values == null) continue;
 
-        // Convert to double, handling both int and double types
+        // Check each field defined in the exercise
+        for (final field in exercise.fields) {
+          final fieldName = field.name;
+          final value = set.values![fieldName];
+
+          if (value == null) continue;
+
+          // Convert to double
+          final numValue = (value as num?)?.toDouble();
+          if (numValue == null || numValue <= 0) continue;
+
+          // Track max value for this field
+          final prType = 'max${fieldName[0].toUpperCase()}${fieldName.substring(1)}';
+
+          if (!maxValues.containsKey(prType) ||
+              numValue > maxValues[prType]!['value']) {
+            maxValues[prType] = {
+              'value': numValue,
+              'date': set.completedAt,
+            };
+          }
+        }
+
+        // Calculate derived PRs (like volume = weight × reps)
         final weight = (set.values!['weight'] as num?)?.toDouble();
         final reps = (set.values!['reps'] as num?)?.toDouble();
-
-        // Track maxWeight for weighted exercises
-        if (hasWeight && weight != null && weight > 0) {
-          if (maxWeight == null || weight > maxWeight) {
-            maxWeight = weight;
-            maxWeightDate = set.completedAt;
-          }
-        }
-
-        // Track maxReps for bodyweight exercises
-        if (!hasWeight && reps != null && reps > 0) {
-          if (maxReps == null || reps > maxReps) {
-            maxReps = reps;
-            maxRepsDate = set.completedAt;
-          }
-        }
-
-        // Track maxVolume for weighted exercises
-        if (hasWeight &&
-            weight != null &&
-            weight > 0 &&
-            reps != null &&
-            reps > 0) {
+        
+        if (weight != null && weight > 0 && reps != null && reps > 0) {
           final volume = weight * reps;
-          if (maxVolume == null || volume > maxVolume) {
-            maxVolume = volume;
-            maxVolumeDate = set.completedAt;
+          if (!maxValues.containsKey('maxVolume') ||
+              volume > maxValues['maxVolume']!['value']) {
+            maxValues['maxVolume'] = {
+              'value': volume,
+              'date': set.completedAt,
+            };
           }
         }
       }
 
-      // 5. Create new PRs based on max values found
-      if (maxWeight != null && maxWeightDate != null) {
-        await _prRepository.save(
-          PersonalRecord(
-            id: 'pr_${exerciseId}_maxWeight_${DateTime.now().millisecondsSinceEpoch}',
-            exerciseId: exerciseId,
-            type: 'maxWeight',
-            value: maxWeight,
-            achievedAt: maxWeightDate,
-          ),
-        );
-      }
+      // 5. Create PR records for all max values found
+      for (final entry in maxValues.entries) {
+        final prType = entry.key;
+        final data = entry.value;
 
-      if (maxReps != null && maxRepsDate != null) {
         await _prRepository.save(
           PersonalRecord(
-            id: 'pr_${exerciseId}_maxReps_${DateTime.now().millisecondsSinceEpoch}',
+            id: 'pr_${exerciseId}_${prType}_${DateTime.now().millisecondsSinceEpoch}',
             exerciseId: exerciseId,
-            type: 'maxReps',
-            value: maxReps,
-            achievedAt: maxRepsDate,
-          ),
-        );
-      }
-
-      if (maxVolume != null && maxVolumeDate != null) {
-        await _prRepository.save(
-          PersonalRecord(
-            id: 'pr_${exerciseId}_maxVolume_${DateTime.now().millisecondsSinceEpoch}',
-            exerciseId: exerciseId,
-            type: 'maxVolume',
-            value: maxVolume,
-            achievedAt: maxVolumeDate,
+            type: prType,
+            value: data['value'],
+            achievedAt: data['date'],
           ),
         );
       }

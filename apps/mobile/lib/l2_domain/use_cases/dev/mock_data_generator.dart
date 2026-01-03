@@ -177,7 +177,7 @@ class MockDataGenerator {
 
     // 5% chance of incomplete data
     final hasNullValues = _random.nextDouble() < 0.05;
-    
+
     if (hasNullValues) {
       return WorkoutSet(
         id: 'mock_${exercise.id}_${date.millisecondsSinceEpoch}',
@@ -189,10 +189,10 @@ class MockDataGenerator {
 
     // Build values map based on exercise's actual fields
     final values = <String, dynamic>{};
-    
+
     for (final field in exercise.fields) {
       final fieldName = field.name;
-      
+
       if (fieldName == 'durationInSeconds') {
         final baseDuration = 1200; // 20 minutes base
         values[fieldName] = (baseDuration * progressionFactor).round();
@@ -204,7 +204,9 @@ class MockDataGenerator {
         values[fieldName] = baseSpeed * progressionFactor;
       } else if (fieldName == 'resistance') {
         final baseResistance = 5.0; // level 5 base
-        values[fieldName] = (baseResistance * progressionFactor).round().toDouble();
+        values[fieldName] = (baseResistance * progressionFactor)
+            .round()
+            .toDouble();
       } else if (fieldName == 'incline') {
         final baseIncline = 10.0; // 10% base
         values[fieldName] = (baseIncline * progressionFactor).clamp(5.0, 15.0);

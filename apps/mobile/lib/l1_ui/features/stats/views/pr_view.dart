@@ -45,30 +45,21 @@ class _PRViewState extends State<PRView> {
         if (!grouped[muscleGroup]!.containsKey(pr.exerciseName)) {
           grouped[muscleGroup]![pr.exerciseName] = {
             'exercise': pr.exerciseName,
-            'value': null,
-            'daysAgo': null,
-            'hasWeight': false,
+            'prs': <String, Map<String, dynamic>>{}, // Store all PR types
           };
         }
 
         final exercise = grouped[muscleGroup]![pr.exerciseName]!;
+        final prs = exercise['prs'] as Map<String, Map<String, dynamic>>;
 
-        // Determine if this is a weighted exercise
-        if (pr.prRecord.type == 'maxWeight') {
-          exercise['hasWeight'] = true;
-        }
-
-        // Choose which PR to display: maxWeight for weighted, maxReps for bodyweight
-        if (pr.prRecord.type == 'maxWeight') {
-          exercise['value'] = pr.formattedValue;
-          exercise['daysAgo'] = pr.daysAgo;
-        } else if (pr.prRecord.type == 'maxReps' && !exercise['hasWeight']) {
-          exercise['value'] = pr.formattedValue;
-          exercise['daysAgo'] = pr.daysAgo;
-        }
+        // Store this PR type
+        prs[pr.prRecord.type] = {
+          'value': pr.formattedValue,
+          'daysAgo': pr.daysAgo,
+        };
       }
 
-      // Convert to list format and sort
+      // Convert to list format and select best PR to display
       final result = <String, List<Map<String, dynamic>>>{};
 
       // Always include all muscle groups
@@ -85,9 +76,24 @@ class _PRViewState extends State<PRView> {
 
       for (var muscleGroup in allMuscleGroups) {
         if (grouped.containsKey(muscleGroup)) {
-          final exercises = grouped[muscleGroup]!.values
-              .where((ex) => ex['value'] != null) // Only exercises with PRs
-              .toList();
+          final exercises = <Map<String, dynamic>>[];
+
+          for (var exerciseData in grouped[muscleGroup]!.values) {
+            final prs =
+                exerciseData['prs'] as Map<String, Map<String, dynamic>>;
+
+            // Select best PR to display using priority order
+            final selectedPR = _selectBestPR(prs);
+
+            if (selectedPR != null) {
+              exercises.add({
+                'exercise': exerciseData['exercise'],
+                'value': selectedPR['value'],
+                'daysAgo': selectedPR['daysAgo'],
+                'prType': selectedPR['type'],
+              });
+            }
+          }
 
           // Sort by days ago (most recent first)
           exercises.sort((a, b) {
@@ -123,6 +129,90 @@ class _PRViewState extends State<PRView> {
         _prsByMuscleGroup = {};
         _isLoading = false;
       });
+    }
+  }
+
+  /// Select the best PR to display based on priority order
+  Map<String, dynamic>? _selectBestPR(Map<String, Map<String, dynamic>> prs) {
+    if (prs.isEmpty) return null;
+
+    // Priority order for PR types
+    final priorityOrder = [
+      'maxWeight', // Weighted strength exercises
+      'maxReps', // Bodyweight strength exercises
+      'maxDurationInSeconds', // Time-based cardio
+      'maxDistance', // Distance-based cardio
+      'maxSpeed', // Speed-based cardio
+      'maxResistance', // Resistance-based cardio
+      'maxIncline', // Incline-based cardio
+      'maxHoldTimeInSeconds', // Flexibility exercises
+    ];
+
+    // Try priority order first
+    for (var prType in priorityOrder) {
+      if (prs.containsKey(prType)) {
+        final prData = prs[prType]!;
+        return {
+          'value': prData['value'],
+          'daysAgo': prData['daysAgo'],
+          'type': prType,
+        };
+      }
+    }
+
+    // Fallback: return first available PR
+    final firstEntry = prs.entries.first;
+    return {
+      'value': firstEntry.value['value'],
+      'daysAgo': firstEntry.value['daysAgo'],
+      'type': firstEntry.key,
+    };
+  }
+
+  /// Format PR value based on type
+  String _formatPRValue(String prType, String rawValue) {
+    // Try to parse the raw value
+    final numValue = double.tryParse(rawValue);
+    if (numValue == null) return rawValue;
+
+    switch (prType) {
+      case 'maxDurationInSeconds':
+      case 'maxHoldTimeInSeconds':
+        // Convert seconds to minutes
+        final minutes = (numValue / 60).floor();
+        final seconds = (numValue % 60).round();
+        if (minutes > 0 && seconds > 0) {
+          return '$minutes min $seconds sec';
+        } else if (minutes > 0) {
+          return '$minutes min';
+        } else {
+          return '$seconds sec';
+        }
+
+      case 'maxDistance':
+        return '${numValue.toStringAsFixed(1)} km';
+
+      case 'maxSpeed':
+        return '${numValue.toStringAsFixed(1)} km/h';
+
+      case 'maxResistance':
+        return 'Level ${numValue.round()}';
+
+      case 'maxIncline':
+        return '${numValue.toStringAsFixed(1)}%';
+
+      case 'maxWeight':
+        return '${numValue.toStringAsFixed(1)} kg';
+
+      case 'maxReps':
+        return '${numValue.round()} reps';
+
+      case 'maxVolume':
+        return '${numValue.toStringAsFixed(0)} kg';
+
+      default:
+        // Unknown type, return raw value
+        return rawValue;
     }
   }
 
@@ -280,6 +370,13 @@ class _PRViewState extends State<PRView> {
                                 ? ''
                                 : '$daysAgo ${daysAgo == 1 ? 'day' : 'days'} ago';
 
+                            // Format the value based on PR type
+                            final rawValue = pr['value'] ?? '—';
+                            final prType = pr['prType'] ?? '';
+                            final formattedValue = prType.isNotEmpty
+                                ? _formatPRValue(prType, rawValue)
+                                : rawValue;
+
                             return Container(
                               color: index.isEven
                                   ? Colors.transparent
@@ -304,7 +401,7 @@ class _PRViewState extends State<PRView> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        pr['value'] ?? '—',
+                                        formattedValue,
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w900,
