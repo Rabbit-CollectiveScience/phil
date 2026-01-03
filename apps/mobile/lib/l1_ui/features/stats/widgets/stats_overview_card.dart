@@ -39,6 +39,16 @@ class StatsOverviewCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            'OVERVIEW',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w900,
+              color: AppColors.darkText.withOpacity(0.5),
+              letterSpacing: 1.2,
+            ),
+          ),
+          const SizedBox(height: 32),
           // 2x2 Grid of metrics
           GridView.count(
             shrinkWrap: true,
@@ -54,6 +64,7 @@ class StatsOverviewCard extends StatelessWidget {
               MetricTile(value: avgReps.toStringAsFixed(1), label: 'AVG REPS'),
             ],
           ),
+          const SizedBox(height: 8),
           if (exerciseTypes.isNotEmpty) ...[
             const SizedBox(height: 16),
             const Divider(height: 1, color: AppColors.darkGrey),
