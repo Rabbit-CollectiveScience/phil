@@ -14,6 +14,7 @@ import 'l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart'
 import 'l2_domain/use_cases/workout_sets/get_workout_sets_by_date_use_case.dart';
 import 'l2_domain/use_cases/stats/get_today_stats_overview_use_case.dart';
 import 'l2_domain/use_cases/stats/get_today_exercise_details_use_case.dart';
+import 'l2_domain/use_cases/stats/get_weekly_stats_use_case.dart';
 import 'l2_domain/use_cases/filters/get_last_filter_selection_use_case.dart';
 import 'l2_domain/use_cases/filters/record_filter_selection_use_case.dart';
 import 'l2_domain/use_cases/filters/should_show_filter_page_use_case.dart';
@@ -114,6 +115,12 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
     () => GetTodayExerciseDetailsUseCase(
       getIt<GetWorkoutSetsByDateUseCase>(),
       prRepository: getIt<PersonalRecordRepository>(),
+    ),
+  );
+  getIt.registerFactory<GetWeeklyStatsUseCase>(
+    () => GetWeeklyStatsUseCase(
+      getIt<GetWorkoutSetsByDateUseCase>(),
+      getIt<ExerciseRepository>(),
     ),
   );
 

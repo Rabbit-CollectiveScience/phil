@@ -30,8 +30,12 @@ class TypeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final typeKey = type.toLowerCase();
     final iconPath = 'assets/images/exercise_types/$typeKey.png';
-    final isCardioOrFlexibility = typeKey == 'cardio' || typeKey == 'flexibility';
-    final hasData = exercises > 0 || sets > 0 || (isCardioOrFlexibility ? (duration ?? 0) > 0 : volume > 0);
+    final isCardioOrFlexibility =
+        typeKey == 'cardio' || typeKey == 'flexibility';
+    final hasData =
+        exercises > 0 ||
+        sets > 0 ||
+        (isCardioOrFlexibility ? (duration ?? 0) > 0 : volume > 0);
     final hasPR = prExercise != null && prValue != null;
     final hasBestVolume = bestVolumeExercise != null && bestVolumeValue != null;
     final hasNotableOutcome = hasPR || hasBestVolume;
@@ -104,7 +108,7 @@ class TypeCard extends StatelessWidget {
               ),
               MetricItem(value: '$sets', label: 'Sets', hasData: hasData),
               MetricItem(
-                value: isCardioOrFlexibility 
+                value: isCardioOrFlexibility
                     ? '${(duration ?? 0).toInt()}'
                     : '${volume.toInt()}',
                 label: isCardioOrFlexibility ? 'min' : 'kg',
