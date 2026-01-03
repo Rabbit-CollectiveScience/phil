@@ -113,19 +113,23 @@ class _WeeklyViewState extends State<WeeklyView> {
                     letterSpacing: 1.2,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 32),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    StatColumn(value: '5', label: 'DAYS TRAINED'),
+                    Expanded(
+                      child: StatColumn(value: '5', label: 'DAYS TRAINED'),
+                    ),
                     Container(
                       width: 1,
-                      height: 50,
+                      height: 60,
                       color: AppColors.darkGrey.withOpacity(0.2),
                     ),
-                    StatColumn(value: '12', label: 'SESSIONS'),
+                    Expanded(
+                      child: StatColumn(value: '12', label: 'AVG SETS/DAY'),
+                    ),
                   ],
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),
