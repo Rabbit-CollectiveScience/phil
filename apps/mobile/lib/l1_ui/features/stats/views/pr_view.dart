@@ -14,7 +14,8 @@ class _PRViewState extends State<PRView> {
   Map<String, List<Map<String, dynamic>>> _prsByMuscleGroup = {};
   bool _isLoading = true;
   Set<String> _expandedTypes = {};
-  Set<String> _showingAllExercises = {}; // Track which groups show all exercises
+  Set<String> _showingAllExercises =
+      {}; // Track which groups show all exercises
 
   @override
   void initState() {
@@ -345,10 +346,11 @@ class _PRViewState extends State<PRView> {
                           children: [
                             Column(
                               children: (() {
-                                final showingAll =
-                                    _showingAllExercises.contains(type);
-                                final displayPRs =
-                                    showingAll ? prs : prs.take(3).toList();
+                                final showingAll = _showingAllExercises
+                                    .contains(type);
+                                final displayPRs = showingAll
+                                    ? prs
+                                    : prs.take(3).toList();
 
                                 return displayPRs.asMap().entries.map((entry) {
                                   final index = entry.key;
@@ -419,7 +421,9 @@ class _PRViewState extends State<PRView> {
                             ),
                             if (prs.length > 3) ...[
                               Container(
-                                  height: 1, color: const Color(0xFFE0E0E0)),
+                                height: 1,
+                                color: const Color(0xFFE0E0E0),
+                              ),
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -446,8 +450,9 @@ class _PRViewState extends State<PRView> {
                                         style: TextStyle(
                                           fontSize: 11,
                                           fontWeight: FontWeight.w900,
-                                          color: AppColors.darkText
-                                              .withOpacity(0.5),
+                                          color: AppColors.darkText.withOpacity(
+                                            0.5,
+                                          ),
                                           letterSpacing: 0.5,
                                         ),
                                       ),
@@ -457,8 +462,9 @@ class _PRViewState extends State<PRView> {
                                             ? Icons.keyboard_arrow_up
                                             : Icons.keyboard_arrow_down,
                                         size: 16,
-                                        color:
-                                            AppColors.darkText.withOpacity(0.5),
+                                        color: AppColors.darkText.withOpacity(
+                                          0.5,
+                                        ),
                                       ),
                                     ],
                                   ),

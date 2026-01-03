@@ -29,7 +29,7 @@ class _StatsPageState extends State<StatsPage> {
   @override
   void initState() {
     super.initState();
-    final sections = ['PR', 'TODAY', 'WEEKLY', 'LOG', 'SETTING'];
+    final sections = ['TODAY', 'WEEKLY', 'PR', 'LOG', 'SETTING'];
     _selectedSection = sections[widget.initialSection];
     if (_selectedSection == 'TODAY') {
       _loadTodayData();
@@ -64,7 +64,7 @@ class _StatsPageState extends State<StatsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> sections = ['PR', 'TODAY', 'WEEKLY', 'LOG', 'SETTING'];
+    final List<String> sections = ['TODAY', 'WEEKLY', 'PR', 'LOG', 'SETTING'];
 
     return Scaffold(
       backgroundColor: AppColors.deepCharcoal,

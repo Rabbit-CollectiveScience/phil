@@ -652,14 +652,11 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                       child: DashboardIconButton(
                         size: _iconSize,
                         onTap: () async {
-                          // Navigate to PR view if no sets today, TODAY view if has sets
-                          final targetSection = _visualCounterValue == 0
-                              ? 0
-                              : 1;
+                          // Always navigate to first section (TODAY)
                           await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) =>
-                                  StatsPage(initialSection: targetSection),
+                                  const StatsPage(initialSection: 0),
                             ),
                           );
 
