@@ -21,15 +21,22 @@ class ExerciseDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasPRs = prsToday.isNotEmpty;
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.zero,
-        border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+        border: Border.all(
+          color: hasPRs ? AppColors.limeGreen : const Color(0xFFE0E0E0),
+          width: hasPRs ? 2 : 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.white.withOpacity(0.08),
+            color: hasPRs
+                ? AppColors.limeGreen.withOpacity(0.15)
+                : Colors.white.withOpacity(0.08),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
