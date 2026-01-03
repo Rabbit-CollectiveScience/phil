@@ -84,12 +84,11 @@ class GetTodayExerciseDetailsUseCase {
       if (_prRepository != null) {
         final allPRs = await _prRepository!.getPRsByExercise(exerciseId);
 
-        // Filter to only PRs achieved today
-        final today = DateTime.now();
+        // Filter to only PRs achieved on the target date
         final todayPRs = allPRs.where((pr) {
-          return pr.achievedAt.year == today.year &&
-              pr.achievedAt.month == today.month &&
-              pr.achievedAt.day == today.day;
+          return pr.achievedAt.year == targetDate.year &&
+              pr.achievedAt.month == targetDate.month &&
+              pr.achievedAt.day == targetDate.day;
         }).toList();
 
         // Convert to maps for easy JSON serialization
