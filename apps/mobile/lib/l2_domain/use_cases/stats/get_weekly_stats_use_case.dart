@@ -65,10 +65,19 @@ class GetWeeklyStatsUseCase {
       final exercise = await _exerciseRepository.getExerciseById(exerciseId);
       if (exercise == null) continue;
 
-      // Get primary category (first one)
-      final String type = exercise.categories.isNotEmpty
-          ? exercise.categories.first.toUpperCase()
-          : 'OTHER';
+      // Get category - for strength exercises, take the second category (muscle group)
+      // For cardio/flexibility, take the first category
+      String type = 'OTHER';
+      if (exercise.categories.isNotEmpty) {
+        if (exercise.categories.first.toLowerCase() == 'strength' &&
+            exercise.categories.length > 1) {
+          // Strength exercise - use the muscle group (second category)
+          type = exercise.categories[1].toUpperCase();
+        } else {
+          // Cardio/flexibility - use the first category
+          type = exercise.categories.first.toUpperCase();
+        }
+      }
 
       // Initialize type stats if not exists
       if (!typeStats.containsKey(type)) {

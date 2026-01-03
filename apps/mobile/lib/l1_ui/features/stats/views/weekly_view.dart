@@ -194,23 +194,45 @@ class _WeeklyViewState extends State<WeeklyView> {
               ),
             ),
             const SizedBox(height: 16),
-            // All exercise types
-            ...(_typeStats ?? []).map((typeStat) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: TypeCard(
-                  type: typeStat.type,
-                  exercises: typeStat.exercises,
-                  sets: typeStat.sets,
-                  volume: typeStat.volume,
-                  duration: typeStat.duration,
-                ),
-              );
-            }),
+            // All exercise types - show all muscle groups even if empty
+            ..._buildAllTypeCards(),
             const SizedBox(height: 20),
           ],
         ],
       ),
     );
+  }
+
+  List<Widget> _buildAllTypeCards() {
+    // Define all exercise types in order
+    final allTypes = [
+      'CHEST',
+      'BACK',
+      'LEGS',
+      'SHOULDERS',
+      'ARMS',
+      'CORE',
+      'CARDIO',
+      'FLEXIBILITY',
+    ];
+
+    return allTypes.map((type) {
+      // Find stats for this type, or use empty if not found
+      final typeStat = (_typeStats ?? []).firstWhere(
+        (stat) => stat.type == type,
+        orElse: () => ExerciseTypeWeeklyStats.empty(type),
+      );
+
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: TypeCard(
+          type: typeStat.type,
+          exercises: typeStat.exercises,
+          sets: typeStat.sets,
+          volume: typeStat.volume,
+          duration: typeStat.duration,
+        ),
+      );
+    }).toList();
   }
 }
