@@ -125,7 +125,7 @@ class _StatsPageState extends State<StatsPage> {
                               );
                               return;
                             }
-                            
+
                             setState(() {
                               _selectedSection = selected;
                             });

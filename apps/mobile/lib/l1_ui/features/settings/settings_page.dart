@@ -54,16 +54,42 @@ class SettingsPage extends StatelessWidget {
             ),
             // Content area
             Expanded(
-              child: Center(
-                child: Text(
-                  'SETTINGS CONTENT\nCOMING SOON',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.offWhite.withOpacity(0.3),
-                    letterSpacing: 0.5,
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // TODO: Add mock data to database
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: AppColors.boldGrey,
+                          borderRadius: BorderRadius.zero,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.pureBlack.withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'ADD MOCK DATA',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.offWhite,
+                              letterSpacing: 1.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
