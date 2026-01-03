@@ -12,17 +12,20 @@ class GetTodayStatsOverviewUseCase {
     this._exerciseRepository,
   );
 
-  /// Executes the use case to calculate today's overview statistics.
+  /// Executes the use case to calculate overview statistics for a specific date.
+  ///
+  /// Parameters:
+  /// - date: Optional date to query. Defaults to today if not provided.
   ///
   /// Returns a Map containing:
-  /// - setsCount: Total number of sets completed today
-  /// - exercisesCount: Number of unique exercises performed today
+  /// - setsCount: Total number of sets completed on the date
+  /// - exercisesCount: Number of unique exercises performed on the date
   /// - totalVolume: Sum of calculated volume for all sets
   /// - exerciseTypes: List of unique exercise categories
-  Future<Map<String, dynamic>> execute() async {
-    final today = DateTime.now();
+  Future<Map<String, dynamic>> execute({DateTime? date}) async {
+    final targetDate = date ?? DateTime.now();
     final workoutSetsWithDetails = await _getWorkoutSetsByDateUseCase.execute(
-      date: today,
+      date: targetDate,
     );
 
     if (workoutSetsWithDetails.isEmpty) {

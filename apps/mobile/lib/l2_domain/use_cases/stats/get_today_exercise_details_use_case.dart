@@ -14,17 +14,20 @@ class GetTodayExerciseDetailsUseCase {
     PersonalRecordRepository? prRepository,
   }) : _prRepository = prRepository;
 
-  /// Executes the use case to get exercise details for today.
+  /// Executes the use case to get exercise details for a specific date.
+  ///
+  /// Parameters:
+  /// - date: Optional date to query. Defaults to today if not provided.
   ///
   /// Returns a List of Maps, each containing:
   /// - name: Exercise name
   /// - sets: Number of sets completed
   /// - volumeToday: Total volume calculated for this exercise
   /// - maxWeightToday: Highest weight value used (null if no weight field)
-  Future<List<Map<String, dynamic>>> execute() async {
-    final today = DateTime.now();
+  Future<List<Map<String, dynamic>>> execute({DateTime? date}) async {
+    final targetDate = date ?? DateTime.now();
     final workoutSetsWithDetails = await _getWorkoutSetsByDateUseCase.execute(
-      date: today,
+      date: targetDate,
     );
 
     if (workoutSetsWithDetails.isEmpty) {

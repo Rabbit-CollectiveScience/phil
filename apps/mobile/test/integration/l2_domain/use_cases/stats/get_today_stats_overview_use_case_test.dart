@@ -136,5 +136,68 @@ void main() {
       expect(result['exercisesCount'], equals(1));
       expect(result['totalVolume'], equals(0.0));
     });
+
+    test('returns stats for specific past date (yesterday)', () async {
+      // Arrange
+      final exercises = await exerciseRepo.getAllExercises();
+      final benchPress = exercises.firstWhere(
+        (e) => e.name.contains('Bench Press'),
+      );
+
+      final yesterday = DateTime.now().subtract(const Duration(days: 1));
+      await recordUseCase.execute(
+        exerciseId: benchPress.id,
+        values: {'weight': 100, 'reps': 10},
+        completedAt: yesterday,
+      );
+
+      // Act
+      final result = await useCase.execute(date: yesterday);
+
+      // Assert
+      expect(result['setsCount'], equals(1));
+      expect(result['exercisesCount'], equals(1));
+      expect(result['totalVolume'], equals(1000.0));
+    });
+
+    test('returns zero stats for future date', () async {
+      // Arrange
+      final tomorrow = DateTime.now().add(const Duration(days: 1));
+
+      // Act
+      final result = await useCase.execute(date: tomorrow);
+
+      // Assert
+      expect(result['setsCount'], equals(0));
+      expect(result['exercisesCount'], equals(0));
+      expect(result['totalVolume'], equals(0.0));
+      expect(result['exerciseTypes'], isEmpty);
+    });
+
+    test('returns stats for date 7 days ago', () async {
+      // Arrange
+      final exercises = await exerciseRepo.getAllExercises();
+      final squat = exercises.firstWhere((e) => e.name.contains('Squat'));
+
+      final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
+      await recordUseCase.execute(
+        exerciseId: squat.id,
+        values: {'weight': 150, 'reps': 5},
+        completedAt: sevenDaysAgo,
+      );
+      await recordUseCase.execute(
+        exerciseId: squat.id,
+        values: {'weight': 160, 'reps': 5},
+        completedAt: sevenDaysAgo,
+      );
+
+      // Act
+      final result = await useCase.execute(date: sevenDaysAgo);
+
+      // Assert
+      expect(result['setsCount'], equals(2));
+      expect(result['exercisesCount'], equals(1));
+      expect(result['totalVolume'], equals(1550.0)); // (150*5) + (160*5)
+    });
   });
 }

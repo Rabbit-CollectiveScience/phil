@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../l2_domain/use_cases/stats/get_today_stats_overview_use_case.dart';
-import '../../../l2_domain/use_cases/stats/get_today_exercise_details_use_case.dart';
-import '../../../main.dart';
 import '../../shared/theme/app_colors.dart';
 import 'views/today_view.dart';
 import 'views/weekly_view.dart';
 import 'views/log_view.dart';
 import 'views/pr_view.dart';
 import '../settings/settings_page.dart';
-import 'view_models/today_stats_overview.dart';
-import 'view_models/exercise_detail_today.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key, this.initialSection = 1});
@@ -22,44 +17,12 @@ class StatsPage extends StatefulWidget {
 
 class _StatsPageState extends State<StatsPage> {
   late String _selectedSection;
-  TodayStatsOverview? _todayOverview;
-  List<ExerciseDetailToday>? _exerciseDetails;
-  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     final sections = ['TODAY', 'WEEKLY', 'PR', 'LOG', 'SETTING'];
     _selectedSection = sections[widget.initialSection];
-    if (_selectedSection == 'TODAY') {
-      _loadTodayData();
-    }
-  }
-
-  Future<void> _loadTodayData() async {
-    setState(() => _isLoading = true);
-
-    try {
-      final overviewUseCase = getIt<GetTodayStatsOverviewUseCase>();
-      final detailsUseCase = getIt<GetTodayExerciseDetailsUseCase>();
-
-      final overviewMap = await overviewUseCase.execute();
-      final detailsList = await detailsUseCase.execute();
-
-      setState(() {
-        _todayOverview = TodayStatsOverview.fromMap(overviewMap);
-        _exerciseDetails = detailsList
-            .map((map) => ExerciseDetailToday.fromMap(map))
-            .toList();
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _todayOverview = TodayStatsOverview.empty();
-        _exerciseDetails = [];
-        _isLoading = false;
-      });
-    }
   }
 
   @override
@@ -129,10 +92,6 @@ class _StatsPageState extends State<StatsPage> {
                             setState(() {
                               _selectedSection = selected;
                             });
-                            // Reload data when switching to TODAY section
-                            if (selected == 'TODAY') {
-                              _loadTodayData();
-                            }
                           },
                           offset: const Offset(0, 50),
                           color: AppColors.boldGrey,
@@ -197,26 +156,7 @@ class _StatsPageState extends State<StatsPage> {
             // Content area
             Expanded(
               child: _selectedSection == 'TODAY'
-                  ? _isLoading
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.limeGreen,
-                            ),
-                          )
-                        : _todayOverview != null && _exerciseDetails != null
-                        ? TodayView(
-                            overview: _todayOverview!,
-                            exerciseDetails: _exerciseDetails!,
-                          )
-                        : Center(
-                            child: Text(
-                              'Failed to load today stats',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.offWhite.withOpacity(0.5),
-                              ),
-                            ),
-                          )
+                  ? const TodayView()
                   : _selectedSection == 'WEEKLY'
                   ? const WeeklyView()
                   : _selectedSection == 'LOG'
