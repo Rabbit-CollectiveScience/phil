@@ -88,7 +88,7 @@ void main() {
       expect(exercise.categories.length, 1);
     });
 
-    test('should derive type from categories for backward compatibility', () {
+    test('should support only strength and cardio exercise types', () {
       final strengthJson = {
         'id': 'arms_1',
         'name': 'Barbell Curl',
@@ -105,21 +105,11 @@ void main() {
         'fields': [],
       };
 
-      final flexibilityJson = {
-        'id': 'flex_1',
-        'name': 'Hamstring Stretch',
-        'description': 'Test',
-        'categories': ['flexibility', 'legs'],
-        'fields': [],
-      };
-
       final strengthExercise = Exercise.fromJson(strengthJson);
       final cardioExercise = Exercise.fromJson(cardioJson);
-      final flexibilityExercise = Exercise.fromJson(flexibilityJson);
 
       expect(strengthExercise.categories, contains('strength'));
       expect(cardioExercise.categories, contains('cardio'));
-      expect(flexibilityExercise.categories, contains('flexibility'));
     });
 
     test('should handle missing categories gracefully', () {
@@ -133,6 +123,69 @@ void main() {
       final exercise = Exercise.fromJson(json);
 
       expect(exercise.categories, ['strength']); // Default fallback
+    });
+
+    test('should verify flexibility category is not used in valid exercises', () {
+      final exercises = [
+        {
+          'id': 'arms_1',
+          'name': 'Barbell Curl',
+          'description': 'Test',
+          'categories': ['strength', 'arms'],
+          'fields': [],
+        },
+        {
+          'id': 'cardio_1',
+          'name': 'Treadmill',
+          'description': 'Test',
+          'categories': ['cardio'],
+          'fields': [],
+        },
+        {
+          'id': 'legs_1',
+          'name': 'Squat',
+          'description': 'Test',
+          'categories': ['strength', 'legs', 'core'],
+          'fields': [],
+        },
+      ];
+
+      for (final json in exercises) {
+        final exercise = Exercise.fromJson(json);
+        expect(
+          exercise.categories.contains('flexibility'),
+          false,
+          reason: 'Exercise ${exercise.name} should not have flexibility category',
+        );
+      }
+    });
+
+    test('should not accept flexibility as valid exercise type', () {
+      // Even if someone tries to create a flexibility exercise,
+      // the system should only accept strength and cardio
+      final validTypes = ['strength', 'cardio'];
+      
+      final strengthJson = {
+        'id': 'test_1',
+        'name': 'Test',
+        'description': 'Test',
+        'categories': ['strength'],
+        'fields': [],
+      };
+      
+      final cardioJson = {
+        'id': 'test_2',
+        'name': 'Test',
+        'description': 'Test',
+        'categories': ['cardio'],
+        'fields': [],
+      };
+
+      final strengthEx = Exercise.fromJson(strengthJson);
+      final cardioEx = Exercise.fromJson(cardioJson);
+
+      expect(validTypes.contains(strengthEx.categories.first), true);
+      expect(validTypes.contains(cardioEx.categories.first), true);
     });
   });
 }

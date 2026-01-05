@@ -13,7 +13,6 @@ part 'workout_set.g.dart';
 // Examples:
 // - Squat set: {'weight': 100, 'reps': 10, 'unit': 'kg'}
 // - Run set: {'durationInSeconds': 1800, 'distance': 5.0, 'unit': 'km'}
-// - Stretch set: {'holdTimeInSeconds': 30, 'reps': 3}
 // - No input yet: {} or null values
 
 @HiveType(typeId: 0)

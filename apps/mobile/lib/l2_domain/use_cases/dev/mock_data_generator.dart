@@ -20,14 +20,10 @@ class MockDataGenerator {
     final cardioExercises = exercises
         .where((e) => e.categories.contains('cardio'))
         .toList();
-    final flexibilityExercises = exercises
-        .where((e) => e.categories.contains('flexibility'))
-        .toList();
 
     // Select key exercises for regular tracking
     final mainStrengthExercises = _selectMainExercises(strengthExercises, 8);
     final mainCardioExercises = _selectMainExercises(cardioExercises, 3);
-    final mainFlexExercises = _selectMainExercises(flexibilityExercises, 3);
 
     // Generate 3 months of workout data (90 days)
     for (int daysAgo = 90; daysAgo >= 0; daysAgo--) {
@@ -46,13 +42,6 @@ class MockDataGenerator {
             final cardioEx =
                 mainCardioExercises[i % mainCardioExercises.length];
             workoutSets.add(_generateCardioSet(cardioEx, date, daysAgo));
-          }
-
-          // Still add some flexibility on cardio days
-          if (_random.nextDouble() < 0.4 && mainFlexExercises.isNotEmpty) {
-            final flexEx =
-                mainFlexExercises[_random.nextInt(mainFlexExercises.length)];
-            workoutSets.add(_generateFlexibilitySet(flexEx, date));
           }
         } else {
           // Strength workout (3 sets per exercise)
@@ -74,12 +63,6 @@ class MockDataGenerator {
             workoutSets.add(_generateCardioSet(cardioEx, date, daysAgo));
           }
 
-          // Sometimes add flexibility
-          if (_random.nextDouble() < 0.3 && mainFlexExercises.isNotEmpty) {
-            final flexEx =
-                mainFlexExercises[_random.nextInt(mainFlexExercises.length)];
-            workoutSets.add(_generateFlexibilitySet(flexEx, date));
-          }
         }
       }
     }
@@ -223,19 +206,6 @@ class MockDataGenerator {
     );
   }
 
-  /// Generate flexibility/stretch set
-  static WorkoutSet _generateFlexibilitySet(Exercise exercise, DateTime date) {
-    final holdTime = 20 + _random.nextInt(40); // 20-60 seconds
-    final reps = 2 + _random.nextInt(3); // 2-4 reps
-
-    return WorkoutSet(
-      id: 'mock_${exercise.id}_${date.millisecondsSinceEpoch}',
-      exerciseId: exercise.id,
-      completedAt: date.add(const Duration(minutes: 30)),
-      values: {'holdTimeInSeconds': holdTime, 'reps': reps},
-    );
-  }
-
   /// Generate edge cases for testing
   static List<WorkoutSet> _generateEdgeCases(
     List<Exercise> exercises,
@@ -331,8 +301,6 @@ class MockDataGenerator {
           'distance': 2.0 + (i % 10),
           'unit': 'km',
         };
-      } else if (categories.contains('flexibility')) {
-        values = {'holdTimeInSeconds': 20 + (i % 40), 'reps': 2 + (i % 3)};
       }
 
       stressData.add(

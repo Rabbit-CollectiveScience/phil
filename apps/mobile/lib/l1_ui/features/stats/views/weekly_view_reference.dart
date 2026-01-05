@@ -169,8 +169,6 @@ class _WeeklyViewState extends State<WeeklyView> {
           TypeCard(type: 'CORE', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 12),
           TypeCard(type: 'CARDIO', exercises: 0, sets: 0, volume: 0),
-          const SizedBox(height: 12),
-          TypeCard(type: 'FLEXIBILITY', exercises: 0, sets: 0, volume: 0),
           const SizedBox(height: 20),
         ],
       ),

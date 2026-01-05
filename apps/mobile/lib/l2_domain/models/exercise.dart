@@ -4,7 +4,7 @@ import 'exercise_field.dart';
 //
 // Purpose:
 // - Defines an exercise with metadata and trackable fields
-// - Single class handles all exercise types (strength, cardio, flexibility)
+// - Single class handles all exercise types (strength, cardio)
 // - Uses categories as tags for filtering (activity type + body parts)
 // - Fields list defines what data the exercise tracks
 //
@@ -12,7 +12,6 @@ import 'exercise_field.dart';
 // - Barbell Curl: categories=["strength", "arms"], fields=[weight, reps]
 // - Deadlift: categories=["strength", "back", "legs", "core"], fields=[weight, reps]
 // - Treadmill: categories=["cardio"], fields=[duration, speed]
-// - Hamstring Stretch: categories=["flexibility", "legs"], fields=[holdTime]
 
 class Exercise {
   final String id;

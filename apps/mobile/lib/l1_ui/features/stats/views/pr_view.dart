@@ -73,7 +73,6 @@ class _PRViewState extends State<PRView> {
         'ARMS',
         'CORE',
         'CARDIO',
-        'FLEXIBILITY',
       ];
 
       for (var muscleGroup in allMuscleGroups) {
@@ -147,7 +146,6 @@ class _PRViewState extends State<PRView> {
       'maxSpeed', // Speed-based cardio
       'maxResistance', // Resistance-based cardio
       'maxIncline', // Incline-based cardio
-      'maxHoldTimeInSeconds', // Flexibility exercises
     ];
 
     // Try priority order first
@@ -179,7 +177,6 @@ class _PRViewState extends State<PRView> {
 
     switch (prType) {
       case 'maxDurationInSeconds':
-      case 'maxHoldTimeInSeconds':
         // Convert seconds to minutes
         final minutes = (numValue / 60).floor();
         final seconds = (numValue % 60).round();
@@ -227,7 +224,6 @@ class _PRViewState extends State<PRView> {
     if (categories.contains('arms')) return 'ARMS';
     if (categories.contains('core')) return 'CORE';
     if (categories.contains('cardio')) return 'CARDIO';
-    if (categories.contains('flexibility')) return 'FLEXIBILITY';
     return null; // Skip 'strength' category as it's redundant
   }
 

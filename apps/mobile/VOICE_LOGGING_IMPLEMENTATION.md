@@ -5,14 +5,13 @@ Complete implementation of voice-based workout logging using Google's Gemini AI 
 
 ## Architecture
 
-### 3-Function Approach
-We use **3 separate functions** based on exercise category for type-safe parameters:
+### 2-Function Approach
+We use **2 separate functions** based on exercise category for type-safe parameters:
 
 1. **`log_strength_exercise`** - For resistance training (sets, reps, weight, toFailure)
 2. **`log_cardio_exercise`** - For aerobic exercises (duration, distance, pace)
-3. **`log_flexibility_exercise`** - For stretching/yoga (holdDuration, sets)
 
-**Why 3 functions?**
+**Why 2 functions?**
 - ✅ Type-safe parameters per category
 - ✅ AI chooses correct function automatically
 - ✅ Clear validation rules
@@ -25,10 +24,9 @@ Each function includes **ALL exercise names** in its description (~6,750 tokens/
 ### Core Service Layer (`lib/l3_service/`)
 
 #### 1. `function_declarations.dart`
-Defines 3 function declarations with complete exercise lists:
+Defines 2 function declarations with complete exercise lists:
 - `log_strength_exercise`: 155 exercises (Barbell Bench Press, Squats, etc.)
 - `log_cardio_exercise`: 30 exercises (Running, Cycling, etc.)
-- `log_flexibility_exercise`: 15 exercises (Hamstring Stretch, etc.)
 
 ```dart
 WorkoutFunctionDeclarations.getDeclarations()
@@ -171,19 +169,6 @@ AI calls: log_cardio_exercise(
 )
 ↓
 Response: "Great run! Logged 5km in 25 min (5:00/km pace) 🏃"
-```
-
-### Flexibility Exercise
-```dart
-Input: "Hamstring stretch for 30 seconds, 3 times"
-↓
-AI calls: log_flexibility_exercise(
-  exercise_name: "Hamstring Stretch",
-  hold_duration_seconds: 30,
-  sets: 3
-)
-↓
-Response: "Good work on flexibility! Logged 3x30s hamstring stretches 🧘"
 ```
 
 ## Key Features

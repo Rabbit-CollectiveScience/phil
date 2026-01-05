@@ -17,7 +17,7 @@ This document describes the data models used in the Phil fitness tracking applic
 - `name` (String): Exercise name (e.g., "Barbell Squat")
 - `description` (String): Instructions and notes
 - `categories` (List\<String\>): Tags for filtering (activity type + body parts)
-  - Activity types: "strength", "cardio", "flexibility"
+  - Activity types: "strength", "cardio"
   - Body parts: "chest", "back", "legs", "shoulders", "arms", "core"
 - `fields` (List\<ExerciseField\>): Defines what metrics this exercise tracks
 

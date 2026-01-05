@@ -60,7 +60,6 @@ flutter:
     - assets/data/exercises/schemas/legs/
     - assets/data/exercises/schemas/core/
     - assets/data/exercises/schemas/cardio/
-    - assets/data/exercises/schemas/flexibility/
     - assets/images/
     - assets/images/exercise_types/
     - assets/phil-479202-d4e78adb0eea.json

@@ -30,7 +30,6 @@ class StubExerciseRepository implements ExerciseRepository {
       'assets/data/exercises/strength_arms_exercises.json',
       'assets/data/exercises/strength_core_exercises.json',
       'assets/data/exercises/cardio_exercises.json',
-      'assets/data/exercises/flexibility_exercises.json',
     ];
 
     final List<Exercise> allExercises = [];

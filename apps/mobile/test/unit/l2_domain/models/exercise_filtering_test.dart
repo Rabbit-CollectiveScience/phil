@@ -43,13 +43,6 @@ void main() {
           categories: ['cardio'],
           fields: [],
         ),
-        Exercise(
-          id: 'flex_1',
-          name: 'Hamstring Stretch',
-          description: 'Flexibility exercise',
-          categories: ['flexibility', 'legs'],
-          fields: [],
-        ),
       ];
     });
 
@@ -60,7 +53,7 @@ void main() {
         return filterId == 'all' || exercise.categories.contains(filterId);
       }).toList();
 
-      expect(filtered.length, 6);
+      expect(filtered.length, 5);
       expect(filtered, equals(exercises));
     });
 
@@ -93,13 +86,12 @@ void main() {
         return exercise.categories.contains(filterId);
       }).toList();
 
-      expect(filtered.length, 3); // squat, deadlift, hamstring stretch
+      expect(filtered.length, 2); // squat, deadlift
       expect(filtered.any((e) => e.id == 'legs_1'), true);
       expect(
         filtered.any((e) => e.id == 'legs_10'),
         true,
       ); // deadlift (compound)
-      expect(filtered.any((e) => e.id == 'flex_1'), true); // hamstring stretch
     });
 
     test('should filter by "back" category', () {
@@ -135,15 +127,15 @@ void main() {
       expect(filtered.first.id, 'cardio_1');
     });
 
-    test('should filter by "flexibility" category', () {
+    test('should not find any exercises with "flexibility" category', () {
       final filterId = 'flexibility';
 
       final filtered = exercises.where((exercise) {
         return exercise.categories.contains(filterId);
       }).toList();
 
-      expect(filtered.length, 1);
-      expect(filtered.first.id, 'flex_1');
+      expect(filtered.length, 0);
+      expect(filtered.isEmpty, true);
     });
 
     test('should return empty list when no exercises match filter', () {
@@ -180,6 +172,33 @@ void main() {
       expect(backFiltered, contains(deadlift));
       expect(legsFiltered, contains(deadlift));
       expect(coreFiltered, contains(deadlift));
+    });
+
+    test('should verify no exercises have flexibility category', () {
+      final hasFlexibility = exercises.any(
+        (exercise) => exercise.categories.contains('flexibility'),
+      );
+
+      expect(hasFlexibility, false);
+      expect(
+        exercises.where((e) => e.categories.contains('flexibility')).isEmpty,
+        true,
+      );
+    });
+
+    test('should only support strength and cardio exercise types', () {
+      final supportedTypes = {'strength', 'cardio'};
+      
+      // Get all activity types (first category is usually the activity type)
+      final activityTypes = exercises
+          .map((e) => e.categories.first)
+          .toSet();
+
+      // All activity types should be either strength or cardio
+      for (final type in activityTypes) {
+        expect(supportedTypes.contains(type), true,
+            reason: 'Found unsupported activity type: $type');
+      }
     });
   });
 }

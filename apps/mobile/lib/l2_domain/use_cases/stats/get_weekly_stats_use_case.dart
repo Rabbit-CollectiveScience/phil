@@ -66,7 +66,7 @@ class GetWeeklyStatsUseCase {
       if (exercise == null) continue;
 
       // Get category - for strength exercises, take the second category (muscle group)
-      // For cardio/flexibility, take the first category
+      // For cardio, take the first category
       String type = 'OTHER';
       if (exercise.categories.isNotEmpty) {
         if (exercise.categories.first.toLowerCase() == 'strength' &&
@@ -74,7 +74,7 @@ class GetWeeklyStatsUseCase {
           // Strength exercise - use the muscle group (second category)
           type = exercise.categories[1].toUpperCase();
         } else {
-          // Cardio/flexibility - use the first category
+          // Cardio - use the first category
           type = exercise.categories.first.toUpperCase();
         }
       }
@@ -95,10 +95,10 @@ class GetWeeklyStatsUseCase {
       typeStats[type]!['sets'] += 1;
 
       // Calculate volume or duration based on type
-      final isCardioOrFlexibility = type == 'CARDIO' || type == 'FLEXIBILITY';
+      final isCardio = type == 'CARDIO';
 
-      if (isCardioOrFlexibility) {
-        // Sum duration for cardio/flexibility
+      if (isCardio) {
+        // Sum duration for cardio
         if (values != null && values.containsKey('durationInSeconds')) {
           final duration = values['durationInSeconds'];
           if (duration != null) {
@@ -129,15 +129,14 @@ class GetWeeklyStatsUseCase {
       entry,
     ) {
       final stats = entry.value;
-      final isCardioOrFlexibility =
-          entry.key == 'CARDIO' || entry.key == 'FLEXIBILITY';
+      final isCardio = entry.key == 'CARDIO';
 
       return {
         'type': entry.key,
         'exercises': (stats['exercises'] as Set<String>).length,
         'sets': stats['sets'],
-        'volume': isCardioOrFlexibility ? 0.0 : stats['volume'],
-        'duration': isCardioOrFlexibility
+        'volume': isCardio ? 0.0 : stats['volume'],
+        'duration': isCardio
             ? (stats['duration'] as double) /
                   60.0 // Convert seconds to minutes
             : null,

@@ -12,7 +12,6 @@ Use the exercise type ID as the filename:
 - `arms.png` - Arm exercises
 - `core.png` - Core exercises
 - `cardio.png` - Cardio exercises
-- `flexibility.png` - Flexibility exercises
 
 ## Icon Specifications
 - **Format**: PNG with transparency

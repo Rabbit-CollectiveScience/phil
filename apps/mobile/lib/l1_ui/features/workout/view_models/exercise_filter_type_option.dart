@@ -49,11 +49,6 @@ class ExerciseFilterTypeOption {
       imagePath: 'assets/images/exercise_types/cardio.png',
     ),
     ExerciseFilterTypeOption(
-      id: 'flexibility',
-      label: 'Flexibility',
-      imagePath: 'assets/images/exercise_types/flexibility.png',
-    ),
-    ExerciseFilterTypeOption(
       id: 'all',
       label: 'All',
       imagePath: 'assets/images/exercise_types/all.png',

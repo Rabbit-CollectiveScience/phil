@@ -213,7 +213,6 @@ class _WeeklyViewState extends State<WeeklyView> {
       'ARMS',
       'CORE',
       'CARDIO',
-      'FLEXIBILITY',
     ];
 
     return allTypes.map((type) {

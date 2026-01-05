@@ -205,9 +205,9 @@ void main() {
         equals({'durationInSeconds': 600, 'reps': 15, 'height': 45}),
       );
 
-      // Act & Assert for 1 field (flexibility)
+      // Act & Assert for 1 field (cardio with just reps)
       final oneFieldSet = await useCase.execute(
-        exerciseId: 'flex_6',
+        exerciseId: 'cardio_1',
         values: {'reps': 10},
       );
       expect(oneFieldSet, isNotNull);
