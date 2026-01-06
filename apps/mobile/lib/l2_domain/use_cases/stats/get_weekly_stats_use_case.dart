@@ -1,3 +1,9 @@
+import '../../models/workout_sets/weighted_workout_set.dart';
+import '../../models/workout_sets/distance_cardio_workout_set.dart';
+import '../../models/workout_sets/duration_cardio_workout_set.dart';
+import '../../models/exercises/strength_exercise.dart';
+import '../../models/exercises/cardio_exercise.dart';
+import '../../models/common/muscle_group.dart';
 import '../workout_sets/get_workout_sets_by_date_use_case.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 
@@ -33,7 +39,6 @@ class GetWeeklyStatsUseCase {
     final startOfTargetWeek = startOfCurrentWeek.add(
       Duration(days: weekOffset * 7),
     );
-    final endOfTargetWeek = startOfTargetWeek.add(const Duration(days: 6));
 
     // Collect all workout sets for the week
     final List<dynamic> allWorkoutSets = [];
@@ -59,34 +64,33 @@ class GetWeeklyStatsUseCase {
 
     for (final setWithDetails in allWorkoutSets) {
       final exerciseId = setWithDetails.workoutSet.exerciseId;
-      final values = setWithDetails.workoutSet.values;
+      final set = setWithDetails.workoutSet;
 
       // Get exercise to determine type
-      final exercise = await _exerciseRepository.getExerciseById(exerciseId);
+      final exercise = await _exerciseRepository.getById(exerciseId);
       if (exercise == null) continue;
 
-      // Get category - for strength exercises, take the second category (muscle group)
-      // For cardio, take the first category
+      // Determine category
       String type = 'OTHER';
-      if (exercise.categories.isNotEmpty) {
-        if (exercise.categories.first.toLowerCase() == 'strength' &&
-            exercise.categories.length > 1) {
-          // Strength exercise - use the muscle group (second category)
-          type = exercise.categories[1].toUpperCase();
+      if (exercise is StrengthExercise) {
+        // Use primary muscle group if available
+        if (exercise.targetMuscles.isNotEmpty) {
+          type = exercise.targetMuscles.first.name.toUpperCase();
         } else {
-          // Cardio - use the first category
-          type = exercise.categories.first.toUpperCase();
+          type = 'STRENGTH';
         }
+      } else if (exercise is CardioExercise) {
+        type = 'CARDIO';
       }
 
       // Initialize type stats if not exists
       if (!typeStats.containsKey(type)) {
         typeStats[type] = {
           'type': type,
-          'exercises': <String>{}, // Use Set to track unique exercises
+          'exercises': <String>{},
           'sets': 0,
           'volume': 0.0,
-          'duration': 0.0, // in seconds, will convert to minutes
+          'duration': 0.0,
         };
       }
 
@@ -94,33 +98,16 @@ class GetWeeklyStatsUseCase {
       (typeStats[type]!['exercises'] as Set<String>).add(exerciseId);
       typeStats[type]!['sets'] += 1;
 
-      // Calculate volume or duration based on type
-      final isCardio = type == 'CARDIO';
-
-      if (isCardio) {
-        // Sum duration for cardio
-        if (values != null && values.containsKey('durationInSeconds')) {
-          final duration = values['durationInSeconds'];
-          if (duration != null) {
-            typeStats[type]!['duration'] += (duration as num).toDouble();
-          }
-        }
-      } else {
-        // Calculate volume for strength exercises
-        if (values != null) {
-          double volume = 0.0;
-
-          // Priority: weight × reps
-          if (values.containsKey('weight') && values.containsKey('reps')) {
-            final weight = values['weight'];
-            final reps = values['reps'];
-            if (weight != null && reps != null) {
-              volume = (weight as num).toDouble() * (reps as num).toDouble();
-            }
-          }
-
+      // Calculate volume or duration
+      if (set is WeightedWorkoutSet) {
+        final volume = set.getVolume();
+        if (volume != null) {
           typeStats[type]!['volume'] += volume;
         }
+      } else if (set is DistanceCardioWorkoutSet) {
+        typeStats[type]!['duration'] += set.duration.inSeconds.toDouble();
+      } else if (set is DurationCardioWorkoutSet) {
+        typeStats[type]!['duration'] += set.duration.inSeconds.toDouble();
       }
     }
 
@@ -138,12 +125,12 @@ class GetWeeklyStatsUseCase {
         'volume': isCardio ? 0.0 : stats['volume'],
         'duration': isCardio
             ? (stats['duration'] as double) /
-                  60.0 // Convert seconds to minutes
+                  60.0 // Convert to minutes
             : null,
       };
     }).toList();
 
-    // Sort by type name for consistency
+    // Sort by type name
     exerciseTypes.sort((a, b) => a['type'].compareTo(b['type']));
 
     return {

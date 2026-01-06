@@ -1,10 +1,12 @@
+import '../../models/workout_sets/weighted_workout_set.dart';
+import '../../models/workout_sets/bodyweight_workout_set.dart';
+import '../../models/personal_records/weight_pr.dart';
+import '../../models/personal_records/reps_pr.dart';
+import '../../models/personal_records/volume_pr.dart';
 import '../workout_sets/get_workout_sets_by_date_use_case.dart';
 import '../../../l3_data/repositories/personal_record_repository.dart';
-import '../personal_records/get_current_pr_use_case.dart';
-import '../../legacy_models/personal_record.dart';
 
-/// Use case to get detailed statistics for each exercise performed today.
-/// Groups workout sets by exercise and calculates aggregated metrics.
+/// Use case to get detailed exercise breakdown for today's workout
 class GetTodayExerciseDetailsUseCase {
   final GetWorkoutSetsByDateUseCase _getWorkoutSetsByDateUseCase;
   final PersonalRecordRepository? _prRepository;
@@ -14,135 +16,113 @@ class GetTodayExerciseDetailsUseCase {
     PersonalRecordRepository? prRepository,
   }) : _prRepository = prRepository;
 
-  /// Executes the use case to get exercise details for a specific date.
-  ///
-  /// Parameters:
-  /// - date: Optional date to query. Defaults to today if not provided.
-  ///
-  /// Returns a List of Maps, each containing:
-  /// - name: Exercise name
-  /// - sets: Number of sets completed
-  /// - volumeToday: Total volume calculated for this exercise
-  /// - maxWeightToday: Highest weight value used (null if no weight field)
+  /// Returns exercise-level details for today including PR status
   Future<List<Map<String, dynamic>>> execute({DateTime? date}) async {
     final targetDate = date ?? DateTime.now();
     final workoutSetsWithDetails = await _getWorkoutSetsByDateUseCase.execute(
       date: targetDate,
     );
 
-    if (workoutSetsWithDetails.isEmpty) {
-      return [];
-    }
-
     // Group sets by exercise
-    final Map<String, List<dynamic>> groupedByExercise = {};
+    final Map<String, List<dynamic>> exerciseGroups = {};
     for (final setWithDetails in workoutSetsWithDetails) {
       final exerciseId = setWithDetails.workoutSet.exerciseId;
-      if (!groupedByExercise.containsKey(exerciseId)) {
-        groupedByExercise[exerciseId] = [];
-      }
-      groupedByExercise[exerciseId]!.add(setWithDetails);
+      exerciseGroups.putIfAbsent(exerciseId, () => []);
+      exerciseGroups[exerciseId]!.add(setWithDetails);
     }
 
-    // Calculate details for each exercise
+    // Build exercise detail list
     final List<Map<String, dynamic>> exerciseDetails = [];
-    for (final entry in groupedByExercise.entries) {
+
+    for (final entry in exerciseGroups.entries) {
       final exerciseId = entry.key;
-      final setsWithDetails = entry.value;
+      final sets = entry.value;
+      final firstSet = sets.first;
 
-      // Get exercise name from first set
-      final exerciseName = setsWithDetails[0].exerciseName;
-      final exercise = setsWithDetails[0].exercise;
+      // Calculate stats
+      final setCount = sets.length;
+      double? totalVolume;
+      int? maxReps;
+      double? maxWeight;
 
-      // Count sets
-      final setsCount = setsWithDetails.length;
+      for (final setWithDetails in sets) {
+        final set = setWithDetails.workoutSet;
 
-      // Calculate total volume
-      double volumeToday = 0.0;
-      for (final setWithDetails in setsWithDetails) {
-        final volume = _calculateVolume(
-          exercise,
-          setWithDetails.workoutSet.values,
-        );
-        volumeToday += volume;
-      }
+        if (set is WeightedWorkoutSet) {
+          final volume = set.getVolume();
+          if (volume != null) {
+            totalVolume = (totalVolume ?? 0) + volume;
+          }
 
-      // Find max weight (if exercise has weight field)
-      double? maxWeightToday;
-      for (final setWithDetails in setsWithDetails) {
-        final values = setWithDetails.workoutSet.values;
-        if (values != null && values.containsKey('weight')) {
-          final weight = (values['weight'] as num).toDouble();
-          if (maxWeightToday == null || weight > maxWeightToday) {
-            maxWeightToday = weight;
+          if (maxWeight == null || set.weight.kg > maxWeight) {
+            maxWeight = set.weight.kg;
+          }
+
+          if (maxReps == null || set.reps > maxReps) {
+            maxReps = set.reps;
+          }
+        } else if (set is BodyweightWorkoutSet) {
+          if (maxReps == null || set.reps > maxReps) {
+            maxReps = set.reps;
           }
         }
       }
 
-      // Get all PRs for this exercise
-      List<Map<String, dynamic>> prsToday = [];
+      // Check for PRs if repository available
+      bool hasWeightPR = false;
+      bool hasRepsPR = false;
+      bool hasVolumePR = false;
+
       if (_prRepository != null) {
-        final allPRs = await _prRepository!.getPRsByExercise(exerciseId);
+        final weightPRs = await _prRepository.getByExerciseIdAndType<WeightPR>(
+          exerciseId,
+        );
+        final repsPRs = await _prRepository.getByExerciseIdAndType<RepsPR>(
+          exerciseId,
+        );
+        final volumePRs = await _prRepository.getByExerciseIdAndType<VolumePR>(
+          exerciseId,
+        );
 
-        // Filter to only PRs achieved on the target date
-        final todayPRs = allPRs.where((pr) {
-          return pr.achievedAt.year == targetDate.year &&
-              pr.achievedAt.month == targetDate.month &&
-              pr.achievedAt.day == targetDate.day;
-        }).toList();
+        // Check if any PR was achieved today
+        final todayStart = DateTime(
+          targetDate.year,
+          targetDate.month,
+          targetDate.day,
+        );
+        final todayEnd = todayStart.add(const Duration(days: 1));
 
-        // Convert to maps for easy JSON serialization
-        prsToday = todayPRs
-            .map((pr) => {'type': pr.type, 'value': pr.value})
-            .toList();
+        hasWeightPR = weightPRs.any(
+          (pr) =>
+              pr.achievedAt.isAfter(todayStart) &&
+              pr.achievedAt.isBefore(todayEnd),
+        );
+        hasRepsPR = repsPRs.any(
+          (pr) =>
+              pr.achievedAt.isAfter(todayStart) &&
+              pr.achievedAt.isBefore(todayEnd),
+        );
+        hasVolumePR = volumePRs.any(
+          (pr) =>
+              pr.achievedAt.isAfter(todayStart) &&
+              pr.achievedAt.isBefore(todayEnd),
+        );
       }
 
       exerciseDetails.add({
-        'name': exerciseName,
-        'sets': setsCount,
-        'volumeToday': volumeToday,
-        'maxWeightToday': maxWeightToday,
-        'prsToday': prsToday,
+        'exerciseId': exerciseId,
+        'exerciseName': firstSet.exerciseName,
+        'exercise': firstSet.exercise,
+        'setCount': setCount,
+        'totalVolume': totalVolume,
+        'maxReps': maxReps,
+        'maxWeight': maxWeight,
+        'hasWeightPR': hasWeightPR,
+        'hasRepsPR': hasRepsPR,
+        'hasVolumePR': hasVolumePR,
       });
     }
 
     return exerciseDetails;
-  }
-
-  /// Calculates volume for a single set based on priority system:
-  /// Priority 1: weight × reps
-  /// Priority 2: reps only
-  /// Priority 3: duration only
-  /// Priority 4: distance only
-  double _calculateVolume(dynamic exercise, Map<String, dynamic>? values) {
-    if (values == null || values.isEmpty) {
-      return 0.0;
-    }
-
-    // Priority 1: weight × reps
-    final weight = values['weight'];
-    final reps = values['reps'];
-    if (weight != null && reps != null) {
-      return (weight as num).toDouble() * (reps as num).toDouble();
-    }
-
-    // Priority 2: reps only
-    if (reps != null) {
-      return (reps as num).toDouble();
-    }
-
-    // Priority 3: duration only
-    final duration = values['duration'];
-    if (duration != null) {
-      return (duration as num).toDouble();
-    }
-
-    // Priority 4: distance only
-    final distance = values['distance'];
-    if (distance != null) {
-      return (distance as num).toDouble();
-    }
-
-    return 0.0;
   }
 }

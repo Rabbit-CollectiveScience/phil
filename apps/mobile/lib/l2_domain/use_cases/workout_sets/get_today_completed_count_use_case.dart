@@ -16,7 +16,7 @@ class GetTodayCompletedCountUseCase {
 
   Future<int> execute({DateTime? startDate, DateTime? endDate}) async {
     // Get today's workout sets
-    final todayWorkouts = await _repository.getTodayWorkoutSets();
+    final todayWorkouts = await _repository.getToday();
 
     // Return count
     return todayWorkouts.length;

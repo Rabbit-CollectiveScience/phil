@@ -1,6 +1,5 @@
-import '../../legacy_models/personal_record.dart';
-import '../../legacy_models/pr_item_with_exercise.dart';
-import '../../legacy_models/exercise.dart';
+import '../../models/personal_records/personal_record.dart';
+import '../../models/exercises/exercise.dart';
 import '../../../l3_data/repositories/personal_record_repository.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 
@@ -14,10 +13,10 @@ class GetAllPRsUseCase {
 
   Future<List<PRItemWithExercise>> execute() async {
     // Get all PRs
-    final allPRs = await _prRepository.getAllPRs();
+    final allPRs = await _prRepository.getAll();
 
     // Get all exercises
-    final allExercises = await _exerciseRepository.getAllExercises();
+    final allExercises = await _exerciseRepository.getAll();
 
     // Create a map for quick exercise lookup
     final exerciseMap = <String, Exercise>{};
@@ -37,7 +36,7 @@ class GetAllPRsUseCase {
         PRItemWithExercise(
           prRecord: pr,
           exerciseName: exercise.name,
-          exerciseCategories: exercise.categories,
+          exercise: exercise,
         ),
       );
     }
@@ -49,4 +48,17 @@ class GetAllPRsUseCase {
 
     return enrichedPRs;
   }
+}
+
+/// DTO for returning PR with exercise details
+class PRItemWithExercise {
+  final PersonalRecord prRecord;
+  final String exerciseName;
+  final Exercise exercise;
+
+  PRItemWithExercise({
+    required this.prRecord,
+    required this.exerciseName,
+    required this.exercise,
+  });
 }

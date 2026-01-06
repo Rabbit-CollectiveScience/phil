@@ -20,7 +20,7 @@ class AddMockDataUseCase {
   /// Returns the number of workout sets added
   Future<int> execute() async {
     // Get all available exercises
-    final exercises = await _exerciseRepository.getAllExercises();
+    final exercises = await _exerciseRepository.getAll();
 
     if (exercises.isEmpty) {
       throw Exception('No exercises available to generate mock data');
@@ -35,7 +35,7 @@ class AddMockDataUseCase {
 
     for (final workoutSet in mockSets) {
       try {
-        await _workoutSetRepository.saveWorkoutSet(workoutSet);
+        await _workoutSetRepository.save(workoutSet);
         savedCount++;
         exerciseIds.add(workoutSet.exerciseId);
       } catch (e) {

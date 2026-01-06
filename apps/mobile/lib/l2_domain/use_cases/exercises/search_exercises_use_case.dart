@@ -1,4 +1,4 @@
-import '../../legacy_models/exercise.dart';
+import '../../models/exercises/exercise.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 
 // Use Case: Search all exercises by name
@@ -20,7 +20,7 @@ class SearchExercisesUseCase {
 
   Future<List<Exercise>> execute({required String searchQuery}) async {
     // Get all exercises
-    final allExercises = await _exerciseRepository.getAllExercises();
+    final allExercises = await _exerciseRepository.getAll();
 
     // If no search query, return empty list (user needs to type to search)
     if (searchQuery.trim().isEmpty) {

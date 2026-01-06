@@ -1,13 +1,30 @@
-import '../../legacy_models/personal_record.dart';
+import 'package:uuid/uuid.dart';
+import '../../models/personal_records/weight_pr.dart';
+import '../../models/personal_records/reps_pr.dart';
+import '../../models/personal_records/volume_pr.dart';
+import '../../models/personal_records/duration_pr.dart';
+import '../../models/personal_records/distance_pr.dart';
+import '../../models/personal_records/pace_pr.dart';
+import '../../models/workout_sets/weighted_workout_set.dart';
+import '../../models/workout_sets/bodyweight_workout_set.dart';
+import '../../models/workout_sets/isometric_workout_set.dart';
+import '../../models/workout_sets/distance_cardio_workout_set.dart';
+import '../../models/workout_sets/duration_cardio_workout_set.dart';
+import '../../models/exercises/strength_exercise.dart';
+import '../../models/exercises/cardio_exercise.dart';
 import '../../../l3_data/repositories/personal_record_repository.dart';
 import '../../../l3_data/repositories/workout_set_repository.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 
-/// Use case to recalculate PRs for an exercise after a workout set is deleted
+/// Use case to recalculate PRs for an exercise
+///
+/// This scans all workout sets for the exercise and creates new PR records
+/// based on max values found. Old PRs are deleted first.
 class RecalculatePRsForExerciseUseCase {
   final PersonalRecordRepository _prRepository;
   final WorkoutSetRepository _workoutSetRepository;
   final ExerciseRepository _exerciseRepository;
+  final _uuid = const Uuid();
 
   RecalculatePRsForExerciseUseCase(
     this._prRepository,
@@ -18,78 +35,204 @@ class RecalculatePRsForExerciseUseCase {
   Future<void> execute(String exerciseId) async {
     try {
       // 1. Get exercise info
-      final exercise = await _exerciseRepository.getExerciseById(exerciseId);
+      final exercise = await _exerciseRepository.getById(exerciseId);
+      if (exercise == null) return;
 
       // 2. Get all workout sets for this exercise
-      final allSets = await _workoutSetRepository.getWorkoutSets();
-      final setsForExercise = allSets
-          .where((set) => set.exerciseId == exerciseId)
-          .toList();
+      final setsForExercise = await _workoutSetRepository.getByExerciseId(
+        exerciseId,
+      );
 
       // 3. Delete all existing PRs for this exercise
-      await _prRepository.deletePRsForExercise(exerciseId);
+      await _prRepository.deleteByExerciseId(exerciseId);
 
       // If no sets remain, we're done
       if (setsForExercise.isEmpty) return;
 
-      // 4. Calculate max values for each field dynamically
-      final maxValues = <String, Map<String, dynamic>>{};
-
-      for (final set in setsForExercise) {
-        if (set.values == null) continue;
-
-        // Check each field defined in the exercise
-        for (final field in exercise.fields) {
-          final fieldName = field.name;
-          final value = set.values![fieldName];
-
-          if (value == null) continue;
-
-          // Convert to double
-          final numValue = (value as num?)?.toDouble();
-          if (numValue == null || numValue <= 0) continue;
-
-          // Track max value for this field
-          final prType =
-              'max${fieldName[0].toUpperCase()}${fieldName.substring(1)}';
-
-          if (!maxValues.containsKey(prType) ||
-              numValue > maxValues[prType]!['value']) {
-            maxValues[prType] = {'value': numValue, 'date': set.completedAt};
-          }
-        }
-
-        // Calculate derived PRs (like volume = weight × reps)
-        final weight = (set.values!['weight'] as num?)?.toDouble();
-        final reps = (set.values!['reps'] as num?)?.toDouble();
-
-        if (weight != null && weight > 0 && reps != null && reps > 0) {
-          final volume = weight * reps;
-          if (!maxValues.containsKey('maxVolume') ||
-              volume > maxValues['maxVolume']!['value']) {
-            maxValues['maxVolume'] = {'value': volume, 'date': set.completedAt};
-          }
-        }
-      }
-
-      // 5. Create PR records for all max values found
-      for (final entry in maxValues.entries) {
-        final prType = entry.key;
-        final data = entry.value;
-
-        await _prRepository.save(
-          PersonalRecord(
-            id: 'pr_${exerciseId}_${prType}_${DateTime.now().millisecondsSinceEpoch}',
-            exerciseId: exerciseId,
-            type: prType,
-            value: data['value'],
-            achievedAt: data['date'],
-          ),
-        );
+      // 4. Calculate PRs based on exercise type
+      if (exercise is StrengthExercise) {
+        await _calculateStrengthPRs(exerciseId, setsForExercise);
+      } else if (exercise is CardioExercise) {
+        await _calculateCardioPRs(exerciseId, setsForExercise);
       }
     } catch (e) {
-      // Exercise not found - skip recalculation
+      // Exercise not found or error - skip recalculation
       return;
     }
+  }
+
+  Future<void> _calculateStrengthPRs(
+    String exerciseId,
+    List<dynamic> sets,
+  ) async {
+    // Track max values
+    double? maxWeight;
+    int? maxReps;
+    double? maxVolume;
+    Duration? maxDuration;
+    String? maxWeightSetId;
+    String? maxRepsSetId;
+    String? maxVolumeSetId;
+    String? maxDurationSetId;
+
+    for (final set in sets) {
+      if (set is WeightedWorkoutSet) {
+        // Weight PR
+        if (maxWeight == null || set.weight.kg > maxWeight) {
+          maxWeight = set.weight.kg;
+          maxWeightSetId = set.id;
+        }
+
+        // Reps PR
+        if (maxReps == null || set.reps > maxReps) {
+          maxReps = set.reps;
+          maxRepsSetId = set.id;
+        }
+
+        // Volume PR
+        final volume = set.getVolume();
+        if (volume != null && (maxVolume == null || volume > maxVolume)) {
+          maxVolume = volume;
+          maxVolumeSetId = set.id;
+        }
+      } else if (set is BodyweightWorkoutSet) {
+        // Reps PR
+        if (maxReps == null || set.reps > maxReps) {
+          maxReps = set.reps;
+          maxRepsSetId = set.id;
+        }
+      } else if (set is IsometricWorkoutSet) {
+        // Duration PR
+        if (maxDuration == null || set.duration > maxDuration) {
+          maxDuration = set.duration;
+          maxDurationSetId = set.id;
+        }
+      }
+    }
+
+    // Create PR records
+    if (maxWeight != null && maxWeightSetId != null) {
+      await _prRepository.save(
+        WeightPR(
+          id: _uuid.v4(),
+          exerciseId: exerciseId,
+          workoutSetId: maxWeightSetId,
+          achievedAt: _getSetTimestamp(sets, maxWeightSetId),
+        ),
+      );
+    }
+
+    if (maxReps != null && maxRepsSetId != null) {
+      await _prRepository.save(
+        RepsPR(
+          id: _uuid.v4(),
+          exerciseId: exerciseId,
+          workoutSetId: maxRepsSetId,
+          achievedAt: _getSetTimestamp(sets, maxRepsSetId),
+        ),
+      );
+    }
+
+    if (maxVolume != null && maxVolumeSetId != null) {
+      await _prRepository.save(
+        VolumePR(
+          id: _uuid.v4(),
+          exerciseId: exerciseId,
+          workoutSetId: maxVolumeSetId,
+          achievedAt: _getSetTimestamp(sets, maxVolumeSetId),
+        ),
+      );
+    }
+
+    if (maxDuration != null && maxDurationSetId != null) {
+      await _prRepository.save(
+        DurationPR(
+          id: _uuid.v4(),
+          exerciseId: exerciseId,
+          workoutSetId: maxDurationSetId,
+          achievedAt: _getSetTimestamp(sets, maxDurationSetId),
+        ),
+      );
+    }
+  }
+
+  Future<void> _calculateCardioPRs(
+    String exerciseId,
+    List<dynamic> sets,
+  ) async {
+    // Track max values
+    Duration? maxDuration;
+    double? maxDistance;
+    double? minPace; // Lower is better for pace
+    String? maxDurationSetId;
+    String? maxDistanceSetId;
+    String? minPaceSetId;
+
+    for (final set in sets) {
+      if (set is DistanceCardioWorkoutSet) {
+        // Duration PR
+        if (maxDuration == null || set.duration > maxDuration) {
+          maxDuration = set.duration;
+          maxDurationSetId = set.id;
+        }
+
+        // Distance PR
+        if (maxDistance == null || set.distance.meters > maxDistance) {
+          maxDistance = set.distance.meters;
+          maxDistanceSetId = set.id;
+        }
+
+        // Pace PR (best/fastest pace)
+        final pace = set.getPace();
+        if (minPace == null || pace < minPace) {
+          minPace = pace;
+          minPaceSetId = set.id;
+        }
+      } else if (set is DurationCardioWorkoutSet) {
+        // Duration PR
+        if (maxDuration == null || set.duration > maxDuration) {
+          maxDuration = set.duration;
+          maxDurationSetId = set.id;
+        }
+      }
+    }
+
+    // Create PR records
+    if (maxDuration != null && maxDurationSetId != null) {
+      await _prRepository.save(
+        DurationPR(
+          id: _uuid.v4(),
+          exerciseId: exerciseId,
+          workoutSetId: maxDurationSetId,
+          achievedAt: _getSetTimestamp(sets, maxDurationSetId),
+        ),
+      );
+    }
+
+    if (maxDistance != null && maxDistanceSetId != null) {
+      await _prRepository.save(
+        DistancePR(
+          id: _uuid.v4(),
+          exerciseId: exerciseId,
+          workoutSetId: maxDistanceSetId,
+          achievedAt: _getSetTimestamp(sets, maxDistanceSetId),
+        ),
+      );
+    }
+
+    if (minPace != null && minPaceSetId != null) {
+      await _prRepository.save(
+        PacePR(
+          id: _uuid.v4(),
+          exerciseId: exerciseId,
+          workoutSetId: minPaceSetId,
+          achievedAt: _getSetTimestamp(sets, minPaceSetId),
+        ),
+      );
+    }
+  }
+
+  DateTime _getSetTimestamp(List<dynamic> sets, String setId) {
+    return sets.firstWhere((s) => s.id == setId).timestamp;
   }
 }

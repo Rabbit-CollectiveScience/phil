@@ -1,7 +1,7 @@
-import '../../legacy_models/workout_set.dart';
+import '../../models/workout_sets/workout_set.dart';
+import '../../models/exercises/exercise.dart';
 import '../../../l3_data/repositories/workout_set_repository.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
-import 'get_today_completed_list_use_case.dart';
 
 // Use Case: Get workout sets for a specific date
 //
@@ -32,13 +32,13 @@ class GetWorkoutSetsByDateUseCase {
     final endOfDay = startOfDay.add(const Duration(days: 1));
 
     // Get workout sets for the selected date
-    final workoutSets = await _workoutSetRepository.getWorkoutSets(
+    final workoutSets = await _workoutSetRepository.getByDateRange(
       startDate: startOfDay,
       endDate: endOfDay,
     );
 
     // Get all exercises for lookup
-    final exercises = await _exerciseRepository.getAllExercises();
+    final exercises = await _exerciseRepository.getAll();
     final exerciseMap = {for (var e in exercises) e.id: e};
 
     // Join workout sets with exercise data
@@ -54,9 +54,22 @@ class GetWorkoutSetsByDateUseCase {
 
     // Sort by completion time - most recent first
     workoutsWithDetails.sort(
-      (a, b) => b.workoutSet.completedAt.compareTo(a.workoutSet.completedAt),
+      (a, b) => b.workoutSet.timestamp.compareTo(a.workoutSet.timestamp),
     );
 
     return workoutsWithDetails;
   }
+}
+
+// DTO for returning workout set with exercise details
+class WorkoutSetWithDetails {
+  final WorkoutSet workoutSet;
+  final String exerciseName;
+  final Exercise? exercise;
+
+  WorkoutSetWithDetails({
+    required this.workoutSet,
+    required this.exerciseName,
+    this.exercise,
+  });
 }

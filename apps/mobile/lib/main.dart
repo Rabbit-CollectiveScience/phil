@@ -4,7 +4,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l1_ui/features/workout/workout_home_page.dart';
 import 'l1_ui/shared/theme/app_colors.dart';
-import 'l2_domain/legacy_models/workout_set.dart';
 import 'l2_domain/use_cases/exercises/get_recommended_exercises_use_case.dart';
 import 'l2_domain/use_cases/exercises/search_exercises_use_case.dart';
 import 'l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
@@ -22,13 +21,10 @@ import 'l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
 import 'l2_domain/use_cases/personal_records/recalculate_prs_for_exercise_use_case.dart';
 import 'l2_domain/use_cases/dev/add_mock_data_use_case.dart';
 import 'l3_data/repositories/exercise_repository.dart';
-import 'l3_data/repositories/stub_exercise_repository.dart';
 import 'l3_data/repositories/workout_set_repository.dart';
-import 'l3_data/repositories/hive_workout_set_repository.dart';
 import 'l3_data/repositories/preferences_repository.dart';
 import 'l3_data/repositories/local_preferences_repository.dart';
 import 'l3_data/repositories/personal_record_repository.dart';
-import 'l3_data/repositories/hive_personal_record_repository.dart';
 
 // Global GetIt instance for dependency injection
 final getIt = GetIt.instance;
@@ -39,11 +35,10 @@ void main() async {
   // Initialize Hive for local storage
   await Hive.initFlutter();
 
-  // Register Hive adapters
-  Hive.registerAdapter(WorkoutSetAdapter());
-
-  // Open Hive boxes
-  await Hive.openBox<WorkoutSet>('workout_sets');
+  // Open Hive boxes (storing JSON maps, not typed objects)
+  await Hive.openBox<Map<dynamic, dynamic>>('exercises');
+  await Hive.openBox<Map<dynamic, dynamic>>('workout_sets');
+  await Hive.openBox<Map<dynamic, dynamic>>('personal_records');
 
   // Initialize SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -58,11 +53,9 @@ void main() async {
 /// L3 (Data) -> L2 (Domain) dependency chain
 void _setupDependencies(SharedPreferences sharedPreferences) {
   // Register L3 - Data Layer (Repositories)
-  getIt.registerSingleton<ExerciseRepository>(StubExerciseRepository());
-  getIt.registerSingleton<WorkoutSetRepository>(HiveWorkoutSetRepository());
-  getIt.registerSingleton<PersonalRecordRepository>(
-    HivePersonalRecordRepository(),
-  );
+  getIt.registerSingleton<ExerciseRepository>(ExerciseRepository());
+  getIt.registerSingleton<WorkoutSetRepository>(WorkoutSetRepository());
+  getIt.registerSingleton<PersonalRecordRepository>(PersonalRecordRepository());
   getIt.registerSingleton<PreferencesRepository>(
     LocalPreferencesRepository(sharedPreferences),
   );

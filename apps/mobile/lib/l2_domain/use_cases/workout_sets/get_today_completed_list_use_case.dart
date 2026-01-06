@@ -1,5 +1,5 @@
-import '../../legacy_models/workout_set.dart';
-import '../../legacy_models/exercise.dart';
+import '../../models/workout_sets/workout_set.dart';
+import '../../models/exercises/exercise.dart';
 import '../../../l3_data/repositories/workout_set_repository.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 
@@ -27,10 +27,10 @@ class GetTodayCompletedListUseCase {
     DateTime? endDate,
   }) async {
     // Get today's workout sets
-    final todayWorkouts = await _workoutSetRepository.getTodayWorkoutSets();
+    final todayWorkouts = await _workoutSetRepository.getToday();
 
     // Get all exercises for lookup
-    final exercises = await _exerciseRepository.getAllExercises();
+    final exercises = await _exerciseRepository.getAll();
     final exerciseMap = {for (var e in exercises) e.id: e};
 
     // Join workout sets with exercise data
@@ -46,7 +46,7 @@ class GetTodayCompletedListUseCase {
 
     // Sort by completion time - most recent first
     workoutsWithDetails.sort(
-      (a, b) => b.workoutSet.completedAt.compareTo(a.workoutSet.completedAt),
+      (a, b) => b.workoutSet.timestamp.compareTo(a.workoutSet.timestamp),
     );
 
     return workoutsWithDetails;

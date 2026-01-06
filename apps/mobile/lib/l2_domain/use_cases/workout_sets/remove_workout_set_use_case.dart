@@ -7,7 +7,7 @@ import '../personal_records/recalculate_prs_for_exercise_use_case.dart';
 //
 // Responsibility:
 // - Delete a workout set from data store by ID
-// - Repository handles the actual deletion
+// - Recalculate PRs for the affected exercise
 //
 // Used by: CompletedListPage when user deletes a workout entry
 
@@ -25,21 +25,20 @@ class RemoveWorkoutSetUseCase {
 
   Future<void> execute(String workoutSetId) async {
     // Get the set before deleting to know which exercise it was for
-    final allSets = await _repository.getWorkoutSets();
-    final setToDelete = allSets.where((s) => s.id == workoutSetId).firstOrNull;
+    final setToDelete = await _repository.getById(workoutSetId);
     final exerciseId = setToDelete?.exerciseId;
 
     // Delete the set
-    await _repository.deleteWorkoutSet(workoutSetId);
+    await _repository.delete(workoutSetId);
 
     // Recalculate PRs for this exercise if repositories are provided
     if (exerciseId != null &&
         _prRepository != null &&
         _exerciseRepository != null) {
       final recalculateUseCase = RecalculatePRsForExerciseUseCase(
-        _prRepository!,
+        _prRepository,
         _repository,
-        _exerciseRepository!,
+        _exerciseRepository,
       );
       await recalculateUseCase.execute(exerciseId);
     }
