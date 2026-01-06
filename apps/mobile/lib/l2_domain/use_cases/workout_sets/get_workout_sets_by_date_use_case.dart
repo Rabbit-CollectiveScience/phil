@@ -1,4 +1,4 @@
-import '../../models/workout_set.dart';
+import '../../legacy_models/workout_set.dart';
 import '../../../l3_data/repositories/workout_set_repository.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 import 'get_today_completed_list_use_case.dart';

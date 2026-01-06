@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../../../../lib/l2_domain/models/personal_record.dart';
-import '../../../../../lib/l2_domain/models/exercise.dart';
-import '../../../../../lib/l2_domain/models/exercise_field.dart';
-import '../../../../../lib/l2_domain/models/field_type_enum.dart';
+import '../../../../../lib/l2_domain/legacy_models/personal_record.dart';
+import '../../../../../lib/l2_domain/legacy_models/exercise.dart';
+import '../../../../../lib/l2_domain/legacy_models/exercise_field.dart';
+import '../../../../../lib/l2_domain/legacy_models/field_type_enum.dart';
 import '../../../../../lib/l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
 import '../../../../../lib/l3_data/repositories/stub_personal_record_repository.dart';
 import '../../../../../lib/l3_data/repositories/exercise_repository.dart';

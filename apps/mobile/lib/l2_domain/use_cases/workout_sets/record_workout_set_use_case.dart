@@ -1,11 +1,11 @@
 import 'package:uuid/uuid.dart';
-import '../../models/workout_set.dart';
+import '../../legacy_models/workout_set.dart';
 import '../../../l3_data/repositories/workout_set_repository.dart';
 import '../../../l3_data/repositories/personal_record_repository.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 import '../personal_records/check_for_new_pr_use_case.dart';
 import '../personal_records/save_personal_record_use_case.dart';
-import '../../models/personal_record.dart';
+import '../../legacy_models/personal_record.dart';
 
 // Use Case: Record a completed workout set
 //

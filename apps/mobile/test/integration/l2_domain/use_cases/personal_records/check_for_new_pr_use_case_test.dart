@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:phil/l2_domain/models/exercise.dart';
-import 'package:phil/l2_domain/models/exercise_field.dart';
-import 'package:phil/l2_domain/models/field_type_enum.dart';
-import 'package:phil/l2_domain/models/personal_record.dart';
+import 'package:phil/l2_domain/legacy_models/exercise.dart';
+import 'package:phil/l2_domain/legacy_models/exercise_field.dart';
+import 'package:phil/l2_domain/legacy_models/field_type_enum.dart';
+import 'package:phil/l2_domain/legacy_models/personal_record.dart';
 import 'package:phil/l2_domain/use_cases/personal_records/check_for_new_pr_use_case.dart';
 import 'package:phil/l3_data/repositories/personal_record_repository.dart';
 import 'package:phil/l3_data/repositories/stub_personal_record_repository.dart';

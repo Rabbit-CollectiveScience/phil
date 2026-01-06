@@ -1,5 +1,5 @@
-import '../../models/workout_set.dart';
-import '../../models/exercise.dart';
+import '../../legacy_models/workout_set.dart';
+import '../../legacy_models/exercise.dart';
 import '../../../l3_data/repositories/workout_set_repository.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 

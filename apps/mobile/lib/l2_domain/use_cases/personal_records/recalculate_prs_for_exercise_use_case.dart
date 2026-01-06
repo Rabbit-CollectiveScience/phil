@@ -1,4 +1,4 @@
-import '../../models/personal_record.dart';
+import '../../legacy_models/personal_record.dart';
 import '../../../l3_data/repositories/personal_record_repository.dart';
 import '../../../l3_data/repositories/workout_set_repository.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';

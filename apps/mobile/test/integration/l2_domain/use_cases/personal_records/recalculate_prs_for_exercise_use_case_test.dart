@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:phil/l2_domain/models/personal_record.dart';
+import 'package:phil/l2_domain/legacy_models/personal_record.dart';
 import 'package:phil/l2_domain/use_cases/personal_records/recalculate_prs_for_exercise_use_case.dart';
 import 'package:phil/l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
 import 'package:phil/l3_data/repositories/personal_record_repository.dart';

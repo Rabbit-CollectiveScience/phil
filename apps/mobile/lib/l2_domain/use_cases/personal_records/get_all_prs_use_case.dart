@@ -1,6 +1,6 @@
-import '../../models/personal_record.dart';
-import '../../models/pr_item_with_exercise.dart';
-import '../../models/exercise.dart';
+import '../../legacy_models/personal_record.dart';
+import '../../legacy_models/pr_item_with_exercise.dart';
+import '../../legacy_models/exercise.dart';
 import '../../../l3_data/repositories/personal_record_repository.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 

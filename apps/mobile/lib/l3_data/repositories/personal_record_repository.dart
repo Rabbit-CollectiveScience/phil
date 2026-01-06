@@ -1,4 +1,4 @@
-import '../../l2_domain/models/personal_record.dart';
+import '../../l2_domain/legacy_models/personal_record.dart';
 
 /// Repository interface for Personal Records
 abstract class PersonalRecordRepository {

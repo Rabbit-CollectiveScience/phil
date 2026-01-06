@@ -1,6 +1,6 @@
-import '../../models/personal_record.dart';
-import '../../models/exercise.dart';
-import '../../models/field_type_enum.dart';
+import '../../legacy_models/personal_record.dart';
+import '../../legacy_models/exercise.dart';
+import '../../legacy_models/field_type_enum.dart';
 import '../../../l3_data/repositories/personal_record_repository.dart';
 
 /// Result of checking for a new PR

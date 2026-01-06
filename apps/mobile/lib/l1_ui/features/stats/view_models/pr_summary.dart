@@ -1,4 +1,4 @@
-import '../../../../l2_domain/models/pr_item_with_exercise.dart';
+import '../../../../l2_domain/legacy_models/pr_item_with_exercise.dart';
 
 /// Summary data for the PR view
 class PRSummary {

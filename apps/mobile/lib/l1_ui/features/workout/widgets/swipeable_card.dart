@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../view_models/card_model.dart';
-import '../../../../l2_domain/models/field_type_enum.dart';
+import '../../../../l2_domain/legacy_models/field_type_enum.dart';
 
 /// Card interaction states for gesture handling
 enum CardInteractionState {

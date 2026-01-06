@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:phil/l2_domain/models/exercise.dart';
+import 'package:phil/l2_domain/legacy_models/exercise.dart';
 
 void main() {
   group('Exercise Filtering by Categories', () {
@@ -188,16 +188,17 @@ void main() {
 
     test('should only support strength and cardio exercise types', () {
       final supportedTypes = {'strength', 'cardio'};
-      
+
       // Get all activity types (first category is usually the activity type)
-      final activityTypes = exercises
-          .map((e) => e.categories.first)
-          .toSet();
+      final activityTypes = exercises.map((e) => e.categories.first).toSet();
 
       // All activity types should be either strength or cardio
       for (final type in activityTypes) {
-        expect(supportedTypes.contains(type), true,
-            reason: 'Found unsupported activity type: $type');
+        expect(
+          supportedTypes.contains(type),
+          true,
+          reason: 'Found unsupported activity type: $type',
+        );
       }
     });
   });

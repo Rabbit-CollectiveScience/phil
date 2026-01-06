@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l1_ui/features/workout/workout_home_page.dart';
 import 'l1_ui/shared/theme/app_colors.dart';
-import 'l2_domain/models/workout_set.dart';
+import 'l2_domain/legacy_models/workout_set.dart';
 import 'l2_domain/use_cases/exercises/get_recommended_exercises_use_case.dart';
 import 'l2_domain/use_cases/exercises/search_exercises_use_case.dart';
 import 'l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';

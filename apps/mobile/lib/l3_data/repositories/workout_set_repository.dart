@@ -1,4 +1,4 @@
-import '../../l2_domain/models/workout_set.dart';
+import '../../l2_domain/legacy_models/workout_set.dart';
 
 // Repository Interface: Workout set data operations
 //

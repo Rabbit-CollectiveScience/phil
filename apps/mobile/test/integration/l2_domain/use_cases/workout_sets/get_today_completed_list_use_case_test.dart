@@ -3,7 +3,7 @@ import 'package:phil/l2_domain/use_cases/workout_sets/get_today_completed_list_u
 import 'package:phil/l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
 import 'package:phil/l3_data/repositories/stub_workout_set_repository.dart';
 import 'package:phil/l3_data/repositories/stub_exercise_repository.dart';
-import 'package:phil/l2_domain/models/workout_set.dart';
+import 'package:phil/l2_domain/legacy_models/workout_set.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -7,9 +7,9 @@ import '../../../../l2_domain/use_cases/workout_sets/get_today_completed_list_us
 import '../../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
 import '../../../../l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
 import '../../../../l2_domain/use_cases/exercises/search_exercises_use_case.dart';
-import '../../../../l2_domain/models/exercise.dart';
-import '../../../../l2_domain/models/exercise_field.dart';
-import '../../../../l2_domain/models/field_type_enum.dart';
+import '../../../../l2_domain/legacy_models/exercise.dart';
+import '../../../../l2_domain/legacy_models/exercise_field.dart';
+import '../../../../l2_domain/legacy_models/field_type_enum.dart';
 
 class LogView extends StatefulWidget {
   const LogView({super.key});

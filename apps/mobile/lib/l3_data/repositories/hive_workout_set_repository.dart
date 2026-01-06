@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import '../../l2_domain/models/workout_set.dart';
+import '../../l2_domain/legacy_models/workout_set.dart';
 import 'workout_set_repository.dart';
 
 // Implementation: Hive-based WorkoutSetRepository

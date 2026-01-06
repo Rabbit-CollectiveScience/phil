@@ -1,6 +1,6 @@
 import 'dart:math';
-import '../../models/workout_set.dart';
-import '../../models/exercise.dart';
+import '../../legacy_models/workout_set.dart';
+import '../../legacy_models/exercise.dart';
 
 /// Generates realistic mock workout data for testing
 /// Includes edge cases, null values, and stress test data
@@ -62,7 +62,6 @@ class MockDataGenerator {
                 )];
             workoutSets.add(_generateCardioSet(cardioEx, date, daysAgo));
           }
-
         }
       }
     }

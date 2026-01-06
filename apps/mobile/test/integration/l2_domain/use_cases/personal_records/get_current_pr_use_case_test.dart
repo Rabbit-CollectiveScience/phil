@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:phil/l2_domain/models/personal_record.dart';
+import 'package:phil/l2_domain/legacy_models/personal_record.dart';
 import 'package:phil/l2_domain/use_cases/personal_records/get_current_pr_use_case.dart';
 import 'package:phil/l3_data/repositories/personal_record_repository.dart';
 import 'package:phil/l3_data/repositories/stub_personal_record_repository.dart';

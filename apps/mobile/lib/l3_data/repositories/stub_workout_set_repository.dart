@@ -1,4 +1,4 @@
-import '../../l2_domain/models/workout_set.dart';
+import '../../l2_domain/legacy_models/workout_set.dart';
 import 'workout_set_repository.dart';
 
 // Strategy: Stub implementation of WorkoutSetRepository

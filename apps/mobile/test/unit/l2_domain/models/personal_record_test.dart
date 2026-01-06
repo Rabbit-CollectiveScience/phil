@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:phil/l2_domain/models/personal_record.dart';
+import 'package:phil/l2_domain/legacy_models/personal_record.dart';
 
 void main() {
   group('PersonalRecord Model', () {

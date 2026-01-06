@@ -1,7 +1,7 @@
 import '../workout_sets/get_workout_sets_by_date_use_case.dart';
 import '../../../l3_data/repositories/personal_record_repository.dart';
 import '../personal_records/get_current_pr_use_case.dart';
-import '../../models/personal_record.dart';
+import '../../legacy_models/personal_record.dart';
 
 /// Use case to get detailed statistics for each exercise performed today.
 /// Groups workout sets by exercise and calculates aggregated metrics.

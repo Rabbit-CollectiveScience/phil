@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:phil/l2_domain/models/exercise.dart';
+import 'package:phil/l2_domain/legacy_models/exercise.dart';
 
 void main() {
   group('Exercise Model - Categories Support', () {
@@ -125,46 +125,50 @@ void main() {
       expect(exercise.categories, ['strength']); // Default fallback
     });
 
-    test('should verify flexibility category is not used in valid exercises', () {
-      final exercises = [
-        {
-          'id': 'arms_1',
-          'name': 'Barbell Curl',
-          'description': 'Test',
-          'categories': ['strength', 'arms'],
-          'fields': [],
-        },
-        {
-          'id': 'cardio_1',
-          'name': 'Treadmill',
-          'description': 'Test',
-          'categories': ['cardio'],
-          'fields': [],
-        },
-        {
-          'id': 'legs_1',
-          'name': 'Squat',
-          'description': 'Test',
-          'categories': ['strength', 'legs', 'core'],
-          'fields': [],
-        },
-      ];
+    test(
+      'should verify flexibility category is not used in valid exercises',
+      () {
+        final exercises = [
+          {
+            'id': 'arms_1',
+            'name': 'Barbell Curl',
+            'description': 'Test',
+            'categories': ['strength', 'arms'],
+            'fields': [],
+          },
+          {
+            'id': 'cardio_1',
+            'name': 'Treadmill',
+            'description': 'Test',
+            'categories': ['cardio'],
+            'fields': [],
+          },
+          {
+            'id': 'legs_1',
+            'name': 'Squat',
+            'description': 'Test',
+            'categories': ['strength', 'legs', 'core'],
+            'fields': [],
+          },
+        ];
 
-      for (final json in exercises) {
-        final exercise = Exercise.fromJson(json);
-        expect(
-          exercise.categories.contains('flexibility'),
-          false,
-          reason: 'Exercise ${exercise.name} should not have flexibility category',
-        );
-      }
-    });
+        for (final json in exercises) {
+          final exercise = Exercise.fromJson(json);
+          expect(
+            exercise.categories.contains('flexibility'),
+            false,
+            reason:
+                'Exercise ${exercise.name} should not have flexibility category',
+          );
+        }
+      },
+    );
 
     test('should not accept flexibility as valid exercise type', () {
       // Even if someone tries to create a flexibility exercise,
       // the system should only accept strength and cardio
       final validTypes = ['strength', 'cardio'];
-      
+
       final strengthJson = {
         'id': 'test_1',
         'name': 'Test',
@@ -172,7 +176,7 @@ void main() {
         'categories': ['strength'],
         'fields': [],
       };
-      
+
       final cardioJson = {
         'id': 'test_2',
         'name': 'Test',

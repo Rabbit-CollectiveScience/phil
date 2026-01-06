@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../l2_domain/models/exercise.dart';
+import '../../../../l2_domain/legacy_models/exercise.dart';
 
 class CardModel {
   final Exercise exercise;

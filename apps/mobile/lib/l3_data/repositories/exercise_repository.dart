@@ -1,4 +1,4 @@
-import '../../l2_domain/models/exercise.dart';
+import '../../l2_domain/legacy_models/exercise.dart';
 
 // Repository Interface: Exercise data operations
 //

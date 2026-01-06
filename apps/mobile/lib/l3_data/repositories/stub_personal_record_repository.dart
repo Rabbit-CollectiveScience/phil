@@ -1,4 +1,4 @@
-import '../../l2_domain/models/personal_record.dart';
+import '../../l2_domain/legacy_models/personal_record.dart';
 import 'personal_record_repository.dart';
 
 /// In-memory implementation of PersonalRecordRepository for testing

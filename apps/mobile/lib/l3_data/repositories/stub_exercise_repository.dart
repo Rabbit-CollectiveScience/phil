@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import '../../l2_domain/models/exercise.dart';
+import '../../l2_domain/legacy_models/exercise.dart';
 import 'exercise_repository.dart';
 
 // Strategy: Stub implementation of ExerciseRepository

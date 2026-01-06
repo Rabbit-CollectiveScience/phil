@@ -1,4 +1,4 @@
-import '../../models/exercise.dart';
+import '../../legacy_models/exercise.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 
 // Use Case: Get recommended exercises for workout session
