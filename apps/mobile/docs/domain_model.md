@@ -11,7 +11,15 @@ classDiagram
         +String name
         +String description
         +bool isCustom
+    }
+    
+    class StrengthExercise {
+        <<abstract>>
         +List~MuscleGroup~ targetMuscles
+    }
+    
+    class CardioExercise {
+        <<abstract>>
     }
     
     class BodyweightExercise {
@@ -27,10 +35,22 @@ classDiagram
     class IsometricExercise {
     }
     
-    Exercise <|-- BodyweightExercise
-    Exercise <|-- FreeWeightExercise
-    Exercise <|-- MachineExercise
-    Exercise <|-- IsometricExercise
+    class DistanceCardioExercise {
+    }
+    
+    class DurationCardioExercise {
+    }
+    
+    Exercise <|-- StrengthExercise
+    Exercise <|-- CardioExercise
+    
+    StrengthExercise <|-- BodyweightExercise
+    StrengthExercise <|-- FreeWeightExercise
+    StrengthExercise <|-- MachineExercise
+    StrengthExercise <|-- IsometricExercise
+    
+    CardioExercise <|-- DistanceCardioExercise
+    CardioExercise <|-- DurationCardioExercise
 
     %% Workout Set Recordings (Instances)
     class WorkoutSet {
@@ -58,9 +78,23 @@ classDiagram
         +getVolume() null
     }
     
+    class DistanceCardioWorkoutSet {
+        +Duration duration
+        +Distance distance
+        +getPace() distance / duration
+        +getVolume() null
+    }
+    
+    class DurationCardioWorkoutSet {
+        +Duration duration
+        +getVolume() null
+    }
+    
     WorkoutSet <|-- BodyweightWorkoutSet
     WorkoutSet <|-- WeightedWorkoutSet
     WorkoutSet <|-- IsometricWorkoutSet
+    WorkoutSet <|-- DistanceCardioWorkoutSet
+    WorkoutSet <|-- DurationCardioWorkoutSet
 
     %% Personal Records (Achievements)
     class PersonalRecord {
@@ -83,16 +117,26 @@ classDiagram
     class DurationPR {
     }
     
+    class DistancePR {
+    }
+    
+    class PacePR {
+    }
+    
     PersonalRecord <|-- WeightPR
     PersonalRecord <|-- RepsPR
     PersonalRecord <|-- VolumePR
     PersonalRecord <|-- DurationPR
+    PersonalRecord <|-- DistancePR
+    PersonalRecord <|-- PacePR
 
     %% Relationships - Explicit mappings
     BodyweightExercise "1" --> "*" BodyweightWorkoutSet : records
     FreeWeightExercise "1" --> "*" WeightedWorkoutSet : records
     MachineExercise "1" --> "*" WeightedWorkoutSet : records
     IsometricExercise "1" --> "*" IsometricWorkoutSet : records
+    DistanceCardioExercise "1" --> "*" DistanceCardioWorkoutSet : records
+    DurationCardioExercise "1" --> "*" DurationCardioWorkoutSet : records
     
     BodyweightWorkoutSet "1" --> "0..*" RepsPR : achieves
     BodyweightWorkoutSet "1" --> "0..*" WeightPR : achieves (if additionalWeight)
@@ -100,6 +144,10 @@ classDiagram
     WeightedWorkoutSet "1" --> "0..*" RepsPR : achieves
     WeightedWorkoutSet "1" --> "0..*" VolumePR : achieves
     IsometricWorkoutSet "1" --> "0..*" DurationPR : achieves
+    DistanceCardioWorkoutSet "1" --> "0..*" DurationPR : achieves
+    DistanceCardioWorkoutSet "1" --> "0..*" DistancePR : achieves
+    DistanceCardioWorkoutSet "1" --> "0..*" PacePR : achieves
+    DurationCardioWorkoutSet "1" --> "0..*" DurationPR : achieves
 
     %% Supporting Types
     class MuscleGroup {
@@ -116,6 +164,12 @@ classDiagram
         +double kg
         +getInLbs()
         +setInLbs(double)
+    }
+    
+    class Distance {
+        +double meters
+        +getInKm()
+        +getInMiles()
     }
 ```
 
