@@ -34,13 +34,13 @@ class BodyweightWorkoutSet extends WorkoutSet {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'bodyweight',
-        'id': id,
-        'exerciseId': exerciseId,
-        'timestamp': timestamp.toIso8601String(),
-        'reps': reps,
-        'additionalWeight': additionalWeight?.toJson(),
-      };
+    'type': 'bodyweight',
+    'id': id,
+    'exerciseId': exerciseId,
+    'timestamp': timestamp.toIso8601String(),
+    'reps': reps,
+    'additionalWeight': additionalWeight?.toJson(),
+  };
 
   factory BodyweightWorkoutSet.fromJson(Map<String, dynamic> json) {
     return BodyweightWorkoutSet(
@@ -64,5 +64,6 @@ class BodyweightWorkoutSet extends WorkoutSet {
           additionalWeight == other.additionalWeight;
 
   @override
-  int get hashCode => super.hashCode ^ reps.hashCode ^ additionalWeight.hashCode;
+  int get hashCode =>
+      super.hashCode ^ reps.hashCode ^ additionalWeight.hashCode;
 }

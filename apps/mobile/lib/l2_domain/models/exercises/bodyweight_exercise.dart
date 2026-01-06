@@ -33,14 +33,14 @@ class BodyweightExercise extends StrengthExercise {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'bodyweight',
-        'id': id,
-        'name': name,
-        'description': description,
-        'isCustom': isCustom,
-        'targetMuscles': targetMuscles.map((m) => m.name).toList(),
-        'canAddWeight': canAddWeight,
-      };
+    'type': 'bodyweight',
+    'id': id,
+    'name': name,
+    'description': description,
+    'isCustom': isCustom,
+    'targetMuscles': targetMuscles.map((m) => m.name).toList(),
+    'canAddWeight': canAddWeight,
+  };
 
   factory BodyweightExercise.fromJson(Map<String, dynamic> json) {
     return BodyweightExercise(

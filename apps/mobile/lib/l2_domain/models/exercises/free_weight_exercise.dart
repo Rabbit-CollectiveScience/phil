@@ -28,13 +28,13 @@ class FreeWeightExercise extends StrengthExercise {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'freeWeight',
-        'id': id,
-        'name': name,
-        'description': description,
-        'isCustom': isCustom,
-        'targetMuscles': targetMuscles.map((m) => m.name).toList(),
-      };
+    'type': 'freeWeight',
+    'id': id,
+    'name': name,
+    'description': description,
+    'isCustom': isCustom,
+    'targetMuscles': targetMuscles.map((m) => m.name).toList(),
+  };
 
   factory FreeWeightExercise.fromJson(Map<String, dynamic> json) {
     return FreeWeightExercise(

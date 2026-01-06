@@ -28,13 +28,13 @@ class IsometricExercise extends StrengthExercise {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'isometric',
-        'id': id,
-        'name': name,
-        'description': description,
-        'isCustom': isCustom,
-        'targetMuscles': targetMuscles.map((m) => m.name).toList(),
-      };
+    'type': 'isometric',
+    'id': id,
+    'name': name,
+    'description': description,
+    'isCustom': isCustom,
+    'targetMuscles': targetMuscles.map((m) => m.name).toList(),
+  };
 
   factory IsometricExercise.fromJson(Map<String, dynamic> json) {
     return IsometricExercise(

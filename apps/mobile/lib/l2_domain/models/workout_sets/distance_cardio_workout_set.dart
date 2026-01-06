@@ -37,13 +37,13 @@ class DistanceCardioWorkoutSet extends WorkoutSet {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'distanceCardio',
-        'id': id,
-        'exerciseId': exerciseId,
-        'timestamp': timestamp.toIso8601String(),
-        'duration': duration.inSeconds,
-        'distance': distance.toJson(),
-      };
+    'type': 'distanceCardio',
+    'id': id,
+    'exerciseId': exerciseId,
+    'timestamp': timestamp.toIso8601String(),
+    'duration': duration.inSeconds,
+    'distance': distance.toJson(),
+  };
 
   factory DistanceCardioWorkoutSet.fromJson(Map<String, dynamic> json) {
     return DistanceCardioWorkoutSet(

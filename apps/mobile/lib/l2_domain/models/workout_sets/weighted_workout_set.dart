@@ -34,13 +34,13 @@ class WeightedWorkoutSet extends WorkoutSet {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'weighted',
-        'id': id,
-        'exerciseId': exerciseId,
-        'timestamp': timestamp.toIso8601String(),
-        'weight': weight.toJson(),
-        'reps': reps,
-      };
+    'type': 'weighted',
+    'id': id,
+    'exerciseId': exerciseId,
+    'timestamp': timestamp.toIso8601String(),
+    'weight': weight.toJson(),
+    'reps': reps,
+  };
 
   factory WeightedWorkoutSet.fromJson(Map<String, dynamic> json) {
     return WeightedWorkoutSet(

@@ -28,13 +28,13 @@ class MachineExercise extends StrengthExercise {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'machine',
-        'id': id,
-        'name': name,
-        'description': description,
-        'isCustom': isCustom,
-        'targetMuscles': targetMuscles.map((m) => m.name).toList(),
-      };
+    'type': 'machine',
+    'id': id,
+    'name': name,
+    'description': description,
+    'isCustom': isCustom,
+    'targetMuscles': targetMuscles.map((m) => m.name).toList(),
+  };
 
   factory MachineExercise.fromJson(Map<String, dynamic> json) {
     return MachineExercise(
