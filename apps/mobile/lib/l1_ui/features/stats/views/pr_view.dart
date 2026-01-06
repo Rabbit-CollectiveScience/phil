@@ -55,7 +55,9 @@ class _PRViewState extends State<PRView> {
         final daysAgo = now.difference(pr.prRecord.achievedAt).inDays;
 
         // Fetch the WorkoutSet to get the actual values
-        final workoutSet = await workoutSetRepo.getById(pr.prRecord.workoutSetId);
+        final workoutSet = await workoutSetRepo.getById(
+          pr.prRecord.workoutSetId,
+        );
         if (workoutSet == null) continue;
 
         // Format the value based on WorkoutSet type
@@ -161,22 +163,25 @@ class _PRViewState extends State<PRView> {
 
   List<String> _getMuscleGroupsFromExercise(Exercise exercise) {
     if (exercise is StrengthExercise) {
-      return exercise.targetMuscles.map((muscle) {
-        switch (muscle) {
-          case MuscleGroup.chest:
-            return 'CHEST';
-          case MuscleGroup.back:
-            return 'BACK';
-          case MuscleGroup.legs:
-            return 'LEGS';
-          case MuscleGroup.shoulders:
-            return 'SHOULDERS';
-          case MuscleGroup.arms:
-            return 'ARMS';
-          case MuscleGroup.core:
-            return 'CORE';
-        }
-      }).toSet().toList();
+      return exercise.targetMuscles
+          .map((muscle) {
+            switch (muscle) {
+              case MuscleGroup.chest:
+                return 'CHEST';
+              case MuscleGroup.back:
+                return 'BACK';
+              case MuscleGroup.legs:
+                return 'LEGS';
+              case MuscleGroup.shoulders:
+                return 'SHOULDERS';
+              case MuscleGroup.arms:
+                return 'ARMS';
+              case MuscleGroup.core:
+                return 'CORE';
+            }
+          })
+          .toSet()
+          .toList();
     } else if (exercise is CardioExercise) {
       return ['CARDIO'];
     }

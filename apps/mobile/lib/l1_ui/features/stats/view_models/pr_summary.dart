@@ -23,7 +23,20 @@ class PRSummary {
     String lastPRDate = 'Never';
     if (prs.isNotEmpty) {
       final date = prs.first.prRecord.achievedAt;
-      final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      final monthNames = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
       lastPRDate = '${monthNames[date.month - 1]} ${date.day}, ${date.year}';
     }
 

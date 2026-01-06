@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import '../../../shared/theme/app_colors.dart';
-import '../../../../l2_domain/use_cases/workout_sets/get_workout_sets_by_date_use_case.dart' as byDate;
+import '../../../../l2_domain/use_cases/workout_sets/get_workout_sets_by_date_use_case.dart'
+    as byDate;
 import '../../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
 import '../../../../l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
 import '../../../../l2_domain/use_cases/exercises/search_exercises_use_case.dart';
@@ -341,7 +342,7 @@ class _LogViewState extends State<LogView> {
   /// Format workout set values for display based on workout set type
   String _formatSetValues(byDate.WorkoutSetWithDetails setDetails) {
     final workoutSet = setDetails.workoutSet;
-    
+
     if (workoutSet is WeightedWorkoutSet) {
       return '${workoutSet.weight.kg.toStringAsFixed(1)} kg × ${workoutSet.reps}';
     } else if (workoutSet is BodyweightWorkoutSet) {
@@ -358,7 +359,7 @@ class _LogViewState extends State<LogView> {
       final durationMin = workoutSet.duration.inMinutes;
       return '$durationMin min';
     }
-    
+
     return 'No data';
   }
 
@@ -659,44 +660,54 @@ class _AddSetDialogState extends State<_AddSetDialog> {
 
     if (exercise is StrengthExercise) {
       // Weight field
-      widgets.add(_buildInputField(
-        label: 'WEIGHT',
-        controller: _fieldControllers['weight']!,
-        hint: 'Enter weight',
-        suffix: 'kg',
-      ));
+      widgets.add(
+        _buildInputField(
+          label: 'WEIGHT',
+          controller: _fieldControllers['weight']!,
+          hint: 'Enter weight',
+          suffix: 'kg',
+        ),
+      );
 
       // Reps field
-      widgets.add(_buildInputField(
-        label: 'REPS',
-        controller: _fieldControllers['reps']!,
-        hint: 'Enter reps',
-        suffix: null,
-      ));
+      widgets.add(
+        _buildInputField(
+          label: 'REPS',
+          controller: _fieldControllers['reps']!,
+          hint: 'Enter reps',
+          suffix: null,
+        ),
+      );
     } else if (exercise is DistanceCardioExercise) {
       // Distance field
-      widgets.add(_buildInputField(
-        label: 'DISTANCE',
-        controller: _fieldControllers['distance']!,
-        hint: 'Enter distance',
-        suffix: 'km',
-      ));
+      widgets.add(
+        _buildInputField(
+          label: 'DISTANCE',
+          controller: _fieldControllers['distance']!,
+          hint: 'Enter distance',
+          suffix: 'km',
+        ),
+      );
 
       // Duration field
-      widgets.add(_buildInputField(
-        label: 'DURATION',
-        controller: _fieldControllers['duration']!,
-        hint: 'Enter duration',
-        suffix: 'min',
-      ));
+      widgets.add(
+        _buildInputField(
+          label: 'DURATION',
+          controller: _fieldControllers['duration']!,
+          hint: 'Enter duration',
+          suffix: 'min',
+        ),
+      );
     } else if (exercise is DurationCardioExercise) {
       // Duration field
-      widgets.add(_buildInputField(
-        label: 'DURATION',
-        controller: _fieldControllers['duration']!,
-        hint: 'Enter duration',
-        suffix: 'min',
-      ));
+      widgets.add(
+        _buildInputField(
+          label: 'DURATION',
+          controller: _fieldControllers['duration']!,
+          hint: 'Enter duration',
+          suffix: 'min',
+        ),
+      );
     }
 
     return widgets;
@@ -733,9 +744,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
             ),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(
-                color: AppColors.offWhite.withOpacity(0.3),
-              ),
+              hintStyle: TextStyle(color: AppColors.offWhite.withOpacity(0.3)),
               filled: true,
               fillColor: AppColors.deepCharcoal,
               border: OutlineInputBorder(
@@ -908,10 +917,11 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                     itemCount: _filteredExercises.length,
                     itemBuilder: (context, index) {
                       final exercise = _filteredExercises[index];
-                      
+
                       // Generate field preview based on exercise type
                       String fieldPreview = '';
-                      if (exercise is FreeWeightExercise || exercise is MachineExercise) {
+                      if (exercise is FreeWeightExercise ||
+                          exercise is MachineExercise) {
                         fieldPreview = 'kg · reps';
                       } else if (exercise is BodyweightExercise) {
                         fieldPreview = 'reps';
@@ -1015,10 +1025,11 @@ class _AddSetDialogState extends State<_AddSetDialog> {
 
                               if (exercise is FreeWeightExercise ||
                                   exercise is MachineExercise) {
-                                final weightText =
-                                    _fieldControllers['weight']!.text.trim();
-                                final repsText =
-                                    _fieldControllers['reps']!.text.trim();
+                                final weightText = _fieldControllers['weight']!
+                                    .text
+                                    .trim();
+                                final repsText = _fieldControllers['reps']!.text
+                                    .trim();
 
                                 final weight = Weight(double.parse(weightText));
                                 final reps = int.parse(repsText);
@@ -1031,14 +1042,15 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                   reps: reps,
                                 );
                               } else if (exercise is BodyweightExercise) {
-                                final repsText =
-                                    _fieldControllers['reps']!.text.trim();
-                                final weightText =
-                                    _fieldControllers['weight']?.text.trim();
+                                final repsText = _fieldControllers['reps']!.text
+                                    .trim();
+                                final weightText = _fieldControllers['weight']
+                                    ?.text
+                                    .trim();
 
                                 final reps = int.parse(repsText);
-                                final additionalWeight = weightText != null &&
-                                        weightText.isNotEmpty
+                                final additionalWeight =
+                                    weightText != null && weightText.isNotEmpty
                                     ? Weight(double.parse(weightText))
                                     : null;
 

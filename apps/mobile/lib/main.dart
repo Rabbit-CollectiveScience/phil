@@ -35,6 +35,16 @@ void main() async {
   // Initialize Hive for local storage
   await Hive.initFlutter();
 
+  // Delete old boxes to clear incompatible data from previous schema
+  // TODO: Remove this after migration is complete
+  try {
+    await Hive.deleteBoxFromDisk('exercises');
+    await Hive.deleteBoxFromDisk('workout_sets');
+    await Hive.deleteBoxFromDisk('personal_records');
+  } catch (e) {
+    // Boxes might not exist yet, that's fine
+  }
+
   // Open Hive boxes (storing JSON maps, not typed objects)
   await Hive.openBox<Map<dynamic, dynamic>>('exercises');
   await Hive.openBox<Map<dynamic, dynamic>>('workout_sets');
