@@ -176,15 +176,27 @@ classDiagram
 ## Key Relationships
 
 **Exercise → WorkoutSet (strict typing):**
+
+*Strength Training:*
 - BodyweightExercise → BodyweightWorkoutSet (tracks reps + optional additionalWeight)
 - FreeWeightExercise → WeightedWorkoutSet (tracks weight + reps)
 - MachineExercise → WeightedWorkoutSet (tracks weight + reps)
 - IsometricExercise → IsometricWorkoutSet (tracks duration)
 
+*Cardio:*
+- DistanceCardioExercise → DistanceCardioWorkoutSet (tracks duration + distance, calculates pace)
+- DurationCardioExercise → DurationCardioWorkoutSet (tracks duration only)
+
 **WorkoutSet → PersonalRecord (by metrics):**
+
+*Strength Training:*
 - BodyweightWorkoutSet → RepsPR, WeightPR (if additionalWeight used)
 - WeightedWorkoutSet → WeightPR, RepsPR, VolumePR
 - IsometricWorkoutSet → DurationPR
+
+*Cardio:*
+- DistanceCardioWorkoutSet → DurationPR (for specific distance), DistancePR (longest distance), PacePR (best average pace)
+- DurationCardioWorkoutSet → DurationPR (longest duration)
 
 ## Design Principles - Strength Training
 
@@ -231,6 +243,51 @@ classDiagram
   - Bodyweight: RepsPR, WeightPR (when additionalWeight used)
   - Free Weight & Machine: WeightPR, RepsPR, VolumePR
   - Isometric: DurationPR
+
+## Design Principles - Cardio
+
+### Core Architecture
+- **Same foundational principles as strength training**: Type safety, strict mappings, separation of concerns
+- **Classification by metrics tracked**: DistanceCardio vs DurationCardio based on whether distance is meaningful
+
+### Exercise Classification
+- **DistanceCardioExercise**: Activities where distance tracking is meaningful (running, cycling, rowing, swimming)
+  - Records both duration and distance
+  - Pace calculated at runtime from these values
+  - Suitable for machines/activities with distance measurement
+  
+- **DurationCardioExercise**: Activities where only duration matters (elliptical, stair climber, battle ropes)
+  - Duration-only tracking for equipment without meaningful distance metrics
+  - Simpler data structure for non-distance-based conditioning
+
+### Activity Intensity Variations
+- **Separate exercises for intensity levels**: Walking vs Running are distinct exercises
+  - Each has its own PR tracking (fastest 5K run, longest walk)
+  - User creates exercise names that reflect their use case
+  - Classification is by data structure needed, not by heart rate/intensity
+
+### Personal Records
+- **DistanceCardio PRs**:
+  - DurationPR: Fastest time for specific distance (e.g., fastest 5K)
+  - DistancePR: Longest distance achieved (useful for endurance tracking)
+  - PacePR: Best average pace across any session
+  
+- **DurationCardio PRs**:
+  - DurationPR: Longest session duration
+
+### Explicit Design Decisions (What we DON'T have)
+- ❌ No heart rate tracking - out of scope for weightlifter-focused app
+- ❌ No interval detail tracking - HIIT/interval training recorded as one combined session
+  - 10x(400m sprint + 200m jog) = one 6km, 30min session
+  - Prioritizes simplicity over granular interval analysis
+- ❌ No split times - no lap tracking or kilometer splits
+- ❌ No elevation/incline tracking - flat assumption
+- ❌ No activity-specific enums - use exercise name to distinguish running from cycling
+
+### Pace Calculation
+- **Distance.meters / Duration.seconds** = meters per second (stored format)
+- Display conversions: min/km, min/mile, km/h, mph calculated at runtime
+- Pace is derived metric, not stored directly
 
 ### Explicit Design Decisions (What we DON'T have)
 - ❌ No `workoutId` grouping - derive sessions from timestamp at runtime
