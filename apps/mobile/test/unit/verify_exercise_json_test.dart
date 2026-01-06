@@ -22,16 +22,16 @@ void main() {
       // Try to deserialize each exercise
       for (final exerciseJson in jsonList) {
         final exercise = DistanceCardioExercise.fromJson(exerciseJson);
-        
+
         // Verify all required fields are present
         expect(exercise.id, isNotEmpty);
         expect(exercise.name, isNotEmpty);
         expect(exercise.description, isNotEmpty);
         expect(exercise.isCustom, false);
-        
+
         // Verify the JSON has the correct type field
         expect(exerciseJson['type'], 'distance_cardio');
-        
+
         print('✓ Successfully deserialized: ${exercise.name} (${exercise.id})');
       }
     });
@@ -50,16 +50,16 @@ void main() {
       // Try to deserialize each exercise
       for (final exerciseJson in jsonList) {
         final exercise = DurationCardioExercise.fromJson(exerciseJson);
-        
+
         // Verify all required fields are present
         expect(exercise.id, isNotEmpty);
         expect(exercise.name, isNotEmpty);
         expect(exercise.description, isNotEmpty);
         expect(exercise.isCustom, false);
-        
+
         // Verify the JSON has the correct type field
         expect(exerciseJson['type'], 'duration_cardio');
-        
+
         print('✓ Successfully deserialized: ${exercise.name} (${exercise.id})');
       }
     });
@@ -73,17 +73,17 @@ void main() {
       for (final exerciseJson in jsonList) {
         // Deserialize
         final exercise = DistanceCardioExercise.fromJson(exerciseJson);
-        
+
         // Serialize back to JSON
         final serialized = exercise.toJson();
-        
+
         // Verify key fields match
         expect(serialized['type'], 'distance_cardio');
         expect(serialized['id'], exerciseJson['id']);
         expect(serialized['name'], exerciseJson['name']);
         expect(serialized['description'], exerciseJson['description']);
         expect(serialized['isCustom'], exerciseJson['isCustom']);
-        
+
         print('✓ Round-trip successful: ${exercise.name}');
       }
     });
@@ -97,17 +97,17 @@ void main() {
       for (final exerciseJson in jsonList) {
         // Deserialize
         final exercise = DurationCardioExercise.fromJson(exerciseJson);
-        
+
         // Serialize back to JSON
         final serialized = exercise.toJson();
-        
+
         // Verify key fields match
         expect(serialized['type'], 'duration_cardio');
         expect(serialized['id'], exerciseJson['id']);
         expect(serialized['name'], exerciseJson['name']);
         expect(serialized['description'], exerciseJson['description']);
         expect(serialized['isCustom'], exerciseJson['isCustom']);
-        
+
         print('✓ Round-trip successful: ${exercise.name}');
       }
     });
