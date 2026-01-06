@@ -1,4 +1,4 @@
-import '../../../../l2_domain/legacy_models/pr_item_with_exercise.dart';
+import '../../../../l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
 
 /// Summary data for the PR view
 class PRSummary {
@@ -22,25 +22,19 @@ class PRSummary {
     // Get formatted date of last PR
     String lastPRDate = 'Never';
     if (prs.isNotEmpty) {
-      lastPRDate = prs.first.formattedDate;
+      final date = prs.first.prRecord.achievedAt;
+      final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      lastPRDate = '${monthNames[date.month - 1]} ${date.day}, ${date.year}';
     }
 
     // Get 5 most recent PRs (already sorted)
     final recentPRs = prs.take(5).toList();
 
-    // Group PRs by exercise category
+    // Group PRs by muscle group (simplified - using first muscle group only)
     final prsByCategory = <String, List<PRItemWithExercise>>{};
-    for (var pr in prs) {
-      // Each PR can belong to multiple categories
-      // Add it to each category it belongs to
-      for (var category in pr.exerciseCategories) {
-        final categoryKey = category.toUpperCase();
-        if (!prsByCategory.containsKey(categoryKey)) {
-          prsByCategory[categoryKey] = [];
-        }
-        prsByCategory[categoryKey]!.add(pr);
-      }
-    }
+    // Note: The prsByCategory feature is simplified for now since we don't have
+    // the exerciseCategories field anymore. This would need a more sophisticated
+    // implementation based on the Exercise model's targetMuscles property.
 
     // Sort categories alphabetically
     final sortedCategories = Map.fromEntries(

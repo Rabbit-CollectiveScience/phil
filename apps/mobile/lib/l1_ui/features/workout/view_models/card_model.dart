@@ -7,6 +7,7 @@ class CardModel {
   final Exercise exercise;
   final Color color;
   final bool isFlipped;
+
   /// Generic storage for user input data (weight, reps, distance, duration, etc.)
   /// Keys are field names, values are user inputs as strings
   final Map<String, String> userData;
@@ -43,4 +44,3 @@ class CardModel {
     return copyWith(userData: updatedValues);
   }
 }
-

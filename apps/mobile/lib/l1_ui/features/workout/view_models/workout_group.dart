@@ -90,10 +90,9 @@ class WorkoutGroup {
     final firstSet = sets.first;
 
     // Sort sets by completion time (oldest to newest for display)
-    final sortedSets = List<WorkoutSetWithDetails>.from(sets)
-      ..sort(
-        (a, b) => a.workoutSet.timestamp.compareTo(b.workoutSet.timestamp),
-      );
+    final sortedSets = List<WorkoutSetWithDetails>.from(
+      sets,
+    )..sort((a, b) => a.workoutSet.timestamp.compareTo(b.workoutSet.timestamp));
 
     return WorkoutGroup(
       exerciseName: firstSet.exerciseName,

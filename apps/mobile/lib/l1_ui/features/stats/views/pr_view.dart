@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../../l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
+import '../../../../l2_domain/models/exercises/exercise.dart';
+import '../../../../l2_domain/models/exercises/strength_exercise.dart';
+import '../../../../l2_domain/models/exercises/cardio_exercise.dart';
+import '../../../../l2_domain/models/common/muscle_group.dart';
+import '../../../../l2_domain/models/workout_sets/workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
+import '../../../../l3_data/repositories/workout_set_repository.dart';
 
 class PRView extends StatefulWidget {
   const PRView({super.key});
@@ -30,35 +40,43 @@ class _PRViewState extends State<PRView> {
       final useCase = GetIt.instance<GetAllPRsUseCase>();
       final allPRs = await useCase.execute();
 
+      final workoutSetRepo = GetIt.instance<WorkoutSetRepository>();
+
       // Group PRs by muscle group and exercise
       final grouped = <String, Map<String, Map<String, dynamic>>>{};
 
       for (var pr in allPRs) {
-        // Map category to muscle group
-        final muscleGroup = _mapCategoryToMuscleGroup(pr.exerciseCategories);
-        if (muscleGroup == null) continue;
+        // Get muscle groups from exercise
+        final muscleGroups = _getMuscleGroupsFromExercise(pr.exercise);
+        if (muscleGroups.isEmpty) continue;
 
-        // Initialize muscle group if needed
-        if (!grouped.containsKey(muscleGroup)) {
-          grouped[muscleGroup] = {};
+        // Calculate days ago
+        final now = DateTime.now();
+        final daysAgo = now.difference(pr.prRecord.achievedAt).inDays;
+
+        // Fetch the WorkoutSet to get the actual values
+        final workoutSet = await workoutSetRepo.getById(pr.prRecord.workoutSetId);
+        if (workoutSet == null) continue;
+
+        // Format the value based on WorkoutSet type
+        final formattedValue = _formatWorkoutSetValue(workoutSet);
+
+        // Add to each muscle group this exercise targets
+        for (var muscleGroup in muscleGroups) {
+          // Initialize muscle group if needed
+          if (!grouped.containsKey(muscleGroup)) {
+            grouped[muscleGroup] = {};
+          }
+
+          // Initialize exercise if needed
+          if (!grouped[muscleGroup]!.containsKey(pr.exerciseName)) {
+            grouped[muscleGroup]![pr.exerciseName] = {
+              'exercise': pr.exerciseName,
+              'value': formattedValue,
+              'daysAgo': daysAgo,
+            };
+          }
         }
-
-        // Initialize exercise if needed
-        if (!grouped[muscleGroup]!.containsKey(pr.exerciseName)) {
-          grouped[muscleGroup]![pr.exerciseName] = {
-            'exercise': pr.exerciseName,
-            'prs': <String, Map<String, dynamic>>{}, // Store all PR types
-          };
-        }
-
-        final exercise = grouped[muscleGroup]![pr.exerciseName]!;
-        final prs = exercise['prs'] as Map<String, Map<String, dynamic>>;
-
-        // Store this PR type
-        prs[pr.prRecord.type] = {
-          'value': pr.formattedValue,
-          'daysAgo': pr.daysAgo,
-        };
       }
 
       // Convert to list format and select best PR to display
@@ -80,29 +98,17 @@ class _PRViewState extends State<PRView> {
           final exercises = <Map<String, dynamic>>[];
 
           for (var exerciseData in grouped[muscleGroup]!.values) {
-            final prs =
-                exerciseData['prs'] as Map<String, Map<String, dynamic>>;
-
-            // Select best PR to display using priority order
-            final selectedPR = _selectBestPR(prs);
-
-            if (selectedPR != null) {
-              exercises.add({
-                'exercise': exerciseData['exercise'],
-                'value': selectedPR['value'],
-                'daysAgo': selectedPR['daysAgo'],
-                'prType': selectedPR['type'],
-              });
-            }
+            exercises.add({
+              'exercise': exerciseData['exercise'],
+              'value': exerciseData['value'],
+              'daysAgo': exerciseData['daysAgo'],
+            });
           }
 
           // Sort by days ago (most recent first)
           exercises.sort((a, b) {
-            final daysA = a['daysAgo'] as int?;
-            final daysB = b['daysAgo'] as int?;
-            if (daysA == null && daysB == null) return 0;
-            if (daysA == null) return 1;
-            if (daysB == null) return -1;
+            final daysA = a['daysAgo'] as int;
+            final daysB = b['daysAgo'] as int;
             return daysA.compareTo(daysB);
           });
 
@@ -133,98 +139,48 @@ class _PRViewState extends State<PRView> {
     }
   }
 
-  /// Select the best PR to display based on priority order
-  Map<String, dynamic>? _selectBestPR(Map<String, Map<String, dynamic>> prs) {
-    if (prs.isEmpty) return null;
-
-    // Priority order for PR types
-    final priorityOrder = [
-      'maxWeight', // Weighted strength exercises
-      'maxReps', // Bodyweight strength exercises
-      'maxDurationInSeconds', // Time-based cardio
-      'maxDistance', // Distance-based cardio
-      'maxSpeed', // Speed-based cardio
-      'maxResistance', // Resistance-based cardio
-      'maxIncline', // Incline-based cardio
-    ];
-
-    // Try priority order first
-    for (var prType in priorityOrder) {
-      if (prs.containsKey(prType)) {
-        final prData = prs[prType]!;
-        return {
-          'value': prData['value'],
-          'daysAgo': prData['daysAgo'],
-          'type': prType,
-        };
+  String _formatWorkoutSetValue(WorkoutSet workoutSet) {
+    if (workoutSet is WeightedWorkoutSet) {
+      return '${workoutSet.weight.kg.toStringAsFixed(1)} kg × ${workoutSet.reps}';
+    } else if (workoutSet is BodyweightWorkoutSet) {
+      final repsText = '${workoutSet.reps} reps';
+      if (workoutSet.additionalWeight != null) {
+        return '$repsText (+${workoutSet.additionalWeight!.kg.toStringAsFixed(1)} kg)';
       }
+      return repsText;
+    } else if (workoutSet is DistanceCardioWorkoutSet) {
+      final distanceKm = workoutSet.distance.getInKm();
+      final durationMin = workoutSet.duration.inMinutes;
+      return '${distanceKm.toStringAsFixed(1)} km · $durationMin min';
+    } else if (workoutSet is DurationCardioWorkoutSet) {
+      final durationMin = workoutSet.duration.inMinutes;
+      return '$durationMin min';
     }
-
-    // Fallback: return first available PR
-    final firstEntry = prs.entries.first;
-    return {
-      'value': firstEntry.value['value'],
-      'daysAgo': firstEntry.value['daysAgo'],
-      'type': firstEntry.key,
-    };
+    return 'No data';
   }
 
-  /// Format PR value based on type
-  String _formatPRValue(String prType, String rawValue) {
-    // Try to parse the raw value
-    final numValue = double.tryParse(rawValue);
-    if (numValue == null) return rawValue;
-
-    switch (prType) {
-      case 'maxDurationInSeconds':
-        // Convert seconds to minutes
-        final minutes = (numValue / 60).floor();
-        final seconds = (numValue % 60).round();
-        if (minutes > 0 && seconds > 0) {
-          return '$minutes min $seconds sec';
-        } else if (minutes > 0) {
-          return '$minutes min';
-        } else {
-          return '$seconds sec';
+  List<String> _getMuscleGroupsFromExercise(Exercise exercise) {
+    if (exercise is StrengthExercise) {
+      return exercise.targetMuscles.map((muscle) {
+        switch (muscle) {
+          case MuscleGroup.chest:
+            return 'CHEST';
+          case MuscleGroup.back:
+            return 'BACK';
+          case MuscleGroup.legs:
+            return 'LEGS';
+          case MuscleGroup.shoulders:
+            return 'SHOULDERS';
+          case MuscleGroup.arms:
+            return 'ARMS';
+          case MuscleGroup.core:
+            return 'CORE';
         }
-
-      case 'maxDistance':
-        return '${numValue.toStringAsFixed(1)} km';
-
-      case 'maxSpeed':
-        return '${numValue.toStringAsFixed(1)} km/h';
-
-      case 'maxResistance':
-        return 'Level ${numValue.round()}';
-
-      case 'maxIncline':
-        return '${numValue.toStringAsFixed(1)}%';
-
-      case 'maxWeight':
-        return '${numValue.toStringAsFixed(1)} kg';
-
-      case 'maxReps':
-        return '${numValue.round()} reps';
-
-      case 'maxVolume':
-        return '${numValue.toStringAsFixed(0)} kg';
-
-      default:
-        // Unknown type, return raw value
-        return rawValue;
+      }).toSet().toList();
+    } else if (exercise is CardioExercise) {
+      return ['CARDIO'];
     }
-  }
-
-  String? _mapCategoryToMuscleGroup(List<String> categories) {
-    // Map exercise categories to muscle groups
-    if (categories.contains('chest')) return 'CHEST';
-    if (categories.contains('back')) return 'BACK';
-    if (categories.contains('legs')) return 'LEGS';
-    if (categories.contains('shoulders')) return 'SHOULDERS';
-    if (categories.contains('arms')) return 'ARMS';
-    if (categories.contains('core')) return 'CORE';
-    if (categories.contains('cardio')) return 'CARDIO';
-    return null; // Skip 'strength' category as it's redundant
+    return [];
   }
 
   @override
@@ -356,12 +312,7 @@ class _PRViewState extends State<PRView> {
                                       ? ''
                                       : '$daysAgo ${daysAgo == 1 ? 'day' : 'days'} ago';
 
-                                  // Format the value based on PR type
-                                  final rawValue = pr['value'] ?? '—';
-                                  final prType = pr['prType'] ?? '';
-                                  final formattedValue = prType.isNotEmpty
-                                      ? _formatPRValue(prType, rawValue)
-                                      : rawValue;
+                                  final formattedValue = pr['value'] ?? '—';
 
                                   return Container(
                                     color: index.isEven

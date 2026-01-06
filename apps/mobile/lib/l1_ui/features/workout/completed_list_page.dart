@@ -157,7 +157,7 @@ class _CompletedListPageState extends State<CompletedListPage>
       final durationSec = workoutSet.duration.inSeconds;
       return '$durationSec sec';
     }
-    
+
     return 'No data recorded';
   }
 
@@ -515,7 +515,8 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                             CustomSlidableAction(
                                                               onPressed: (context) async {
                                                                 // Vibrate when delete is tapped
-                                                                if (await Vibration.hasVibrator() == true) {
+                                                                if (await Vibration.hasVibrator() ==
+                                                                    true) {
                                                                   Vibration.vibrate(
                                                                     duration:
                                                                         50,

@@ -256,11 +256,11 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
           // Parse values
           final weightStr = fieldValues?['weight'];
           final repsStr = fieldValues?['reps'];
-          
+
           if (weightStr != null && repsStr != null) {
             final weight = double.tryParse(weightStr) ?? 0.0;
             final reps = int.tryParse(repsStr) ?? 0;
-            
+
             // Determine if it's weighted or bodyweight
             if (exercise is BodyweightExercise && weight == 0) {
               // Pure bodyweight
@@ -287,11 +287,11 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
           // Parse distance and duration
           final distanceStr = fieldValues?['distance'];
           final durationStr = fieldValues?['duration'];
-          
+
           if (distanceStr != null && durationStr != null) {
             final distance = double.tryParse(distanceStr) ?? 0.0;
             final durationMinutes = double.tryParse(durationStr) ?? 0.0;
-            
+
             final workoutSet = DistanceCardioWorkoutSet(
               id: uuid.v4(),
               exerciseId: exercise.id,
@@ -304,10 +304,10 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         } else if (exercise is DurationCardioExercise) {
           // Parse duration only
           final durationStr = fieldValues?['duration'];
-          
+
           if (durationStr != null) {
             final durationMinutes = double.tryParse(durationStr) ?? 0.0;
-            
+
             final workoutSet = DurationCardioWorkoutSet(
               id: uuid.v4(),
               exerciseId: exercise.id,

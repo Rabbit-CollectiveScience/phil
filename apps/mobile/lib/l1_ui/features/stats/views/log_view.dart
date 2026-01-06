@@ -2,14 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 import '../../../shared/theme/app_colors.dart';
-import '../../../../l2_domain/use_cases/workout_sets/get_workout_sets_by_date_use_case.dart';
-import '../../../../l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart';
+import '../../../../l2_domain/use_cases/workout_sets/get_workout_sets_by_date_use_case.dart' as byDate;
 import '../../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
 import '../../../../l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
 import '../../../../l2_domain/use_cases/exercises/search_exercises_use_case.dart';
-import '../../../../l2_domain/legacy_models/exercise.dart';
-import '../../../../l2_domain/legacy_models/exercise_field.dart';
-import '../../../../l2_domain/legacy_models/field_type_enum.dart';
+import '../../../../l2_domain/models/exercises/exercise.dart';
+import '../../../../l2_domain/models/exercises/strength_exercise.dart';
+import '../../../../l2_domain/models/exercises/bodyweight_exercise.dart';
+import '../../../../l2_domain/models/exercises/free_weight_exercise.dart';
+import '../../../../l2_domain/models/exercises/machine_exercise.dart';
+import '../../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
+import '../../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
+import '../../../../l2_domain/models/workout_sets/workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
+import '../../../../l2_domain/models/common/weight.dart';
+import '../../../../l2_domain/models/common/distance.dart';
+import 'package:uuid/uuid.dart';
 
 class LogView extends StatefulWidget {
   const LogView({super.key});
@@ -20,7 +31,7 @@ class LogView extends StatefulWidget {
 
 class _LogViewState extends State<LogView> {
   DateTime _selectedDate = DateTime.now();
-  List<WorkoutSetWithDetails> _sets = [];
+  List<byDate.WorkoutSetWithDetails> _sets = [];
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -37,7 +48,7 @@ class _LogViewState extends State<LogView> {
     });
 
     try {
-      final useCase = GetIt.instance<GetWorkoutSetsByDateUseCase>();
+      final useCase = GetIt.instance<byDate.GetWorkoutSetsByDateUseCase>();
       final sets = await useCase.execute(date: _selectedDate);
 
       setState(() {
@@ -327,80 +338,31 @@ class _LogViewState extends State<LogView> {
     );
   }
 
-  String _formatSetValues(Exercise? exercise, Map<String, dynamic>? values) {
-    if (exercise == null) {
-      return 'No data';
-    }
-
-    // Build display string based on exercise field definitions
-    final parts = <String>[];
-
-    for (final field in exercise.fields) {
-      final value = values?[field.name];
-      final unit = field.unit;
-
-      // Format based on field type, show placeholder if no value
-      String formattedValue;
-      if (value != null) {
-        // Has value - display it with unit
-        if (field.type == FieldTypeEnum.number) {
-          // Round decimal numbers to 1 decimal place
-          final numValue = value is num
-              ? value.toDouble()
-              : double.tryParse(value.toString());
-          if (numValue != null) {
-            formattedValue =
-                '${numValue.toStringAsFixed(1)}${unit.isNotEmpty ? " $unit" : ""}';
-          } else {
-            formattedValue = '${value}${unit.isNotEmpty ? " $unit" : ""}';
-          }
-        } else if (field.type == FieldTypeEnum.duration) {
-          // Format duration as minutes
-          final seconds = value is num
-              ? value.toInt()
-              : int.tryParse(value.toString());
-          if (seconds != null) {
-            final minutes = (seconds / 60).floor();
-            final remainingSecs = seconds % 60;
-            if (minutes > 0 && remainingSecs > 0) {
-              formattedValue = '$minutes min $remainingSecs sec';
-            } else if (minutes > 0) {
-              formattedValue = '$minutes min';
-            } else {
-              formattedValue = '$remainingSecs sec';
-            }
-          } else {
-            formattedValue = '${value}${unit.isNotEmpty ? " $unit" : ""}';
-          }
-        } else {
-          // For other types, format based on field name
-          if (field.name.toLowerCase().contains('incline') ||
-              field.name.toLowerCase().contains('percentage')) {
-            // Format percentages without space
-            final numValue = value is num
-                ? value.toDouble()
-                : double.tryParse(value.toString());
-            if (numValue != null) {
-              formattedValue = '${numValue.toStringAsFixed(1)}%';
-            } else {
-              formattedValue = '$value${unit.isNotEmpty ? unit : ""}';
-            }
-          } else {
-            formattedValue = '$value${unit.isNotEmpty ? " $unit" : ""}';
-          }
-        }
-      } else {
-        // No value - show placeholder with unit
-        formattedValue = '-${unit.isNotEmpty ? " $unit" : ""}';
+  /// Format workout set values for display based on workout set type
+  String _formatSetValues(byDate.WorkoutSetWithDetails setDetails) {
+    final workoutSet = setDetails.workoutSet;
+    
+    if (workoutSet is WeightedWorkoutSet) {
+      return '${workoutSet.weight.kg.toStringAsFixed(1)} kg × ${workoutSet.reps}';
+    } else if (workoutSet is BodyweightWorkoutSet) {
+      final repsText = '${workoutSet.reps} reps';
+      if (workoutSet.additionalWeight != null) {
+        return '$repsText (+${workoutSet.additionalWeight!.kg.toStringAsFixed(1)} kg)';
       }
-
-      parts.add(formattedValue);
+      return repsText;
+    } else if (workoutSet is DistanceCardioWorkoutSet) {
+      final distanceKm = workoutSet.distance.getInKm();
+      final durationMin = workoutSet.duration.inMinutes;
+      return '${distanceKm.toStringAsFixed(1)} km · $durationMin min';
+    } else if (workoutSet is DurationCardioWorkoutSet) {
+      final durationMin = workoutSet.duration.inMinutes;
+      return '$durationMin min';
     }
-
-    return parts.isEmpty ? 'No data' : parts.join(' · ');
+    
+    return 'No data';
   }
 
-  Widget _buildSetRow(WorkoutSetWithDetails setWithDetails, int index) {
+  Widget _buildSetRow(byDate.WorkoutSetWithDetails setWithDetails, int index) {
     // Calculate set number by counting previous sets of same exercise
     int setNumber = 1;
     for (int i = 0; i < index; i++) {
@@ -409,10 +371,7 @@ class _LogViewState extends State<LogView> {
       }
     }
 
-    final displayString = _formatSetValues(
-      setWithDetails.exercise,
-      setWithDetails.workoutSet.values,
-    );
+    final displayString = _formatSetValues(setWithDetails);
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Slidable(
@@ -649,10 +608,16 @@ class _AddSetDialogState extends State<_AddSetDialog> {
       _searchController.text = exercise.name;
       _showSuggestions = false;
 
-      // Create controllers for each field
+      // Create controllers based on exercise type
       _fieldControllers.clear();
-      for (var field in exercise.fields) {
-        _fieldControllers[field.name] = TextEditingController();
+      if (exercise is StrengthExercise) {
+        _fieldControllers['weight'] = TextEditingController();
+        _fieldControllers['reps'] = TextEditingController();
+      } else if (exercise is DistanceCardioExercise) {
+        _fieldControllers['distance'] = TextEditingController();
+        _fieldControllers['duration'] = TextEditingController();
+      } else if (exercise is DurationCardioExercise) {
+        _fieldControllers['duration'] = TextEditingController();
       }
     });
   }
@@ -684,6 +649,117 @@ class _AddSetDialogState extends State<_AddSetDialog> {
     } else {
       return '${monthNames[date.month - 1]} ${date.day}, ${date.year}';
     }
+  }
+
+  List<Widget> _buildInputFields() {
+    final exercise = _selectedExercise!;
+    final widgets = <Widget>[];
+
+    widgets.add(const SizedBox(height: 20));
+
+    if (exercise is StrengthExercise) {
+      // Weight field
+      widgets.add(_buildInputField(
+        label: 'WEIGHT',
+        controller: _fieldControllers['weight']!,
+        hint: 'Enter weight',
+        suffix: 'kg',
+      ));
+
+      // Reps field
+      widgets.add(_buildInputField(
+        label: 'REPS',
+        controller: _fieldControllers['reps']!,
+        hint: 'Enter reps',
+        suffix: null,
+      ));
+    } else if (exercise is DistanceCardioExercise) {
+      // Distance field
+      widgets.add(_buildInputField(
+        label: 'DISTANCE',
+        controller: _fieldControllers['distance']!,
+        hint: 'Enter distance',
+        suffix: 'km',
+      ));
+
+      // Duration field
+      widgets.add(_buildInputField(
+        label: 'DURATION',
+        controller: _fieldControllers['duration']!,
+        hint: 'Enter duration',
+        suffix: 'min',
+      ));
+    } else if (exercise is DurationCardioExercise) {
+      // Duration field
+      widgets.add(_buildInputField(
+        label: 'DURATION',
+        controller: _fieldControllers['duration']!,
+        hint: 'Enter duration',
+        suffix: 'min',
+      ));
+    }
+
+    return widgets;
+  }
+
+  Widget _buildInputField({
+    required String label,
+    required TextEditingController controller,
+    required String hint,
+    required String? suffix,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w900,
+              color: AppColors.offWhite.withOpacity(0.7),
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: AppColors.offWhite,
+            ),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: TextStyle(
+                color: AppColors.offWhite.withOpacity(0.3),
+              ),
+              filled: true,
+              fillColor: AppColors.deepCharcoal,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.zero,
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              suffixText: suffix,
+              suffixStyle: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: AppColors.offWhite.withOpacity(0.5),
+              ),
+            ),
+            onChanged: (value) {
+              setState(() {}); // Rebuild to update button state
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -832,10 +908,18 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                     itemCount: _filteredExercises.length,
                     itemBuilder: (context, index) {
                       final exercise = _filteredExercises[index];
-                      final fieldPreview = exercise.fields
-                          .map((f) => f.unit)
-                          .where((u) => u.isNotEmpty)
-                          .join(' · ');
+                      
+                      // Generate field preview based on exercise type
+                      String fieldPreview = '';
+                      if (exercise is FreeWeightExercise || exercise is MachineExercise) {
+                        fieldPreview = 'kg · reps';
+                      } else if (exercise is BodyweightExercise) {
+                        fieldPreview = 'reps';
+                      } else if (exercise is DistanceCardioExercise) {
+                        fieldPreview = 'km · min';
+                      } else if (exercise is DurationCardioExercise) {
+                        fieldPreview = 'min';
+                      }
 
                       return InkWell(
                         onTap: () => _selectExercise(exercise),
@@ -884,69 +968,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
             ],
 
             // Dynamic fields based on selected exercise
-            if (_selectedExercise != null) ...[
-              const SizedBox(height: 20),
-              ..._selectedExercise!.fields.map((field) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        field.label.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.offWhite.withOpacity(0.7),
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      TextField(
-                        controller: _fieldControllers[field.name],
-                        keyboardType:
-                            field.type == FieldTypeEnum.number ||
-                                field.type == FieldTypeEnum.duration
-                            ? TextInputType.number
-                            : TextInputType.text,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.offWhite,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: field.unit.isNotEmpty
-                              ? 'Enter ${field.unit}'
-                              : 'Enter value',
-                          hintStyle: TextStyle(
-                            color: AppColors.offWhite.withOpacity(0.3),
-                          ),
-                          filled: true,
-                          fillColor: AppColors.deepCharcoal,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero,
-                            borderSide: BorderSide.none,
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          suffixText: field.unit.isNotEmpty ? field.unit : null,
-                          suffixStyle: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.offWhite.withOpacity(0.5),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {}); // Rebuild to update button state
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ],
+            if (_selectedExercise != null) ..._buildInputFields(),
 
             const SizedBox(height: 24),
 
@@ -987,26 +1009,83 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                             });
 
                             try {
-                              // Convert field values to proper types
-                              // Only include non-empty values (sparse map)
-                              final values = <String, dynamic>{};
-                              _fieldControllers.forEach((key, controller) {
-                                final text = controller.text.trim();
-                                if (text.isNotEmpty) {
-                                  // Try to parse as number if possible
-                                  final numValue = num.tryParse(text);
-                                  values[key] = numValue ?? text;
-                                }
-                              });
+                              // Create the appropriate WorkoutSet based on exercise type
+                              final exercise = _selectedExercise!;
+                              final WorkoutSet workoutSet;
 
-                              // Save the workout set with custom date
-                              // Pass null if no values, otherwise pass the map
+                              if (exercise is FreeWeightExercise ||
+                                  exercise is MachineExercise) {
+                                final weightText =
+                                    _fieldControllers['weight']!.text.trim();
+                                final repsText =
+                                    _fieldControllers['reps']!.text.trim();
+
+                                final weight = Weight(double.parse(weightText));
+                                final reps = int.parse(repsText);
+
+                                workoutSet = WeightedWorkoutSet(
+                                  id: const Uuid().v4(),
+                                  exerciseId: exercise.id,
+                                  timestamp: widget.selectedDate,
+                                  weight: weight,
+                                  reps: reps,
+                                );
+                              } else if (exercise is BodyweightExercise) {
+                                final repsText =
+                                    _fieldControllers['reps']!.text.trim();
+                                final weightText =
+                                    _fieldControllers['weight']?.text.trim();
+
+                                final reps = int.parse(repsText);
+                                final additionalWeight = weightText != null &&
+                                        weightText.isNotEmpty
+                                    ? Weight(double.parse(weightText))
+                                    : null;
+
+                                workoutSet = BodyweightWorkoutSet(
+                                  id: const Uuid().v4(),
+                                  exerciseId: exercise.id,
+                                  timestamp: widget.selectedDate,
+                                  reps: reps,
+                                  additionalWeight: additionalWeight,
+                                );
+                              } else if (exercise is DistanceCardioExercise) {
+                                final distanceText =
+                                    _fieldControllers['distance']!.text.trim();
+                                final durationText =
+                                    _fieldControllers['duration']!.text.trim();
+
+                                final distanceKm = double.parse(distanceText);
+                                final durationMin = int.parse(durationText);
+
+                                workoutSet = DistanceCardioWorkoutSet(
+                                  id: const Uuid().v4(),
+                                  exerciseId: exercise.id,
+                                  timestamp: widget.selectedDate,
+                                  distance: Distance(distanceKm * 1000),
+                                  duration: Duration(minutes: durationMin),
+                                );
+                              } else if (exercise is DurationCardioExercise) {
+                                final durationText =
+                                    _fieldControllers['duration']!.text.trim();
+
+                                final durationMin = int.parse(durationText);
+
+                                workoutSet = DurationCardioWorkoutSet(
+                                  id: const Uuid().v4(),
+                                  exerciseId: exercise.id,
+                                  timestamp: widget.selectedDate,
+                                  duration: Duration(minutes: durationMin),
+                                );
+                              } else {
+                                throw Exception('Unsupported exercise type');
+                              }
+
+                              // Save the workout set
                               final recordUseCase =
                                   GetIt.instance<RecordWorkoutSetUseCase>();
                               await recordUseCase.execute(
-                                exerciseId: _selectedExercise!.id,
-                                values: values.isEmpty ? null : values,
-                                completedAt: widget.selectedDate,
+                                workoutSet: workoutSet,
                               );
 
                               // Close dialog

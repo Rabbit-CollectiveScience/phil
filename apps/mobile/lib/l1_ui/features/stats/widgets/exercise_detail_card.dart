@@ -232,18 +232,4 @@ class ExerciseDetailCard extends StatelessWidget {
         .trim();
     return 'PR ${spaced.toUpperCase()}';
   }
-
-  String _formatPRValue(String type, double value) {
-    // Format based on PR type
-    if (type == 'maxWeight' || type == 'maxVolume') {
-      return '${value.toInt()} kg';
-    } else if (type == 'maxReps') {
-      return '${value.toInt()} reps';
-    } else if (type == 'maxDistance') {
-      return '${value.toInt()} m';
-    } else if (type == 'maxDuration') {
-      return '${value.toInt()} s';
-    }
-    return value.toStringAsFixed(1);
-  }
 }

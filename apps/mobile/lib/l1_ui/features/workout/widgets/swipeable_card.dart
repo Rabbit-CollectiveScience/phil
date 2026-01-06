@@ -155,14 +155,14 @@ class SwipeableCardState extends State<SwipeableCard>
   /// Initialize input fields based on exercise type
   void _initializeInputFields() {
     final exercise = widget.card.exercise;
-    
+
     if (exercise is StrengthExercise) {
       // Strength exercises: weight + reps
       _fieldControllers['weight'] = TextEditingController(text: '- kg');
       _fieldControllers['reps'] = TextEditingController(text: '- reps');
       _fieldFocusNodes['weight'] = FocusNode();
       _fieldFocusNodes['reps'] = FocusNode();
-      
+
       _fieldFocusNodes['weight']!.addListener(() {
         if (_fieldFocusNodes['weight']!.hasFocus) {
           _startFieldTimer('weight');
@@ -170,7 +170,7 @@ class SwipeableCardState extends State<SwipeableCard>
           _fieldTimers['weight']?.cancel();
         }
       });
-      
+
       _fieldFocusNodes['reps']!.addListener(() {
         if (_fieldFocusNodes['reps']!.hasFocus) {
           _startFieldTimer('reps');
@@ -184,7 +184,7 @@ class SwipeableCardState extends State<SwipeableCard>
       _fieldControllers['duration'] = TextEditingController(text: '- min');
       _fieldFocusNodes['distance'] = FocusNode();
       _fieldFocusNodes['duration'] = FocusNode();
-      
+
       _fieldFocusNodes['distance']!.addListener(() {
         if (_fieldFocusNodes['distance']!.hasFocus) {
           _startFieldTimer('distance');
@@ -192,7 +192,7 @@ class SwipeableCardState extends State<SwipeableCard>
           _fieldTimers['distance']?.cancel();
         }
       });
-      
+
       _fieldFocusNodes['duration']!.addListener(() {
         if (_fieldFocusNodes['duration']!.hasFocus) {
           _startFieldTimer('duration');
@@ -204,7 +204,7 @@ class SwipeableCardState extends State<SwipeableCard>
       // Duration cardio: only duration
       _fieldControllers['duration'] = TextEditingController(text: '- min');
       _fieldFocusNodes['duration'] = FocusNode();
-      
+
       _fieldFocusNodes['duration']!.addListener(() {
         if (_fieldFocusNodes['duration']!.hasFocus) {
           _startFieldTimer('duration');
@@ -622,7 +622,7 @@ class SwipeableCardState extends State<SwipeableCard>
   /// Build input fields based on exercise type
   List<Widget> _buildInputFields() {
     final exercise = widget.card.exercise;
-    
+
     if (exercise is StrengthExercise) {
       return [
         if (_fieldControllers.containsKey('weight'))
@@ -658,7 +658,7 @@ class SwipeableCardState extends State<SwipeableCard>
           ),
       ];
     }
-    
+
     return [];
   }
 
@@ -754,9 +754,7 @@ class SwipeableCardState extends State<SwipeableCard>
                 widget.card.userData,
               );
               updatedData[fieldName] = newValue.toString();
-              widget.onCardUpdate(
-                widget.card.copyWith(userData: updatedData),
-              );
+              widget.onCardUpdate(widget.card.copyWith(userData: updatedData));
             },
             icon: const Icon(Icons.chevron_right),
             color: AppColors.limeGreen,
