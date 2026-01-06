@@ -53,13 +53,6 @@ flutter:
   # Exercise database assets
   assets:
     - assets/data/exercises/
-    - assets/data/exercises/schemas/chest/
-    - assets/data/exercises/schemas/back/
-    - assets/data/exercises/schemas/shoulders/
-    - assets/data/exercises/schemas/arms/
-    - assets/data/exercises/schemas/legs/
-    - assets/data/exercises/schemas/core/
-    - assets/data/exercises/schemas/cardio/
     - assets/images/
     - assets/images/exercise_types/
     - assets/phil-479202-d4e78adb0eea.json
