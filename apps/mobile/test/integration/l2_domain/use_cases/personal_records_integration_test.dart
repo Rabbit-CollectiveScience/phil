@@ -30,17 +30,17 @@ void main() {
   setUp(() async {
     final tempDir = await Directory.systemTemp.createTemp('hive_test_');
     Hive.init(tempDir.path);
-    
+
     // Open boxes with the exact names the repositories expect
     final prBox = await Hive.openBox<Map>('personal_records');
     final workoutSetBox = await Hive.openBox<Map>('workout_sets');
     final exerciseBox = await Hive.openBox<Map>('exercises');
-    
+
     // Repositories don't take Box parameters - they access boxes by name
     prRepository = PersonalRecordRepository();
     workoutSetRepository = WorkoutSetRepository();
     exerciseRepository = ExerciseRepository();
-    
+
     await prBox.clear();
     await workoutSetBox.clear();
     await exerciseBox.clear();
@@ -72,19 +72,23 @@ void main() {
       );
       await exerciseRepository.save(exercise);
 
-      await prRepository.save(WeightPR(
-        id: 'pr1',
-        exerciseId: 'exercise1',
-        workoutSetId: 'set1',
-        achievedAt: DateTime.now(),
-      ));
+      await prRepository.save(
+        WeightPR(
+          id: 'pr1',
+          exerciseId: 'exercise1',
+          workoutSetId: 'set1',
+          achievedAt: DateTime.now(),
+        ),
+      );
 
-      await prRepository.save(RepsPR(
-        id: 'pr2',
-        exerciseId: 'exercise1',
-        workoutSetId: 'set2',
-        achievedAt: DateTime.now(),
-      ));
+      await prRepository.save(
+        RepsPR(
+          id: 'pr2',
+          exerciseId: 'exercise1',
+          workoutSetId: 'set2',
+          achievedAt: DateTime.now(),
+        ),
+      );
 
       final useCase = GetAllPRsUseCase(prRepository, exerciseRepository);
 
@@ -106,19 +110,23 @@ void main() {
 
       final now = DateTime.now();
 
-      await prRepository.save(WeightPR(
-        id: 'pr1',
-        exerciseId: 'exercise1',
-        workoutSetId: 'set1',
-        achievedAt: now.subtract(const Duration(days: 30)),
-      ));
+      await prRepository.save(
+        WeightPR(
+          id: 'pr1',
+          exerciseId: 'exercise1',
+          workoutSetId: 'set1',
+          achievedAt: now.subtract(const Duration(days: 30)),
+        ),
+      );
 
-      await prRepository.save(WeightPR(
-        id: 'pr2',
-        exerciseId: 'exercise1',
-        workoutSetId: 'set2',
-        achievedAt: now,
-      ));
+      await prRepository.save(
+        WeightPR(
+          id: 'pr2',
+          exerciseId: 'exercise1',
+          workoutSetId: 'set2',
+          achievedAt: now,
+        ),
+      );
 
       final useCase = GetAllPRsUseCase(prRepository, exerciseRepository);
 
@@ -135,7 +143,7 @@ void main() {
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
       );
-      
+
       final runningExercise = DistanceCardioExercise(
         id: 'running',
         name: 'Running',
@@ -148,47 +156,59 @@ void main() {
 
       final now = DateTime.now();
 
-      await prRepository.save(WeightPR(
-        id: 'pr1',
-        exerciseId: 'bench',
-        workoutSetId: 'set1',
-        achievedAt: now,
-      ));
+      await prRepository.save(
+        WeightPR(
+          id: 'pr1',
+          exerciseId: 'bench',
+          workoutSetId: 'set1',
+          achievedAt: now,
+        ),
+      );
 
-      await prRepository.save(RepsPR(
-        id: 'pr2',
-        exerciseId: 'bench',
-        workoutSetId: 'set2',
-        achievedAt: now,
-      ));
+      await prRepository.save(
+        RepsPR(
+          id: 'pr2',
+          exerciseId: 'bench',
+          workoutSetId: 'set2',
+          achievedAt: now,
+        ),
+      );
 
-      await prRepository.save(VolumePR(
-        id: 'pr3',
-        exerciseId: 'bench',
-        workoutSetId: 'set3',
-        achievedAt: now,
-      ));
+      await prRepository.save(
+        VolumePR(
+          id: 'pr3',
+          exerciseId: 'bench',
+          workoutSetId: 'set3',
+          achievedAt: now,
+        ),
+      );
 
-      await prRepository.save(DistancePR(
-        id: 'pr4',
-        exerciseId: 'running',
-        workoutSetId: 'set4',
-        achievedAt: now,
-      ));
+      await prRepository.save(
+        DistancePR(
+          id: 'pr4',
+          exerciseId: 'running',
+          workoutSetId: 'set4',
+          achievedAt: now,
+        ),
+      );
 
-      await prRepository.save(DurationPR(
-        id: 'pr5',
-        exerciseId: 'running',
-        workoutSetId: 'set5',
-        achievedAt: now,
-      ));
+      await prRepository.save(
+        DurationPR(
+          id: 'pr5',
+          exerciseId: 'running',
+          workoutSetId: 'set5',
+          achievedAt: now,
+        ),
+      );
 
-      await prRepository.save(PacePR(
-        id: 'pr6',
-        exerciseId: 'running',
-        workoutSetId: 'set6',
-        achievedAt: now,
-      ));
+      await prRepository.save(
+        PacePR(
+          id: 'pr6',
+          exerciseId: 'running',
+          workoutSetId: 'set6',
+          achievedAt: now,
+        ),
+      );
 
       final useCase = GetAllPRsUseCase(prRepository, exerciseRepository);
 
@@ -204,12 +224,14 @@ void main() {
     });
 
     test('skips PRs for deleted exercises', () async {
-      await prRepository.save(WeightPR(
-        id: 'pr1',
-        exerciseId: 'nonexistent',
-        workoutSetId: 'set1',
-        achievedAt: DateTime.now(),
-      ));
+      await prRepository.save(
+        WeightPR(
+          id: 'pr1',
+          exerciseId: 'nonexistent',
+          workoutSetId: 'set1',
+          achievedAt: DateTime.now(),
+        ),
+      );
 
       final useCase = GetAllPRsUseCase(prRepository, exerciseRepository);
 
@@ -231,13 +253,15 @@ void main() {
 
       await exerciseRepository.save(exercise);
 
-      await workoutSetRepository.save(WeightedWorkoutSet(
-        id: 'set1',
-        exerciseId: 'bench',
-        timestamp: DateTime.now(),
-        weight: Weight(100.0),
-        reps: 10,
-      ));
+      await workoutSetRepository.save(
+        WeightedWorkoutSet(
+          id: 'set1',
+          exerciseId: 'bench',
+          timestamp: DateTime.now(),
+          weight: Weight(100.0),
+          reps: 10,
+        ),
+      );
 
       final useCase = RecalculatePRsForExerciseUseCase(
         prRepository,
@@ -263,22 +287,26 @@ void main() {
       await exerciseRepository.save(exercise);
 
       // Old workout set
-      await workoutSetRepository.save(WeightedWorkoutSet(
-        id: 'set1',
-        exerciseId: 'bench',
-        timestamp: DateTime.now().subtract(const Duration(days: 30)),
-        weight: Weight(80.0),
-        reps: 10,
-      ));
+      await workoutSetRepository.save(
+        WeightedWorkoutSet(
+          id: 'set1',
+          exerciseId: 'bench',
+          timestamp: DateTime.now().subtract(const Duration(days: 30)),
+          weight: Weight(80.0),
+          reps: 10,
+        ),
+      );
 
       // New workout set with heavier weight
-      await workoutSetRepository.save(WeightedWorkoutSet(
-        id: 'set2',
-        exerciseId: 'bench',
-        timestamp: DateTime.now(),
-        weight: Weight(100.0),
-        reps: 10,
-      ));
+      await workoutSetRepository.save(
+        WeightedWorkoutSet(
+          id: 'set2',
+          exerciseId: 'bench',
+          timestamp: DateTime.now(),
+          weight: Weight(100.0),
+          reps: 10,
+        ),
+      );
 
       final useCase = RecalculatePRsForExerciseUseCase(
         prRepository,
@@ -290,7 +318,7 @@ void main() {
 
       final prs = await prRepository.getByExerciseId('bench');
       expect(prs.isNotEmpty, true);
-      
+
       // Check that we have weight PRs
       final weightPRs = prs.whereType<WeightPR>();
       expect(weightPRs.isNotEmpty, true);
@@ -308,13 +336,15 @@ void main() {
 
       await exerciseRepository.save(exercise);
 
-      await workoutSetRepository.save(BodyweightWorkoutSet(
-        id: 'set1',
-        exerciseId: 'pullup',
-        timestamp: DateTime.now(),
-        reps: 10,
-        additionalWeight: Weight(20.0),
-      ));
+      await workoutSetRepository.save(
+        BodyweightWorkoutSet(
+          id: 'set1',
+          exerciseId: 'pullup',
+          timestamp: DateTime.now(),
+          reps: 10,
+          additionalWeight: Weight(20.0),
+        ),
+      );
 
       final useCase = RecalculatePRsForExerciseUseCase(
         prRepository,
@@ -338,21 +368,25 @@ void main() {
 
       await exerciseRepository.save(exercise);
 
-      await workoutSetRepository.save(DistanceCardioWorkoutSet(
-        id: 'set1',
-        exerciseId: 'running',
-        timestamp: DateTime.now(),
-        duration: const Duration(minutes: 30),
-        distance: Distance(5000.0),
-      ));
+      await workoutSetRepository.save(
+        DistanceCardioWorkoutSet(
+          id: 'set1',
+          exerciseId: 'running',
+          timestamp: DateTime.now(),
+          duration: const Duration(minutes: 30),
+          distance: Distance(5000.0),
+        ),
+      );
 
-      await workoutSetRepository.save(DistanceCardioWorkoutSet(
-        id: 'set2',
-        exerciseId: 'running',
-        timestamp: DateTime.now(),
-        duration: const Duration(minutes: 60),
-        distance: Distance(10000.0),
-      ));
+      await workoutSetRepository.save(
+        DistanceCardioWorkoutSet(
+          id: 'set2',
+          exerciseId: 'running',
+          timestamp: DateTime.now(),
+          duration: const Duration(minutes: 60),
+          distance: Distance(10000.0),
+        ),
+      );
 
       // Verify workout sets were saved
       final savedSets = await workoutSetRepository.getByExerciseId('running');
@@ -367,8 +401,12 @@ void main() {
       await useCase.execute('running');
 
       final prs = await prRepository.getByExerciseId('running');
-      expect(prs.isNotEmpty, true, reason: 'Should have created PRs for cardio exercise');
-      
+      expect(
+        prs.isNotEmpty,
+        true,
+        reason: 'Should have created PRs for cardio exercise',
+      );
+
       // Should have distance and duration PRs
       expect(prs.any((pr) => pr is DistancePR), true);
       expect(prs.any((pr) => pr is DurationPR), true);

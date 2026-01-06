@@ -24,12 +24,12 @@ class DurationCardioExercise extends CardioExercise {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'duration_cardio',
-        'id': id,
-        'name': name,
-        'description': description,
-        'isCustom': isCustom,
-      };
+    'type': 'duration_cardio',
+    'id': id,
+    'name': name,
+    'description': description,
+    'isCustom': isCustom,
+  };
 
   factory DurationCardioExercise.fromJson(Map<String, dynamic> json) {
     return DurationCardioExercise(

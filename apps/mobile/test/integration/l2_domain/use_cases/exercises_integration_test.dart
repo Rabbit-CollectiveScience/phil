@@ -451,58 +451,62 @@ void main() {
       expect(cardioExercises[0].id, '2');
     });
 
-    test('prioritizes exercises used within last 7 days', () async {
-      await exerciseRepository.save(
-        FreeWeightExercise(
-          id: 'recent',
-          name: 'Recent Exercise',
-          description: 'Test',
-          isCustom: false,
-          targetMuscles: [MuscleGroup.chest],
-        ),
-      );
+    test(
+      'prioritizes exercises used within last 7 days',
+      () async {
+        await exerciseRepository.save(
+          FreeWeightExercise(
+            id: 'recent',
+            name: 'Recent Exercise',
+            description: 'Test',
+            isCustom: false,
+            targetMuscles: [MuscleGroup.chest],
+          ),
+        );
 
-      await exerciseRepository.save(
-        FreeWeightExercise(
-          id: 'old',
-          name: 'Old Exercise',
-          description: 'Test',
-          isCustom: false,
-          targetMuscles: [MuscleGroup.chest],
-        ),
-      );
+        await exerciseRepository.save(
+          FreeWeightExercise(
+            id: 'old',
+            name: 'Old Exercise',
+            description: 'Test',
+            isCustom: false,
+            targetMuscles: [MuscleGroup.chest],
+          ),
+        );
 
-      // Add workout from 3 days ago
-      await workoutSetRepository.save(
-        WeightedWorkoutSet(
-          id: 'set1',
-          exerciseId: 'recent',
-          timestamp: DateTime.now().subtract(const Duration(days: 3)),
-          weight: Weight(100.0),
-          reps: 10,
-        ),
-      );
+        // Add workout from 3 days ago
+        await workoutSetRepository.save(
+          WeightedWorkoutSet(
+            id: 'set1',
+            exerciseId: 'recent',
+            timestamp: DateTime.now().subtract(const Duration(days: 3)),
+            weight: Weight(100.0),
+            reps: 10,
+          ),
+        );
 
-      // Add workout from 10 days ago
-      await workoutSetRepository.save(
-        WeightedWorkoutSet(
-          id: 'set2',
-          exerciseId: 'old',
-          timestamp: DateTime.now().subtract(const Duration(days: 10)),
-          weight: Weight(100.0),
-          reps: 10,
-        ),
-      );
+        // Add workout from 10 days ago
+        await workoutSetRepository.save(
+          WeightedWorkoutSet(
+            id: 'set2',
+            exerciseId: 'old',
+            timestamp: DateTime.now().subtract(const Duration(days: 10)),
+            weight: Weight(100.0),
+            reps: 10,
+          ),
+        );
 
-      final useCase = GetRecommendedExercisesUseCase(exerciseRepository);
+        final useCase = GetRecommendedExercisesUseCase(exerciseRepository);
 
-      final result = await useCase.execute();
+        final result = await useCase.execute();
 
-      // TODO: Implement personalization sorting in GetRecommendedExercisesUseCase
-      // For now, just verify exercises are returned
-      expect(result.length, 2);
-      // expect(result[0].id, 'recent');
-    }, skip: 'Personalization feature not yet implemented');
+        // TODO: Implement personalization sorting in GetRecommendedExercisesUseCase
+        // For now, just verify exercises are returned
+        expect(result.length, 2);
+        // expect(result[0].id, 'recent');
+      },
+      skip: 'Personalization feature not yet implemented',
+    );
 
     test('includes custom exercises in recommendations', () async {
       await exerciseRepository.save(

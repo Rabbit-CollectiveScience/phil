@@ -183,10 +183,7 @@ void main() {
       final almostTwoHours = DateTime.now().subtract(
         const Duration(hours: 2, seconds: -1),
       );
-      await preferencesRepository.saveFilterSelection(
-        'chest',
-        almostTwoHours,
-      );
+      await preferencesRepository.saveFilterSelection('chest', almostTwoHours);
 
       final useCase = ShouldShowFilterPageUseCase(preferencesRepository);
 

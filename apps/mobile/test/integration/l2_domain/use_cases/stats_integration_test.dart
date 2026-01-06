@@ -334,62 +334,66 @@ void main() {
       expect(result['exerciseTypes'], isEmpty);
     });
 
-    test('calculates attendance for current week', () async {
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      final yesterday = today.subtract(Duration(days: 1));
+    test(
+      'calculates attendance for current week',
+      () async {
+        final now = DateTime.now();
+        final today = DateTime(now.year, now.month, now.day);
+        final yesterday = today.subtract(Duration(days: 1));
 
-      final benchExercise = FreeWeightExercise(
-        description: 'Test exercise',
-        isCustom: false,
-        id: 'bench',
-        name: 'Bench Press',
-        targetMuscles: [MuscleGroup.chest],
-      );
-      await exerciseRepository.save(benchExercise);
+        final benchExercise = FreeWeightExercise(
+          description: 'Test exercise',
+          isCustom: false,
+          id: 'bench',
+          name: 'Bench Press',
+          targetMuscles: [MuscleGroup.chest],
+        );
+        await exerciseRepository.save(benchExercise);
 
-      // Add sets for today
-      await workoutSetRepository.save(
-        WeightedWorkoutSet(
-          id: 'set1',
-          exerciseId: 'bench',
-          timestamp: today,
-          weight: Weight(100.0),
-          reps: 10,
-        ),
-      );
+        // Add sets for today
+        await workoutSetRepository.save(
+          WeightedWorkoutSet(
+            id: 'set1',
+            exerciseId: 'bench',
+            timestamp: today,
+            weight: Weight(100.0),
+            reps: 10,
+          ),
+        );
 
-      await workoutSetRepository.save(
-        WeightedWorkoutSet(
-          id: 'set2',
-          exerciseId: 'bench',
-          timestamp: today,
-          weight: Weight(100.0),
-          reps: 10,
-        ),
-      );
+        await workoutSetRepository.save(
+          WeightedWorkoutSet(
+            id: 'set2',
+            exerciseId: 'bench',
+            timestamp: today,
+            weight: Weight(100.0),
+            reps: 10,
+          ),
+        );
 
-      // Add sets for yesterday
-      await workoutSetRepository.save(
-        WeightedWorkoutSet(
-          id: 'set3',
-          exerciseId: 'bench',
-          timestamp: yesterday,
-          weight: Weight(100.0),
-          reps: 10,
-        ),
-      );
+        // Add sets for yesterday
+        await workoutSetRepository.save(
+          WeightedWorkoutSet(
+            id: 'set3',
+            exerciseId: 'bench',
+            timestamp: yesterday,
+            weight: Weight(100.0),
+            reps: 10,
+          ),
+        );
 
-      final useCase = GetWeeklyStatsUseCase(
-        getWorkoutSetsByDateUseCase,
-        exerciseRepository,
-      );
+        final useCase = GetWeeklyStatsUseCase(
+          getWorkoutSetsByDateUseCase,
+          exerciseRepository,
+        );
 
-      final result = await useCase.execute(weekOffset: 0);
+        final result = await useCase.execute(weekOffset: 0);
 
-      expect(result['attendance']['daysTrained'], 2);
-      // TODO: Fix test data contamination issue - getting 2.5 instead of 1.5
-      // expect(result['attendance']['avgSetsPerDay'], 1.5); // 3 sets / 2 days
-    }, skip: 'Test data contamination issue - needs investigation');
+        expect(result['attendance']['daysTrained'], 2);
+        // TODO: Fix test data contamination issue - getting 2.5 instead of 1.5
+        // expect(result['attendance']['avgSetsPerDay'], 1.5); // 3 sets / 2 days
+      },
+      skip: 'Test data contamination issue - needs investigation',
+    );
   });
 }

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "cardio_5",
+    "name": "Rowing Machine",
+    "description": "Sit on the rowing machine seat and secure your feet in the foot straps. Grab the handle with both hands. The rowing motion has four phases: catch (knees bent, arms extended), drive (push with legs, then lean back, then pull arms), finish (legs extended, handle at chest), and recovery (extend arms, lean forward, bend knees). Drive powerfully with your legs first, then engage your core and pull with your arms. Keep your back straight and core engaged throughout. The motion should be smooth and continuous: 60% leg drive, 20% core, 20% arm pull.",
+    "categories": ["cardio"],
+    "fields": [
+      {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
+      {"name": "distance", "label": "Distance", "unit": "meters", "type": "number"}
+    ]
+  },
+  {
+    "id": "cardio_19",
+    "name": "Ski Erg",
+    "description": "Stand facing the Ski Erg machine and grab the handles overhead. Pull the handles down powerfully using your core, lats, and arms in a motion similar to cross-country skiing. Bend at the hips and knees slightly as you pull down. Extend your arms back up smoothly, allowing the handles to return to the starting position. Engage your core throughout and use your whole body, not just your arms. The motion should be fluid and continuous with a strong pull and controlled return.",
+    "categories": ["cardio"],
+    "fields": [
+      {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
+      {"name": "distance", "label": "Distance", "unit": "meters", "type": "number"}
+    ]
+  },
+  {
+    "id": "cardio_20",
+    "name": "Assault Bike",
+    "description": "Sit on the assault bike (air bike/fan bike) and place your feet on the pedals and hands on the moving handles. Begin pedaling while simultaneously pushing and pulling the handles. The harder and faster you work, the more resistance the fan creates. Keep your core engaged and maintain an upright posture. Push through your legs and coordinate your arm movements. This full-body cardio machine is excellent for high-intensity intervals. The fan provides smooth, scalable resistance based on your effort.",
+    "categories": ["cardio"],
+    "fields": [
+      {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
+      {"name": "distance", "label": "Distance", "unit": "km", "type": "number"}
+    ]
+  },
+  {
+    "id": "cardio_24",
+    "name": "Bear Crawls",
+    "description": "Start on your hands and knees with hands under shoulders and knees under hips. Lift your knees a few inches off the ground so you're on your hands and toes. Keep your back flat, core engaged, and hips down. Move forward by advancing your right hand and left foot simultaneously, then left hand and right foot. Keep your movements controlled and your body low to the ground. Crawl forward for a set distance, maintaining tension in your core throughout. This builds cardiovascular endurance and full-body strength.",
+    "categories": ["cardio"],
+    "fields": [
+      {"name": "durationInSeconds", "label": "Duration", "unit": "seconds", "type": "duration"},
+      {"name": "distance", "label": "Distance", "unit": "meters", "type": "number"}
+    ]
+  }
+]
