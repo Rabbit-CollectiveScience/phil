@@ -29,7 +29,7 @@ class DurationCardioWorkoutSet extends WorkoutSet {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'durationCardio',
+        'type': 'duration_cardio',
         'id': id,
         'exerciseId': exerciseId,
         'timestamp': timestamp.toIso8601String(),

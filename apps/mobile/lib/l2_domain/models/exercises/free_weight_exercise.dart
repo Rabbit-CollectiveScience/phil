@@ -28,7 +28,7 @@ class FreeWeightExercise extends StrengthExercise {
 
   @override
   Map<String, dynamic> toJson() => {
-    'type': 'freeWeight',
+    'type': 'free_weight',
     'id': id,
     'name': name,
     'description': description,

@@ -70,7 +70,7 @@ void main() {
         expect(json['id'], '1');
         expect(json['exerciseId'], 'exercise1');
         expect(json['timestamp'], testDate.toIso8601String());
-        expect(json['type'], 'durationCardio');
+        expect(json['type'], 'duration_cardio');
         expect(json['duration'], 2700);
       });
 

@@ -56,7 +56,7 @@ void main() {
         expect(json['name'], 'Mountain Climbers');
         expect(json['description'], 'Full body cardio');
         expect(json['isCustom'], false);
-        expect(json['type'], 'durationCardio');
+        expect(json['type'], 'duration_cardio');
       });
 
       test('serializes custom exercise to JSON', () {

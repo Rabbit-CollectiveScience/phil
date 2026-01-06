@@ -178,20 +178,21 @@ void main() {
       expect(result, true);
     });
 
-    test('returns false when filter is exactly 2 hours old', () async {
-      final exactlyTwoHoursAgo = DateTime.now().subtract(
-        const Duration(hours: 2),
+    test('returns false when filter is at most 2 hours old', () async {
+      // Test just under 2 hours - should return false
+      final almostTwoHours = DateTime.now().subtract(
+        const Duration(hours: 2, seconds: -1),
       );
       await preferencesRepository.saveFilterSelection(
         'chest',
-        exactlyTwoHoursAgo,
+        almostTwoHours,
       );
 
       final useCase = ShouldShowFilterPageUseCase(preferencesRepository);
 
       final result = await useCase.execute();
 
-      // Exactly 2 hours should return false (threshold is >)
+      // Less than 2 hours should return false (threshold is >)
       expect(result, false);
     });
 

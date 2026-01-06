@@ -82,7 +82,7 @@ void main() {
         expect(json['name'], 'Dumbbell Press');
         expect(json['description'], 'Shoulder exercise');
         expect(json['isCustom'], false);
-        expect(json['type'], 'freeWeight');
+        expect(json['type'], 'free_weight');
         expect(json['targetMuscles'], ['shoulders', 'arms']);
       });
 

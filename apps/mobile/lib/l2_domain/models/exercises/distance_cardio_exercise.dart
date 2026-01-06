@@ -24,7 +24,7 @@ class DistanceCardioExercise extends CardioExercise {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'distanceCardio',
+        'type': 'distance_cardio',
         'id': id,
         'name': name,
         'description': description,

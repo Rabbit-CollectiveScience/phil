@@ -139,7 +139,7 @@ void main() {
         expect(json['id'], '1');
         expect(json['exerciseId'], 'exercise1');
         expect(json['timestamp'], testDate.toIso8601String());
-        expect(json['type'], 'distanceCardio');
+        expect(json['type'], 'distance_cardio');
         expect(json['duration'], 1800);
         expect(json['distance'], {'meters': 5000.0});
       });

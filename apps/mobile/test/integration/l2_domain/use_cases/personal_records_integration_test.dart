@@ -1,6 +1,6 @@
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:phil/l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
 import 'package:phil/l2_domain/use_cases/personal_records/recalculate_prs_for_exercise_use_case.dart';
 import 'package:phil/l3_data/repositories/personal_record_repository.dart';
@@ -28,7 +28,8 @@ void main() {
   late ExerciseRepository exerciseRepository;
 
   setUp(() async {
-    await Hive.initFlutter();
+    final tempDir = await Directory.systemTemp.createTemp('hive_test_');
+    Hive.init(tempDir.path);
     
     // Open boxes with the exact names the repositories expect
     final prBox = await Hive.openBox<Map>('personal_records');
@@ -353,6 +354,10 @@ void main() {
         distance: Distance(10000.0),
       ));
 
+      // Verify workout sets were saved
+      final savedSets = await workoutSetRepository.getByExerciseId('running');
+      expect(savedSets.length, 2, reason: 'Should have saved 2 workout sets');
+
       final useCase = RecalculatePRsForExerciseUseCase(
         prRepository,
         workoutSetRepository,
@@ -362,7 +367,7 @@ void main() {
       await useCase.execute('running');
 
       final prs = await prRepository.getByExerciseId('running');
-      expect(prs.isNotEmpty, true);
+      expect(prs.isNotEmpty, true, reason: 'Should have created PRs for cardio exercise');
       
       // Should have distance and duration PRs
       expect(prs.any((pr) => pr is DistancePR), true);
