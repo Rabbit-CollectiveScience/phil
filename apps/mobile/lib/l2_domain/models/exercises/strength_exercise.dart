@@ -21,7 +21,13 @@ abstract class StrengthExercise extends Exercise {
           _listEquals(targetMuscles, other.targetMuscles);
 
   @override
-  int get hashCode => super.hashCode ^ targetMuscles.hashCode;
+  int get hashCode {
+    int listHash = 0;
+    for (var muscle in targetMuscles) {
+      listHash = listHash ^ muscle.hashCode;
+    }
+    return super.hashCode ^ listHash;
+  }
 
   bool _listEquals(List a, List b) {
     if (a.length != b.length) return false;

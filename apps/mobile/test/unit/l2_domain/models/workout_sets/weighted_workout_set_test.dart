@@ -138,7 +138,7 @@ void main() {
         expect(json['exerciseId'], 'exercise1');
         expect(json['timestamp'], testDate.toIso8601String());
         expect(json['type'], 'weighted');
-        expect(json['weight'], 100.0);
+        expect(json['weight'], {'kg': 100.0});
         expect(json['reps'], 10);
       });
 
@@ -153,7 +153,7 @@ void main() {
 
         final json = set.toJson();
 
-        expect(json['weight'], 62.5);
+        expect(json['weight'], {'kg': 62.5});
         expect(json['reps'], 8);
       });
     });
@@ -165,7 +165,7 @@ void main() {
           'exerciseId': 'exercise1',
           'timestamp': testDate.toIso8601String(),
           'type': 'weighted',
-          'weight': 100.0,
+          'weight': {'kg': 100.0},
           'reps': 10,
         };
 
@@ -184,7 +184,7 @@ void main() {
           'exerciseId': 'exercise1',
           'timestamp': testDate.toIso8601String(),
           'type': 'weighted',
-          'weight': 100,
+          'weight': {'kg': 100},
           'reps': 10,
         };
 

@@ -13,8 +13,13 @@ class DistanceCardioWorkoutSet extends WorkoutSet {
     required this.distance,
   });
 
-  /// Returns pace in meters per second
-  double getPace() => distance.meters / duration.inSeconds;
+  /// Returns pace in minutes per kilometer
+  double getPace() {
+    if (distance.meters == 0) return 0.0;
+    final km = distance.getInKm();
+    final minutes = duration.inSeconds / 60.0;
+    return minutes / km;
+  }
 
   @override
   double? getVolume() => null; // No volume for cardio

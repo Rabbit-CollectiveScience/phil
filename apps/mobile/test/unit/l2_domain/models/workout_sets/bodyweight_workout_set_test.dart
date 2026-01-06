@@ -114,7 +114,7 @@ void main() {
         final json = set.toJson();
 
         expect(json['reps'], 10);
-        expect(json['additionalWeight'], 10.0);
+        expect(json['additionalWeight'], {'kg': 10.0});
       });
 
       test('serializes set with zero reps', () {
@@ -157,7 +157,7 @@ void main() {
           'timestamp': testDate.toIso8601String(),
           'type': 'bodyweight',
           'reps': 10,
-          'additionalWeight': 10.0,
+          'additionalWeight': {'kg': 10.0},
         };
 
         final set = BodyweightWorkoutSet.fromJson(json);
@@ -220,7 +220,7 @@ void main() {
           additionalWeight: Weight(10.0),
         );
 
-        final updated = set.copyWith(additionalWeight: null);
+        final updated = set.copyWith(clearAdditionalWeight: true);
 
         expect(updated.additionalWeight, isNull);
         expect(set.additionalWeight?.kg, 10.0);

@@ -177,12 +177,15 @@ void main() {
     });
 
     group('immutability', () {
-      test('creating new Weight with different value does not affect original', () {
-        final weight = Weight(10.0);
-        final newWeight = Weight(20.0);
-        expect(newWeight.kg, 20.0);
-        expect(weight.kg, 10.0);
-      });
+      test(
+        'creating new Weight with different value does not affect original',
+        () {
+          final weight = Weight(10.0);
+          final newWeight = Weight(20.0);
+          expect(newWeight.kg, 20.0);
+          expect(weight.kg, 10.0);
+        },
+      );
 
       test('Weight is immutable', () {
         final weight = Weight(10.0);

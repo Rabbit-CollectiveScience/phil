@@ -22,13 +22,14 @@ class BodyweightWorkoutSet extends WorkoutSet {
     DateTime? timestamp,
     int? reps,
     Weight? additionalWeight,
+    bool clearAdditionalWeight = false,
   }) {
     return BodyweightWorkoutSet(
       id: id ?? this.id,
       exerciseId: exerciseId ?? this.exerciseId,
       timestamp: timestamp ?? this.timestamp,
       reps: reps ?? this.reps,
-      additionalWeight: additionalWeight ?? this.additionalWeight,
+      additionalWeight: clearAdditionalWeight ? null : (additionalWeight ?? this.additionalWeight),
     );
   }
 

@@ -19,7 +19,7 @@ class Distance {
   Map<String, dynamic> toJson() => {'meters': meters};
 
   factory Distance.fromJson(Map<String, dynamic> json) =>
-      Distance(json['meters']);
+      Distance((json['meters'] as num).toDouble());
 
   @override
   bool operator ==(Object other) =>

@@ -141,7 +141,7 @@ void main() {
         expect(json['timestamp'], testDate.toIso8601String());
         expect(json['type'], 'distanceCardio');
         expect(json['duration'], 1800);
-        expect(json['distance'], 5000.0);
+        expect(json['distance'], {'meters': 5000.0});
       });
     });
 
@@ -153,7 +153,7 @@ void main() {
           'timestamp': testDate.toIso8601String(),
           'type': 'distanceCardio',
           'duration': 1800,
-          'distance': 5000.0,
+          'distance': {'meters': 5000.0},
         };
 
         final set = DistanceCardioWorkoutSet.fromJson(json);

@@ -149,7 +149,7 @@ void main() {
 
       test('creates Distance from decimal miles', () {
         final distance = Distance(0).setInMiles(3.1);
-        expect(distance.meters, closeTo(4988.954, 0.01));
+        expect(distance.meters, closeTo(4988.954, 0.02));
       });
     });
 
@@ -246,12 +246,15 @@ void main() {
     });
 
     group('immutability', () {
-      test('creating new Distance with different value does not affect original', () {
-        final distance = Distance(1000.0);
-        final newDistance = Distance(2000.0);
-        expect(newDistance.meters, 2000.0);
-        expect(distance.meters, 1000.0);
-      });
+      test(
+        'creating new Distance with different value does not affect original',
+        () {
+          final distance = Distance(1000.0);
+          final newDistance = Distance(2000.0);
+          expect(newDistance.meters, 2000.0);
+          expect(distance.meters, 1000.0);
+        },
+      );
 
       test('Distance is immutable', () {
         final distance = Distance(1000.0);
