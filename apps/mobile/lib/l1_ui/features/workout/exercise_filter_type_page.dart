@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../shared/theme/app_colors.dart';
-import 'package:vibration/vibration.dart';
 import 'view_models/exercise_filter_type_option.dart';
 import 'widgets/exercise_filter_type_grid_tile.dart';
 

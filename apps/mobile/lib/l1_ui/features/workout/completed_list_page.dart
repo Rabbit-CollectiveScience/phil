@@ -5,7 +5,12 @@ import 'package:vibration/vibration.dart';
 import '../../shared/theme/app_colors.dart';
 import '../../../l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart';
 import '../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
-import '../../../l2_domain/legacy_models/exercise.dart';
+import '../../../l2_domain/models/workout_sets/workout_set.dart';
+import '../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
+import '../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
+import '../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
+import '../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
+import '../../../l2_domain/models/workout_sets/isometric_workout_set.dart';
 import 'view_models/workout_group.dart';
 
 class CompletedListPage extends StatefulWidget {
@@ -18,7 +23,6 @@ class CompletedListPage extends StatefulWidget {
 class _CompletedListPageState extends State<CompletedListPage>
     with TickerProviderStateMixin {
   bool _isLoading = true;
-  List<WorkoutSetWithDetails> _completedWorkouts = [];
   List<WorkoutGroup> _workoutGroups = [];
   final Set<String> _expandedExerciseIds = {};
   final Map<int, AnimationController> _controllers = {};
@@ -91,7 +95,6 @@ class _CompletedListPageState extends State<CompletedListPage>
       final groups = WorkoutGroup.groupConsecutive(workouts);
 
       setState(() {
-        _completedWorkouts = workouts;
         _workoutGroups = groups;
         _isLoading = false;
       });
@@ -133,19 +136,29 @@ class _CompletedListPageState extends State<CompletedListPage>
     });
   }
 
-  String _formatSetValues(Map<String, dynamic>? values, Exercise? exercise) {
-    if (exercise == null) {
-      return 'No data recorded';
+  /// Format WorkoutSet values for display based on its type
+  String _formatSetValues(WorkoutSet workoutSet) {
+    if (workoutSet is WeightedWorkoutSet) {
+      return '${workoutSet.weight.kg.toStringAsFixed(1)} kg × ${workoutSet.reps}';
+    } else if (workoutSet is BodyweightWorkoutSet) {
+      final repsText = '${workoutSet.reps} reps';
+      if (workoutSet.additionalWeight != null) {
+        return '$repsText (+${workoutSet.additionalWeight!.kg.toStringAsFixed(1)} kg)';
+      }
+      return repsText;
+    } else if (workoutSet is DistanceCardioWorkoutSet) {
+      final distanceKm = workoutSet.distance.getInKm();
+      final durationMin = workoutSet.duration.inMinutes;
+      return '${distanceKm.toStringAsFixed(1)} km · $durationMin min';
+    } else if (workoutSet is DurationCardioWorkoutSet) {
+      final durationMin = workoutSet.duration.inMinutes;
+      return '$durationMin min';
+    } else if (workoutSet is IsometricWorkoutSet) {
+      final durationSec = workoutSet.duration.inSeconds;
+      return '$durationSec sec';
     }
-
-    // Dynamically format based on exercise fields
-    // Show structure even if values are missing (use '-' placeholders)
-    return exercise.fields
-        .map((field) {
-          final value = values?[field.name]?.toString() ?? '-';
-          return '$value ${field.unit}'.trim();
-        })
-        .join(' · ');
+    
+    return 'No data recorded';
   }
 
   void _removeSetLocally(WorkoutSetWithDetails setToRemove) async {
@@ -319,9 +332,6 @@ class _CompletedListPageState extends State<CompletedListPage>
                               index,
                             ) {
                               final group = _workoutGroups[index];
-                              final isExpanded = _expandedExerciseIds.contains(
-                                group.exerciseId,
-                              );
                               final isGroupDeleting = _deletingExerciseIds
                                   .contains(group.exerciseId);
 
@@ -505,8 +515,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                             CustomSlidableAction(
                                                               onPressed: (context) async {
                                                                 // Vibrate when delete is tapped
-                                                                if (await Vibration.hasVibrator() ??
-                                                                    false) {
+                                                                if (await Vibration.hasVibrator() == true) {
                                                                   Vibration.vibrate(
                                                                     duration:
                                                                         50,
@@ -579,7 +588,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                                     _formatTime(
                                                                       set
                                                                           .workoutSet
-                                                                          .completedAt,
+                                                                          .timestamp,
                                                                     ),
                                                                     style: const TextStyle(
                                                                       fontSize:
@@ -595,10 +604,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                               ),
                                                               Text(
                                                                 _formatSetValues(
-                                                                  set
-                                                                      .workoutSet
-                                                                      .values,
-                                                                  set.exercise,
+                                                                  set.workoutSet,
                                                                 ),
                                                                 style: const TextStyle(
                                                                   fontSize: 14,

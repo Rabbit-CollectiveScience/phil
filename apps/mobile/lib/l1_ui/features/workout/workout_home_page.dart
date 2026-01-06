@@ -19,6 +19,17 @@ import '../../../l2_domain/use_cases/workout_sets/get_today_completed_count_use_
 import '../../../l2_domain/use_cases/filters/get_last_filter_selection_use_case.dart';
 import '../../../l2_domain/use_cases/filters/record_filter_selection_use_case.dart';
 import '../../../l2_domain/use_cases/filters/should_show_filter_page_use_case.dart';
+import '../../../l2_domain/models/exercises/strength_exercise.dart';
+import '../../../l2_domain/models/exercises/bodyweight_exercise.dart';
+import '../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
+import '../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
+import '../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
+import '../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
+import '../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
+import '../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
+import '../../../l2_domain/models/common/weight.dart';
+import '../../../l2_domain/models/common/distance.dart';
+import 'package:uuid/uuid.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   const WorkoutHomePage({super.key});
@@ -234,15 +245,78 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       try {
         // Extract field values from card
         final fieldValues = _topCardKey?.currentState?.getFieldValues();
+        final exercise = completedCard.exercise;
 
         // Get use case from dependency injection
         final recordUseCase = GetIt.instance<RecordWorkoutSetUseCase>();
+        final uuid = const Uuid();
 
-        // Record the workout set with extracted values
-        await recordUseCase.execute(
-          exerciseId: completedCard.exercise.id,
-          values: fieldValues?.isNotEmpty == true ? fieldValues : null,
-        );
+        // Construct appropriate WorkoutSet based on exercise type
+        if (exercise is StrengthExercise) {
+          // Parse values
+          final weightStr = fieldValues?['weight'];
+          final repsStr = fieldValues?['reps'];
+          
+          if (weightStr != null && repsStr != null) {
+            final weight = double.tryParse(weightStr) ?? 0.0;
+            final reps = int.tryParse(repsStr) ?? 0;
+            
+            // Determine if it's weighted or bodyweight
+            if (exercise is BodyweightExercise && weight == 0) {
+              // Pure bodyweight
+              final workoutSet = BodyweightWorkoutSet(
+                id: uuid.v4(),
+                exerciseId: exercise.id,
+                timestamp: DateTime.now(),
+                reps: reps,
+              );
+              await recordUseCase.execute(workoutSet: workoutSet);
+            } else {
+              // Weighted (free weight, machine, or bodyweight with added weight)
+              final workoutSet = WeightedWorkoutSet(
+                id: uuid.v4(),
+                exerciseId: exercise.id,
+                timestamp: DateTime.now(),
+                weight: Weight(weight),
+                reps: reps,
+              );
+              await recordUseCase.execute(workoutSet: workoutSet);
+            }
+          }
+        } else if (exercise is DistanceCardioExercise) {
+          // Parse distance and duration
+          final distanceStr = fieldValues?['distance'];
+          final durationStr = fieldValues?['duration'];
+          
+          if (distanceStr != null && durationStr != null) {
+            final distance = double.tryParse(distanceStr) ?? 0.0;
+            final durationMinutes = double.tryParse(durationStr) ?? 0.0;
+            
+            final workoutSet = DistanceCardioWorkoutSet(
+              id: uuid.v4(),
+              exerciseId: exercise.id,
+              timestamp: DateTime.now(),
+              distance: Distance(distance * 1000), // Convert km to meters
+              duration: Duration(minutes: durationMinutes.toInt()),
+            );
+            await recordUseCase.execute(workoutSet: workoutSet);
+          }
+        } else if (exercise is DurationCardioExercise) {
+          // Parse duration only
+          final durationStr = fieldValues?['duration'];
+          
+          if (durationStr != null) {
+            final durationMinutes = double.tryParse(durationStr) ?? 0.0;
+            
+            final workoutSet = DurationCardioWorkoutSet(
+              id: uuid.v4(),
+              exerciseId: exercise.id,
+              timestamp: DateTime.now(),
+              duration: Duration(minutes: durationMinutes.toInt()),
+            );
+            await recordUseCase.execute(workoutSet: workoutSet);
+          }
+        }
 
         debugPrint(
           '✓ Workout set recorded: ${completedCard.exercise.name} with values: $fieldValues',

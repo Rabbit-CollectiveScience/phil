@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../view_models/card_model.dart';
-import '../../../../l2_domain/legacy_models/field_type_enum.dart';
+import '../../../../l2_domain/models/exercises/strength_exercise.dart';
+import '../../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
+import '../../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
 
 /// Card interaction states for gesture handling
 enum CardInteractionState {
@@ -76,7 +78,6 @@ class SwipeableCardState extends State<SwipeableCard>
   final Map<String, Timer?> _fieldTimers = {};
   final GlobalKey _zetButtonKey = GlobalKey();
   bool _isDraggingToken = false;
-  Offset? _dragStartGlobal;
   Offset? _lastTapPosition;
   Offset? _dragStartLocalPosition;
   bool _gestureCommitted = false;
@@ -123,27 +124,8 @@ class SwipeableCardState extends State<SwipeableCard>
       );
     }
 
-    // Initialize controllers and focus nodes for each field
-    for (var field in widget.card.exercise.fields) {
-      final value =
-          widget.card.fieldValues[field.name] ??
-          field.defaultValue?.toString() ??
-          '';
-      final displayValue = value.isEmpty || value == 'null'
-          ? '- ${field.unit}'
-          : '$value ${field.unit}';
-      _fieldControllers[field.name] = TextEditingController(text: displayValue);
-      _fieldFocusNodes[field.name] = FocusNode();
-
-      // Add listener to start auto-hide timer when focused
-      _fieldFocusNodes[field.name]!.addListener(() {
-        if (_fieldFocusNodes[field.name]!.hasFocus) {
-          _startFieldTimer(field.name);
-        } else {
-          _fieldTimers[field.name]?.cancel();
-        }
-      });
-    }
+    // Initialize controllers and focus nodes based on exercise type
+    _initializeInputFields();
 
     // Cache front card only - back card needs to rebuild for set number updates
     _frontCard = _buildFrontCard();
@@ -170,46 +152,87 @@ class SwipeableCardState extends State<SwipeableCard>
     });
   }
 
-  /// Extract field values from controllers as Map<String, dynamic>
-  /// Parses text, removes units, converts to proper types based on field.type
-  Map<String, dynamic> getFieldValues() {
-    final values = <String, dynamic>{};
+  /// Initialize input fields based on exercise type
+  void _initializeInputFields() {
+    final exercise = widget.card.exercise;
+    
+    if (exercise is StrengthExercise) {
+      // Strength exercises: weight + reps
+      _fieldControllers['weight'] = TextEditingController(text: '- kg');
+      _fieldControllers['reps'] = TextEditingController(text: '- reps');
+      _fieldFocusNodes['weight'] = FocusNode();
+      _fieldFocusNodes['reps'] = FocusNode();
+      
+      _fieldFocusNodes['weight']!.addListener(() {
+        if (_fieldFocusNodes['weight']!.hasFocus) {
+          _startFieldTimer('weight');
+        } else {
+          _fieldTimers['weight']?.cancel();
+        }
+      });
+      
+      _fieldFocusNodes['reps']!.addListener(() {
+        if (_fieldFocusNodes['reps']!.hasFocus) {
+          _startFieldTimer('reps');
+        } else {
+          _fieldTimers['reps']?.cancel();
+        }
+      });
+    } else if (exercise is DistanceCardioExercise) {
+      // Distance cardio: distance + duration
+      _fieldControllers['distance'] = TextEditingController(text: '- km');
+      _fieldControllers['duration'] = TextEditingController(text: '- min');
+      _fieldFocusNodes['distance'] = FocusNode();
+      _fieldFocusNodes['duration'] = FocusNode();
+      
+      _fieldFocusNodes['distance']!.addListener(() {
+        if (_fieldFocusNodes['distance']!.hasFocus) {
+          _startFieldTimer('distance');
+        } else {
+          _fieldTimers['distance']?.cancel();
+        }
+      });
+      
+      _fieldFocusNodes['duration']!.addListener(() {
+        if (_fieldFocusNodes['duration']!.hasFocus) {
+          _startFieldTimer('duration');
+        } else {
+          _fieldTimers['duration']?.cancel();
+        }
+      });
+    } else if (exercise is DurationCardioExercise) {
+      // Duration cardio: only duration
+      _fieldControllers['duration'] = TextEditingController(text: '- min');
+      _fieldFocusNodes['duration'] = FocusNode();
+      
+      _fieldFocusNodes['duration']!.addListener(() {
+        if (_fieldFocusNodes['duration']!.hasFocus) {
+          _startFieldTimer('duration');
+        } else {
+          _fieldTimers['duration']?.cancel();
+        }
+      });
+    }
+  }
 
-    for (var field in widget.card.exercise.fields) {
-      final controller = _fieldControllers[field.name];
-      if (controller == null) continue;
+  /// Extract field values from controllers as Map<String, String>
+  /// Returns raw string values from user input fields
+  Map<String, String> getFieldValues() {
+    final values = <String, String>{};
 
-      // Extract raw text and remove units
-      String text = controller.text.replaceAll(field.unit, '').trim();
+    for (var entry in _fieldControllers.entries) {
+      final controller = entry.value;
+      // Extract text and remove common units
+      String text = controller.text
+          .replaceAll(' kg', '')
+          .replaceAll(' reps', '')
+          .replaceAll(' km', '')
+          .replaceAll(' min', '')
+          .trim();
 
-      // Handle placeholder "- unit" → skip this field
-      if (text == '-' || text.isEmpty) {
-        continue;
-      }
-
-      // Convert to proper type based on field type
-      switch (field.type) {
-        case FieldTypeEnum.number:
-          // Try double first, fallback to int
-          final doubleValue = double.tryParse(text);
-          if (doubleValue != null) {
-            // Store as int if no decimal part, otherwise double
-            values[field.name] = doubleValue == doubleValue.toInt()
-                ? doubleValue.toInt()
-                : doubleValue;
-          }
-        case FieldTypeEnum.duration:
-          // Duration stored as integer seconds
-          final intValue = int.tryParse(text);
-          if (intValue != null) {
-            values[field.name] = intValue;
-          }
-        case FieldTypeEnum.text:
-          // Store as string
-          values[field.name] = text;
-        case FieldTypeEnum.boolean:
-          // Parse boolean
-          values[field.name] = text.toLowerCase() == 'true' || text == '1';
+      // Skip placeholder values
+      if (text != '-' && text.isNotEmpty) {
+        values[entry.key] = text;
       }
     }
 
@@ -235,16 +258,14 @@ class SwipeableCardState extends State<SwipeableCard>
   void didUpdateWidget(SwipeableCard oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Update controllers when card field values change
-    for (var field in widget.card.exercise.fields) {
-      final oldValue = oldWidget.card.fieldValues[field.name];
-      final newValue = widget.card.fieldValues[field.name];
-      if (oldValue != newValue && _fieldControllers.containsKey(field.name)) {
-        final displayValue =
-            newValue == null || newValue.isEmpty || newValue == 'null'
-            ? '- ${field.unit}'
-            : '$newValue ${field.unit}';
-        _fieldControllers[field.name]!.text = displayValue;
+    // Update controllers when card user data changes
+    for (var entry in widget.card.userData.entries) {
+      if (_fieldControllers.containsKey(entry.key)) {
+        final controller = _fieldControllers[entry.key]!;
+        final newValue = entry.value;
+        if (controller.text != newValue && newValue.isNotEmpty) {
+          controller.text = newValue;
+        }
       }
     }
 
@@ -430,7 +451,7 @@ class SwipeableCardState extends State<SwipeableCard>
           // Started in bottom 25% - store position but don't commit yet
           setState(() {
             _dragStartLocalPosition = localPosition;
-            _dragStartGlobal = details.globalPosition;
+            _lastTapPosition = details.globalPosition;
             _gestureCommitted = false;
           });
           return; // Wait for pan update to determine direction
@@ -492,7 +513,7 @@ class SwipeableCardState extends State<SwipeableCard>
       // End token drag - return to idleFlipped
       setState(() {
         _isDraggingToken = false;
-        _dragStartGlobal = null;
+        _lastTapPosition = null;
       });
       widget.onTokenDrag?.call(details.globalPosition, false);
 
@@ -598,17 +619,59 @@ class SwipeableCardState extends State<SwipeableCard>
     );
   }
 
-  Widget _buildFieldInput(dynamic field) {
-    final controller = _fieldControllers[field.name];
-    final focusNode = _fieldFocusNodes[field.name];
+  /// Build input fields based on exercise type
+  List<Widget> _buildInputFields() {
+    final exercise = widget.card.exercise;
+    
+    if (exercise is StrengthExercise) {
+      return [
+        if (_fieldControllers.containsKey('weight'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('weight', 'kg', 2),
+          ),
+        if (_fieldControllers.containsKey('reps'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('reps', 'reps', 1),
+          ),
+      ];
+    } else if (exercise is DistanceCardioExercise) {
+      return [
+        if (_fieldControllers.containsKey('distance'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('distance', 'km', 1),
+          ),
+        if (_fieldControllers.containsKey('duration'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('duration', 'min', 1),
+          ),
+      ];
+    } else if (exercise is DurationCardioExercise) {
+      return [
+        if (_fieldControllers.containsKey('duration'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('duration', 'min', 1),
+          ),
+      ];
+    }
+    
+    return [];
+  }
+
+  /// Build a simple input field with increment/decrement buttons
+  Widget _buildSimpleFieldInput(String fieldName, String unit, int step) {
+    final controller = _fieldControllers[fieldName];
+    final focusNode = _fieldFocusNodes[fieldName];
 
     if (controller == null || focusNode == null) {
       return const SizedBox.shrink();
     }
 
-    // Determine increment/decrement step based on field name
-    final int step = field.name == 'weight' ? 2 : 1;
-    final int minValue = field.name == 'weight' ? step : 1;
+    final int minValue = fieldName == 'weight' ? step : 1;
 
     return TextField(
       controller: controller,
@@ -630,7 +693,7 @@ class SwipeableCardState extends State<SwipeableCard>
         prefixIcon: ListenableBuilder(
           listenable: Listenable.merge([focusNode, controller]),
           builder: (context, child) {
-            final isEmpty = controller.text == '- ${field.unit}';
+            final isEmpty = controller.text == '- $unit';
             return Opacity(
               opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
               child: IgnorePointer(
@@ -642,20 +705,20 @@ class SwipeableCardState extends State<SwipeableCard>
           child: IconButton(
             onPressed: () {
               focusNode.requestFocus();
-              _startFieldTimer(field.name);
+              _startFieldTimer(fieldName);
               String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
               int current = int.tryParse(text) ?? 0;
               if (current >= minValue) {
                 int newValue = current - step;
-                controller.text = '$newValue ${field.unit}';
+                controller.text = '$newValue $unit';
 
                 // Update field value in card model
-                final updatedValues = Map<String, String>.from(
-                  widget.card.fieldValues,
+                final updatedData = Map<String, String>.from(
+                  widget.card.userData,
                 );
-                updatedValues[field.name] = newValue.toString();
+                updatedData[fieldName] = newValue.toString();
                 widget.onCardUpdate(
-                  widget.card.copyWith(fieldValues: updatedValues),
+                  widget.card.copyWith(userData: updatedData),
                 );
               }
             },
@@ -668,7 +731,7 @@ class SwipeableCardState extends State<SwipeableCard>
         suffixIcon: ListenableBuilder(
           listenable: Listenable.merge([focusNode, controller]),
           builder: (context, child) {
-            final isEmpty = controller.text == '- ${field.unit}';
+            final isEmpty = controller.text == '- $unit';
             return Opacity(
               opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
               child: IgnorePointer(
@@ -680,19 +743,19 @@ class SwipeableCardState extends State<SwipeableCard>
           child: IconButton(
             onPressed: () {
               focusNode.requestFocus();
-              _startFieldTimer(field.name);
+              _startFieldTimer(fieldName);
               String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
               int current = int.tryParse(text) ?? 0;
               int newValue = current + step;
-              controller.text = '$newValue ${field.unit}';
+              controller.text = '$newValue $unit';
 
               // Update field value in card model
-              final updatedValues = Map<String, String>.from(
-                widget.card.fieldValues,
+              final updatedData = Map<String, String>.from(
+                widget.card.userData,
               );
-              updatedValues[field.name] = newValue.toString();
+              updatedData[fieldName] = newValue.toString();
               widget.onCardUpdate(
-                widget.card.copyWith(fieldValues: updatedValues),
+                widget.card.copyWith(userData: updatedData),
               );
             },
             icon: const Icon(Icons.chevron_right),
@@ -702,6 +765,10 @@ class SwipeableCardState extends State<SwipeableCard>
           ),
         ),
       ),
+      onTap: () {
+        focusNode.requestFocus();
+        _startFieldTimer(fieldName);
+      },
     );
   }
 
@@ -738,13 +805,8 @@ class SwipeableCardState extends State<SwipeableCard>
                     ),
                   ),
                   const SizedBox(height: 30),
-                  // Dynamic field rendering
-                  ...widget.card.exercise.fields.map((field) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 15),
-                      child: _buildFieldInput(field),
-                    );
-                  }).toList(),
+                  // Dynamic field rendering based on exercise type
+                  ..._buildInputFields(),
                 ],
               ),
               SizedBox(

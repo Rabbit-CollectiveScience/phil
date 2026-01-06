@@ -88,12 +88,11 @@ class WorkoutGroup {
 
   static WorkoutGroup _createGroup(List<WorkoutSetWithDetails> sets) {
     final firstSet = sets.first;
-    final lastSet = sets.last;
 
     // Sort sets by completion time (oldest to newest for display)
     final sortedSets = List<WorkoutSetWithDetails>.from(sets)
       ..sort(
-        (a, b) => a.workoutSet.completedAt.compareTo(b.workoutSet.completedAt),
+        (a, b) => a.workoutSet.timestamp.compareTo(b.workoutSet.timestamp),
       );
 
     return WorkoutGroup(
@@ -101,8 +100,8 @@ class WorkoutGroup {
       exerciseId: firstSet.workoutSet.exerciseId,
       setCount: sets.length,
       sets: sortedSets,
-      firstCompletedAt: sortedSets.first.workoutSet.completedAt,
-      lastCompletedAt: sortedSets.last.workoutSet.completedAt,
+      firstCompletedAt: sortedSets.first.workoutSet.timestamp,
+      lastCompletedAt: sortedSets.last.workoutSet.timestamp,
     );
   }
 }
