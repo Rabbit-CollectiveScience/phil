@@ -29,7 +29,9 @@ class BodyweightWorkoutSet extends WorkoutSet {
       exerciseId: exerciseId ?? this.exerciseId,
       timestamp: timestamp ?? this.timestamp,
       reps: reps ?? this.reps,
-      additionalWeight: clearAdditionalWeight ? null : (additionalWeight ?? this.additionalWeight),
+      additionalWeight: clearAdditionalWeight
+          ? null
+          : (additionalWeight ?? this.additionalWeight),
     );
   }
 

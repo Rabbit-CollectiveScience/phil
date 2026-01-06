@@ -13,7 +13,8 @@ class Weight {
   // JSON serialization
   Map<String, dynamic> toJson() => {'kg': kg};
 
-  factory Weight.fromJson(Map<String, dynamic> json) => Weight((json['kg'] as num).toDouble());
+  factory Weight.fromJson(Map<String, dynamic> json) =>
+      Weight((json['kg'] as num).toDouble());
 
   @override
   bool operator ==(Object other) =>
