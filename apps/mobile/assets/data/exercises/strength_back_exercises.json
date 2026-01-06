@@ -1,433 +1,412 @@
 [
   {
+    "type": "free_weight",
     "id": "back_1",
     "name": "Deadlift",
     "description": "Stand with feet hip-width apart, barbell over mid-foot, and grip it just outside your legs with arms fully extended. Hinge at the hips and bend your knees to reach the bar, keeping your chest up, back flat, and shoulders slightly in front of the bar. Drive through your heels and extend your hips and knees simultaneously, keeping the bar close to your body as it travels up your shins and thighs. Stand tall at the top with shoulders back and hips fully extended, then reverse the movement with control. This is the king of compound movements, building total body strength and mass.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back", "legs"]
   },
   {
+    "type": "free_weight",
     "id": "back_2",
     "name": "Romanian Deadlift",
     "description": "Stand with feet hip-width apart, holding a barbell at thigh level with an overhand grip and arms straight. Keep a slight bend in your knees and push your hips back as you hinge forward, lowering the bar along your thighs and shins. Maintain a flat back and proud chest throughout, feeling a deep stretch in your hamstrings and glutes. Lower until you feel your hamstrings fully stretched, typically mid-shin level. Drive your hips forward to return to standing, squeezing your glutes hard at the top. This variation emphasizes the posterior chain with constant tension on the hamstrings.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back", "legs"]
   },
   {
+    "type": "free_weight",
     "id": "back_3",
     "name": "Sumo Deadlift",
     "description": "Stand with feet significantly wider than shoulder-width, toes pointed out at 30-45 degrees. Squat down and grip the barbell with hands inside your knees, arms straight. Keep your chest up, back flat, and knees tracking over your toes. Drive through your whole foot, extending your hips and knees simultaneously while keeping the bar close to your body. Stand tall at the top, then lower with control. The wider stance shifts more emphasis to the glutes, adductors, and quads while being more back-friendly for some lifters.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back", "legs"]
   },
   {
+    "type": "free_weight",
     "id": "back_4",
     "name": "Rack Pulls",
     "description": "Set up a barbell on safety pins or blocks in a power rack at knee height or just below. Stand with feet hip-width apart and grip the bar just outside your legs. With your back flat and chest up, pull the bar up by extending your hips and standing tall, focusing on the lockout portion of the deadlift. Lower back to the pins with control. This partial range deadlift allows you to overload the top portion of the movement, building lockout strength and trap development with reduced lower back stress.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "free_weight",
     "id": "back_5",
     "name": "Barbell Bent-Over Row",
     "description": "Stand with feet hip-width apart, hinge at the hips to bend forward about 45 degrees while keeping your back straight and core braced. Grip the barbell with hands slightly wider than shoulder-width, letting it hang at arm's length. Pull the bar toward your lower ribcage by driving your elbows back and squeezing your shoulder blades together. Lower the bar with control, maintaining your torso position and avoiding any momentum or swinging. This fundamental horizontal pulling movement builds thickness throughout the entire back, particularly the lats, rhomboids, and mid-back.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "free_weight",
     "id": "back_6",
     "name": "Underhand Barbell Row",
     "description": "Set up like a standard bent-over row but grip the barbell with an underhand (supinated) grip, hands about shoulder-width apart. Hinge forward maintaining a flat back at about 45 degrees. Pull the bar toward your lower abdomen, driving your elbows back and slightly closer to your body than the overhand version. The underhand grip shifts more emphasis to your lower lats and allows for greater bicep involvement, often enabling a stronger contraction and more weight to be used compared to the overhand variation.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back", "arms"]
   },
   {
+    "type": "free_weight",
     "id": "back_7",
     "name": "Pendlay Row",
     "description": "Set up with a barbell on the floor, feet hip-width apart. Hinge forward until your torso is parallel or near-parallel to the ground with a flat back. Grip the bar outside shoulder-width with arms fully extended. Explosively pull the bar to your lower chest or upper abdomen, then lower it back to the floor completely, resetting for each rep. This strict rowing variation eliminates momentum and body english, building explosive pulling power from a dead stop while emphasizing the lats, upper back, and spinal erectors.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "free_weight",
     "id": "back_8",
     "name": "T-Bar Row",
     "description": "Straddle a loaded T-bar with feet shoulder-width apart and hinge forward at the hips, maintaining a flat back at about 45 degrees. Grip the handles with both hands and let the weight hang at arm's length. Pull the bar toward your chest by driving your elbows back and squeezing your shoulder blades together, keeping your core braced. Lower the weight with control, maintaining your torso angle and feeling a full stretch in your lats at the bottom. The T-bar angle and grip position allow for heavy loading while targeting the middle back effectively.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "bodyweight",
     "id": "back_9",
     "name": "Pull-Ups",
     "description": "Grasp a pull-up bar with an overhand grip slightly wider than shoulder-width, hanging with arms fully extended and feet off the ground. Engage your lats and pull yourself up by driving your elbows down and back, bringing your chin above the bar. Keep your core tight and avoid excessive swinging or kipping. Lower yourself with control back to a full hang, maintaining tension in your back throughout the descent. This classic bodyweight movement is the gold standard for building lat width and overall pulling strength.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"],
+    "canAddWeight": true
   },
   {
+    "type": "bodyweight",
     "id": "back_10",
     "name": "Chin-Ups",
     "description": "Grip a pull-up bar with an underhand (supinated) grip at shoulder-width or slightly narrower, hanging with arms fully extended. Pull yourself up by driving your elbows down and back, bringing your chin over the bar while keeping your chest up. The underhand grip allows for greater bicep recruitment and often enables more reps than standard pull-ups. Lower with control to full arm extension. This variation tends to hit the lower lats more intensely while also building impressive bicep and forearm strength.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back", "arms"],
+    "canAddWeight": true
   },
   {
+    "type": "bodyweight",
     "id": "back_11",
     "name": "Neutral Grip Pull-Ups",
     "description": "Use parallel handles or a neutral grip attachment on a pull-up bar, gripping with palms facing each other. Hang with arms extended and pull yourself up by driving your elbows down and back, bringing your chin over the bar level. The neutral grip is often the most shoulder-friendly pull-up variation and allows for a strong contraction of the lats and middle back. Lower with control back to full extension. This grip hits the lats from a slightly different angle while being easier on the wrists and elbows.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"],
+    "canAddWeight": true
   },
   {
+    "type": "bodyweight",
     "id": "back_12",
     "name": "Wide-Grip Pull-Ups",
     "description": "Grip the pull-up bar significantly wider than shoulder-width, as wide as the bar allows while maintaining comfort. Hang with arms extended and pull yourself up, focusing on driving your elbows down and out to the sides. Bring your upper chest toward the bar rather than just your chin. This extremely wide grip maximizes lat width development and outer back thickness, though it reduces range of motion and bicep involvement, making it more challenging than standard grip variations.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"],
+    "canAddWeight": true
   },
   {
+    "type": "machine",
     "id": "back_13",
     "name": "Assisted Pull-Up Machine",
     "description": "Set the desired assistance weight on the machine and kneel or stand on the platform, grasping the pull-up handles with your preferred grip. The platform will support some of your bodyweight, making the movement easier. Pull yourself up by driving your elbows down and back, bringing your chin above the bar while keeping your core engaged. Lower yourself with control back to full arm extension. This machine is perfect for building pull-up strength progressively by reducing assistance weight over time.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "machine",
     "id": "back_14",
     "name": "Lat Pulldown",
     "description": "Sit at a lat pulldown machine with thighs secured under the pad and grip the bar slightly wider than shoulder-width with palms facing forward. Lean back slightly and pull the bar down to your upper chest by driving your elbows down and back. Focus on initiating the movement with your lats rather than your arms, squeezing your shoulder blades together at the bottom. Control the weight back up to full arm extension, maintaining tension in your back throughout. This machine variation is excellent for building pull-up strength and isolating the lats.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "machine",
     "id": "back_15",
     "name": "Close-Grip Lat Pulldown",
     "description": "Sit at a lat pulldown machine using a V-bar or close-grip attachment with palms facing each other. Secure your thighs under the pad and lean back slightly. Pull the bar down to your upper chest by driving your elbows down and close to your body, squeezing your lats at the bottom. The close, neutral grip allows for a longer range of motion and often enables more weight to be used compared to wide-grip variations, while emphasizing the lower lats and middle back thickness.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "machine",
     "id": "back_16",
     "name": "Underhand Lat Pulldown",
     "description": "Sit at a lat pulldown machine and grip the bar with an underhand (supinated) grip at shoulder-width or slightly narrower. Secure your thighs and lean back slightly. Pull the bar down to your upper chest, driving your elbows down and back while keeping them relatively close to your body. This grip variation increases bicep involvement and often allows for a stronger contraction of the lower lats compared to overhand grips, making it excellent for building lat thickness.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back", "arms"]
   },
   {
+    "type": "machine",
     "id": "back_17",
     "name": "Straight-Arm Pulldown",
     "description": "Stand facing a cable machine with a straight bar or rope attachment at the highest setting. Grip the attachment with arms extended overhead and step back to create tension. With a slight bend in your elbows, pull the bar or rope down in an arc motion toward your thighs, keeping your arms relatively straight throughout. Focus on contracting your lats at the bottom, then control the weight back up. This isolation movement emphasizes the lats while removing bicep involvement, excellent for developing the mind-muscle connection.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "free_weight",
     "id": "back_18",
     "name": "Single-Arm Dumbbell Row",
     "description": "Place your left knee and left hand on a flat bench for support, keeping your back flat and parallel to the ground. Hold a dumbbell in your right hand with arm fully extended, allowing your shoulder to drop slightly. Pull the dumbbell up toward your hip by driving your elbow back and rotating your torso slightly. Squeeze your lat at the top, then lower the weight with control, feeling a stretch in your back before repeating. This unilateral movement allows for a greater range of motion and helps correct strength imbalances.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "free_weight",
     "id": "back_19",
     "name": "Dumbbell Bent-Over Row",
     "description": "Stand with feet hip-width apart, holding a dumbbell in each hand. Hinge at the hips to bend forward about 45 degrees, maintaining a flat back and letting the dumbbells hang at arm's length. Pull both dumbbells toward your hips by driving your elbows back and squeezing your shoulder blades together. Lower with control, maintaining the bent-over position. Using dumbbells instead of a barbell allows for a more natural movement path and greater range of motion while helping to identify and correct strength imbalances.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "free_weight",
     "id": "back_20",
     "name": "Chest-Supported Dumbbell Row",
     "description": "Set an incline bench to 30-45 degrees and lie chest-down against it with dumbbells hanging at arm's length below you. Plant your feet firmly for stability. Pull the dumbbells up toward your hips by driving your elbows back and squeezing your shoulder blades together. Lower with control back to full extension. The chest support eliminates lower back strain and momentum, allowing you to focus purely on back contraction, making it ideal for higher rep work or when your lower back is fatigued.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "free_weight",
     "id": "back_21",
     "name": "Seal Row",
-    "description": "Set up a flat bench on blocks or boxes high enough to allow a barbell or dumbbells to hang beneath without touching the ground. Lie face down on the bench with chest supported and grip the weight with arms hanging straight down. Pull the weight up toward the bottom of the bench by driving your elbows back and squeezing your shoulder blades. Lower with complete control. The elevated chest support completely removes lower back and leg involvement, providing maximum isolation for the back muscles.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "description": "Lie face down on an elevated bench with dumbbells or a barbell hanging below you at arm's length. Pull the weight toward your torso by driving your elbows back and squeezing your shoulder blades. Lower with control. The elevated bench completely removes lower back involvement and prevents cheating with momentum, making it one of the strictest rowing variations for pure back isolation and hypertrophy.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "machine",
     "id": "back_22",
-    "name": "Meadows Row",
-    "description": "Set up a barbell in a landmine attachment or corner with weight on one end. Stand perpendicular to the bar and grip the loaded end with your far hand, feet in a staggered stance. Place your near hand on your thigh or a bench for support. Pull the bar up toward your hip in an arcing motion, driving your elbow back and rotating slightly. This unique angle and single-arm movement creates intense lat contraction while the arc path allows for a full range of motion not possible with other rowing variations.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
-  },
-  {
-    "id": "back_23",
     "name": "Seated Cable Row",
-    "description": "Sit at a cable row machine with feet braced against the footplate and knees slightly bent, grasping a V-bar or neutral grip handle. Sit upright with your chest out and shoulders back, arms fully extended in front of you. Pull the handle toward your lower abdomen by driving your elbows straight back and squeezing your shoulder blades together. Maintain an upright torso position throughout, avoiding rocking or using momentum, then extend your arms forward with control. Cables provide constant tension throughout the entire range of motion.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "description": "Sit at a cable rowing station with your feet on the footrests and grip a V-bar or straight bar attachment. Start with arms extended and torso upright. Pull the handle toward your torso by driving your elbows back and squeezing your shoulder blades together. Keep your torso stable throughout. Return with control, allowing a slight stretch at the front. This machine exercise provides constant tension and is excellent for building mid-back thickness.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
-    "id": "back_24",
+    "type": "machine",
+    "id": "back_23",
     "name": "Wide-Grip Seated Cable Row",
-    "description": "Sit at a cable row station and attach a wide-grip bar. Position yourself with feet braced, knees slightly bent, and torso upright. Grip the bar wider than shoulder-width with an overhand grip and arms extended. Pull the bar toward your upper abdomen or lower chest, driving your elbows out and back. Squeeze your shoulder blades together at the back of the movement. The wide grip emphasizes the upper and outer back, particularly the rear delts and rhomboids, creating width in the back.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "description": "Sit at a cable rowing station using a wide grip bar attachment. Position your feet on the footrests and sit upright with arms extended. Pull the bar toward your upper abdomen or lower chest, driving your elbows out and back while squeezing your shoulder blades. The wide grip emphasizes the outer lats and upper back muscles, providing a different stimulus than close-grip variations.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
-    "id": "back_25",
+    "type": "machine",
+    "id": "back_24",
     "name": "Single-Arm Cable Row",
-    "description": "Sit at a cable station with a single handle attached at chest height. Position yourself with feet braced and torso upright. Grip the handle with one hand, arm extended. Pull the handle toward your hip/side, driving your elbow back and rotating your torso slightly. Squeeze your lat at the back of the movement, then extend your arm with control. Working one side at a time allows for greater range of motion, addresses imbalances, and enables focused contraction on each lat individually.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "description": "Sit at a cable station with one handle attachment. Grab the handle with one hand while bracing your free hand on your knee or the machine. Pull the handle toward your hip, rotating your torso slightly and driving your elbow back. Focus on squeezing your lat at the peak contraction. This unilateral variation helps address imbalances and allows for greater range of motion and torso rotation.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "bodyweight",
+    "id": "back_25",
+    "name": "Inverted Row",
+    "description": "Set a barbell in a rack at waist height or use suspension straps. Lie underneath and grab the bar with an overhand grip slightly wider than shoulder-width. Hang with arms extended and body in a straight line from head to heels. Pull your chest to the bar by driving your elbows back and squeezing your shoulder blades. Lower with control. This horizontal bodyweight pulling exercise is perfect for building back strength and is scalable by adjusting bar height.",
+    "isCustom": false,
+    "targetMuscles": ["back"],
+    "canAddWeight": false
+  },
+  {
+    "type": "bodyweight",
     "id": "back_26",
-    "name": "Face Pulls",
-    "description": "Attach a rope to a cable station at upper chest or face height and grasp the ends with an overhand grip, stepping back to create tension. Pull the rope toward your face by driving your elbows back and outward, separating the rope ends as they approach your face. Focus on squeezing your rear delts and upper back at the peak contraction, with your hands ending beside your ears. Control the weight back to the starting position. While targeting rear delts primarily, this exercise is crucial for overall back health and shoulder balance.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Underhand Inverted Row",
+    "description": "Set up like a standard inverted row but use an underhand grip on the bar. Pull your chest to the bar while driving your elbows close to your body. The underhand grip increases bicep involvement and changes the angle of pull on your lats, providing a different stimulus than the overhand version while still being an effective horizontal pulling movement.",
+    "isCustom": false,
+    "targetMuscles": ["back", "arms"],
+    "canAddWeight": false
   },
   {
+    "type": "machine",
     "id": "back_27",
-    "name": "Inverted Rows",
-    "description": "Set a barbell in a rack at waist height and lie underneath it with your body in a straight line from head to heels. Grip the bar with hands shoulder-width apart, arms fully extended, and heels on the ground. Pull your chest up to the bar by driving your elbows back and squeezing your shoulder blades together. Keep your body rigid throughout the movement, avoiding any sagging in your hips, then lower yourself with control back to full arm extension. This bodyweight horizontal pull is perfect for beginners or as a finishing movement.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
-  },
-  {
-    "id": "back_28",
-    "name": "Machine Seated Row",
-    "description": "Sit in a seated row machine with your chest against the pad and feet planted firmly. Grip the handles with your preferred grip and ensure your arms are fully extended. Pull the handles toward your torso by driving your elbows back and squeezing your shoulder blades together. Focus on contracting your back muscles at the peak of the movement. Extend your arms forward with control. Machines provide a stable, fixed path making them excellent for safely pushing to failure and focusing on the contraction.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
-  },
-  {
-    "id": "back_29",
     "name": "Smith Machine Bent-Over Row",
-    "description": "Set up in front of a Smith machine bar loaded at shin to knee height. Hinge forward at the hips maintaining a flat back at about 45 degrees. Grip the bar slightly wider than shoulder-width with arms hanging straight. Pull the bar toward your lower ribcage by driving your elbows back along the fixed path of the machine. The Smith machine's guided bar path allows you to focus purely on back contraction without worrying about balance, enabling you to lift heavier or train to failure more safely.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "description": "Set a Smith machine bar at knee height. Bend forward at the hips with a flat back and grip the bar slightly wider than shoulder-width. Pull the bar toward your lower chest by driving your elbows back. The fixed path provides stability and allows you to focus purely on the pulling motion without balance concerns, making it ideal for safely training to failure.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "machine",
+    "id": "back_28",
+    "name": "Plate-Loaded Row Machine",
+    "description": "Sit in a plate-loaded rowing machine with your chest against the pad. Grip the handles and pull them toward your body by driving your elbows back and squeezing your shoulder blades together. Return with control. The chest support and fixed path make this excellent for isolating the back muscles without lower back fatigue, allowing for heavy loads and intense contractions.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
+  },
+  {
+    "type": "free_weight",
+    "id": "back_29",
+    "name": "Meadows Row",
+    "description": "Stand perpendicular to a loaded barbell positioned in a landmine or corner. Stagger your stance and hinge forward. Grip the end of the barbell with one hand and pull it toward your hip in a rowing motion, driving your elbow back. This single-arm rowing variation created by John Meadows provides a unique pulling angle and massive lat stretch.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
+  },
+  {
+    "type": "free_weight",
     "id": "back_30",
-    "name": "Cable Pullover",
-    "description": "Stand facing away from a cable machine with a straight bar or rope attachment set at the highest position. Grip the attachment overhead with arms extended and lean forward slightly at the hips. With arms relatively straight and elbows slightly bent, pull the attachment down in an arc toward your thighs, focusing on contracting your lats. Control the weight back up overhead, feeling a stretch in your lats. This movement is similar to the dumbbell pullover but with constant cable tension, excellent for lat isolation and finishing movements.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Kroc Row",
+    "description": "Set up like a single-arm dumbbell row but use a heavy dumbbell and allow some controlled body english. Pull the dumbbell with momentum for high reps (15-20+), focusing on a strong squeeze at the top. Named after powerlifter Matt Kroczaleski, this high-rep rowing variation builds grip strength, back thickness, and muscular endurance.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "machine",
     "id": "back_31",
-    "name": "Trap Bar Deadlift",
-    "description": "Stand inside a trap bar (hex bar) with feet hip-width apart, positioned at the center. Squat down and grip the high or low handles on either side of you with arms straight. Keep your chest up, back flat, and shoulders slightly in front of the handles. Drive through your whole foot to stand up, extending your hips and knees simultaneously. Stand tall at the top, then lower with control. The trap bar's design allows for a more upright torso and neutral grip, making it more quad-dominant and often easier on the lower back than conventional deadlifts.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Reverse Grip Lat Pulldown",
+    "description": "Sit at a lat pulldown machine with an underhand grip at shoulder-width. Pull the bar down to your upper chest while keeping your elbows tucked close to your body. The underhand grip targets the lower lats and allows for heavy loading while also recruiting the biceps significantly. This variation often feels more natural and allows for a stronger mind-muscle connection than overhand variations.",
+    "isCustom": false,
+    "targetMuscles": ["back", "arms"]
   },
   {
+    "type": "machine",
     "id": "back_32",
-    "name": "Back Extensions",
-    "description": "Position yourself on a back extension machine with hips resting on the pad and ankles secured under the supports. Start with your body in a straight line or slightly bent at the hips, hands crossed over your chest or behind your head. Lower your upper body by hinging at the hips in a controlled manner until you feel a stretch in your hamstrings and lower back. Raise back up by contracting your spinal erectors and glutes until your body forms a straight line. This fundamental exercise strengthens the lower back, glutes, and hamstrings while improving posterior chain endurance.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Behind-the-Neck Lat Pulldown",
+    "description": "Sit at a lat pulldown machine with a wide grip. Pull the bar down behind your neck to the base of your skull while keeping your torso upright. This variation emphasizes the upper lats and rear delts but requires good shoulder mobility. Only perform if you have adequate flexibility and avoid going too heavy to protect shoulder health.",
+    "isCustom": false,
+    "targetMuscles": ["back", "shoulders"]
   },
   {
+    "type": "free_weight",
     "id": "back_33",
-    "name": "Weighted Back Extensions",
-    "description": "Set up on a back extension machine and hold a weight plate against your chest or behind your head for added resistance. With hips on the pad and ankles secured, start in a neutral position. Lower your torso by hinging at the hips until you feel a stretch in your posterior chain. Squeeze your lower back and glutes to raise back up to the starting position. Adding weight progressively overloads the spinal erectors and glutes, building significant lower back strength and mass beyond bodyweight variations.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Shrug",
+    "description": "Stand holding a barbell or dumbbells at arm's length in front of or at your sides. Elevate your shoulders straight up toward your ears as high as possible, squeezing your traps at the top. Lower with control. Avoid rolling your shoulders. This isolation exercise specifically targets the upper trapezius, building the classic trap development seen in strong, powerful physiques.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "free_weight",
     "id": "back_34",
-    "name": "Reverse Hyperextensions",
-    "description": "Lie face down on a reverse hyperextension machine or bench with your hips at the edge and upper body supported, gripping handles for stability. Let your legs hang down toward the floor. Raise your legs up by contracting your glutes and lower back until they're in line with your torso or slightly higher. Lower with control back to the starting position. This exercise targets the glutes, hamstrings, and lower back while being gentler on the spine than regular back extensions, making it excellent for lower back rehabilitation and strength.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Dumbbell Shrug",
+    "description": "Stand holding dumbbells at your sides with arms straight. Shrug your shoulders straight up toward your ears, squeezing your traps hard at the top. Lower with control. Dumbbells allow for a more natural movement path than a barbell and can often enable a greater range of motion, making them excellent for trap development.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "machine",
     "id": "back_35",
-    "name": "Superman",
-    "description": "Lie face down on the floor or mat with arms extended overhead and legs straight. Simultaneously lift your arms, chest, and legs off the ground by contracting your entire posterior chain, creating a slight arch in your back. Hold at the top for a moment, squeezing your glutes and lower back. Lower back down with control. This bodyweight exercise strengthens the entire back side of the body, improves posture, and requires no equipment, making it perfect for home workouts or warm-ups.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Smith Machine Shrug",
+    "description": "Stand in a Smith machine with the bar at arm's length, gripping it with hands shoulder-width apart. Shrug your shoulders up toward your ears, focusing on the vertical movement. The fixed bar path allows you to load heavy weight safely and focus purely on the traps without balance concerns.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "free_weight",
     "id": "back_36",
-    "name": "Barbell Shrugs",
-    "description": "Stand upright with feet hip-width apart, holding a barbell in front of your thighs with an overhand grip and arms straight. Keep your arms locked and elevate your shoulders straight up toward your ears as high as possible, focusing on contracting your upper traps. Hold the peak contraction briefly, then lower your shoulders back down with control. Avoid rolling your shoulders forward or backward. This is the primary exercise for building massive upper trap development and thick neck/shoulder area.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Behind-the-Back Barbell Shrug",
+    "description": "Stand holding a barbell behind your back at arm's length, similar to the bottom of a Romanian deadlift. Shrug your shoulders up and back, squeezing your traps. This variation shifts emphasis slightly forward on the traps and can feel more natural for some lifters while also hitting the mid-traps more effectively.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "free_weight",
     "id": "back_37",
-    "name": "Dumbbell Shrugs",
-    "description": "Stand with feet hip-width apart, holding a dumbbell in each hand at your sides with arms straight. Keep your arms locked and elevate your shoulders straight up toward your ears as high as possible. Squeeze your traps hard at the top, then lower with control. The dumbbells allow for a more natural movement path compared to a barbell and can enable a slightly greater range of motion. This variation also helps identify and correct any strength imbalances between sides.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
-  },
-  {
-    "id": "back_38",
-    "name": "Behind-the-Back Barbell Shrugs",
-    "description": "Stand with feet hip-width apart and hold a barbell behind your back at arm's length with an overhand grip. Keep your arms straight and chest up. Elevate your shoulders straight up toward your ears, squeezing your traps at the top. Lower with control back to the starting position. The behind-the-back position slightly changes the angle of pull and can reduce the tendency to roll shoulders forward, while some find it more comfortable on the wrists and forearms than standard shrugs.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
-  },
-  {
-    "id": "back_39",
     "name": "Farmer's Walk",
-    "description": "Grab heavy dumbbells, kettlebells, or farmer's walk handles and hold them at your sides with arms straight. Stand tall with chest up, shoulders back, and core braced. Walk forward with controlled steps for a set distance or time, maintaining perfect posture throughout. Keep your shoulders elevated slightly to engage your traps. This loaded carry exercise builds incredible grip strength, trap development, core stability, and functional strength while conditioning the entire body.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "description": "Hold heavy dumbbells or kettlebells at your sides with arms straight and walk forward with controlled steps. Keep your shoulders back, core tight, and maintain an upright posture throughout. This loaded carry builds tremendous grip strength, trap development, core stability, and overall functional strength.",
+    "isCustom": false,
+    "targetMuscles": ["back", "core"]
   },
   {
+    "type": "machine",
+    "id": "back_38",
+    "name": "Cable Shrug",
+    "description": "Stand in a cable crossover station with handles set at the lowest position. Grab both handles and stand upright. Shrug your shoulders up toward your ears, squeezing your traps at the top. The constant cable tension provides a unique stimulus compared to free weights and keeps tension on the traps throughout the entire range.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
+  },
+  {
+    "type": "machine",
+    "id": "back_39",
+    "name": "Machine Row (Hammer Strength)",
+    "description": "Sit in a plate-loaded rowing machine with your chest against the pad. Grip the handles and pull them toward your body by driving your elbows back. The independent handles allow for unilateral training or simultaneous pulling, and the fixed path enables heavy loading with reduced stabilization demands.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
+  },
+  {
+    "type": "free_weight",
     "id": "back_40",
     "name": "Yates Row",
-    "description": "Stand with feet hip-width apart holding a barbell with an underhand (supinated) grip at shoulder-width. Hinge forward only about 30 degrees, keeping your torso more upright than traditional bent-over rows. Pull the bar toward your lower abdomen, driving your elbows back and up while keeping them closer to your body. The more upright position and underhand grip, popularized by bodybuilder Dorian Yates, allows for heavier weight and intense lower lat and mid-back contraction with reduced lower back strain.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "description": "Stand holding a barbell with an underhand grip at shoulder-width. Hinge forward to about 30-45 degrees (more upright than a standard bent-over row). Pull the bar to your lower abdomen with elbows tucked close to your body. Named after bodybuilder Dorian Yates, this more upright rowing variation allows for heavier weights and emphasizes the lower lats and mid-back.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   },
   {
+    "type": "bodyweight",
     "id": "back_41",
-    "name": "Kroc Row",
-    "description": "Place one hand and knee on a bench for support. Grab a heavy dumbbell with your other hand and let it hang at arm's length. Using controlled momentum and body english, explosively pull the dumbbell up toward your hip with high reps (typically 15-25). Focus on squeezing your lat at the top of each rep while allowing some torso rotation. This high-rep, slightly loose-form row variation, named after powerlifter Matt Kroczaleski, builds tremendous grip strength, lat endurance, and mental toughness.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Archer Pull-Ups",
+    "description": "Hang from a pull-up bar with a wide grip. Pull yourself up while shifting your body weight to one side, straightening the opposite arm. Alternate sides on each rep or complete all reps on one side. This advanced variation increases unilateral strength and challenges stability, bridging the gap between standard pull-ups and one-arm pull-ups.",
+    "isCustom": false,
+    "targetMuscles": ["back"],
+    "canAddWeight": false
   },
   {
+    "type": "bodyweight",
     "id": "back_42",
-    "name": "Landmine Single-Arm Row",
-    "description": "Position a barbell in a landmine attachment or corner with weight on one end. Stand perpendicular to the bar in a split stance and grip the loaded end with one hand. Hinge forward at the hips with your back flat and free hand on your knee for support. Pull the bar up toward your hip in a rowing motion, keeping your elbow close to your body. The landmine setup provides a unique arc of motion that hits the lats differently than standard rows while being easy on the shoulder joints.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Commando Pull-Ups",
+    "description": "Grip a pull-up bar with hands together, one in front of the other (parallel to your body). Pull yourself up, alternating which side of the bar your head passes on each rep. This unique grip challenges your core stability and hits the lats from a different angle while building grip strength.",
+    "isCustom": false,
+    "targetMuscles": ["back", "core"],
+    "canAddWeight": false
   },
   {
+    "type": "bodyweight",
     "id": "back_43",
-    "name": "Kneeling Cable Pulldown",
-    "description": "Kneel in front of a cable machine with a rope attachment set at the highest position. Grab the rope with both hands and sit back on your heels. Pull the rope down and apart toward your upper chest, driving your elbows down and back. Squeeze your lats hard at the bottom, then control the weight back up. The kneeling position eliminates leg drive and prevents cheating, forcing pure lat engagement. This variation is excellent for developing the mind-muscle connection with your lats.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "weight", "label": "Weight", "unit": "kg", "type": "number"},
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "L-Sit Pull-Ups",
+    "description": "Hang from a pull-up bar and raise your legs straight out in front of you to form an L-shape. Maintain this position while performing pull-ups. This advanced variation adds intense core work to the standard pull-up, requiring significant abdominal strength and hip flexor endurance.",
+    "isCustom": false,
+    "targetMuscles": ["back", "core"],
+    "canAddWeight": false
   },
   {
+    "type": "machine",
     "id": "back_44",
-    "name": "Scapular Pull-Ups",
-    "description": "Hang from a pull-up bar with arms fully extended and body in a dead hang. Without bending your elbows, retract and depress your shoulder blades, lifting your body slightly by squeezing your lats and upper back. Hold briefly at the top, then slowly release back to a dead hang. This exercise teaches proper scapular movement and lat engagement for pull-ups, building strength in the often-neglected initial pull phase while improving shoulder health and stability.",
-    "categories": ["strength", "back"],
-    "fields": [
-      {"name": "reps", "label": "Reps", "unit": "reps", "type": "number"}
-    ]
+    "name": "Reverse Pec Deck",
+    "description": "Sit facing a pec deck machine with your chest against the pad. Grip the handles with arms extended. Pull the handles back and outward by squeezing your rear delts and upper back. This machine exercise targets the posterior deltoids and mid-back, excellent for posture and balanced shoulder development.",
+    "isCustom": false,
+    "targetMuscles": ["back", "shoulders"]
+  },
+  {
+    "type": "free_weight",
+    "id": "back_45",
+    "name": "Landmine Row",
+    "description": "Place one end of a barbell in a landmine attachment or corner. Straddle the bar, hinge forward, and grip the bar end with both hands. Row the bar toward your chest by pulling your elbows back. The angled path provides a unique loading vector that hammers the lats and mid-back.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
+  },
+  {
+    "type": "machine",
+    "id": "back_46",
+    "name": "High Row Machine",
+    "description": "Sit at a high row machine with handles positioned at upper chest or face height. Pull the handles toward your upper chest or face, driving your elbows high and back. This angle specifically targets the upper back, rear delts, and rhomboids, essential for posture and shoulder health.",
+    "isCustom": false,
+    "targetMuscles": ["back", "shoulders"]
+  },
+  {
+    "type": "machine",
+    "id": "back_47",
+    "name": "Pullover Machine",
+    "description": "Sit in a pullover machine with the pad positioned across your upper arms. Press your elbows against the pad and pull it down in an arc motion by contracting your lats. This machine isolates the lat pullover motion and provides constant tension throughout the movement, excellent for lat width and rib cage expansion.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
+  },
+  {
+    "type": "free_weight",
+    "id": "back_48",
+    "name": "Dumbbell Pullover",
+    "description": "Lie perpendicular across a flat bench with only your upper back supported, feet planted firmly on the ground. Hold one dumbbell with both hands above your chest. Lower the dumbbell back over your head in an arc motion, feeling a stretch in your lats and chest. Pull it back to the starting position. This classic movement works the lats while also stretching the rib cage.",
+    "isCustom": false,
+    "targetMuscles": ["back", "chest"]
+  },
+  {
+    "type": "machine",
+    "id": "back_49",
+    "name": "Cable Pullover",
+    "description": "Stand facing a cable machine with a straight bar or rope set at the highest position. Grab the attachment with arms extended overhead. With a slight bend in your elbows, pull the attachment down in an arc to your thighs by contracting your lats. The cable provides constant tension throughout the range of motion, making it superior to dumbbell pullovers for continuous tension.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
+  },
+  {
+    "type": "bodyweight",
+    "id": "back_50",
+    "name": "Superman Hold",
+    "description": "Lie face down on the floor with arms extended overhead. Simultaneously lift your arms, chest, and legs off the ground as high as comfortable, squeezing your entire posterior chain. Hold this position, creating a banana shape with your body. This isometric exercise strengthens the entire back, glutes, and hamstrings while improving posture and spinal stability.",
+    "isCustom": false,
+    "targetMuscles": ["back", "legs"],
+    "canAddWeight": false
   }
 ]
