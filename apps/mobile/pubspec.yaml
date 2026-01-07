@@ -45,6 +45,7 @@ dev_dependencies:
   hive_generator: ^2.0.1
   build_runner: ^2.4.6
   mockito: ^5.4.4
+  mocktail: ^1.0.0
 
 # ---------- Flutter config ----------
 flutter:
