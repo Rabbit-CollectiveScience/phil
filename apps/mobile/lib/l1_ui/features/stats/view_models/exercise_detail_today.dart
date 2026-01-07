@@ -34,11 +34,13 @@ class ExerciseDetailToday {
         .toList();
 
     return ExerciseDetailToday(
-      name: map['name'] as String,
-      sets: map['sets'] as int,
-      volumeToday: (map['volumeToday'] as num).toDouble(),
-      maxWeightToday: map['maxWeightToday'] != null
-          ? (map['maxWeightToday'] as num).toDouble()
+      name: map['exerciseName'] as String,
+      sets: map['setCount'] as int,
+      volumeToday: map['totalVolume'] != null 
+          ? (map['totalVolume'] as num).toDouble()
+          : 0.0,
+      maxWeightToday: map['maxWeight'] != null
+          ? (map['maxWeight'] as num).toDouble()
           : null,
       prsToday: prs,
     );

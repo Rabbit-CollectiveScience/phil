@@ -73,6 +73,7 @@ class GetTodayExerciseDetailsUseCase {
       bool hasWeightPR = false;
       bool hasRepsPR = false;
       bool hasVolumePR = false;
+      final List<Map<String, dynamic>> prsToday = [];
 
       if (_prRepository != null) {
         final weightPRs = await _prRepository.getByExerciseIdAndType<WeightPR>(
@@ -108,6 +109,17 @@ class GetTodayExerciseDetailsUseCase {
               pr.achievedAt.isAfter(todayStart) &&
               pr.achievedAt.isBefore(todayEnd),
         );
+
+        // Build prsToday list with actual values
+        if (hasWeightPR && maxWeight != null) {
+          prsToday.add({'type': 'maxWeight', 'value': maxWeight});
+        }
+        if (hasRepsPR && maxReps != null) {
+          prsToday.add({'type': 'maxReps', 'value': maxReps.toDouble()});
+        }
+        if (hasVolumePR && totalVolume != null) {
+          prsToday.add({'type': 'maxVolume', 'value': totalVolume});
+        }
       }
 
       exerciseDetails.add({
@@ -121,6 +133,7 @@ class GetTodayExerciseDetailsUseCase {
         'hasWeightPR': hasWeightPR,
         'hasRepsPR': hasRepsPR,
         'hasVolumePR': hasVolumePR,
+        'prsToday': prsToday,
       });
     }
 
