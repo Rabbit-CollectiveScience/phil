@@ -142,11 +142,15 @@ class _CompletedListPageState extends State<CompletedListPage>
       final weightStr = workoutSet.weight != null
           ? '${workoutSet.weight!.kg.toStringAsFixed(1)} kg'
           : '-- kg';
-      final repsStr = workoutSet.reps != null ? '${workoutSet.reps}' : '--';
+      final repsStr = workoutSet.reps != null 
+          ? '${workoutSet.reps} ${workoutSet.reps == 1 ? "rep" : "reps"}' 
+          : '-- rep';
       return '$weightStr × $repsStr';
     } else if (workoutSet is BodyweightWorkoutSet) {
-      final repsStr = workoutSet.reps != null ? '${workoutSet.reps}' : '--';
-      final repsText = '$repsStr reps';
+      final repsStr = workoutSet.reps != null 
+          ? '${workoutSet.reps} ${workoutSet.reps == 1 ? "rep" : "reps"}' 
+          : '-- rep';
+      final repsText = repsStr;
       if (workoutSet.additionalWeight != null) {
         return '$repsText (+${workoutSet.additionalWeight!.kg.toStringAsFixed(1)} kg)';
       }
