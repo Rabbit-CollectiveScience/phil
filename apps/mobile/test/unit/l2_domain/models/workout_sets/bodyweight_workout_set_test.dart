@@ -56,6 +56,19 @@ void main() {
 
         expect(set.reps, 0);
       });
+
+      test('creates BodyweightWorkoutSet with null reps', () {
+        final set = BodyweightWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          reps: null,
+          additionalWeight: Weight(10.0),
+        );
+
+        expect(set.reps, null);
+        expect(set.additionalWeight?.kg, 10.0);
+      });
     });
 
     group('getVolume', () {
@@ -128,6 +141,19 @@ void main() {
         final json = set.toJson();
 
         expect(json['reps'], 0);
+      });
+
+      test('serializes set with null reps to JSON', () {
+        final set = BodyweightWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          reps: null,
+        );
+
+        final json = set.toJson();
+
+        expect(json['reps'], null);
       });
     });
 

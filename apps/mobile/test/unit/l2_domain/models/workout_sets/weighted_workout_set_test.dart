@@ -19,7 +19,7 @@ void main() {
         expect(set.id, '1');
         expect(set.exerciseId, 'exercise1');
         expect(set.timestamp, testDate);
-        expect(set.weight.kg, 100.0);
+        expect(set.weight!.kg, 100.0);
         expect(set.reps, 10);
       });
 
@@ -32,7 +32,7 @@ void main() {
           reps: 10,
         );
 
-        expect(set.weight.kg, 0.0);
+        expect(set.weight!.kg, 0.0);
       });
 
       test('creates WeightedWorkoutSet with one rep', () {
@@ -56,7 +56,46 @@ void main() {
           reps: 8,
         );
 
-        expect(set.weight.kg, 62.5);
+        expect(set.weight!.kg, 62.5);
+      });
+
+      test('creates WeightedWorkoutSet with null weight', () {
+        final set = WeightedWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          weight: null,
+          reps: 10,
+        );
+
+        expect(set.weight, null);
+        expect(set.reps, 10);
+      });
+
+      test('creates WeightedWorkoutSet with null reps', () {
+        final set = WeightedWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          weight: Weight(100.0),
+          reps: null,
+        );
+
+        expect(set.weight!.kg, 100.0);
+        expect(set.reps, null);
+      });
+
+      test('creates WeightedWorkoutSet with both null weight and reps', () {
+        final set = WeightedWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          weight: null,
+          reps: null,
+        );
+
+        expect(set.weight, null);
+        expect(set.reps, null);
       });
     });
 
@@ -120,6 +159,72 @@ void main() {
 
         expect(set.getVolume(), 100.0);
       });
+
+      test('returns null volume when weight is null', () {
+        final set = WeightedWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          weight: null,
+          reps: 10,
+        );
+
+        expect(set.getVolume(), null);
+      });
+
+      test('returns null volume when reps is null', () {
+        final set = WeightedWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          weight: Weight(100.0),
+          reps: null,
+        );
+
+        expect(set.getVolume(), null);
+      });
+
+      test('returns null volume when both weight and reps are null', () {
+        final set = WeightedWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          weight: null,
+          reps: null,
+        );
+
+        expect(set.getVolume(), null);
+      });
+
+      test('serializes set with null weight to JSON', () {
+        final set = WeightedWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          weight: null,
+          reps: 10,
+        );
+
+        final json = set.toJson();
+
+        expect(json['weight'], null);
+        expect(json['reps'], 10);
+      });
+
+      test('serializes set with null reps to JSON', () {
+        final set = WeightedWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          weight: Weight(100.0),
+          reps: null,
+        );
+
+        final json = set.toJson();
+
+        expect(json['weight'], {'kg': 100.0});
+        expect(json['reps'], null);
+      });
     });
 
     group('toJson', () {
@@ -174,8 +279,40 @@ void main() {
         expect(set.id, '1');
         expect(set.exerciseId, 'exercise1');
         expect(set.timestamp, testDate);
-        expect(set.weight.kg, 100.0);
+        expect(set.weight!.kg, 100.0);
         expect(set.reps, 10);
+      });
+
+      test('deserializes set with null weight from JSON', () {
+        final json = {
+          'id': '1',
+          'exerciseId': 'exercise1',
+          'timestamp': testDate.toIso8601String(),
+          'type': 'weighted',
+          'weight': null,
+          'reps': 10,
+        };
+
+        final set = WeightedWorkoutSet.fromJson(json);
+
+        expect(set.weight, null);
+        expect(set.reps, 10);
+      });
+
+      test('deserializes set with null reps from JSON', () {
+        final json = {
+          'id': '1',
+          'exerciseId': 'exercise1',
+          'timestamp': testDate.toIso8601String(),
+          'type': 'weighted',
+          'weight': {'kg': 100.0},
+          'reps': null,
+        };
+
+        final set = WeightedWorkoutSet.fromJson(json);
+
+        expect(set.weight!.kg, 100.0);
+        expect(set.reps, null);
       });
 
       test('deserializes set with integer weight as double', () {
@@ -190,7 +327,7 @@ void main() {
 
         final set = WeightedWorkoutSet.fromJson(json);
 
-        expect(set.weight.kg, 100.0);
+        expect(set.weight!.kg, 100.0);
       });
     });
 
@@ -206,10 +343,10 @@ void main() {
 
         final updated = set.copyWith(weight: Weight(120.0), reps: 8);
 
-        expect(updated.weight.kg, 120.0);
+        expect(updated.weight!.kg, 120.0);
         expect(updated.reps, 8);
         expect(updated.id, '1');
-        expect(set.weight.kg, 100.0);
+        expect(set.weight!.kg, 100.0);
         expect(set.reps, 10);
       });
 
@@ -225,7 +362,7 @@ void main() {
         final updated = set.copyWith();
 
         expect(updated.id, set.id);
-        expect(updated.weight.kg, set.weight.kg);
+        expect(updated.weight!.kg, set.weight!.kg);
         expect(updated.reps, set.reps);
       });
     });
@@ -362,8 +499,25 @@ void main() {
         final json = set.toJson();
         final deserialized = WeightedWorkoutSet.fromJson(json);
 
-        expect(deserialized.weight.kg, 62.5);
+        expect(deserialized.weight!.kg, 62.5);
         expect(deserialized.getVolume(), 500.0);
+      });
+
+      test('handles null fields in round-trip', () {
+        final set = WeightedWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          weight: null,
+          reps: null,
+        );
+
+        final json = set.toJson();
+        final deserialized = WeightedWorkoutSet.fromJson(json);
+
+        expect(deserialized.weight, null);
+        expect(deserialized.reps, null);
+        expect(deserialized.getVolume(), null);
       });
     });
   });

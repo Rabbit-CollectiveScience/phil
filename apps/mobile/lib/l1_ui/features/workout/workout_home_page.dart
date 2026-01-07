@@ -253,69 +253,78 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
 
         // Construct appropriate WorkoutSet based on exercise type
         if (exercise is StrengthExercise) {
-          // Parse values
+          // Parse values (allow nulls for missing data)
           final weightStr = fieldValues?['weight'];
           final repsStr = fieldValues?['reps'];
 
-          if (weightStr != null && repsStr != null) {
-            final weight = double.tryParse(weightStr) ?? 0.0;
-            final reps = int.tryParse(repsStr) ?? 0;
+          final weight = weightStr != null ? double.tryParse(weightStr) : null;
+          final reps = repsStr != null ? int.tryParse(repsStr) : null;
 
-            // Determine if it's weighted or bodyweight
-            if (exercise is BodyweightExercise && weight == 0) {
-              // Pure bodyweight
-              final workoutSet = BodyweightWorkoutSet(
-                id: uuid.v4(),
-                exerciseId: exercise.id,
-                timestamp: DateTime.now(),
-                reps: reps,
-              );
-              await recordUseCase.execute(workoutSet: workoutSet);
-            } else {
-              // Weighted (free weight, machine, or bodyweight with added weight)
-              final workoutSet = WeightedWorkoutSet(
-                id: uuid.v4(),
-                exerciseId: exercise.id,
-                timestamp: DateTime.now(),
-                weight: Weight(weight),
-                reps: reps,
-              );
-              await recordUseCase.execute(workoutSet: workoutSet);
-            }
+          // Determine if it's weighted or bodyweight
+          if (exercise is BodyweightExercise &&
+              (weight == null || weight == 0)) {
+            // Pure bodyweight (or no weight specified)
+            final workoutSet = BodyweightWorkoutSet(
+              id: uuid.v4(),
+              exerciseId: exercise.id,
+              timestamp: DateTime.now(),
+              reps: reps,
+              additionalWeight: weight != null && weight > 0
+                  ? Weight(weight)
+                  : null,
+            );
+            await recordUseCase.execute(workoutSet: workoutSet);
+          } else {
+            // Weighted (free weight, machine, or bodyweight with added weight)
+            final workoutSet = WeightedWorkoutSet(
+              id: uuid.v4(),
+              exerciseId: exercise.id,
+              timestamp: DateTime.now(),
+              weight: weight != null ? Weight(weight) : null,
+              reps: reps,
+            );
+            await recordUseCase.execute(workoutSet: workoutSet);
           }
         } else if (exercise is DistanceCardioExercise) {
-          // Parse distance and duration
+          // Parse distance and duration (allow nulls)
           final distanceStr = fieldValues?['distance'];
           final durationStr = fieldValues?['duration'];
 
-          if (distanceStr != null && durationStr != null) {
-            final distance = double.tryParse(distanceStr) ?? 0.0;
-            final durationMinutes = double.tryParse(durationStr) ?? 0.0;
+          final distance = distanceStr != null
+              ? double.tryParse(distanceStr)
+              : null;
+          final durationMinutes = durationStr != null
+              ? double.tryParse(durationStr)
+              : null;
 
-            final workoutSet = DistanceCardioWorkoutSet(
-              id: uuid.v4(),
-              exerciseId: exercise.id,
-              timestamp: DateTime.now(),
-              distance: Distance(distance * 1000), // Convert km to meters
-              duration: Duration(minutes: durationMinutes.toInt()),
-            );
-            await recordUseCase.execute(workoutSet: workoutSet);
-          }
+          final workoutSet = DistanceCardioWorkoutSet(
+            id: uuid.v4(),
+            exerciseId: exercise.id,
+            timestamp: DateTime.now(),
+            distance: distance != null
+                ? Distance(distance * 1000)
+                : null, // Convert km to meters
+            duration: durationMinutes != null
+                ? Duration(minutes: durationMinutes.toInt())
+                : null,
+          );
+          await recordUseCase.execute(workoutSet: workoutSet);
         } else if (exercise is DurationCardioExercise) {
-          // Parse duration only
+          // Parse duration only (allow null)
           final durationStr = fieldValues?['duration'];
+          final durationMinutes = durationStr != null
+              ? double.tryParse(durationStr)
+              : null;
 
-          if (durationStr != null) {
-            final durationMinutes = double.tryParse(durationStr) ?? 0.0;
-
-            final workoutSet = DurationCardioWorkoutSet(
-              id: uuid.v4(),
-              exerciseId: exercise.id,
-              timestamp: DateTime.now(),
-              duration: Duration(minutes: durationMinutes.toInt()),
-            );
-            await recordUseCase.execute(workoutSet: workoutSet);
-          }
+          final workoutSet = DurationCardioWorkoutSet(
+            id: uuid.v4(),
+            exerciseId: exercise.id,
+            timestamp: DateTime.now(),
+            duration: durationMinutes != null
+                ? Duration(minutes: durationMinutes.toInt())
+                : null,
+          );
+          await recordUseCase.execute(workoutSet: workoutSet);
         }
 
         debugPrint(

@@ -1,13 +1,13 @@
 import 'workout_set.dart';
 
 class DurationCardioWorkoutSet extends WorkoutSet {
-  final Duration duration;
+  final Duration? duration;
 
   const DurationCardioWorkoutSet({
     required super.id,
     required super.exerciseId,
     required super.timestamp,
-    required this.duration,
+    this.duration,
   });
 
   @override
@@ -33,7 +33,7 @@ class DurationCardioWorkoutSet extends WorkoutSet {
     'id': id,
     'exerciseId': exerciseId,
     'timestamp': timestamp.toIso8601String(),
-    'duration': duration.inSeconds,
+    'duration': duration?.inSeconds,
   };
 
   factory DurationCardioWorkoutSet.fromJson(Map<String, dynamic> json) {
@@ -41,7 +41,9 @@ class DurationCardioWorkoutSet extends WorkoutSet {
       id: json['id'],
       exerciseId: json['exerciseId'],
       timestamp: DateTime.parse(json['timestamp']),
-      duration: Duration(seconds: json['duration']),
+      duration: json['duration'] != null
+          ? Duration(seconds: json['duration'])
+          : null,
     );
   }
 

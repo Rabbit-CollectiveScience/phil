@@ -2,14 +2,14 @@ import '../common/weight.dart';
 import 'workout_set.dart';
 
 class BodyweightWorkoutSet extends WorkoutSet {
-  final int reps;
+  final int? reps;
   final Weight? additionalWeight;
 
   const BodyweightWorkoutSet({
     required super.id,
     required super.exerciseId,
     required super.timestamp,
-    required this.reps,
+    this.reps,
     this.additionalWeight,
   });
 

@@ -66,11 +66,11 @@ class GetTodayStatsOverviewUseCase {
     int setsWithReps = 0;
     for (final setWithDetails in workoutSetsWithDetails) {
       final set = setWithDetails.workoutSet;
-      if (set is WeightedWorkoutSet) {
-        totalReps += set.reps;
+      if (set is WeightedWorkoutSet && set.reps != null) {
+        totalReps += set.reps!;
         setsWithReps++;
-      } else if (set is BodyweightWorkoutSet) {
-        totalReps += set.reps;
+      } else if (set is BodyweightWorkoutSet && set.reps != null) {
+        totalReps += set.reps!;
         setsWithReps++;
       }
     }

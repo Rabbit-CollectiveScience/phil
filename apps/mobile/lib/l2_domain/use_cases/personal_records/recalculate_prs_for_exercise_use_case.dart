@@ -78,13 +78,14 @@ class RecalculatePRsForExerciseUseCase {
     for (final set in sets) {
       if (set is WeightedWorkoutSet) {
         // Weight PR
-        if (maxWeight == null || set.weight.kg > maxWeight) {
-          maxWeight = set.weight.kg;
+        if (set.weight != null &&
+            (maxWeight == null || set.weight!.kg > maxWeight)) {
+          maxWeight = set.weight!.kg;
           maxWeightSetId = set.id;
         }
 
         // Reps PR
-        if (maxReps == null || set.reps > maxReps) {
+        if (set.reps != null && (maxReps == null || set.reps! > maxReps)) {
           maxReps = set.reps;
           maxRepsSetId = set.id;
         }
@@ -97,7 +98,7 @@ class RecalculatePRsForExerciseUseCase {
         }
       } else if (set is BodyweightWorkoutSet) {
         // Reps PR
-        if (maxReps == null || set.reps > maxReps) {
+        if (set.reps != null && (maxReps == null || set.reps! > maxReps)) {
           maxReps = set.reps;
           maxRepsSetId = set.id;
         }
@@ -171,14 +172,16 @@ class RecalculatePRsForExerciseUseCase {
     for (final set in sets) {
       if (set is DistanceCardioWorkoutSet) {
         // Duration PR
-        if (maxDuration == null || set.duration > maxDuration) {
+        if (set.duration != null &&
+            (maxDuration == null || set.duration! > maxDuration)) {
           maxDuration = set.duration;
           maxDurationSetId = set.id;
         }
 
         // Distance PR
-        if (maxDistance == null || set.distance.meters > maxDistance) {
-          maxDistance = set.distance.meters;
+        if (set.distance != null &&
+            (maxDistance == null || set.distance!.meters > maxDistance)) {
+          maxDistance = set.distance!.meters;
           maxDistanceSetId = set.id;
         }
 
@@ -190,7 +193,8 @@ class RecalculatePRsForExerciseUseCase {
         }
       } else if (set is DurationCardioWorkoutSet) {
         // Duration PR
-        if (maxDuration == null || set.duration > maxDuration) {
+        if (set.duration != null &&
+            (maxDuration == null || set.duration! > maxDuration)) {
           maxDuration = set.duration;
           maxDurationSetId = set.id;
         }

@@ -73,12 +73,78 @@ void main() {
       final result = await useCase.execute(workoutSet: workoutSet);
 
       expect(result.id, 'set1');
-      expect((result as WeightedWorkoutSet).weight.kg, 100.0);
+      expect((result as WeightedWorkoutSet).weight!.kg, 100.0);
       expect(result.reps, 10);
 
       // Verify it was saved
       final saved = await workoutSetRepository.getById('set1');
       expect(saved, isNotNull);
+    });
+
+    test('records weighted workout set with null weight', () async {
+      final exercise = FreeWeightExercise(
+        id: 'ex1',
+        name: 'Bench Press',
+        description: 'Test',
+        isCustom: false,
+        targetMuscles: [MuscleGroup.chest],
+      );
+      await exerciseRepository.save(exercise);
+
+      final useCase = RecordWorkoutSetUseCase(
+        workoutSetRepository,
+        prRepository: prRepository,
+        exerciseRepository: exerciseRepository,
+      );
+
+      final workoutSet = WeightedWorkoutSet(
+        id: 'set_null_weight',
+        exerciseId: 'ex1',
+        timestamp: DateTime.now(),
+        weight: null,
+        reps: 10,
+      );
+
+      final result = await useCase.execute(workoutSet: workoutSet);
+
+      expect(result.id, 'set_null_weight');
+      expect((result as WeightedWorkoutSet).weight, null);
+      expect(result.reps, 10);
+
+      // Verify it was saved
+      final saved = await workoutSetRepository.getById('set_null_weight');
+      expect(saved, isNotNull);
+    });
+
+    test('records weighted workout set with null reps', () async {
+      final exercise = FreeWeightExercise(
+        id: 'ex1',
+        name: 'Bench Press',
+        description: 'Test',
+        isCustom: false,
+        targetMuscles: [MuscleGroup.chest],
+      );
+      await exerciseRepository.save(exercise);
+
+      final useCase = RecordWorkoutSetUseCase(
+        workoutSetRepository,
+        prRepository: prRepository,
+        exerciseRepository: exerciseRepository,
+      );
+
+      final workoutSet = WeightedWorkoutSet(
+        id: 'set_null_reps',
+        exerciseId: 'ex1',
+        timestamp: DateTime.now(),
+        weight: Weight(100.0),
+        reps: null,
+      );
+
+      final result = await useCase.execute(workoutSet: workoutSet);
+
+      expect(result.id, 'set_null_reps');
+      expect((result as WeightedWorkoutSet).weight!.kg, 100.0);
+      expect(result.reps, null);
     });
 
     test('records bodyweight workout set successfully', () async {
@@ -109,6 +175,36 @@ void main() {
 
       expect(result.id, 'set2');
       expect((result as BodyweightWorkoutSet).reps, 15);
+    });
+
+    test('records bodyweight workout set with null reps', () async {
+      final exercise = BodyweightExercise(
+        id: 'ex2',
+        name: 'Push-up',
+        description: 'Test',
+        isCustom: false,
+        targetMuscles: [MuscleGroup.chest],
+        canAddWeight: true,
+      );
+      await exerciseRepository.save(exercise);
+
+      final useCase = RecordWorkoutSetUseCase(
+        workoutSetRepository,
+        prRepository: prRepository,
+        exerciseRepository: exerciseRepository,
+      );
+
+      final workoutSet = BodyweightWorkoutSet(
+        id: 'set_null_reps_bw',
+        exerciseId: 'ex2',
+        timestamp: DateTime.now(),
+        reps: null,
+      );
+
+      final result = await useCase.execute(workoutSet: workoutSet);
+
+      expect(result.id, 'set_null_reps_bw');
+      expect((result as BodyweightWorkoutSet).reps, null);
     });
   });
 

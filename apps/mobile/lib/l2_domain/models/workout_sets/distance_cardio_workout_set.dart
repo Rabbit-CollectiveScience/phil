@@ -2,22 +2,23 @@ import '../common/distance.dart';
 import 'workout_set.dart';
 
 class DistanceCardioWorkoutSet extends WorkoutSet {
-  final Duration duration;
-  final Distance distance;
+  final Duration? duration;
+  final Distance? distance;
 
   const DistanceCardioWorkoutSet({
     required super.id,
     required super.exerciseId,
     required super.timestamp,
-    required this.duration,
-    required this.distance,
+    this.duration,
+    this.distance,
   });
 
   /// Returns pace in minutes per kilometer
   double getPace() {
-    if (distance.meters == 0) return 0.0;
-    final km = distance.getInKm();
-    final minutes = duration.inSeconds / 60.0;
+    if (distance == null || duration == null || distance!.meters == 0)
+      return 0.0;
+    final km = distance!.getInKm();
+    final minutes = duration!.inSeconds / 60.0;
     return minutes / km;
   }
 
@@ -46,8 +47,8 @@ class DistanceCardioWorkoutSet extends WorkoutSet {
     'id': id,
     'exerciseId': exerciseId,
     'timestamp': timestamp.toIso8601String(),
-    'duration': duration.inSeconds,
-    'distance': distance.toJson(),
+    'duration': duration?.inSeconds,
+    'distance': distance?.toJson(),
   };
 
   factory DistanceCardioWorkoutSet.fromJson(Map<String, dynamic> json) {
@@ -55,8 +56,12 @@ class DistanceCardioWorkoutSet extends WorkoutSet {
       id: json['id'],
       exerciseId: json['exerciseId'],
       timestamp: DateTime.parse(json['timestamp']),
-      duration: Duration(seconds: json['duration']),
-      distance: Distance.fromJson(json['distance']),
+      duration: json['duration'] != null
+          ? Duration(seconds: json['duration'])
+          : null,
+      distance: json['distance'] != null
+          ? Distance.fromJson(json['distance'])
+          : null,
     );
   }
 

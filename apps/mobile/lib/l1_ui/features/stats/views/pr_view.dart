@@ -143,20 +143,31 @@ class _PRViewState extends State<PRView> {
 
   String _formatWorkoutSetValue(WorkoutSet workoutSet) {
     if (workoutSet is WeightedWorkoutSet) {
-      return '${workoutSet.weight.kg.toStringAsFixed(1)} kg × ${workoutSet.reps}';
+      final weightStr = workoutSet.weight != null
+          ? '${workoutSet.weight!.kg.toStringAsFixed(1)} kg'
+          : '-- kg';
+      final repsStr = workoutSet.reps != null ? '${workoutSet.reps}' : '--';
+      return '$weightStr × $repsStr';
     } else if (workoutSet is BodyweightWorkoutSet) {
-      final repsText = '${workoutSet.reps} reps';
+      final repsStr = workoutSet.reps != null ? '${workoutSet.reps}' : '--';
+      final repsText = '$repsStr reps';
       if (workoutSet.additionalWeight != null) {
         return '$repsText (+${workoutSet.additionalWeight!.kg.toStringAsFixed(1)} kg)';
       }
       return repsText;
     } else if (workoutSet is DistanceCardioWorkoutSet) {
-      final distanceKm = workoutSet.distance.getInKm();
-      final durationMin = workoutSet.duration.inMinutes;
-      return '${distanceKm.toStringAsFixed(1)} km · $durationMin min';
+      final distanceStr = workoutSet.distance != null
+          ? '${workoutSet.distance!.getInKm().toStringAsFixed(1)} km'
+          : '-- km';
+      final durationStr = workoutSet.duration != null
+          ? '${workoutSet.duration!.inMinutes} min'
+          : '-- min';
+      return '$distanceStr · $durationStr';
     } else if (workoutSet is DurationCardioWorkoutSet) {
-      final durationMin = workoutSet.duration.inMinutes;
-      return '$durationMin min';
+      final durationStr = workoutSet.duration != null
+          ? '${workoutSet.duration!.inMinutes} min'
+          : '-- min';
+      return durationStr;
     }
     return 'No data';
   }

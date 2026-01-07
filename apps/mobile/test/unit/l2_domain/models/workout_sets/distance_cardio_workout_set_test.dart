@@ -20,7 +20,7 @@ void main() {
         expect(set.exerciseId, 'exercise1');
         expect(set.timestamp, testDate);
         expect(set.duration, const Duration(minutes: 30));
-        expect(set.distance.meters, 5000.0);
+        expect(set.distance!.meters, 5000.0);
       });
 
       test('creates set with zero duration', () {
@@ -44,7 +44,33 @@ void main() {
           distance: Distance(0.0),
         );
 
-        expect(set.distance.meters, 0.0);
+        expect(set.distance!.meters, 0.0);
+      });
+
+      test('creates set with null duration', () {
+        final set = DistanceCardioWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: null,
+          distance: Distance(5000.0),
+        );
+
+        expect(set.duration, null);
+        expect(set.distance!.meters, 5000.0);
+      });
+
+      test('creates set with null distance', () {
+        final set = DistanceCardioWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: const Duration(minutes: 30),
+          distance: null,
+        );
+
+        expect(set.duration, const Duration(minutes: 30));
+        expect(set.distance, null);
       });
     });
 
@@ -108,6 +134,30 @@ void main() {
 
         expect(set.getPace(), closeTo(6.4, 0.1));
       });
+
+      test('returns 0 pace for null duration', () {
+        final set = DistanceCardioWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: null,
+          distance: Distance(5000.0),
+        );
+
+        expect(set.getPace(), 0.0);
+      });
+
+      test('returns 0 pace for null distance', () {
+        final set = DistanceCardioWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: const Duration(minutes: 30),
+          distance: null,
+        );
+
+        expect(set.getPace(), 0.0);
+      });
     });
 
     group('getVolume', () {
@@ -161,8 +211,8 @@ void main() {
         expect(set.id, '1');
         expect(set.exerciseId, 'exercise1');
         expect(set.timestamp, testDate);
-        expect(set.duration.inSeconds, 1800);
-        expect(set.distance.meters, 5000.0);
+        expect(set.duration!.inSeconds, 1800);
+        expect(set.distance!.meters, 5000.0);
       });
     });
 
@@ -182,9 +232,9 @@ void main() {
         );
 
         expect(updated.duration, const Duration(minutes: 25));
-        expect(updated.distance.meters, 6000.0);
+        expect(updated.distance!.meters, 6000.0);
         expect(set.duration, const Duration(minutes: 30));
-        expect(set.distance.meters, 5000.0);
+        expect(set.distance!.meters, 5000.0);
       });
     });
 

@@ -105,9 +105,13 @@ class GetWeeklyStatsUseCase {
           typeStats[type]!['volume'] += volume;
         }
       } else if (set is DistanceCardioWorkoutSet) {
-        typeStats[type]!['duration'] += set.duration.inSeconds.toDouble();
+        if (set.duration != null) {
+          typeStats[type]!['duration'] += set.duration!.inSeconds.toDouble();
+        }
       } else if (set is DurationCardioWorkoutSet) {
-        typeStats[type]!['duration'] += set.duration.inSeconds.toDouble();
+        if (set.duration != null) {
+          typeStats[type]!['duration'] += set.duration!.inSeconds.toDouble();
+        }
       }
     }
 

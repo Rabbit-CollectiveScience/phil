@@ -54,15 +54,16 @@ class GetTodayExerciseDetailsUseCase {
             totalVolume = (totalVolume ?? 0) + volume;
           }
 
-          if (maxWeight == null || set.weight.kg > maxWeight) {
-            maxWeight = set.weight.kg;
+          if (set.weight != null &&
+              (maxWeight == null || set.weight!.kg > maxWeight)) {
+            maxWeight = set.weight!.kg;
           }
 
-          if (maxReps == null || set.reps > maxReps) {
+          if (set.reps != null && (maxReps == null || set.reps! > maxReps)) {
             maxReps = set.reps;
           }
         } else if (set is BodyweightWorkoutSet) {
-          if (maxReps == null || set.reps > maxReps) {
+          if (set.reps != null && (maxReps == null || set.reps! > maxReps)) {
             maxReps = set.reps;
           }
         }

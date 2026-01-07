@@ -2,19 +2,20 @@ import '../common/weight.dart';
 import 'workout_set.dart';
 
 class WeightedWorkoutSet extends WorkoutSet {
-  final Weight weight;
-  final int reps;
+  final Weight? weight;
+  final int? reps;
 
   const WeightedWorkoutSet({
     required super.id,
     required super.exerciseId,
     required super.timestamp,
-    required this.weight,
-    required this.reps,
+    this.weight,
+    this.reps,
   });
 
   @override
-  double? getVolume() => weight.kg * reps;
+  double? getVolume() =>
+      (weight != null && reps != null) ? weight!.kg * reps! : null;
 
   WeightedWorkoutSet copyWith({
     String? id,
@@ -38,7 +39,7 @@ class WeightedWorkoutSet extends WorkoutSet {
     'id': id,
     'exerciseId': exerciseId,
     'timestamp': timestamp.toIso8601String(),
-    'weight': weight.toJson(),
+    'weight': weight?.toJson(),
     'reps': reps,
   };
 
@@ -47,7 +48,7 @@ class WeightedWorkoutSet extends WorkoutSet {
       id: json['id'],
       exerciseId: json['exerciseId'],
       timestamp: DateTime.parse(json['timestamp']),
-      weight: Weight.fromJson(json['weight']),
+      weight: json['weight'] != null ? Weight.fromJson(json['weight']) : null,
       reps: json['reps'],
     );
   }

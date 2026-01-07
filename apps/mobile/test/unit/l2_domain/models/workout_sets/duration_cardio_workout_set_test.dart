@@ -39,7 +39,18 @@ void main() {
           duration: const Duration(hours: 2, minutes: 30),
         );
 
-        expect(set.duration.inMinutes, 150);
+        expect(set.duration!.inMinutes, 150);
+      });
+
+      test('creates set with null duration', () {
+        final set = DurationCardioWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: null,
+        );
+
+        expect(set.duration, null);
       });
     });
 
@@ -86,6 +97,19 @@ void main() {
 
         expect(json['duration'], 4530);
       });
+
+      test('serializes null duration to JSON', () {
+        final set = DurationCardioWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: null,
+        );
+
+        final json = set.toJson();
+
+        expect(json['duration'], null);
+      });
     });
 
     group('fromJson', () {
@@ -103,7 +127,7 @@ void main() {
         expect(set.id, '1');
         expect(set.exerciseId, 'exercise1');
         expect(set.timestamp, testDate);
-        expect(set.duration.inSeconds, 2700);
+        expect(set.duration!.inSeconds, 2700);
       });
     });
 
