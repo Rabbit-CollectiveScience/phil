@@ -25,6 +25,7 @@ import 'l3_data/repositories/workout_set_repository.dart';
 import 'l3_data/repositories/preferences_repository.dart';
 import 'l3_data/repositories/local_preferences_repository.dart';
 import 'l3_data/repositories/personal_record_repository.dart';
+import 'l3_data/adapters/exercise_seeder.dart';
 
 // Global GetIt instance for dependency injection
 final getIt = GetIt.instance;
@@ -55,6 +56,11 @@ void main() async {
 
   // Setup dependency injection
   _setupDependencies(sharedPreferences);
+
+  // Seed exercises on first launch
+  final exerciseRepo = getIt<ExerciseRepository>();
+  final seeder = ExerciseSeeder(exerciseRepo);
+  await seeder.seedIfEmpty();
 
   runApp(const MyApp());
 }
