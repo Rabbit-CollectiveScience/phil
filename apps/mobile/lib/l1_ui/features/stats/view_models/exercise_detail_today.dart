@@ -36,7 +36,7 @@ class ExerciseDetailToday {
     return ExerciseDetailToday(
       name: map['exerciseName'] as String,
       sets: map['setCount'] as int,
-      volumeToday: map['totalVolume'] != null 
+      volumeToday: map['totalVolume'] != null
           ? (map['totalVolume'] as num).toDouble()
           : 0.0,
       maxWeightToday: map['maxWeight'] != null
