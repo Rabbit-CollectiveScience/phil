@@ -60,7 +60,7 @@ class DistanceCardioWorkoutSet extends WorkoutSet {
           ? Duration(seconds: json['duration'])
           : null,
       distance: json['distance'] != null
-          ? Distance.fromJson(json['distance'])
+          ? Distance.fromJson(Map<String, dynamic>.from(json['distance']))
           : null,
     );
   }

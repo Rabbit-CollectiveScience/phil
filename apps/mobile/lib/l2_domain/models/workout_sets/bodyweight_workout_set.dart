@@ -52,7 +52,7 @@ class BodyweightWorkoutSet extends WorkoutSet {
       timestamp: DateTime.parse(json['timestamp']),
       reps: json['reps'],
       additionalWeight: json['additionalWeight'] != null
-          ? Weight.fromJson(json['additionalWeight'])
+          ? Weight.fromJson(Map<String, dynamic>.from(json['additionalWeight']))
           : null,
     );
   }
