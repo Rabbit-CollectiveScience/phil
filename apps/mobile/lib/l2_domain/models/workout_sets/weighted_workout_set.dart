@@ -48,8 +48,8 @@ class WeightedWorkoutSet extends WorkoutSet {
       id: json['id'],
       exerciseId: json['exerciseId'],
       timestamp: DateTime.parse(json['timestamp']),
-      weight: json['weight'] != null 
-          ? Weight.fromJson(Map<String, dynamic>.from(json['weight'])) 
+      weight: json['weight'] != null
+          ? Weight.fromJson(Map<String, dynamic>.from(json['weight']))
           : null,
       reps: json['reps'],
     );

@@ -28,7 +28,9 @@ class MockDataGenerator {
     final now = DateTime.now();
 
     // Group exercises by type
-    final strengthExercises = exercises.whereType<StrengthExercise>().toList();
+    final strengthExercises = exercises.where(
+      (e) => e is StrengthExercise,
+    ).toList();
     final cardioExercises = exercises
         .where(
           (e) => e is DistanceCardioExercise || e is DurationCardioExercise,
@@ -43,8 +45,8 @@ class MockDataGenerator {
     final mainStrength = strengthExercises.take(8).toList();
     final mainCardio = cardioExercises.take(3).toList();
 
-    // Generate 3 months of workout data
-    for (int daysAgo = 90; daysAgo >= 0; daysAgo--) {
+    // Generate 30 days of workout data (excluding today)
+    for (int daysAgo = 30; daysAgo >= 1; daysAgo--) {
       final date = now.subtract(Duration(days: daysAgo));
 
       // 3-4 workouts per week
@@ -76,7 +78,7 @@ class MockDataGenerator {
     int daysAgo,
   ) {
     final sets = <WorkoutSet>[];
-    final baseProgress = (90 - daysAgo) / 90.0; // 0 to 1 over time
+    final baseProgress = (30 - daysAgo) / 30.0; // 0 to 1 over time
 
     // Generate 3 sets per exercise
     for (int setNum = 0; setNum < 3; setNum++) {
@@ -136,7 +138,7 @@ class MockDataGenerator {
     int daysAgo,
   ) {
     final timestamp = date.add(Duration(minutes: 10));
-    final baseProgress = (90 - daysAgo) / 90.0;
+    final baseProgress = (30 - daysAgo) / 30.0;
 
     if (exercise is DistanceCardioExercise) {
       // Distance cardio with improvement over time
