@@ -120,7 +120,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
       // Save to temporary file
       final directory = await getTemporaryDirectory();
-      final file = File('${directory.path}/phil_backup_${DateTime.now().millisecondsSinceEpoch}.json');
+      final file = File(
+        '${directory.path}/phil_backup_${DateTime.now().millisecondsSinceEpoch}.json',
+      );
       await file.writeAsString(jsonString);
 
       if (mounted) {
@@ -129,10 +131,9 @@ class _SettingsPageState extends State<SettingsPage> {
         });
 
         // Share the file
-        final result = await Share.shareXFiles(
-          [XFile(file.path)],
-          text: 'Phil Workout Data Backup',
-        );
+        final result = await Share.shareXFiles([
+          XFile(file.path),
+        ], text: 'Phil Workout Data Backup');
 
         if (mounted && result.status == ShareResultStatus.success) {
           setState(() {
@@ -190,10 +191,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text(
-                'Import',
-                style: TextStyle(color: Colors.blue),
-              ),
+              child: const Text('Import', style: TextStyle(color: Colors.blue)),
             ),
           ],
         ),

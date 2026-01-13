@@ -7,9 +7,7 @@ import 'clear_all_data_use_case.dart';
 class ImportDataUseCase {
   final ClearAllDataUseCase _clearAllDataUseCase;
 
-  ImportDataUseCase(
-    this._clearAllDataUseCase,
-  );
+  ImportDataUseCase(this._clearAllDataUseCase);
 
   /// Execute: Import data from JSON string
   /// Returns a map with import summary: {workoutSets: count, personalRecords: count, exercises: count}

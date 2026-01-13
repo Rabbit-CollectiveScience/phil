@@ -12,6 +12,7 @@ import 'widgets/floating_card_entrance.dart';
 import 'widgets/exercise_filter_type_button.dart';
 import 'completed_list_page.dart';
 import '../stats/stats_page.dart';
+import '../settings/settings_page.dart';
 import 'exercise_filter_type_page.dart';
 import '../../../l2_domain/use_cases/exercises/get_recommended_exercises_use_case.dart';
 import '../../../l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
@@ -746,6 +747,42 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                           // User returned - reload counter from database
                           await _loadTodayCount();
                         },
+                      ),
+                    ),
+                    // Settings icon below dashboard icon
+                    Positioned(
+                      top: _topIconsPadding + _iconSize + 16,
+                      right: _iconPadding,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const SettingsPage(),
+                            ),
+                          );
+                          // Reload counter in case data was cleared/imported
+                          await _loadTodayCount();
+                        },
+                        child: Container(
+                          width: _iconSize,
+                          height: _iconSize,
+                          decoration: BoxDecoration(
+                            color: AppColors.boldGrey,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.pureBlack.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.settings,
+                            color: AppColors.offWhite,
+                            size: _iconSize * 0.5,
+                          ),
+                        ),
                       ),
                     ),
                     // Completion counter at bottom

@@ -174,9 +174,7 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
     ),
   );
   getIt.registerFactory<ImportDataUseCase>(
-    () => ImportDataUseCase(
-      getIt<ClearAllDataUseCase>(),
-    ),
+    () => ImportDataUseCase(getIt<ClearAllDataUseCase>()),
   );
 }
 
