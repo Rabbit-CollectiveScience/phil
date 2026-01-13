@@ -28,9 +28,9 @@ class MockDataGenerator {
     final now = DateTime.now();
 
     // Group exercises by type
-    final strengthExercises = exercises.where(
-      (e) => e is StrengthExercise,
-    ).toList();
+    final strengthExercises = exercises
+        .where((e) => e is StrengthExercise)
+        .toList();
     final cardioExercises = exercises
         .where(
           (e) => e is DistanceCardioExercise || e is DurationCardioExercise,
