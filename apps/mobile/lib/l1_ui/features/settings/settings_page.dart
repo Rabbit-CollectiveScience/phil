@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:share_plus/share_plus.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import '../../../l2_domain/use_cases/dev/add_mock_data_use_case.dart';
 import '../../../l2_domain/use_cases/dev/clear_all_data_use_case.dart';
+import '../../../l2_domain/use_cases/dev/export_data_use_case.dart';
+import '../../../l2_domain/use_cases/dev/import_data_use_case.dart';
 import '../../../main.dart';
 import '../../shared/theme/app_colors.dart';
 
@@ -14,6 +20,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _isAddingMockData = false;
   bool _isClearingData = false;
+  bool _isExporting = false;
+  bool _isImporting = false;
   String? _statusMessage;
 
   Future<void> _addMockData() async {
@@ -95,6 +103,124 @@ class _SettingsPageState extends State<SettingsPage> {
         setState(() {
           _isClearingData = false;
           _statusMessage = 'Error: ${e.toString()}';
+        });
+      }
+    }
+  }
+
+  Future<void> _exportData() async {
+    setState(() {
+      _isExporting = true;
+      _statusMessage = null;
+    });
+
+    try {
+      final exportUseCase = getIt<ExportDataUseCase>();
+      final jsonString = await exportUseCase.execute();
+
+      // Save to temporary file
+      final directory = await getTemporaryDirectory();
+      final file = File('${directory.path}/phil_backup_${DateTime.now().millisecondsSinceEpoch}.json');
+      await file.writeAsString(jsonString);
+
+      if (mounted) {
+        setState(() {
+          _isExporting = false;
+        });
+
+        // Share the file
+        final result = await Share.shareXFiles(
+          [XFile(file.path)],
+          text: 'Phil Workout Data Backup',
+        );
+
+        if (mounted && result.status == ShareResultStatus.success) {
+          setState(() {
+            _statusMessage = 'Data exported successfully';
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isExporting = false;
+          _statusMessage = 'Export error: ${e.toString()}';
+        });
+      }
+    }
+  }
+
+  Future<void> _importData() async {
+    // Pick file
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+    );
+
+    if (result == null || result.files.single.path == null) return;
+
+    final filePath = result.files.single.path!;
+
+    try {
+      // Read file
+      final file = File(filePath);
+      final jsonString = await file.readAsString();
+
+      // Show confirmation dialog
+      if (!mounted) return;
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: AppColors.boldGrey,
+          title: const Text(
+            'Import Data',
+            style: TextStyle(color: AppColors.offWhite),
+          ),
+          content: const Text(
+            'This will replace all your current data with the imported backup. Continue?',
+            style: TextStyle(color: AppColors.offWhite),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: AppColors.offWhite),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text(
+                'Import',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+          ],
+        ),
+      );
+
+      if (confirmed != true) return;
+
+      setState(() {
+        _isImporting = true;
+        _statusMessage = null;
+      });
+
+      final importUseCase = getIt<ImportDataUseCase>();
+      final importResult = await importUseCase.execute(jsonString);
+
+      if (mounted) {
+        setState(() {
+          _isImporting = false;
+          _statusMessage =
+              'Imported ${importResult['workoutSets']} sets, ${importResult['personalRecords']} PRs, ${importResult['exercises']} exercises';
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isImporting = false;
+          _statusMessage = 'Import error: ${e.toString()}';
         });
       }
     }
@@ -233,6 +359,92 @@ class _SettingsPageState extends State<SettingsPage> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w900,
                                     color: Colors.red,
+                                    letterSpacing: 1.0,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Export Data Button
+                    GestureDetector(
+                      onTap: _isExporting ? null : _exportData,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: _isExporting
+                              ? AppColors.boldGrey.withOpacity(0.5)
+                              : AppColors.boldGrey,
+                          borderRadius: BorderRadius.zero,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.pureBlack.withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: _isExporting
+                              ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.offWhite,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  'EXPORT DATA',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.offWhite,
+                                    letterSpacing: 1.0,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Import Data Button
+                    GestureDetector(
+                      onTap: _isImporting ? null : _importData,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: _isImporting
+                              ? AppColors.boldGrey.withOpacity(0.5)
+                              : AppColors.boldGrey,
+                          borderRadius: BorderRadius.zero,
+                          border: Border.all(
+                            color: Colors.blue.withOpacity(0.3),
+                            width: 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.pureBlack.withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: _isImporting
+                              ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  'IMPORT DATA',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.blue,
                                     letterSpacing: 1.0,
                                   ),
                                 ),

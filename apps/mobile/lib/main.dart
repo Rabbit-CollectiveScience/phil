@@ -21,6 +21,8 @@ import 'l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
 import 'l2_domain/use_cases/personal_records/recalculate_prs_for_exercise_use_case.dart';
 import 'l2_domain/use_cases/dev/add_mock_data_use_case.dart';
 import 'l2_domain/use_cases/dev/clear_all_data_use_case.dart';
+import 'l2_domain/use_cases/dev/export_data_use_case.dart';
+import 'l2_domain/use_cases/dev/import_data_use_case.dart';
 import 'l3_data/repositories/exercise_repository.dart';
 import 'l3_data/repositories/workout_set_repository.dart';
 import 'l3_data/repositories/preferences_repository.dart';
@@ -162,6 +164,18 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
     () => ClearAllDataUseCase(
       getIt<WorkoutSetRepository>(),
       getIt<PersonalRecordRepository>(),
+    ),
+  );
+  getIt.registerFactory<ExportDataUseCase>(
+    () => ExportDataUseCase(
+      getIt<WorkoutSetRepository>(),
+      getIt<PersonalRecordRepository>(),
+      getIt<ExerciseRepository>(),
+    ),
+  );
+  getIt.registerFactory<ImportDataUseCase>(
+    () => ImportDataUseCase(
+      getIt<ClearAllDataUseCase>(),
     ),
   );
 }
