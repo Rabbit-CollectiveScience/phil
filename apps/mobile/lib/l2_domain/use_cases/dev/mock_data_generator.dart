@@ -45,26 +45,23 @@ class MockDataGenerator {
     final mainStrength = strengthExercises.take(8).toList();
     final mainCardio = cardioExercises.take(3).toList();
 
-    // Generate 30 days of workout data (excluding today)
-    for (int daysAgo = 30; daysAgo >= 1; daysAgo--) {
+    // Generate 90 days of workout data (including today) - every day
+    for (int daysAgo = 90; daysAgo >= 0; daysAgo--) {
       final date = now.subtract(Duration(days: daysAgo));
 
-      // 3-4 workouts per week
-      if (_random.nextDouble() < 0.5 && date.weekday != DateTime.sunday) {
-        final isCardioDay = daysAgo % 3 == 0;
+      final isCardioDay = daysAgo % 3 == 0;
 
-        if (isCardioDay && mainCardio.isNotEmpty) {
-          // Cardio day
-          final cardioCount = 2 + _random.nextInt(2);
-          for (int i = 0; i < cardioCount && i < mainCardio.length; i++) {
-            workoutSets.add(_generateCardioSet(mainCardio[i], date, daysAgo));
-          }
-        } else if (mainStrength.isNotEmpty) {
-          // Strength day: 4 exercises, 3 sets each
-          final exercisesTodo = mainStrength.take(4).toList();
-          for (final exercise in exercisesTodo) {
-            workoutSets.addAll(_generateStrengthSets(exercise, date, daysAgo));
-          }
+      if (isCardioDay && mainCardio.isNotEmpty) {
+        // Cardio day
+        final cardioCount = 2 + _random.nextInt(2);
+        for (int i = 0; i < cardioCount && i < mainCardio.length; i++) {
+          workoutSets.add(_generateCardioSet(mainCardio[i], date, daysAgo));
+        }
+      } else if (mainStrength.isNotEmpty) {
+        // Strength day: 4 exercises, 3 sets each
+        final exercisesTodo = mainStrength.take(4).toList();
+        for (final exercise in exercisesTodo) {
+          workoutSets.addAll(_generateStrengthSets(exercise, date, daysAgo));
         }
       }
     }
@@ -78,7 +75,7 @@ class MockDataGenerator {
     int daysAgo,
   ) {
     final sets = <WorkoutSet>[];
-    final baseProgress = (30 - daysAgo) / 30.0; // 0 to 1 over time
+    final baseProgress = (90 - daysAgo) / 90.0; // 0 to 1 over time
 
     // Generate 3 sets per exercise
     for (int setNum = 0; setNum < 3; setNum++) {
@@ -138,7 +135,7 @@ class MockDataGenerator {
     int daysAgo,
   ) {
     final timestamp = date.add(Duration(minutes: 10));
-    final baseProgress = (30 - daysAgo) / 30.0;
+    final baseProgress = (90 - daysAgo) / 90.0;
 
     if (exercise is DistanceCardioExercise) {
       // Distance cardio with improvement over time

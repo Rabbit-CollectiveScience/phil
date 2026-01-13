@@ -26,9 +26,6 @@ class ClearAllDataUseCase {
     await _workoutSetRepository.deleteAll();
     await _personalRecordRepository.deleteAll();
 
-    return {
-      'workoutSets': workoutSetCount,
-      'personalRecords': prCount,
-    };
+    return {'workoutSets': workoutSetCount, 'personalRecords': prCount};
   }
 }
