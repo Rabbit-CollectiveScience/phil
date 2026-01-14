@@ -12,11 +12,13 @@ import '../../../../l2_domain/models/exercises/strength_exercise.dart';
 import '../../../../l2_domain/models/exercises/bodyweight_exercise.dart';
 import '../../../../l2_domain/models/exercises/free_weight_exercise.dart';
 import '../../../../l2_domain/models/exercises/machine_exercise.dart';
+import '../../../../l2_domain/models/exercises/isometric_exercise.dart';
 import '../../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
 import '../../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
 import '../../../../l2_domain/models/workout_sets/workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/isometric_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
 import '../../../../l2_domain/models/common/weight.dart';
@@ -626,7 +628,13 @@ class _AddSetDialogState extends State<_AddSetDialog> {
 
       // Create controllers based on exercise type
       _fieldControllers.clear();
-      if (exercise is StrengthExercise) {
+      if (exercise is IsometricExercise) {
+        _fieldControllers['duration'] = TextEditingController();
+        _fieldControllers['weight'] = TextEditingController();
+      } else if (exercise is BodyweightExercise) {
+        _fieldControllers['reps'] = TextEditingController();
+        _fieldControllers['weight'] = TextEditingController();
+      } else if (exercise is StrengthExercise) {
         _fieldControllers['weight'] = TextEditingController();
         _fieldControllers['reps'] = TextEditingController();
       } else if (exercise is DistanceCardioExercise) {
@@ -673,7 +681,47 @@ class _AddSetDialogState extends State<_AddSetDialog> {
 
     widgets.add(const SizedBox(height: 20));
 
-    if (exercise is StrengthExercise) {
+    if (exercise is IsometricExercise) {
+      // Duration field
+      widgets.add(
+        _buildInputField(
+          label: 'DURATION',
+          controller: _fieldControllers['duration']!,
+          hint: 'Enter duration',
+          suffix: 'sec',
+        ),
+      );
+
+      // Weight field
+      widgets.add(
+        _buildInputField(
+          label: 'WEIGHT',
+          controller: _fieldControllers['weight']!,
+          hint: 'Enter weight (optional)',
+          suffix: 'kg',
+        ),
+      );
+    } else if (exercise is BodyweightExercise) {
+      // Reps field
+      widgets.add(
+        _buildInputField(
+          label: 'REPS',
+          controller: _fieldControllers['reps']!,
+          hint: 'Enter reps',
+          suffix: null,
+        ),
+      );
+
+      // Weight field (optional additional weight)
+      widgets.add(
+        _buildInputField(
+          label: 'WEIGHT',
+          controller: _fieldControllers['weight']!,
+          hint: 'Enter additional weight (optional)',
+          suffix: 'kg',
+        ),
+      );
+    } else if (exercise is StrengthExercise) {
       // Weight field
       widgets.add(
         _buildInputField(
@@ -935,11 +983,13 @@ class _AddSetDialogState extends State<_AddSetDialog> {
 
                       // Generate field preview based on exercise type
                       String fieldPreview = '';
-                      if (exercise is FreeWeightExercise ||
+                      if (exercise is IsometricExercise) {
+                        fieldPreview = 'sec · kg';
+                      } else if (exercise is FreeWeightExercise ||
                           exercise is MachineExercise) {
                         fieldPreview = 'kg · reps';
                       } else if (exercise is BodyweightExercise) {
-                        fieldPreview = 'reps';
+                        fieldPreview = 'reps · kg';
                       } else if (exercise is DistanceCardioExercise) {
                         fieldPreview = 'km · min';
                       } else if (exercise is DurationCardioExercise) {
@@ -1038,7 +1088,29 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                               final exercise = _selectedExercise!;
                               final WorkoutSet workoutSet;
 
-                              if (exercise is FreeWeightExercise ||
+                              if (exercise is IsometricExercise) {
+                                final durationText = _fieldControllers['duration']!
+                                    .text
+                                    .trim();
+                                final weightText = _fieldControllers['weight']
+                                    ?.text
+                                    .trim();
+
+                                final duration = durationText.isNotEmpty
+                                    ? Duration(seconds: int.parse(durationText))
+                                    : null;
+                                final weight = weightText != null && weightText.isNotEmpty
+                                    ? Weight(double.parse(weightText))
+                                    : null;
+
+                                workoutSet = IsometricWorkoutSet(
+                                  id: const Uuid().v4(),
+                                  exerciseId: exercise.id,
+                                  timestamp: widget.selectedDate,
+                                  duration: duration,
+                                  weight: weight,
+                                );
+                              } else if (exercise is FreeWeightExercise ||
                                   exercise is MachineExercise) {
                                 final weightText = _fieldControllers['weight']!
                                     .text

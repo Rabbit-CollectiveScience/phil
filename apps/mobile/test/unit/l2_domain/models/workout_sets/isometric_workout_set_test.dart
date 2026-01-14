@@ -1,12 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/models/workout_sets/isometric_workout_set.dart';
+import 'package:phil/l2_domain/models/common/weight.dart';
 
 void main() {
   group('IsometricWorkoutSet', () {
     final testDate = DateTime(2024, 1, 1, 12, 0);
 
     group('constructor', () {
-      test('creates IsometricWorkoutSet with all required fields', () {
+      test('creates IsometricWorkoutSet with duration only', () {
         final set = IsometricWorkoutSet(
           id: '1',
           exerciseId: 'exercise1',
@@ -18,6 +19,46 @@ void main() {
         expect(set.exerciseId, 'exercise1');
         expect(set.timestamp, testDate);
         expect(set.duration, const Duration(seconds: 60));
+        expect(set.weight, isNull);
+      });
+
+      test('creates IsometricWorkoutSet with duration and weight', () {
+        final set = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: const Duration(seconds: 45),
+          weight: Weight(10.0),
+        );
+
+        expect(set.duration, const Duration(seconds: 45));
+        expect(set.weight?.kg, 10.0);
+      });
+
+      test('creates IsometricWorkoutSet with null duration', () {
+        final set = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: null,
+          weight: Weight(5.0),
+        );
+
+        expect(set.duration, isNull);
+        expect(set.weight?.kg, 5.0);
+      });
+
+      test('creates IsometricWorkoutSet with all null values', () {
+        final set = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: null,
+          weight: null,
+        );
+
+        expect(set.duration, isNull);
+        expect(set.weight, isNull);
       });
 
       test('creates IsometricWorkoutSet with zero duration', () {
@@ -39,7 +80,7 @@ void main() {
           duration: const Duration(minutes: 5, seconds: 30),
         );
 
-        expect(set.duration.inSeconds, 330);
+        expect(set.duration!.inSeconds, 330);
       });
 
       test('creates IsometricWorkoutSet with milliseconds', () {
@@ -50,7 +91,7 @@ void main() {
           duration: const Duration(seconds: 30, milliseconds: 500),
         );
 
-        expect(set.duration.inMilliseconds, 30500);
+        expect(set.duration!.inMilliseconds, 30500);
       });
     });
 
@@ -61,6 +102,18 @@ void main() {
           exerciseId: 'exercise1',
           timestamp: testDate,
           duration: const Duration(seconds: 60),
+        );
+
+        expect(set.getVolume(), isNull);
+      });
+
+      test('returns null even with weight', () {
+        final set = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: const Duration(seconds: 60),
+          weight: Weight(10.0),
         );
 
         expect(set.getVolume(), isNull);
@@ -79,7 +132,7 @@ void main() {
     });
 
     group('toJson', () {
-      test('serializes to JSON correctly', () {
+      test('serializes to JSON correctly with duration only', () {
         final set = IsometricWorkoutSet(
           id: '1',
           exerciseId: 'exercise1',
@@ -94,6 +147,37 @@ void main() {
         expect(json['timestamp'], testDate.toIso8601String());
         expect(json['type'], 'isometric');
         expect(json['duration'], 60);
+        expect(json['weight'], isNull);
+      });
+
+      test('serializes to JSON correctly with duration and weight', () {
+        final set = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: const Duration(seconds: 45),
+          weight: Weight(10.0),
+        );
+
+        final json = set.toJson();
+
+        expect(json['duration'], 45);
+        expect(json['weight'], 10.0);
+      });
+
+      test('serializes to JSON with null duration', () {
+        final set = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: null,
+          weight: Weight(5.0),
+        );
+
+        final json = set.toJson();
+
+        expect(json['duration'], isNull);
+        expect(json['weight'], 5.0);
       });
 
       test('serializes duration in seconds', () {
@@ -124,7 +208,7 @@ void main() {
     });
 
     group('fromJson', () {
-      test('deserializes from JSON correctly', () {
+      test('deserializes from JSON with duration only', () {
         final json = {
           'id': '1',
           'exerciseId': 'exercise1',
@@ -139,6 +223,39 @@ void main() {
         expect(set.exerciseId, 'exercise1');
         expect(set.timestamp, testDate);
         expect(set.duration, const Duration(seconds: 60));
+        expect(set.weight, isNull);
+      });
+
+      test('deserializes from JSON with duration and weight', () {
+        final json = {
+          'id': '1',
+          'exerciseId': 'exercise1',
+          'timestamp': testDate.toIso8601String(),
+          'type': 'isometric',
+          'duration': 45,
+          'weight': 10.0,
+        };
+
+        final set = IsometricWorkoutSet.fromJson(json);
+
+        expect(set.duration, const Duration(seconds: 45));
+        expect(set.weight?.kg, 10.0);
+      });
+
+      test('deserializes from JSON with null duration', () {
+        final json = {
+          'id': '1',
+          'exerciseId': 'exercise1',
+          'timestamp': testDate.toIso8601String(),
+          'type': 'isometric',
+          'duration': null,
+          'weight': 5.0,
+        };
+
+        final set = IsometricWorkoutSet.fromJson(json);
+
+        expect(set.duration, isNull);
+        expect(set.weight?.kg, 5.0);
       });
 
       test('deserializes long duration from JSON', () {
@@ -152,8 +269,8 @@ void main() {
 
         final set = IsometricWorkoutSet.fromJson(json);
 
-        expect(set.duration.inSeconds, 330);
-        expect(set.duration.inMinutes, 5);
+        expect(set.duration!.inSeconds, 330);
+        expect(set.duration!.inMinutes, 5);
       });
     });
 
@@ -170,6 +287,20 @@ void main() {
 
         expect(updated.duration, const Duration(seconds: 90));
         expect(set.duration, const Duration(seconds: 60));
+      });
+
+      test('returns new instance with updated weight', () {
+        final set = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: const Duration(seconds: 60),
+        );
+
+        final updated = set.copyWith(weight: Weight(10.0));
+
+        expect(updated.weight?.kg, 10.0);
+        expect(set.weight, isNull);
       });
 
       test('returns new instance with updated timestamp', () {
@@ -221,6 +352,26 @@ void main() {
         expect(set1, set2);
       });
 
+      test('two sets with same values and weight are equal', () {
+        final set1 = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: const Duration(seconds: 60),
+          weight: Weight(10.0),
+        );
+
+        final set2 = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: const Duration(seconds: 60),
+          weight: Weight(10.0),
+        );
+
+        expect(set1, set2);
+      });
+
       test('two sets with different durations are not equal', () {
         final set1 = IsometricWorkoutSet(
           id: '1',
@@ -234,6 +385,26 @@ void main() {
           exerciseId: 'exercise1',
           timestamp: testDate,
           duration: const Duration(seconds: 90),
+        );
+
+        expect(set1, isNot(set2));
+      });
+
+      test('two sets with different weights are not equal', () {
+        final set1 = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: const Duration(seconds: 60),
+          weight: Weight(10.0),
+        );
+
+        final set2 = IsometricWorkoutSet(
+          id: '1',
+          exerciseId: 'exercise1',
+          timestamp: testDate,
+          duration: const Duration(seconds: 60),
+          weight: Weight(15.0),
         );
 
         expect(set1, isNot(set2));
@@ -322,7 +493,7 @@ void main() {
         final json = set.toJson();
         final deserialized = IsometricWorkoutSet.fromJson(json);
 
-        expect(deserialized.duration.inSeconds, 330);
+        expect(deserialized.duration!.inSeconds, 330);
       });
     });
   });

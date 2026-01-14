@@ -115,12 +115,18 @@ class MockDataGenerator {
         final baseDuration = 30 + (baseProgress * 30).toInt(); // 30-60s
         final duration = Duration(seconds: baseDuration + _random.nextInt(10));
 
+        // 30% chance of using additional weight for progression
+        final weight = _random.nextDouble() < 0.3
+            ? Weight(5.0 + _random.nextInt(4) * 2.5) // 5, 7.5, 10, 12.5 kg
+            : null;
+
         sets.add(
           IsometricWorkoutSet(
             id: _uuid.v4(),
             exerciseId: exercise.id,
             timestamp: timestamp,
             duration: duration,
+            weight: weight,
           ),
         );
       }

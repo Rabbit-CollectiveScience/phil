@@ -1,13 +1,16 @@
 import 'workout_set.dart';
+import '../common/weight.dart';
 
 class IsometricWorkoutSet extends WorkoutSet {
-  final Duration duration;
+  final Duration? duration;
+  final Weight? weight;
 
   const IsometricWorkoutSet({
     required super.id,
     required super.exerciseId,
     required super.timestamp,
-    required this.duration,
+    this.duration,
+    this.weight,
   });
 
   @override
@@ -18,12 +21,14 @@ class IsometricWorkoutSet extends WorkoutSet {
     String? exerciseId,
     DateTime? timestamp,
     Duration? duration,
+    Weight? weight,
   }) {
     return IsometricWorkoutSet(
       id: id ?? this.id,
       exerciseId: exerciseId ?? this.exerciseId,
       timestamp: timestamp ?? this.timestamp,
       duration: duration ?? this.duration,
+      weight: weight ?? this.weight,
     );
   }
 
@@ -33,7 +38,8 @@ class IsometricWorkoutSet extends WorkoutSet {
         'id': id,
         'exerciseId': exerciseId,
         'timestamp': timestamp.toIso8601String(),
-        'duration': duration.inSeconds,
+        'duration': duration?.inSeconds,
+        'weight': weight?.kg,
       };
 
   factory IsometricWorkoutSet.fromJson(Map<String, dynamic> json) {
@@ -41,7 +47,12 @@ class IsometricWorkoutSet extends WorkoutSet {
       id: json['id'],
       exerciseId: json['exerciseId'],
       timestamp: DateTime.parse(json['timestamp']),
-      duration: Duration(seconds: json['duration']),
+      duration: json['duration'] != null 
+          ? Duration(seconds: json['duration']) 
+          : null,
+      weight: json['weight'] != null 
+          ? Weight(json['weight']) 
+          : null,
     );
   }
 
@@ -51,8 +62,9 @@ class IsometricWorkoutSet extends WorkoutSet {
       super == other &&
           other is IsometricWorkoutSet &&
           runtimeType == other.runtimeType &&
-          duration == other.duration;
+          duration == other.duration &&
+          weight == other.weight;
 
   @override
-  int get hashCode => super.hashCode ^ duration.hashCode;
+  int get hashCode => super.hashCode ^ duration.hashCode ^ weight.hashCode;
 }

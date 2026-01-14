@@ -74,7 +74,8 @@ classDiagram
     }
     
     class IsometricWorkoutSet {
-        +Duration duration
+        +Duration? duration
+        +Weight? weight
         +getVolume() null
     }
     
@@ -181,7 +182,7 @@ classDiagram
 - BodyweightExercise → BodyweightWorkoutSet (tracks reps + optional additionalWeight)
 - FreeWeightExercise → WeightedWorkoutSet (tracks weight + reps)
 - MachineExercise → WeightedWorkoutSet (tracks weight + reps)
-- IsometricExercise → IsometricWorkoutSet (tracks duration)
+- IsometricExercise → IsometricWorkoutSet (tracks optional duration + optional weight)
 
 *Cardio:*
 - DistanceCardioExercise → DistanceCardioWorkoutSet (tracks duration + distance, calculates pace)
@@ -219,8 +220,10 @@ classDiagram
 - **MachineExercise**: Fixed-path equipment (smith machine, leg press, cables, resistance bands)
   - Guided movements, includes resistance bands
   
-- **IsometricExercise**: Static holds tracking duration only (planks, wall sits, dead hangs)
-  - No weight tracking (loaded carries excluded - different movement pattern)
+- **IsometricExercise**: Static holds tracking duration and optional weight (planks, wall sits, dead hangs)
+  - Duration tracking for hold time (optional - user may not track time)
+  - Optional weight for weighted holds (weight belt, vest, added plates)
+  - Examples: bodyweight dead hang (duration only), weighted plank (duration + weight), casual logging (neither tracked)
 
 ### Volume Calculation
 - **WeightedWorkoutSet**: `volume = weight.kg × reps`
@@ -232,6 +235,9 @@ classDiagram
   - Track WeightPR when additionalWeight is used
   
 - **IsometricWorkoutSet**: No volume (duration-based metric)
+  - Both duration and weight are optional (flexible logging)
+  - Allows tracking: time only, weight only, both, or neither
+  - No traditional volume calculation (time under tension is different metric)
 
 ### Personal Records
 - **Reference-only approach**: PR classes only store `workoutSetId`, not cached values
@@ -242,7 +248,7 @@ classDiagram
 - **PR types per exercise category**:
   - Bodyweight: RepsPR, WeightPR (when additionalWeight used)
   - Free Weight & Machine: WeightPR, RepsPR, VolumePR
-  - Isometric: DurationPR
+  - Isometric: DurationPR (only when duration tracked; weight is informative but doesn't create separate PR)
 
 ## Design Principles - Cardio
 

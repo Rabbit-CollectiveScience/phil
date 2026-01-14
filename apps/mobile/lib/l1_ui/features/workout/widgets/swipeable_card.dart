@@ -6,6 +6,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../view_models/card_model.dart';
 import '../../../../l2_domain/models/exercises/strength_exercise.dart';
+import '../../../../l2_domain/models/exercises/isometric_exercise.dart';
+import '../../../../l2_domain/models/exercises/bodyweight_exercise.dart';
 import '../../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
 import '../../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
 
@@ -156,8 +158,52 @@ class SwipeableCardState extends State<SwipeableCard>
   void _initializeInputFields() {
     final exercise = widget.card.exercise;
 
-    if (exercise is StrengthExercise) {
-      // Strength exercises: weight + reps
+    if (exercise is IsometricExercise) {
+      // Isometric exercises: duration + optional weight
+      _fieldControllers['duration'] = TextEditingController(text: '- sec');
+      _fieldControllers['weight'] = TextEditingController(text: '- kg');
+      _fieldFocusNodes['duration'] = FocusNode();
+      _fieldFocusNodes['weight'] = FocusNode();
+
+      _fieldFocusNodes['duration']!.addListener(() {
+        if (_fieldFocusNodes['duration']!.hasFocus) {
+          _startFieldTimer('duration');
+        } else {
+          _fieldTimers['duration']?.cancel();
+        }
+      });
+
+      _fieldFocusNodes['weight']!.addListener(() {
+        if (_fieldFocusNodes['weight']!.hasFocus) {
+          _startFieldTimer('weight');
+        } else {
+          _fieldTimers['weight']?.cancel();
+        }
+      });
+    } else if (exercise is BodyweightExercise) {
+      // Bodyweight exercises: reps + optional weight
+      _fieldControllers['reps'] = TextEditingController(text: '- reps');
+      _fieldControllers['weight'] = TextEditingController(text: '- kg');
+      _fieldFocusNodes['reps'] = FocusNode();
+      _fieldFocusNodes['weight'] = FocusNode();
+
+      _fieldFocusNodes['reps']!.addListener(() {
+        if (_fieldFocusNodes['reps']!.hasFocus) {
+          _startFieldTimer('reps');
+        } else {
+          _fieldTimers['reps']?.cancel();
+        }
+      });
+
+      _fieldFocusNodes['weight']!.addListener(() {
+        if (_fieldFocusNodes['weight']!.hasFocus) {
+          _startFieldTimer('weight');
+        } else {
+          _fieldTimers['weight']?.cancel();
+        }
+      });
+    } else if (exercise is StrengthExercise) {
+      // Other strength exercises (free weight, machine): weight + reps
       _fieldControllers['weight'] = TextEditingController(text: '- kg');
       _fieldControllers['reps'] = TextEditingController(text: '- reps');
       _fieldFocusNodes['weight'] = FocusNode();
@@ -623,7 +669,33 @@ class SwipeableCardState extends State<SwipeableCard>
   List<Widget> _buildInputFields() {
     final exercise = widget.card.exercise;
 
-    if (exercise is StrengthExercise) {
+    if (exercise is IsometricExercise) {
+      return [
+        if (_fieldControllers.containsKey('duration'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('duration', 'sec', 1),
+          ),
+        if (_fieldControllers.containsKey('weight'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('weight', 'kg', 2),
+          ),
+      ];
+    } else if (exercise is BodyweightExercise) {
+      return [
+        if (_fieldControllers.containsKey('reps'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('reps', 'reps', 1),
+          ),
+        if (_fieldControllers.containsKey('weight'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('weight', 'kg', 2),
+          ),
+      ];
+    } else if (exercise is StrengthExercise) {
       return [
         if (_fieldControllers.containsKey('weight'))
           Padding(

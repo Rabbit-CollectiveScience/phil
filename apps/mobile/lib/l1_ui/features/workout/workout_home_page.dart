@@ -21,11 +21,13 @@ import '../../../l2_domain/use_cases/filters/get_last_filter_selection_use_case.
 import '../../../l2_domain/use_cases/filters/record_filter_selection_use_case.dart';
 import '../../../l2_domain/use_cases/filters/should_show_filter_page_use_case.dart';
 import '../../../l2_domain/models/exercises/strength_exercise.dart';
+import '../../../l2_domain/models/exercises/isometric_exercise.dart';
 import '../../../l2_domain/models/exercises/bodyweight_exercise.dart';
 import '../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
 import '../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
 import '../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
+import '../../../l2_domain/models/workout_sets/isometric_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
 import '../../../l2_domain/models/common/weight.dart';
@@ -253,7 +255,31 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
         final uuid = const Uuid();
 
         // Construct appropriate WorkoutSet based on exercise type
-        if (exercise is StrengthExercise) {
+        if (exercise is IsometricExercise) {
+          // Parse duration and weight (allow nulls)
+          final durationStr = fieldValues?['duration'];
+          final weightStr = fieldValues?['weight'];
+
+          final durationSeconds = durationStr != null
+              ? int.tryParse(durationStr)
+              : null;
+          final weight = weightStr != null
+              ? double.tryParse(weightStr)
+              : null;
+
+          final workoutSet = IsometricWorkoutSet(
+            id: uuid.v4(),
+            exerciseId: exercise.id,
+            timestamp: DateTime.now(),
+            duration: durationSeconds != null
+                ? Duration(seconds: durationSeconds)
+                : null,
+            weight: weight != null && weight > 0
+                ? Weight(weight)
+                : null,
+          );
+          await recordUseCase.execute(workoutSet: workoutSet);
+        } else if (exercise is StrengthExercise) {
           // Parse values (allow nulls for missing data)
           final weightStr = fieldValues?['weight'];
           final repsStr = fieldValues?['reps'];

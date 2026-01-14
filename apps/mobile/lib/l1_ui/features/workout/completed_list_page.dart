@@ -169,8 +169,18 @@ class _CompletedListPageState extends State<CompletedListPage>
           : '-- min';
       return durationStr;
     } else if (workoutSet is IsometricWorkoutSet) {
-      final durationSec = workoutSet.duration.inSeconds;
-      return '$durationSec sec';
+      final durationSec = workoutSet.duration?.inSeconds;
+      final weightKg = workoutSet.weight?.kg;
+
+      if (durationSec != null && weightKg != null && weightKg > 0) {
+        return '$durationSec sec · ${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
+      } else if (durationSec != null) {
+        return '$durationSec sec';
+      } else if (weightKg != null && weightKg > 0) {
+        return '${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
+      } else {
+        return '-';
+      }
     }
 
     return 'No data recorded';
