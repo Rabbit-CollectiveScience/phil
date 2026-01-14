@@ -66,6 +66,7 @@ void main() {
           description: 'Core plank',
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
+          isBodyweightBased: true,
         );
 
         // await repository.save(exercise);

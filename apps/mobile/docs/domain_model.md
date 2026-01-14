@@ -33,6 +33,7 @@ classDiagram
     }
     
     class IsometricExercise {
+        +bool isBodyweightBased
     }
     
     class DistanceCardioExercise {
@@ -220,9 +221,16 @@ classDiagram
 - **MachineExercise**: Fixed-path equipment (smith machine, leg press, cables, resistance bands)
   - Guided movements, includes resistance bands
   
-- **IsometricExercise**: Static holds tracking duration and optional weight (planks, wall sits, dead hangs)
+- **IsometricExercise**: Static holds tracking duration and optional weight
+  - `isBodyweightBased` flag distinguishes two types:
+    - **Bodyweight-based holds** (true): Dead hang, plank, wall sit, hollow body hold
+      - Display: "Bodyweight" (0kg) or "BW + 10kg" (with added weight)
+      - Weight represents additional load on top of bodyweight
+    - **Loaded static holds** (false): Farmer's carry, overhead hold, plate pinch
+      - Display: "40kg" (absolute weight held)
+      - Weight represents total load being held
   - Duration tracking for hold time (optional - user may not track time)
-  - Optional weight for weighted holds (weight belt, vest, added plates)
+  - Optional weight for weighted holds (weight belt, vest, plates, dumbbells)
   - Examples: bodyweight dead hang (duration only), weighted plank (duration + weight), casual logging (neither tracked)
 
 ### Volume Calculation

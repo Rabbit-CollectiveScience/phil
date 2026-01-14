@@ -288,7 +288,8 @@
     "name": "Dead Hang",
     "description": "Hang from a pull-up bar with straight arms, full grip on the bar, and shoulders engaged (not completely relaxed). Hold this position for time without letting go. Keep your body still and breathe normally. This simple exercise builds tremendous grip strength and forearm endurance while also improving shoulder stability and decompressing the spine. It's foundational for advanced pulling exercises.",
     "isCustom": false,
-    "targetMuscles": ["arms", "back"]
+    "targetMuscles": ["arms", "back"],
+    "isBodyweightBased": true
   },
   {
     "type": "machine",
@@ -370,7 +371,8 @@
     "name": "Plate Pinch Hold",
     "description": "Pinch two weight plates together (smooth sides out) with one hand using just your fingers and thumb. Hold them at your side for time without letting them slip. Stand with good posture and breathe normally. This static exercise builds crushing grip strength, thumb strength, and forearm endurance, important for lifts like deadlifts and farmer's carries.",
     "isCustom": false,
-    "targetMuscles": ["arms"]
+    "targetMuscles": ["arms"],
+    "isBodyweightBased": false
   },
   {
     "type": "free_weight",

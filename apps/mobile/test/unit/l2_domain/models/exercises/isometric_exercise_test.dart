@@ -12,6 +12,7 @@ void main() {
           description: 'Core stability exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
+          isBodyweightBased: true,
         );
 
         expect(exercise.id, '1');
@@ -28,6 +29,7 @@ void main() {
           description: 'Custom isometric',
           isCustom: true,
           targetMuscles: [MuscleGroup.shoulders],
+          isBodyweightBased: true,
         );
 
         expect(exercise.isCustom, true);
@@ -40,6 +42,7 @@ void main() {
           description: 'Oblique plank',
           isCustom: false,
           targetMuscles: [MuscleGroup.core, MuscleGroup.shoulders],
+          isBodyweightBased: true,
         );
 
         expect(exercise.targetMuscles.length, 2);
@@ -54,6 +57,7 @@ void main() {
           description: 'Leg isometric',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          isBodyweightBased: true,
         );
 
         final json = exercise.toJson();
@@ -76,6 +80,7 @@ void main() {
           'isCustom': false,
           'type': 'isometric',
           'targetMuscles': ['core', 'arms'],
+          'isBodyweightBased': true,
         };
 
         final exercise = IsometricExercise.fromJson(json);
@@ -96,6 +101,7 @@ void main() {
           description: 'Standard plank',
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
+          isBodyweightBased: true,
         );
 
         final updated = exercise.copyWith(
@@ -117,6 +123,7 @@ void main() {
           description: 'Hanging exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.back, MuscleGroup.arms],
+          isBodyweightBased: true,
         );
 
         final exercise2 = IsometricExercise(
@@ -125,6 +132,7 @@ void main() {
           description: 'Hanging exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.back, MuscleGroup.arms],
+          isBodyweightBased: true,
         );
 
         expect(exercise1, exercise2);
@@ -137,6 +145,7 @@ void main() {
           description: 'Core exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
+          isBodyweightBased: true,
         );
 
         final exercise2 = IsometricExercise(
@@ -145,6 +154,7 @@ void main() {
           description: 'Core exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.core, MuscleGroup.shoulders],
+          isBodyweightBased: true,
         );
 
         expect(exercise1, isNot(exercise2));
@@ -159,6 +169,7 @@ void main() {
           description: 'Core control',
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
+          isBodyweightBased: true,
         );
 
         final json = exercise.toJson();

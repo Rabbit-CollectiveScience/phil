@@ -11,6 +11,8 @@ import '../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/isometric_workout_set.dart';
+import '../../../l2_domain/models/exercises/exercise.dart';
+import '../../../l2_domain/models/exercises/isometric_exercise.dart';
 import 'view_models/workout_group.dart';
 
 class CompletedListPage extends StatefulWidget {
@@ -137,7 +139,7 @@ class _CompletedListPageState extends State<CompletedListPage>
   }
 
   /// Format WorkoutSet values for display based on its type
-  String _formatSetValues(WorkoutSet workoutSet) {
+  String _formatSetValues(WorkoutSet workoutSet, {Exercise? exercise}) {
     if (workoutSet is WeightedWorkoutSet) {
       final weightStr = workoutSet.weight != null
           ? '${workoutSet.weight!.kg.toStringAsFixed(1)} kg'
@@ -171,15 +173,32 @@ class _CompletedListPageState extends State<CompletedListPage>
     } else if (workoutSet is IsometricWorkoutSet) {
       final durationSec = workoutSet.duration?.inSeconds;
       final weightKg = workoutSet.weight?.kg;
+      final isBodyweightBased = exercise is IsometricExercise
+          ? exercise.isBodyweightBased
+          : true;
 
-      if (durationSec != null && weightKg != null && weightKg > 0) {
-        return '$durationSec sec · ${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
-      } else if (durationSec != null) {
-        return '$durationSec sec';
-      } else if (weightKg != null && weightKg > 0) {
-        return '${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
+      if (isBodyweightBased) {
+        // Bodyweight-based exercises: "Bodyweight" or "BW + Xkg"
+        if (durationSec != null && weightKg != null && weightKg > 0) {
+          return '$durationSec sec · BW + ${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
+        } else if (durationSec != null && (weightKg == null || weightKg == 0)) {
+          return '$durationSec sec · Bodyweight';
+        } else if (weightKg != null && weightKg > 0) {
+          return 'BW + ${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
+        } else {
+          return 'Bodyweight';
+        }
       } else {
-        return '-';
+        // Loaded static holds: "Xkg" or "Xkg · Ysec"
+        if (durationSec != null && weightKg != null && weightKg > 0) {
+          return '$durationSec sec · ${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
+        } else if (durationSec != null) {
+          return '$durationSec sec';
+        } else if (weightKg != null && weightKg > 0) {
+          return '${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
+        } else {
+          return '-';
+        }
       }
     }
 
@@ -631,6 +650,7 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                               Text(
                                                                 _formatSetValues(
                                                                   set.workoutSet,
+                                                                  exercise: set.exercise,
                                                                 ),
                                                                 style: const TextStyle(
                                                                   fontSize: 14,

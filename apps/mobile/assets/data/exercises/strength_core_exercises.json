@@ -5,7 +5,8 @@
     "name": "Plank",
     "description": "Start in a forearm plank position with elbows directly under shoulders, forearms on the ground, and body in a straight line from head to heels. Engage your core by pulling your belly button toward your spine, squeeze your glutes, and keep your hips level without sagging or piking up. Maintain neutral head position by looking at the floor about a foot in front of you. Breathe steadily throughout the hold. This fundamental isometric exercise builds total core endurance, teaching your abs to stabilize your spine while working the rectus abdominis, transverse abdominis, and obliques.",
     "isCustom": false,
-    "targetMuscles": ["core"]
+    "targetMuscles": ["core"],
+    "isBodyweightBased": true
   },
   {
     "type": "isometric",
@@ -13,7 +14,8 @@
     "name": "Side Plank",
     "description": "Lie on your side and prop yourself up on one forearm with elbow directly under shoulder. Stack your feet or place the top foot in front of the bottom foot for more stability. Lift your hips off the ground, creating a straight line from head to feet, and extend your top arm toward the ceiling or rest it on your hip. Keep your core tight and avoid letting your hips sag. This anti-lateral flexion exercise targets the obliques, quadratus lumborum, and hip abductors, crucial for rotational stability and injury prevention.",
     "isCustom": false,
-    "targetMuscles": ["core"]
+    "targetMuscles": ["core"],
+    "isBodyweightBased": true
   },
   {
     "type": "bodyweight",
@@ -160,7 +162,8 @@
     "name": "Hollow Body Hold",
     "description": "Lie on your back and press your lower back firmly into the floor. Lift your shoulders, arms, and legs off the ground, creating a banana or hollow shape with your body. Extend your arms overhead beside your ears and keep your legs straight and together, lifted at about 45 degrees. Hold this position while maintaining pressure in your lower back against the floor. This gymnastics-based exercise builds incredible core strength and body tension, working the entire anterior core chain and teaching proper hollow body positioning.",
     "isCustom": false,
-    "targetMuscles": ["core"]
+    "targetMuscles": ["core"],
+    "isBodyweightBased": true
   },
   {
     "type": "bodyweight",
@@ -240,7 +243,8 @@
     "name": "Plank Shoulder Taps",
     "description": "Start in a high plank position. While maintaining a stable core and avoiding hip rotation, lift one hand and tap the opposite shoulder. Alternate sides. This anti-rotation exercise challenges core stability while also building shoulder strength and endurance.",
     "isCustom": false,
-    "targetMuscles": ["core"]
+    "targetMuscles": ["core"],
+    "isBodyweightBased": true
   },
   {
     "type": "isometric",
@@ -248,7 +252,8 @@
     "name": "Plank with Leg Lift",
     "description": "Hold a forearm or high plank position. Lift one leg off the ground while maintaining a straight body line and level hips. Hold briefly, lower, and alternate. This variation increases the anti-extension challenge and works the glutes along with the core.",
     "isCustom": false,
-    "targetMuscles": ["core", "legs"]
+    "targetMuscles": ["core", "legs"],
+    "isBodyweightBased": true
   },
   {
     "type": "bodyweight",
