@@ -34,25 +34,23 @@ class IsometricWorkoutSet extends WorkoutSet {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'isometric',
-        'id': id,
-        'exerciseId': exerciseId,
-        'timestamp': timestamp.toIso8601String(),
-        'duration': duration?.inSeconds,
-        'weight': weight?.kg,
-      };
+    'type': 'isometric',
+    'id': id,
+    'exerciseId': exerciseId,
+    'timestamp': timestamp.toIso8601String(),
+    'duration': duration?.inSeconds,
+    'weight': weight?.kg,
+  };
 
   factory IsometricWorkoutSet.fromJson(Map<String, dynamic> json) {
     return IsometricWorkoutSet(
       id: json['id'],
       exerciseId: json['exerciseId'],
       timestamp: DateTime.parse(json['timestamp']),
-      duration: json['duration'] != null 
-          ? Duration(seconds: json['duration']) 
+      duration: json['duration'] != null
+          ? Duration(seconds: json['duration'])
           : null,
-      weight: json['weight'] != null 
-          ? Weight(json['weight']) 
-          : null,
+      weight: json['weight'] != null ? Weight(json['weight']) : null,
     );
   }
 

@@ -104,7 +104,7 @@ class RecalculatePRsForExerciseUseCase {
         }
       } else if (set is IsometricWorkoutSet) {
         // Duration PR - only if duration was tracked
-        if (set.duration != null && 
+        if (set.duration != null &&
             (maxDuration == null || set.duration! > maxDuration)) {
           maxDuration = set.duration;
           maxDurationSetId = set.id;

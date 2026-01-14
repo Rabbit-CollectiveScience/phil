@@ -263,9 +263,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
           final durationSeconds = durationStr != null
               ? int.tryParse(durationStr)
               : null;
-          final weight = weightStr != null
-              ? double.tryParse(weightStr)
-              : null;
+          final weight = weightStr != null ? double.tryParse(weightStr) : null;
 
           final workoutSet = IsometricWorkoutSet(
             id: uuid.v4(),
@@ -274,9 +272,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
             duration: durationSeconds != null
                 ? Duration(seconds: durationSeconds)
                 : null,
-            weight: weight != null && weight > 0
-                ? Weight(weight)
-                : null,
+            weight: weight != null && weight > 0 ? Weight(weight) : null,
           );
           await recordUseCase.execute(workoutSet: workoutSet);
         } else if (exercise is StrengthExercise) {

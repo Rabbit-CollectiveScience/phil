@@ -1089,9 +1089,8 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                               final WorkoutSet workoutSet;
 
                               if (exercise is IsometricExercise) {
-                                final durationText = _fieldControllers['duration']!
-                                    .text
-                                    .trim();
+                                final durationText =
+                                    _fieldControllers['duration']!.text.trim();
                                 final weightText = _fieldControllers['weight']
                                     ?.text
                                     .trim();
@@ -1099,7 +1098,8 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                 final duration = durationText.isNotEmpty
                                     ? Duration(seconds: int.parse(durationText))
                                     : null;
-                                final weight = weightText != null && weightText.isNotEmpty
+                                final weight =
+                                    weightText != null && weightText.isNotEmpty
                                     ? Weight(double.parse(weightText))
                                     : null;
 
