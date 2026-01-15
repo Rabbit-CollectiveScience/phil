@@ -411,5 +411,13 @@
     "isCustom": false,
     "targetMuscles": ["chest"],
     "canAddWeight": true
+  },
+  {
+    "type": "assisted_machine",
+    "id": "chest_51",
+    "name": "Assisted Chest Dip Machine",
+    "description": "Set the desired assistance weight on the machine and kneel or stand on the platform, grasping the parallel dip handles with arms extended. The platform will support some of your bodyweight, making the movement easier. Lean your torso forward about 30 degrees to emphasize chest activation. Lower yourself by bending your elbows and allowing them to flare slightly outward, descending until you feel a deep stretch in your chest or your upper arms are parallel to the ground. Maintain the forward lean throughout. Push back up to the starting position, focusing on contracting your chest muscles. Perfect for building strength toward unassisted chest dips while heavily loading the pectorals.",
+    "isCustom": false,
+    "targetMuscles": ["chest", "arms", "shoulders"]
   }
 ]

@@ -26,11 +26,12 @@ void main() {
         final jsonString = await rootBundle.loadString(filePath);
         final List<dynamic> jsonList = json.decode(jsonString);
 
-        // Adjusted counts: legs=56, back=53, arms=51, others=50
+        // Adjusted counts: legs=56, back=53, arms=51, chest=51, others=50
         int expectedCount = 50;
         if (filePath.contains('legs')) expectedCount = 56;
         if (filePath.contains('back')) expectedCount = 53;
         if (filePath.contains('arms')) expectedCount = 51;
+        if (filePath.contains('chest')) expectedCount = 51;
         expect(jsonList.length, expectedCount);
         print('\n$filePath:');
 
@@ -161,7 +162,7 @@ void main() {
         }
       }
 
-      expect(totalExercises, 310);
+      expect(totalExercises, 311);
 
       print('\n\nCombined Statistics (All Files):');
       print('  Total Exercises: $totalExercises');
