@@ -309,8 +309,25 @@ class SwipeableCardState extends State<SwipeableCard>
       if (_fieldControllers.containsKey(entry.key)) {
         final controller = _fieldControllers[entry.key]!;
         final newValue = entry.value;
-        if (controller.text != newValue && newValue.isNotEmpty) {
-          controller.text = newValue;
+        if (newValue.isNotEmpty) {
+          // Determine the unit for this field
+          String unit = '';
+          if (entry.key == 'weight') {
+            unit = 'kg';
+          } else if (entry.key == 'reps') {
+            int value = int.tryParse(newValue) ?? 0;
+            unit = value == 1 ? 'rep' : 'reps';
+          } else if (entry.key == 'duration') {
+            final exercise = widget.card.exercise;
+            unit = (exercise is DurationCardioExercise || exercise is DistanceCardioExercise) ? 'min' : 'sec';
+          } else if (entry.key == 'distance') {
+            unit = 'km';
+          }
+          
+          final displayText = '$newValue $unit';
+          if (controller.text != displayText) {
+            controller.text = displayText;
+          }
         }
       }
     }
@@ -782,7 +799,11 @@ class SwipeableCardState extends State<SwipeableCard>
               int current = int.tryParse(text) ?? 0;
               if (current >= minValue) {
                 int newValue = current - step;
-                controller.text = '$newValue $unit';
+                String displayUnit = unit;
+                if (unit == 'reps' && newValue == 1) {
+                  displayUnit = 'rep';
+                }
+                controller.text = '$newValue $displayUnit';
 
                 // Update field value in card model
                 final updatedData = Map<String, String>.from(
@@ -819,7 +840,11 @@ class SwipeableCardState extends State<SwipeableCard>
               String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
               int current = int.tryParse(text) ?? 0;
               int newValue = current + step;
-              controller.text = '$newValue $unit';
+              String displayUnit = unit;
+              if (unit == 'reps' && newValue == 1) {
+                displayUnit = 'rep';
+              }
+              controller.text = '$newValue $displayUnit';
 
               // Update field value in card model
               final updatedData = Map<String, String>.from(
