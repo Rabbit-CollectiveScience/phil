@@ -12,7 +12,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -28,7 +27,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 45),
           weight: Weight(10.0),
         );
@@ -42,7 +40,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: null,
           weight: Weight(5.0),
         );
@@ -56,7 +53,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: null,
           weight: null,
         );
@@ -70,7 +66,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: Duration.zero,
         );
 
@@ -82,7 +77,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(minutes: 5, seconds: 30),
         );
 
@@ -94,7 +88,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 30, milliseconds: 500),
         );
 
@@ -108,7 +101,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -120,7 +112,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
           weight: Weight(10.0),
         );
@@ -133,7 +124,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(minutes: 10),
         );
 
@@ -147,7 +137,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -166,7 +155,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 45),
           weight: Weight(10.0),
         );
@@ -182,7 +170,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: null,
           weight: Weight(5.0),
         );
@@ -198,7 +185,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(minutes: 2, seconds: 30),
         );
 
@@ -212,7 +198,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: Duration.zero,
         );
 
@@ -295,7 +280,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -310,7 +294,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -325,7 +308,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -341,7 +323,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -358,7 +339,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -366,7 +346,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -378,7 +357,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
           weight: Weight(10.0),
         );
@@ -387,7 +365,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
           weight: Weight(10.0),
         );
@@ -400,7 +377,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -408,7 +384,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 90),
         );
 
@@ -420,7 +395,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
           weight: Weight(10.0),
         );
@@ -429,7 +403,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
           weight: Weight(15.0),
         );
@@ -442,7 +415,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -450,7 +422,6 @@ void main() {
           id: '2',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -464,7 +435,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -472,7 +442,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -484,7 +453,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -492,7 +460,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 90),
         );
 
@@ -506,7 +473,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(seconds: 60),
         );
 
@@ -521,7 +487,6 @@ void main() {
           id: '1',
           exerciseId: 'exercise1',
           timestamp: testDate,
-          isBodyweightBased: true,
           duration: const Duration(minutes: 5, seconds: 30),
         );
 

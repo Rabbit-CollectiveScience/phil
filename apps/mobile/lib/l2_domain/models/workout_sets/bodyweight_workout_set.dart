@@ -16,6 +16,18 @@ class BodyweightWorkoutSet extends WorkoutSet {
   @override
   double? getVolume() => null; // No volume calculation for bodyweight
 
+  @override
+  String formatForDisplay() {
+    final repsStr = reps != null
+        ? '$reps ${reps == 1 ? "rep" : "reps"}'
+        : '-- rep';
+    
+    if (additionalWeight != null && additionalWeight!.kg > 0) {
+      return '$repsStr · BW + ${additionalWeight!.kg.toStringAsFixed(1)} kg';
+    }
+    return '$repsStr · Bodyweight';
+  }
+
   BodyweightWorkoutSet copyWith({
     String? id,
     String? exerciseId,

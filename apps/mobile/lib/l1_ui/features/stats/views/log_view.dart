@@ -343,41 +343,7 @@ class _LogViewState extends State<LogView> {
 
   /// Format workout set values for display based on workout set type
   String _formatSetValues(byDate.WorkoutSetWithDetails setDetails) {
-    final workoutSet = setDetails.workoutSet;
-
-    if (workoutSet is WeightedWorkoutSet) {
-      final weightStr = workoutSet.weight != null
-          ? '${workoutSet.weight!.kg.toStringAsFixed(1)} kg'
-          : '-- kg';
-      final repsStr = workoutSet.reps != null
-          ? '${workoutSet.reps} ${workoutSet.reps == 1 ? "rep" : "reps"}'
-          : '-- rep';
-      return '$weightStr × $repsStr';
-    } else if (workoutSet is BodyweightWorkoutSet) {
-      final repsStr = workoutSet.reps != null
-          ? '${workoutSet.reps} ${workoutSet.reps == 1 ? "rep" : "reps"}'
-          : '-- rep';
-      final repsText = repsStr;
-      if (workoutSet.additionalWeight != null) {
-        return '$repsText (+${workoutSet.additionalWeight!.kg.toStringAsFixed(1)} kg)';
-      }
-      return repsText;
-    } else if (workoutSet is DistanceCardioWorkoutSet) {
-      final distanceStr = workoutSet.distance != null
-          ? '${workoutSet.distance!.getInKm().toStringAsFixed(1)} km'
-          : '-- km';
-      final durationStr = workoutSet.duration != null
-          ? '${workoutSet.duration!.inMinutes} min'
-          : '-- min';
-      return '$distanceStr · $durationStr';
-    } else if (workoutSet is DurationCardioWorkoutSet) {
-      final durationStr = workoutSet.duration != null
-          ? '${workoutSet.duration!.inMinutes} min'
-          : '-- min';
-      return durationStr;
-    }
-
-    return 'No data';
+    return setDetails.workoutSet.formatForDisplay();
   }
 
   Widget _buildSetRow(byDate.WorkoutSetWithDetails setWithDetails, int index) {
@@ -1103,12 +1069,17 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                     ? Weight(double.parse(weightText))
                                     : null;
 
+                                final isBodyweightBased = exercise is IsometricExercise
+                                    ? exercise.isBodyweightBased
+                                    : true; // Default to true for safety
+
                                 workoutSet = IsometricWorkoutSet(
                                   id: const Uuid().v4(),
                                   exerciseId: exercise.id,
                                   timestamp: widget.selectedDate,
                                   duration: duration,
                                   weight: weight,
+                                  isBodyweightBased: isBodyweightBased,
                                 );
                               } else if (exercise is FreeWeightExercise ||
                                   exercise is MachineExercise) {

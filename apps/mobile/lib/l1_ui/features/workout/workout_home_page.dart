@@ -273,6 +273,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                 ? Duration(seconds: durationSeconds)
                 : null,
             weight: weight != null && weight > 0 ? Weight(weight) : null,
+            isBodyweightBased: exercise.isBodyweightBased,
           );
           await recordUseCase.execute(workoutSet: workoutSet);
         } else if (exercise is StrengthExercise) {

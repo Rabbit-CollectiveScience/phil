@@ -4,6 +4,7 @@ import '../common/weight.dart';
 class IsometricWorkoutSet extends WorkoutSet {
   final Duration? duration;
   final Weight? weight;
+  final bool isBodyweightBased;
 
   const IsometricWorkoutSet({
     required super.id,
@@ -11,10 +12,48 @@ class IsometricWorkoutSet extends WorkoutSet {
     required super.timestamp,
     this.duration,
     this.weight,
+    required this.isBodyweightBased,
   });
 
   @override
   double? getVolume() => null; // No volume for duration-based exercises
+
+  @override
+  String formatForDisplay() {
+    final durationSec = duration?.inSeconds;
+    final weightKg = weight?.kg;
+
+    if (isBodyweightBased) {
+      // Bodyweight-based exercises: "Bodyweight" or "BW + Xkg"
+      if (durationSec != null && weightKg != null && weightKg > 0) {
+        return '$durationSec sec · BW + ${_formatWeight(weightKg)} kg';
+      } else if (durationSec != null && (weightKg == null || weightKg == 0)) {
+        return '$durationSec sec · Bodyweight';
+      } else if (weightKg != null && weightKg > 0) {
+        return 'BW + ${_formatWeight(weightKg)} kg';
+      } else {
+        return 'Bodyweight';
+      }
+    } else {
+      // Loaded static holds: "Xkg" or "Xkg · Ysec"
+      if (durationSec != null && weightKg != null && weightKg > 0) {
+        return '$durationSec sec · ${_formatWeight(weightKg)} kg';
+      } else if (durationSec != null) {
+        return '$durationSec sec';
+      } else if (weightKg != null && weightKg > 0) {
+        return '${_formatWeight(weightKg)} kg';
+      } else {
+        return '-';
+      }
+    }
+  }
+
+  /// Helper to format weight (removes .0 if whole number)
+  String _formatWeight(double kg) {
+    return kg.truncateToDouble() == kg
+        ? kg.toStringAsFixed(0)
+        : kg.toStringAsFixed(1);
+  }
 
   IsometricWorkoutSet copyWith({
     String? id,
@@ -22,6 +61,7 @@ class IsometricWorkoutSet extends WorkoutSet {
     DateTime? timestamp,
     Duration? duration,
     Weight? weight,
+    bool? isBodyweightBased,
   }) {
     return IsometricWorkoutSet(
       id: id ?? this.id,
@@ -29,6 +69,7 @@ class IsometricWorkoutSet extends WorkoutSet {
       timestamp: timestamp ?? this.timestamp,
       duration: duration ?? this.duration,
       weight: weight ?? this.weight,
+      isBodyweightBased: isBodyweightBased ?? this.isBodyweightBased,
     );
   }
 
@@ -40,6 +81,7 @@ class IsometricWorkoutSet extends WorkoutSet {
     'timestamp': timestamp.toIso8601String(),
     'duration': duration?.inSeconds,
     'weight': weight?.kg,
+    'isBodyweightBased': isBodyweightBased,
   };
 
   factory IsometricWorkoutSet.fromJson(Map<String, dynamic> json) {
@@ -51,6 +93,7 @@ class IsometricWorkoutSet extends WorkoutSet {
           ? Duration(seconds: json['duration'])
           : null,
       weight: json['weight'] != null ? Weight(json['weight']) : null,
+      isBodyweightBased: json['isBodyweightBased'] ?? true,
     );
   }
 
@@ -61,8 +104,9 @@ class IsometricWorkoutSet extends WorkoutSet {
           other is IsometricWorkoutSet &&
           runtimeType == other.runtimeType &&
           duration == other.duration &&
-          weight == other.weight;
+          weight == other.weight &&
+          isBodyweightBased == other.isBodyweightBased;
 
   @override
-  int get hashCode => super.hashCode ^ duration.hashCode ^ weight.hashCode;
+  int get hashCode => super.hashCode ^ duration.hashCode ^ weight.hashCode ^ isBodyweightBased.hashCode;
 }

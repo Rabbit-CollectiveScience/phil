@@ -142,38 +142,7 @@ class _PRViewState extends State<PRView> {
   }
 
   String _formatWorkoutSetValue(WorkoutSet workoutSet) {
-    if (workoutSet is WeightedWorkoutSet) {
-      final weightStr = workoutSet.weight != null
-          ? '${workoutSet.weight!.kg.toStringAsFixed(1)} kg'
-          : '-- kg';
-      final repsStr = workoutSet.reps != null
-          ? '${workoutSet.reps} ${workoutSet.reps == 1 ? "rep" : "reps"}'
-          : '-- rep';
-      return '$weightStr × $repsStr';
-    } else if (workoutSet is BodyweightWorkoutSet) {
-      final repsStr = workoutSet.reps != null
-          ? '${workoutSet.reps} ${workoutSet.reps == 1 ? "rep" : "reps"}'
-          : '-- rep';
-      final repsText = repsStr;
-      if (workoutSet.additionalWeight != null) {
-        return '$repsText (+${workoutSet.additionalWeight!.kg.toStringAsFixed(1)} kg)';
-      }
-      return repsText;
-    } else if (workoutSet is DistanceCardioWorkoutSet) {
-      final distanceStr = workoutSet.distance != null
-          ? '${workoutSet.distance!.getInKm().toStringAsFixed(1)} km'
-          : '-- km';
-      final durationStr = workoutSet.duration != null
-          ? '${workoutSet.duration!.inMinutes} min'
-          : '-- min';
-      return '$distanceStr · $durationStr';
-    } else if (workoutSet is DurationCardioWorkoutSet) {
-      final durationStr = workoutSet.duration != null
-          ? '${workoutSet.duration!.inMinutes} min'
-          : '-- min';
-      return durationStr;
-    }
-    return 'No data';
+    return workoutSet.formatForDisplay();
   }
 
   List<String> _getMuscleGroupsFromExercise(Exercise exercise) {

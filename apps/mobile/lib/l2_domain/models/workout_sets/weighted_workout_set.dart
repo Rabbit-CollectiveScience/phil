@@ -17,6 +17,17 @@ class WeightedWorkoutSet extends WorkoutSet {
   double? getVolume() =>
       (weight != null && reps != null) ? weight!.kg * reps! : null;
 
+  @override
+  String formatForDisplay() {
+    final weightStr = weight != null
+        ? '${weight!.kg.toStringAsFixed(1)} kg'
+        : '-- kg';
+    final repsStr = reps != null
+        ? '$reps ${reps == 1 ? "rep" : "reps"}'
+        : '-- rep';
+    return '$weightStr × $repsStr';
+  }
+
   WeightedWorkoutSet copyWith({
     String? id,
     String? exerciseId,

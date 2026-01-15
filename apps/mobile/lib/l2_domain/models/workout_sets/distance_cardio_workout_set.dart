@@ -25,6 +25,17 @@ class DistanceCardioWorkoutSet extends WorkoutSet {
   @override
   double? getVolume() => null; // No volume for cardio
 
+  @override
+  String formatForDisplay() {
+    final distanceStr = distance != null
+        ? '${distance!.getInKm().toStringAsFixed(1)} km'
+        : '-- km';
+    final durationStr = duration != null
+        ? '${duration!.inMinutes} min'
+        : '-- min';
+    return '$distanceStr · $durationStr';
+  }
+
   DistanceCardioWorkoutSet copyWith({
     String? id,
     String? exerciseId,

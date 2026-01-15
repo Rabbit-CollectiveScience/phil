@@ -11,6 +11,9 @@ abstract class WorkoutSet {
 
   double? getVolume();
 
+  /// Format this workout set for display in the UI
+  String formatForDisplay();
+
   Map<String, dynamic> toJson();
 
   @override

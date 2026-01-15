@@ -13,6 +13,14 @@ class DurationCardioWorkoutSet extends WorkoutSet {
   @override
   double? getVolume() => null; // No volume for cardio
 
+  @override
+  String formatForDisplay() {
+    final durationStr = duration != null
+        ? '${duration!.inMinutes} min'
+        : '-- min';
+    return durationStr;
+  }
+
   DurationCardioWorkoutSet copyWith({
     String? id,
     String? exerciseId,

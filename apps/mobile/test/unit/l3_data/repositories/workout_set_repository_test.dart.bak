@@ -49,7 +49,6 @@ void main() {
           exerciseId: 'exercise2',
           timestamp: DateTime.now(),
           duration: const Duration(seconds: 60),
-          isBodyweightBased: true,
         );
 
         // await repository.save(set);

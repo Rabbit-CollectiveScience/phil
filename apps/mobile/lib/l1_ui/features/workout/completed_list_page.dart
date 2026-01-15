@@ -140,69 +140,7 @@ class _CompletedListPageState extends State<CompletedListPage>
 
   /// Format WorkoutSet values for display based on its type
   String _formatSetValues(WorkoutSet workoutSet, {Exercise? exercise}) {
-    if (workoutSet is WeightedWorkoutSet) {
-      final weightStr = workoutSet.weight != null
-          ? '${workoutSet.weight!.kg.toStringAsFixed(1)} kg'
-          : '-- kg';
-      final repsStr = workoutSet.reps != null
-          ? '${workoutSet.reps} ${workoutSet.reps == 1 ? "rep" : "reps"}'
-          : '-- rep';
-      return '$weightStr × $repsStr';
-    } else if (workoutSet is BodyweightWorkoutSet) {
-      final repsStr = workoutSet.reps != null
-          ? '${workoutSet.reps} ${workoutSet.reps == 1 ? "rep" : "reps"}'
-          : '-- rep';
-      final repsText = repsStr;
-      if (workoutSet.additionalWeight != null) {
-        return '$repsText (+${workoutSet.additionalWeight!.kg.toStringAsFixed(1)} kg)';
-      }
-      return repsText;
-    } else if (workoutSet is DistanceCardioWorkoutSet) {
-      final distanceStr = workoutSet.distance != null
-          ? '${workoutSet.distance!.getInKm().toStringAsFixed(1)} km'
-          : '-- km';
-      final durationStr = workoutSet.duration != null
-          ? '${workoutSet.duration!.inMinutes} min'
-          : '-- min';
-      return '$distanceStr · $durationStr';
-    } else if (workoutSet is DurationCardioWorkoutSet) {
-      final durationStr = workoutSet.duration != null
-          ? '${workoutSet.duration!.inMinutes} min'
-          : '-- min';
-      return durationStr;
-    } else if (workoutSet is IsometricWorkoutSet) {
-      final durationSec = workoutSet.duration?.inSeconds;
-      final weightKg = workoutSet.weight?.kg;
-      final isBodyweightBased = exercise is IsometricExercise
-          ? exercise.isBodyweightBased
-          : true;
-
-      if (isBodyweightBased) {
-        // Bodyweight-based exercises: "Bodyweight" or "BW + Xkg"
-        if (durationSec != null && weightKg != null && weightKg > 0) {
-          return '$durationSec sec · BW + ${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
-        } else if (durationSec != null && (weightKg == null || weightKg == 0)) {
-          return '$durationSec sec · Bodyweight';
-        } else if (weightKg != null && weightKg > 0) {
-          return 'BW + ${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
-        } else {
-          return 'Bodyweight';
-        }
-      } else {
-        // Loaded static holds: "Xkg" or "Xkg · Ysec"
-        if (durationSec != null && weightKg != null && weightKg > 0) {
-          return '$durationSec sec · ${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
-        } else if (durationSec != null) {
-          return '$durationSec sec';
-        } else if (weightKg != null && weightKg > 0) {
-          return '${weightKg.toStringAsFixed(weightKg.truncateToDouble() == weightKg ? 0 : 1)} kg';
-        } else {
-          return '-';
-        }
-      }
-    }
-
-    return 'No data recorded';
+    return workoutSet.formatForDisplay();
   }
 
   void _removeSetLocally(WorkoutSetWithDetails setToRemove) async {
