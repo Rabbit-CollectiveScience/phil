@@ -822,119 +822,127 @@ class SwipeableCardState extends State<SwipeableCard>
             fontWeight: FontWeight.w300,
             letterSpacing: 1.5,
           ),
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        contentPadding: const EdgeInsets.symmetric(vertical: 12),
-        prefixIcon: ListenableBuilder(
-          listenable: Listenable.merge([focusNode, controller]),
-          builder: (context, child) {
-            final isEmpty = isBodyweightField
-                ? controller.text == 'bodyweight'
-                : controller.text == '- $unit';
-            return Opacity(
-              opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
-              child: IgnorePointer(
-                ignoring: !(isEmpty || focusNode.hasFocus),
-                child: child!,
-              ),
-            );
-          },
-          child: IconButton(
-            onPressed: () {
-              focusNode.requestFocus();
-              _startFieldTimer(fieldName);
-              String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
-              int current = int.tryParse(text) ?? 0;
-              if (current >= minValue) {
-                int newValue = current - step;
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            prefixIcon: ListenableBuilder(
+              listenable: Listenable.merge([focusNode, controller]),
+              builder: (context, child) {
+                final isEmpty = isBodyweightField
+                    ? controller.text == 'bodyweight'
+                    : controller.text == '- $unit';
+                return Opacity(
+                  opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
+                  child: IgnorePointer(
+                    ignoring: !(isEmpty || focusNode.hasFocus),
+                    child: child!,
+                  ),
+                );
+              },
+              child: IconButton(
+                onPressed: () {
+                  focusNode.requestFocus();
+                  _startFieldTimer(fieldName);
+                  String text = controller.text.replaceAll(
+                    RegExp(r'[^0-9]'),
+                    '',
+                  );
+                  int current = int.tryParse(text) ?? 0;
+                  if (current >= minValue) {
+                    int newValue = current - step;
 
-                if (isBodyweightField) {
-                  if (newValue == 0) {
-                    controller.text = 'bodyweight';
+                    if (isBodyweightField) {
+                      if (newValue == 0) {
+                        controller.text = 'bodyweight';
+                      } else {
+                        controller.text = 'BW+${newValue}kg';
+                      }
+                    } else {
+                      String displayUnit = unit;
+                      if (unit == 'reps' && newValue == 1) {
+                        displayUnit = 'rep';
+                      }
+                      controller.text = '$newValue $displayUnit';
+                    }
+
+                    // Update field value in card model
+                    final updatedData = Map<String, String>.from(
+                      widget.card.userData,
+                    );
+                    updatedData[fieldName] = newValue.toString();
+                    widget.onCardUpdate(
+                      widget.card.copyWith(userData: updatedData),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.chevron_left),
+                color: AppColors.limeGreen,
+                iconSize: 28,
+                style: IconButton.styleFrom(padding: const EdgeInsets.all(4)),
+              ),
+            ),
+            suffixIcon: ListenableBuilder(
+              listenable: Listenable.merge([focusNode, controller]),
+              builder: (context, child) {
+                final isEmpty = isBodyweightField
+                    ? controller.text == 'bodyweight'
+                    : controller.text == '- $unit';
+                return Opacity(
+                  opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
+                  child: IgnorePointer(
+                    ignoring: !(isEmpty || focusNode.hasFocus),
+                    child: child!,
+                  ),
+                );
+              },
+              child: IconButton(
+                onPressed: () {
+                  focusNode.requestFocus();
+                  _startFieldTimer(fieldName);
+                  String text = controller.text.replaceAll(
+                    RegExp(r'[^0-9]'),
+                    '',
+                  );
+                  int current = int.tryParse(text) ?? 0;
+                  int newValue = current + step;
+
+                  if (isBodyweightField) {
+                    if (newValue == 0) {
+                      controller.text = 'bodyweight';
+                    } else {
+                      controller.text = 'BW+${newValue}kg';
+                    }
                   } else {
-                    controller.text = 'BW+${newValue}kg';
+                    String displayUnit = unit;
+                    if (unit == 'reps' && newValue == 1) {
+                      displayUnit = 'rep';
+                    }
+                    controller.text = '$newValue $displayUnit';
                   }
-                } else {
-                  String displayUnit = unit;
-                  if (unit == 'reps' && newValue == 1) {
-                    displayUnit = 'rep';
-                  }
-                  controller.text = '$newValue $displayUnit';
-                }
 
-                // Update field value in card model
-                final updatedData = Map<String, String>.from(
-                  widget.card.userData,
-                );
-                updatedData[fieldName] = newValue.toString();
-                widget.onCardUpdate(
-                  widget.card.copyWith(userData: updatedData),
-                );
-              }
-            },
-            icon: const Icon(Icons.chevron_left),
-            color: AppColors.limeGreen,
-            iconSize: 28,
-            style: IconButton.styleFrom(padding: const EdgeInsets.all(4)),
-          ),
-        ),
-        suffixIcon: ListenableBuilder(
-          listenable: Listenable.merge([focusNode, controller]),
-          builder: (context, child) {
-            final isEmpty = isBodyweightField
-                ? controller.text == 'bodyweight'
-                : controller.text == '- $unit';
-            return Opacity(
-              opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
-              child: IgnorePointer(
-                ignoring: !(isEmpty || focusNode.hasFocus),
-                child: child!,
+                  // Update field value in card model
+                  final updatedData = Map<String, String>.from(
+                    widget.card.userData,
+                  );
+                  updatedData[fieldName] = newValue.toString();
+                  widget.onCardUpdate(
+                    widget.card.copyWith(userData: updatedData),
+                  );
+                },
+                icon: const Icon(Icons.chevron_right),
+                color: AppColors.limeGreen,
+                iconSize: 28,
+                style: IconButton.styleFrom(padding: const EdgeInsets.all(4)),
               ),
-            );
-          },
-          child: IconButton(
-            onPressed: () {
-              focusNode.requestFocus();
-              _startFieldTimer(fieldName);
-              String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
-              int current = int.tryParse(text) ?? 0;
-              int newValue = current + step;
-
-              if (isBodyweightField) {
-                if (newValue == 0) {
-                  controller.text = 'bodyweight';
-                } else {
-                  controller.text = 'BW+${newValue}kg';
-                }
-              } else {
-                String displayUnit = unit;
-                if (unit == 'reps' && newValue == 1) {
-                  displayUnit = 'rep';
-                }
-                controller.text = '$newValue $displayUnit';
-              }
-
-              // Update field value in card model
-              final updatedData = Map<String, String>.from(
-                widget.card.userData,
-              );
-              updatedData[fieldName] = newValue.toString();
-              widget.onCardUpdate(widget.card.copyWith(userData: updatedData));
-            },
-            icon: const Icon(Icons.chevron_right),
-            color: AppColors.limeGreen,
-            iconSize: 28,
-            style: IconButton.styleFrom(padding: const EdgeInsets.all(4)),
+            ),
           ),
-        ),
-      ),
-      onTap: () {
-        focusNode.requestFocus();
-        _startFieldTimer(fieldName);
-      },
-    );
+          onTap: () {
+            focusNode.requestFocus();
+            _startFieldTimer(fieldName);
+          },
+        );
       },
     );
   }
