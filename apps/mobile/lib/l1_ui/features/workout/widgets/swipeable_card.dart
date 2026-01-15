@@ -271,7 +271,7 @@ class SwipeableCardState extends State<SwipeableCard>
     for (var entry in _fieldControllers.entries) {
       final controller = entry.value;
       String text = controller.text.trim();
-      
+
       // Handle bodyweight exercises weight field
       if (entry.key == 'weight' && text.toLowerCase().contains('bw')) {
         // Extract number from "BW+Xkg" format
@@ -328,13 +328,14 @@ class SwipeableCardState extends State<SwipeableCard>
         final newValue = entry.value;
         if (newValue.isNotEmpty) {
           String displayText;
-          
+
           // Handle weight field for bodyweight-based exercises
           if (entry.key == 'weight') {
             final exercise = widget.card.exercise;
-            final isBodyweightBased = exercise is BodyweightExercise || 
+            final isBodyweightBased =
+                exercise is BodyweightExercise ||
                 (exercise is IsometricExercise && exercise.isBodyweightBased);
-            
+
             if (isBodyweightBased) {
               int value = int.tryParse(newValue) ?? 0;
               if (value == 0) {
@@ -350,7 +351,11 @@ class SwipeableCardState extends State<SwipeableCard>
             displayText = '$newValue ${value == 1 ? "rep" : "reps"}';
           } else if (entry.key == 'duration') {
             final exercise = widget.card.exercise;
-            String unit = (exercise is DurationCardioExercise || exercise is DistanceCardioExercise) ? 'min' : 'sec';
+            String unit =
+                (exercise is DurationCardioExercise ||
+                    exercise is DistanceCardioExercise)
+                ? 'min'
+                : 'sec';
             displayText = '$newValue $unit';
           } else if (entry.key == 'distance') {
             displayText = '$newValue km';
@@ -794,25 +799,29 @@ class SwipeableCardState extends State<SwipeableCard>
     }
 
     final int minValue = fieldName == 'weight' ? step : 1;
-    
+
     // Check if this is a bodyweight-based exercise
     final exercise = widget.card.exercise;
-    final isBodyweightField = fieldName == 'weight' && 
-        (exercise is BodyweightExercise || 
-         (exercise is IsometricExercise && exercise.isBodyweightBased));
+    final isBodyweightField =
+        fieldName == 'weight' &&
+        (exercise is BodyweightExercise ||
+            (exercise is IsometricExercise && exercise.isBodyweightBased));
 
-    return TextField(
-      controller: controller,
-      focusNode: focusNode,
-      readOnly: true,
-      keyboardType: TextInputType.number,
-      textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontSize: 32,
-        color: AppColors.offWhite,
-        fontWeight: FontWeight.w300,
-        letterSpacing: 1.5,
-      ),
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, child) {
+        return TextField(
+          controller: controller,
+          focusNode: focusNode,
+          readOnly: true,
+          keyboardType: TextInputType.number,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: controller.text == 'bodyweight' ? 26 : 32,
+            color: AppColors.offWhite,
+            fontWeight: FontWeight.w300,
+            letterSpacing: 1.5,
+          ),
       decoration: InputDecoration(
         border: InputBorder.none,
         enabledBorder: InputBorder.none,
@@ -821,7 +830,7 @@ class SwipeableCardState extends State<SwipeableCard>
         prefixIcon: ListenableBuilder(
           listenable: Listenable.merge([focusNode, controller]),
           builder: (context, child) {
-            final isEmpty = isBodyweightField 
+            final isEmpty = isBodyweightField
                 ? controller.text == 'bodyweight'
                 : controller.text == '- $unit';
             return Opacity(
@@ -840,7 +849,7 @@ class SwipeableCardState extends State<SwipeableCard>
               int current = int.tryParse(text) ?? 0;
               if (current >= minValue) {
                 int newValue = current - step;
-                
+
                 if (isBodyweightField) {
                   if (newValue == 0) {
                     controller.text = 'bodyweight';
@@ -874,7 +883,7 @@ class SwipeableCardState extends State<SwipeableCard>
         suffixIcon: ListenableBuilder(
           listenable: Listenable.merge([focusNode, controller]),
           builder: (context, child) {
-            final isEmpty = isBodyweightField 
+            final isEmpty = isBodyweightField
                 ? controller.text == 'bodyweight'
                 : controller.text == '- $unit';
             return Opacity(
@@ -892,7 +901,7 @@ class SwipeableCardState extends State<SwipeableCard>
               String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
               int current = int.tryParse(text) ?? 0;
               int newValue = current + step;
-              
+
               if (isBodyweightField) {
                 if (newValue == 0) {
                   controller.text = 'bodyweight';
@@ -924,6 +933,8 @@ class SwipeableCardState extends State<SwipeableCard>
       onTap: () {
         focusNode.requestFocus();
         _startFieldTimer(fieldName);
+      },
+    );
       },
     );
   }
