@@ -267,8 +267,10 @@ class ExerciseDetailCard extends StatelessWidget {
         Expanded(
           child: _buildMetricColumn(
             'Min Assistance',
-            (maxWeightToday != null && maxWeightToday! > 0)
-                ? '${maxWeightToday!.toInt()} kg'
+            maxWeightToday != null
+                ? (maxWeightToday! == 0
+                    ? 'bodyweight'
+                    : '${maxWeightToday!.toInt()} kg')
                 : '-',
             isPR: _hasPR('maxWeight'),
           ),

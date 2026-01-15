@@ -88,9 +88,10 @@ class GetTodayExerciseDetailsUseCase {
           }
 
           // Track MINIMUM assistance weight (lower = better for assisted machines)
-          if (set.assistanceWeight != null &&
-              (maxWeight == null || set.assistanceWeight!.kg < maxWeight)) {
-            maxWeight = set.assistanceWeight!.kg;
+          // Treat null as 0 (bodyweight) since UI defaults to bodyweight
+          final assistanceKg = set.assistanceWeight?.kg ?? 0;
+          if (maxWeight == null || assistanceKg < maxWeight) {
+            maxWeight = assistanceKg;
           }
         } else if (set is IsometricWorkoutSet) {
           // Duration tracking for isometric exercises

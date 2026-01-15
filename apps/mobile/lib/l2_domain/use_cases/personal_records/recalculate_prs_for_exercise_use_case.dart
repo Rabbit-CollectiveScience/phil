@@ -105,9 +105,10 @@ class RecalculatePRsForExerciseUseCase {
         }
       } else if (set is AssistedMachineWorkoutSet) {
         // CRITICAL: INVERTED LOGIC - Lower assistance = better (PR)
-        if (set.assistanceWeight != null &&
-            (maxWeight == null || set.assistanceWeight!.kg < maxWeight)) {
-          maxWeight = set.assistanceWeight!.kg;
+        // Treat null as 0 (bodyweight) since UI defaults to bodyweight
+        final assistanceKg = set.assistanceWeight?.kg ?? 0;
+        if (maxWeight == null || assistanceKg < maxWeight) {
+          maxWeight = assistanceKg;
           maxWeightSetId = set.id;
         }
 
