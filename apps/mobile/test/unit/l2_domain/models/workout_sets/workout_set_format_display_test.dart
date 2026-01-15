@@ -64,7 +64,7 @@ void main() {
           reps: 15,
           additionalWeight: null,
         );
-        expect(set.formatForDisplay(), '15 reps · Bodyweight');
+        expect(set.formatForDisplay(), '15 reps · bodyweight');
       });
 
       test('formats with additional weight', () {
@@ -86,7 +86,7 @@ void main() {
           reps: 12,
           additionalWeight: Weight(0),
         );
-        expect(set.formatForDisplay(), '12 reps · Bodyweight');
+        expect(set.formatForDisplay(), '12 reps · bodyweight');
       });
 
       test('formats single rep', () {
@@ -123,7 +123,7 @@ void main() {
           weight: null,
           isBodyweightBased: true,
         );
-        expect(set.formatForDisplay(), '45 sec · Bodyweight');
+        expect(set.formatForDisplay(), '45 sec · bodyweight');
       });
 
       test('formats loaded static hold with weight', () {

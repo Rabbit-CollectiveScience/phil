@@ -21,11 +21,11 @@ class BodyweightWorkoutSet extends WorkoutSet {
     final repsStr = reps != null
         ? '$reps ${reps == 1 ? "rep" : "reps"}'
         : '-- rep';
-    
+
     if (additionalWeight != null && additionalWeight!.kg > 0) {
       return '$repsStr · BW + ${additionalWeight!.kg.toStringAsFixed(1)} kg';
     }
-    return '$repsStr · Bodyweight';
+    return '$repsStr · bodyweight';
   }
 
   BodyweightWorkoutSet copyWith({

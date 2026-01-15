@@ -127,7 +127,8 @@ class MockDataGenerator {
             timestamp: timestamp,
             duration: duration,
             weight: weight,
-            isBodyweightBased: true, // Most isometric exercises are bodyweight-based
+            isBodyweightBased:
+                true, // Most isometric exercises are bodyweight-based
           ),
         );
       }

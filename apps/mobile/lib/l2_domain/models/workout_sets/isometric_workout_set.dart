@@ -24,15 +24,15 @@ class IsometricWorkoutSet extends WorkoutSet {
     final weightKg = weight?.kg;
 
     if (isBodyweightBased) {
-      // Bodyweight-based exercises: "Bodyweight" or "BW + Xkg"
+      // Bodyweight-based exercises: "bodyweight" or "BW + Xkg"
       if (durationSec != null && weightKg != null && weightKg > 0) {
         return '$durationSec sec · BW + ${_formatWeight(weightKg)} kg';
       } else if (durationSec != null && (weightKg == null || weightKg == 0)) {
-        return '$durationSec sec · Bodyweight';
+        return '$durationSec sec · bodyweight';
       } else if (weightKg != null && weightKg > 0) {
         return 'BW + ${_formatWeight(weightKg)} kg';
       } else {
-        return 'Bodyweight';
+        return 'bodyweight';
       }
     } else {
       // Loaded static holds: "Xkg" or "Xkg · Ysec"
@@ -108,5 +108,9 @@ class IsometricWorkoutSet extends WorkoutSet {
           isBodyweightBased == other.isBodyweightBased;
 
   @override
-  int get hashCode => super.hashCode ^ duration.hashCode ^ weight.hashCode ^ isBodyweightBased.hashCode;
+  int get hashCode =>
+      super.hashCode ^
+      duration.hashCode ^
+      weight.hashCode ^
+      isBodyweightBased.hashCode;
 }

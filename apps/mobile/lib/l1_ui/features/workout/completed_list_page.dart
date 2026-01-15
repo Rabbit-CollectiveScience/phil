@@ -588,7 +588,8 @@ class _CompletedListPageState extends State<CompletedListPage>
                                                               Text(
                                                                 _formatSetValues(
                                                                   set.workoutSet,
-                                                                  exercise: set.exercise,
+                                                                  exercise: set
+                                                                      .exercise,
                                                                 ),
                                                                 style: const TextStyle(
                                                                   fontSize: 14,

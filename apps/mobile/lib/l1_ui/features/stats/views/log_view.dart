@@ -1069,7 +1069,8 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                     ? Weight(double.parse(weightText))
                                     : null;
 
-                                final isBodyweightBased = exercise is IsometricExercise
+                                final isBodyweightBased =
+                                    exercise is IsometricExercise
                                     ? exercise.isBodyweightBased
                                     : true; // Default to true for safety
 
