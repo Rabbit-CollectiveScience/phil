@@ -32,6 +32,9 @@ classDiagram
     class MachineExercise {
     }
     
+    class AssistedMachineExercise {
+    }
+    
     class IsometricExercise {
         +bool isBodyweightBased
     }
@@ -48,6 +51,7 @@ classDiagram
     StrengthExercise <|-- BodyweightExercise
     StrengthExercise <|-- FreeWeightExercise
     StrengthExercise <|-- MachineExercise
+    StrengthExercise <|-- AssistedMachineExercise
     StrengthExercise <|-- IsometricExercise
     
     CardioExercise <|-- DistanceCardioExercise
@@ -74,6 +78,13 @@ classDiagram
         +getVolume() weight.kg * reps
     }
     
+    class AssistedMachineWorkoutSet {
+        +Weight assistanceWeight
+        +int reps
+        +getEffectiveWeight(userBodyweight) userBodyweight.kg - assistanceWeight.kg
+        +getVolume() null
+    }
+    
     class IsometricWorkoutSet {
         +Duration? duration
         +Weight? weight
@@ -94,6 +105,7 @@ classDiagram
     
     WorkoutSet <|-- BodyweightWorkoutSet
     WorkoutSet <|-- WeightedWorkoutSet
+    WorkoutSet <|-- AssistedMachineWorkoutSet
     WorkoutSet <|-- IsometricWorkoutSet
     WorkoutSet <|-- DistanceCardioWorkoutSet
     WorkoutSet <|-- DurationCardioWorkoutSet
@@ -136,6 +148,7 @@ classDiagram
     BodyweightExercise "1" --> "*" BodyweightWorkoutSet : records
     FreeWeightExercise "1" --> "*" WeightedWorkoutSet : records
     MachineExercise "1" --> "*" WeightedWorkoutSet : records
+    AssistedMachineExercise "1" --> "*" AssistedMachineWorkoutSet : records
     IsometricExercise "1" --> "*" IsometricWorkoutSet : records
     DistanceCardioExercise "1" --> "*" DistanceCardioWorkoutSet : records
     DurationCardioExercise "1" --> "*" DurationCardioWorkoutSet : records
@@ -147,6 +160,8 @@ classDiagram
     WeightedWorkoutSet "1" --> "0..*" VolumePR : achieves
     IsometricWorkoutSet "1" --> "0..*" DurationPR : achieves
     DistanceCardioWorkoutSet "1" --> "0..*" DurationPR : achieves
+    AssistedMachineWorkoutSet "1" --> "0..*" WeightPR : achieves (lowest assistance)
+    AssistedMachineWorkoutSet "1" --> "0..*" RepsPR : achieves
     DistanceCardioWorkoutSet "1" --> "0..*" DistancePR : achieves
     DistanceCardioWorkoutSet "1" --> "0..*" PacePR : achieves
     DurationCardioWorkoutSet "1" --> "0..*" DurationPR : achieves
@@ -170,9 +185,9 @@ classDiagram
     
     class Distance {
         +double meters
-        +getInKm()
         +getInMiles()
-    }
+  AssistedMachineExercise → AssistedMachineWorkoutSet (tracks assistance weight + reps, inverted progress)
+-   }
 ```
 
 ## Key Relationships
@@ -181,7 +196,8 @@ classDiagram
 
 *Strength Training:*
 - BodyweightExercise → BodyweightWorkoutSet (tracks reps + optional additionalWeight)
-- FreeWeightExercise → WeightedWorkoutSet (tracks weight + reps)
+- MachineExercise → WeightedWorkoutSet (tracks weight + reps)
+- AssistedMachineExercise → AssistedMachineWorkoutSet (tracks assistance weight + reps, inverted progres best), RepsPR
 - MachineExercise → WeightedWorkoutSet (tracks weight + reps)
 - IsometricExercise → IsometricWorkoutSet (tracks optional duration + optional weight)
 
@@ -207,8 +223,8 @@ classDiagram
 - **Strict Mappings**: Each Exercise type maps to exactly one WorkoutSet type
 - **Separation of Concerns**: 
   - Exercise = Definition/Template (what the exercise is)
-  - WorkoutSet = Instance/Recording (what you actually did)
-  - PersonalRecord = Achievement (your best performance)
+  - Traditional resistance machines where more weight = harder
+  PersonalRecord = Achievement (your best performance)
 
 ### Exercise Classification
 - **BodyweightExercise**: Pure bodyweight movements (push-ups, pull-ups, dips)
@@ -220,14 +236,22 @@ classDiagram
   
 - **MachineExercise**: Fixed-path equipment (smith machine, leg press, cables, resistance bands)
   - Guided movements, includes resistance bands
+
+- **AssistedMachineWorkoutSet**: No volume calculation
+  - `assistanceWeight` represents counterbalance force reducing effective load
+  - **Inverted comparison logic**: Lower assistance weight = better performance
+  - `getEffectiveWeight(userBodyweight)` calculates actual resistance (optional, requires user weight)
+  - PRs compare assistance weight in reverse (minimum assistance = maximum PR)
+  - Example progression: 60kg assist → 50kg assist → 40kg assist (each is a PR)
   
-- **IsometricExercise**: Static holds tracking duration and optional weight
-  - `isBodyweightBased` flag distinguishes two types:
-    - **Bodyweight-based holds** (true): Dead hang, plank, wall sit, hollow body hold
-      - Display: "Bodyweight" (0kg) or "BW + 10kg" (with added weight)
-      - Weight represents additional load on top of bodyweight
-    - **Loaded static holds** (false): Farmer's carry, overhead hold, plate pinch
-      - Display: "40kg" (absolute weight held)
+  - Traditional resistance machines where more weight = harder
+  
+- **AssistedMachineExercise**: Counterbalance machines that reduce effective bodyweight (assisted pull-ups, assisted dips)
+  - Weight represents assistance provided by the machine
+  - **Inverted progress metric**: Lower assistance weight = better (getting stronger)
+  - Effective resistance = bodyweight - assistance weight
+  - Example: 80kg person using 30kg assistance = effectively lifting 50kg
+  - Progress: 40kg assist → 30kg assist → 20kg assist → unassisted
       - Weight represents total load being held
   - Duration tracking for hold time (optional - user may not track time)
   - Optional weight for weighted holds (weight belt, vest, plates, dumbbells)
@@ -235,14 +259,14 @@ classDiagram
 
 ### Volume Calculation
 - **WeightedWorkoutSet**: `volume = weight.kg × reps`
+  - Assisted Machine: WeightPR (lowest assistance), RepsPR
+    - **WeightPR logic is inverted**: Tracks the minimum assistance weight used (best = least help)
+    - Display: "PR: 20kg assistance" means you needed only 20kg help (better than 30kg assistance)
+    - Can track RepsPR at specific assistance levels independently
   - Standard volume metric for strength training
   
 - **BodyweightWorkoutSet**: No volume calculation
-  - Decision: Don't calculate bodyweight-only volume (would require user bodyweight history)
-  - Only track RepsPR for bodyweight-only
-  - Track WeightPR when additionalWeight is used
-  
-- **IsometricWorkoutSet**: No volume (duration-based metric)
+  - IsometricWorkoutSet**: No volume (duration-based metric)
   - Both duration and weight are optional (flexible logging)
   - Allows tracking: time only, weight only, both, or neither
   - No traditional volume calculation (time under tension is different metric)
@@ -267,6 +291,10 @@ classDiagram
 ### Exercise Classification
 - **DistanceCardioExercise**: Activities where distance tracking is meaningful (running, cycling, rowing, swimming)
   - Records both duration and distance
+  - Assisted Machine: WeightPR (lowest assistance), RepsPR
+    - **WeightPR logic is inverted**: Tracks the minimum assistance weight used (best = least help)
+    - Display: "PR: 20kg assistance" means you needed only 20kg help (better than 30kg assistance)
+    - Can track RepsPR at specific assistance levels independently
   - Pace calculated at runtime from these values
   - Suitable for machines/activities with distance measurement
   

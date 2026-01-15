@@ -408,5 +408,53 @@
     "isCustom": false,
     "targetMuscles": ["legs"],
     "canAddWeight": false
+  },
+  {
+    "type": "machine",
+    "id": "legs_51",
+    "name": "Hip Thrust Machine",
+    "description": "Position yourself in a hip thrust machine with your upper back against the pad and feet flat on the platform. The padded bar or weight stack should rest across your hips. Drive through your heels to lift your hips by squeezing your glutes, raising the weight until your thighs and torso form a straight line. Pause at the top with maximum glute contraction, then lower with control. This machine variation provides consistent resistance throughout the movement and is more comfortable than barbell versions, making it ideal for building glute strength and mass without the discomfort of a barbell on your hips.",
+    "isCustom": false,
+    "targetMuscles": ["legs"]
+  },
+  {
+    "type": "machine",
+    "id": "legs_52",
+    "name": "Cable Pull-Through",
+    "description": "Stand facing away from a cable machine with a rope attachment set at the lowest position. Reach between your legs to grab the rope with both hands and step forward to create tension. With a slight bend in your knees and feet shoulder-width apart, hinge at the hips to lower the rope down and back between your legs, feeling a stretch in your glutes and hamstrings. Drive your hips forward explosively by contracting your glutes, bringing your torso upright while keeping your arms straight throughout. This hip-hinge movement is excellent for teaching proper deadlift mechanics while building powerful glutes and hamstrings with reduced lower back stress.",
+    "isCustom": false,
+    "targetMuscles": ["legs", "back"]
+  },
+  {
+    "type": "machine",
+    "id": "legs_53",
+    "name": "Glute Kickback Machine",
+    "description": "Stand in a glute kickback machine with one leg positioned on the moving platform or footpad and hands gripping the handles for stability. Keep your core braced and back flat. Push the platform backward by extending your hip and contracting your glute until your leg is fully extended behind you. Squeeze your glute hard at the peak contraction, then slowly return to the starting position. This isolation machine targets the glutes with a direct hip extension movement, building size and strength in the gluteus maximus while minimizing hamstring involvement.",
+    "isCustom": false,
+    "targetMuscles": ["legs"]
+  },
+  {
+    "type": "machine",
+    "id": "legs_54",
+    "name": "Hip Abduction Machine",
+    "description": "Sit in a hip abduction machine with your outer thighs against the pads and feet on the footrests. Adjust the machine so the pads start close together. Push your legs apart by contracting your outer glutes and hip abductors, opening your legs as wide as the machine allows. Hold briefly at the peak, then control the weight back to the starting position. This isolation exercise targets the gluteus medius and minimus (outer glutes), crucial for hip stability, preventing knee valgus during squats, and building rounder glutes.",
+    "isCustom": false,
+    "targetMuscles": ["legs"]
+  },
+  {
+    "type": "machine",
+    "id": "legs_55",
+    "name": "Hip Adduction Machine",
+    "description": "Sit in a hip adduction machine with your inner thighs against the pads and feet on the footrests. Adjust the machine so the pads start wide apart. Squeeze your legs together by contracting your inner thighs (adductors), bringing the pads as close together as possible. Hold the peak contraction briefly, then control the weight back out. This isolation exercise targets the adductor muscles (inner thighs), building strength for athletic movements, improving hip stability, and contributing to overall leg development.",
+    "isCustom": false,
+    "targetMuscles": ["legs"]
+  },
+  {
+    "type": "machine",
+    "id": "legs_56",
+    "name": "Reverse Hyperextension",
+    "description": "Position yourself face-down on a reverse hyperextension machine with your hips at the edge of the pad and your legs hanging down. Grip the handles for stability. Keeping your legs relatively straight, raise them up by contracting your glutes and lower back until they're in line with your torso or slightly higher. Squeeze your glutes hard at the top, then lower your legs back down with control. This unique exercise builds powerful glutes and strengthens the lower back through hip extension while being gentler on the spine than traditional hyperextensions. It's excellent for athletes and anyone recovering from lower back issues.",
+    "isCustom": false,
+    "targetMuscles": ["legs", "back"]
   }
 ]
