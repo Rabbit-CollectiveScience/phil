@@ -161,7 +161,9 @@ class SwipeableCardState extends State<SwipeableCard>
     if (exercise is IsometricExercise) {
       // Isometric exercises: duration + optional weight
       _fieldControllers['duration'] = TextEditingController(text: '- sec');
-      _fieldControllers['weight'] = TextEditingController(text: '- kg');
+      _fieldControllers['weight'] = TextEditingController(
+        text: exercise.isBodyweightBased ? 'bodyweight' : '- kg',
+      );
       _fieldFocusNodes['duration'] = FocusNode();
       _fieldFocusNodes['weight'] = FocusNode();
 
@@ -183,7 +185,7 @@ class SwipeableCardState extends State<SwipeableCard>
     } else if (exercise is BodyweightExercise) {
       // Bodyweight exercises: reps + optional weight
       _fieldControllers['reps'] = TextEditingController(text: '- reps');
-      _fieldControllers['weight'] = TextEditingController(text: '- kg');
+      _fieldControllers['weight'] = TextEditingController(text: 'bodyweight');
       _fieldFocusNodes['reps'] = FocusNode();
       _fieldFocusNodes['weight'] = FocusNode();
 
@@ -268,17 +270,32 @@ class SwipeableCardState extends State<SwipeableCard>
 
     for (var entry in _fieldControllers.entries) {
       final controller = entry.value;
-      // Extract text and remove common units
-      String text = controller.text
-          .replaceAll(' kg', '')
-          .replaceAll(' reps', '')
-          .replaceAll(' km', '')
-          .replaceAll(' min', '')
-          .trim();
+      String text = controller.text.trim();
+      
+      // Handle bodyweight exercises weight field
+      if (entry.key == 'weight' && text.toLowerCase().contains('bw')) {
+        // Extract number from "BW+Xkg" format
+        final match = RegExp(r'BW\+(\d+)').firstMatch(text);
+        if (match != null) {
+          values[entry.key] = match.group(1)!;
+        } else if (text == 'bodyweight') {
+          values[entry.key] = '0';
+        }
+      } else {
+        // Extract text and remove common units
+        text = text
+            .replaceAll(' kg', '')
+            .replaceAll(' reps', '')
+            .replaceAll(' rep', '')
+            .replaceAll(' km', '')
+            .replaceAll(' min', '')
+            .replaceAll(' sec', '')
+            .trim();
 
-      // Skip placeholder values
-      if (text != '-' && text.isNotEmpty) {
-        values[entry.key] = text;
+        // Skip placeholder values
+        if (text != '-' && text.isNotEmpty && text != 'bodyweight') {
+          values[entry.key] = text;
+        }
       }
     }
 
@@ -310,21 +327,37 @@ class SwipeableCardState extends State<SwipeableCard>
         final controller = _fieldControllers[entry.key]!;
         final newValue = entry.value;
         if (newValue.isNotEmpty) {
-          // Determine the unit for this field
-          String unit = '';
+          String displayText;
+          
+          // Handle weight field for bodyweight-based exercises
           if (entry.key == 'weight') {
-            unit = 'kg';
+            final exercise = widget.card.exercise;
+            final isBodyweightBased = exercise is BodyweightExercise || 
+                (exercise is IsometricExercise && exercise.isBodyweightBased);
+            
+            if (isBodyweightBased) {
+              int value = int.tryParse(newValue) ?? 0;
+              if (value == 0) {
+                displayText = 'bodyweight';
+              } else {
+                displayText = 'BW+${value}kg';
+              }
+            } else {
+              displayText = '$newValue kg';
+            }
           } else if (entry.key == 'reps') {
             int value = int.tryParse(newValue) ?? 0;
-            unit = value == 1 ? 'rep' : 'reps';
+            displayText = '$newValue ${value == 1 ? "rep" : "reps"}';
           } else if (entry.key == 'duration') {
             final exercise = widget.card.exercise;
-            unit = (exercise is DurationCardioExercise || exercise is DistanceCardioExercise) ? 'min' : 'sec';
+            String unit = (exercise is DurationCardioExercise || exercise is DistanceCardioExercise) ? 'min' : 'sec';
+            displayText = '$newValue $unit';
           } else if (entry.key == 'distance') {
-            unit = 'km';
+            displayText = '$newValue km';
+          } else {
+            displayText = newValue;
           }
-          
-          final displayText = '$newValue $unit';
+
           if (controller.text != displayText) {
             controller.text = displayText;
           }
@@ -761,6 +794,12 @@ class SwipeableCardState extends State<SwipeableCard>
     }
 
     final int minValue = fieldName == 'weight' ? step : 1;
+    
+    // Check if this is a bodyweight-based exercise
+    final exercise = widget.card.exercise;
+    final isBodyweightField = fieldName == 'weight' && 
+        (exercise is BodyweightExercise || 
+         (exercise is IsometricExercise && exercise.isBodyweightBased));
 
     return TextField(
       controller: controller,
@@ -782,7 +821,9 @@ class SwipeableCardState extends State<SwipeableCard>
         prefixIcon: ListenableBuilder(
           listenable: Listenable.merge([focusNode, controller]),
           builder: (context, child) {
-            final isEmpty = controller.text == '- $unit';
+            final isEmpty = isBodyweightField 
+                ? controller.text == 'bodyweight'
+                : controller.text == '- $unit';
             return Opacity(
               opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
               child: IgnorePointer(
@@ -799,11 +840,20 @@ class SwipeableCardState extends State<SwipeableCard>
               int current = int.tryParse(text) ?? 0;
               if (current >= minValue) {
                 int newValue = current - step;
-                String displayUnit = unit;
-                if (unit == 'reps' && newValue == 1) {
-                  displayUnit = 'rep';
+                
+                if (isBodyweightField) {
+                  if (newValue == 0) {
+                    controller.text = 'bodyweight';
+                  } else {
+                    controller.text = 'BW+${newValue}kg';
+                  }
+                } else {
+                  String displayUnit = unit;
+                  if (unit == 'reps' && newValue == 1) {
+                    displayUnit = 'rep';
+                  }
+                  controller.text = '$newValue $displayUnit';
                 }
-                controller.text = '$newValue $displayUnit';
 
                 // Update field value in card model
                 final updatedData = Map<String, String>.from(
@@ -824,7 +874,9 @@ class SwipeableCardState extends State<SwipeableCard>
         suffixIcon: ListenableBuilder(
           listenable: Listenable.merge([focusNode, controller]),
           builder: (context, child) {
-            final isEmpty = controller.text == '- $unit';
+            final isEmpty = isBodyweightField 
+                ? controller.text == 'bodyweight'
+                : controller.text == '- $unit';
             return Opacity(
               opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
               child: IgnorePointer(
@@ -840,11 +892,20 @@ class SwipeableCardState extends State<SwipeableCard>
               String text = controller.text.replaceAll(RegExp(r'[^0-9]'), '');
               int current = int.tryParse(text) ?? 0;
               int newValue = current + step;
-              String displayUnit = unit;
-              if (unit == 'reps' && newValue == 1) {
-                displayUnit = 'rep';
+              
+              if (isBodyweightField) {
+                if (newValue == 0) {
+                  controller.text = 'bodyweight';
+                } else {
+                  controller.text = 'BW+${newValue}kg';
+                }
+              } else {
+                String displayUnit = unit;
+                if (unit == 'reps' && newValue == 1) {
+                  displayUnit = 'rep';
+                }
+                controller.text = '$newValue $displayUnit';
               }
-              controller.text = '$newValue $displayUnit';
 
               // Update field value in card model
               final updatedData = Map<String, String>.from(
