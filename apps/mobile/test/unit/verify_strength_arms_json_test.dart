@@ -5,6 +5,7 @@ import 'package:phil/l2_domain/models/exercises/bodyweight_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/free_weight_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/machine_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/isometric_exercise.dart';
+import 'package:phil/l2_domain/models/exercises/assisted_machine_exercise.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -16,13 +17,14 @@ void main() {
       );
       final List<dynamic> jsonList = json.decode(jsonString);
 
-      expect(jsonList.length, 50);
+      expect(jsonList.length, 51);
       print('Found ${jsonList.length} arm exercises');
 
       int freeWeightCount = 0;
       int machineCount = 0;
       int bodyweightCount = 0;
       int isometricCount = 0;
+      int assistedMachineCount = 0;
 
       for (final exerciseJson in jsonList) {
         final type = exerciseJson['type'];
@@ -75,6 +77,17 @@ void main() {
             print('✓ Isometric: ${exercise.name} (${exercise.id})');
             break;
 
+          case 'assisted_machine':
+            final exercise = AssistedMachineExercise.fromJson(exerciseJson);
+            expect(exercise.id, isNotEmpty);
+            expect(exercise.name, isNotEmpty);
+            expect(exercise.description, isNotEmpty);
+            expect(exercise.isCustom, false);
+            expect(exercise.targetMuscles, isNotEmpty);
+            assistedMachineCount++;
+            print('✓ Assisted Machine: ${exercise.name} (${exercise.id})');
+            break;
+
           default:
             fail('Unknown exercise type: $type');
         }
@@ -85,13 +98,18 @@ void main() {
       print('Machine: $machineCount');
       print('Bodyweight: $bodyweightCount');
       print('Isometric: $isometricCount');
+      print('Assisted Machine: $assistedMachineCount');
       print(
-        'Total: ${freeWeightCount + machineCount + bodyweightCount + isometricCount}',
+        'Total: ${freeWeightCount + machineCount + bodyweightCount + isometricCount + assistedMachineCount}',
       );
 
       expect(
-        freeWeightCount + machineCount + bodyweightCount + isometricCount,
-        50,
+        freeWeightCount +
+            machineCount +
+            bodyweightCount +
+            isometricCount +
+            assistedMachineCount,
+        51,
       );
     });
 
@@ -141,10 +159,19 @@ void main() {
             expect(serialized['name'], exerciseJson['name']);
             expect(serialized['targetMuscles'], isNotEmpty);
             break;
+
+          case 'assisted_machine':
+            final exercise = AssistedMachineExercise.fromJson(exerciseJson);
+            final serialized = exercise.toJson();
+            expect(serialized['type'], 'assisted_machine');
+            expect(serialized['id'], exerciseJson['id']);
+            expect(serialized['name'], exerciseJson['name']);
+            expect(serialized['targetMuscles'], isNotEmpty);
+            break;
         }
       }
 
-      print('✓ All 50 exercises serialized and deserialized successfully');
+      print('✓ All 51 exercises serialized and deserialized successfully');
     });
   });
 }

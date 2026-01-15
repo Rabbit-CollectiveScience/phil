@@ -7,6 +7,7 @@ import '../../models/personal_records/distance_pr.dart';
 import '../../models/personal_records/pace_pr.dart';
 import '../../models/workout_sets/weighted_workout_set.dart';
 import '../../models/workout_sets/bodyweight_workout_set.dart';
+import '../../models/workout_sets/assisted_machine_workout_set.dart';
 import '../../models/workout_sets/isometric_workout_set.dart';
 import '../../models/workout_sets/distance_cardio_workout_set.dart';
 import '../../models/workout_sets/duration_cardio_workout_set.dart';
@@ -102,6 +103,20 @@ class RecalculatePRsForExerciseUseCase {
           maxReps = set.reps;
           maxRepsSetId = set.id;
         }
+      } else if (set is AssistedMachineWorkoutSet) {
+        // CRITICAL: INVERTED LOGIC - Lower assistance = better (PR)
+        if (set.assistanceWeight != null &&
+            (maxWeight == null || set.assistanceWeight!.kg < maxWeight)) {
+          maxWeight = set.assistanceWeight!.kg;
+          maxWeightSetId = set.id;
+        }
+
+        // Reps PR (normal comparison)
+        if (set.reps != null && (maxReps == null || set.reps! > maxReps)) {
+          maxReps = set.reps;
+          maxRepsSetId = set.id;
+        }
+        // Note: No VolumePR for assisted machines
       } else if (set is IsometricWorkoutSet) {
         // Duration PR - only if duration was tracked
         if (set.duration != null &&

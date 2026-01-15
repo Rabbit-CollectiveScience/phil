@@ -405,5 +405,13 @@
     "description": "Sit on a bench with back support holding dumbbells at your sides with palms facing forward or inward. Keep your back against the pad and curl both dumbbells up simultaneously, maintaining control and avoiding momentum. Squeeze at the top, then lower back down. The seated position eliminates body English and hip drive, forcing strict form and maximum bicep isolation.",
     "isCustom": false,
     "targetMuscles": ["arms"]
+  },
+  {
+    "type": "assisted_machine",
+    "id": "arms_51",
+    "name": "Assisted Tricep Dip Machine",
+    "description": "Set the desired assistance weight on the machine and kneel or stand on the platform, grasping the parallel handles with arms extended. The platform will support some of your bodyweight, making the movement easier. Lower your body by bending your elbows until your upper arms are roughly parallel to the ground, keeping your elbows close to your body and leaning slightly forward. Press back up to full extension. This compound movement builds tricep mass and strength while also engaging the chest and shoulders. Perfect for progressively working toward unassisted dips.",
+    "isCustom": false,
+    "targetMuscles": ["arms", "chest", "shoulders"]
   }
 ]

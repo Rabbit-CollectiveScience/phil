@@ -5,6 +5,7 @@ import 'package:phil/l2_domain/models/exercises/bodyweight_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/free_weight_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/machine_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/isometric_exercise.dart';
+import 'package:phil/l2_domain/models/exercises/assisted_machine_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/strength_exercise.dart';
 
 void main() {
@@ -25,13 +26,19 @@ void main() {
         final jsonString = await rootBundle.loadString(filePath);
         final List<dynamic> jsonList = json.decode(jsonString);
 
-        expect(jsonList.length, 50);
+        // Adjusted counts: legs=56, back=53, arms=51, others=50
+        int expectedCount = 50;
+        if (filePath.contains('legs')) expectedCount = 56;
+        if (filePath.contains('back')) expectedCount = 53;
+        if (filePath.contains('arms')) expectedCount = 51;
+        expect(jsonList.length, expectedCount);
         print('\n$filePath:');
 
         int freeWeightCount = 0;
         int machineCount = 0;
         int bodyweightCount = 0;
         int isometricCount = 0;
+        int assistedMachineCount = 0;
 
         for (final exerciseJson in jsonList) {
           final type = exerciseJson['type'];
@@ -54,6 +61,10 @@ void main() {
               exercise = IsometricExercise.fromJson(exerciseJson);
               isometricCount++;
               break;
+            case 'assisted_machine':
+              exercise = AssistedMachineExercise.fromJson(exerciseJson);
+              assistedMachineCount++;
+              break;
             default:
               fail('Unknown exercise type: $type');
           }
@@ -67,6 +78,9 @@ void main() {
         print('  Total: ${jsonList.length}');
         print('  Free Weight: $freeWeightCount');
         print('  Machine: $machineCount');
+        print('  Bodyweight: $bodyweightCount');
+        print('  Isometric: $isometricCount');
+        print('  Assisted Machine: $assistedMachineCount');
         print('  Bodyweight: $bodyweightCount');
         print('  Isometric: $isometricCount');
       });
@@ -93,6 +107,9 @@ void main() {
             case 'isometric':
               exercise = IsometricExercise.fromJson(originalJson);
               break;
+            case 'assisted_machine':
+              exercise = AssistedMachineExercise.fromJson(originalJson);
+              break;
             default:
               fail('Unknown type: $type at index $i');
           }
@@ -114,6 +131,7 @@ void main() {
       int totalMachine = 0;
       int totalBodyweight = 0;
       int totalIsometric = 0;
+      int totalAssistedMachine = 0;
 
       for (final filePath in files) {
         final jsonString = await rootBundle.loadString(filePath);
@@ -136,11 +154,14 @@ void main() {
             case 'isometric':
               totalIsometric++;
               break;
+            case 'assisted_machine':
+              totalAssistedMachine++;
+              break;
           }
         }
       }
 
-      expect(totalExercises, 300);
+      expect(totalExercises, 310);
 
       print('\n\nCombined Statistics (All Files):');
       print('  Total Exercises: $totalExercises');
@@ -148,6 +169,7 @@ void main() {
       print('  Machine: $totalMachine');
       print('  Bodyweight: $totalBodyweight');
       print('  Isometric: $totalIsometric');
+      print('  Assisted Machine: $totalAssistedMachine');
     });
   });
 }

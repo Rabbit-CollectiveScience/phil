@@ -5,6 +5,7 @@ import '../../l2_domain/models/exercises/cardio_exercise.dart';
 import '../../l2_domain/models/exercises/bodyweight_exercise.dart';
 import '../../l2_domain/models/exercises/free_weight_exercise.dart';
 import '../../l2_domain/models/exercises/machine_exercise.dart';
+import '../../l2_domain/models/exercises/assisted_machine_exercise.dart';
 import '../../l2_domain/models/exercises/isometric_exercise.dart';
 import '../../l2_domain/models/exercises/distance_cardio_exercise.dart';
 import '../../l2_domain/models/exercises/duration_cardio_exercise.dart';
@@ -30,6 +31,10 @@ class ExerciseRepository {
         return FreeWeightExercise.fromJson(Map<String, dynamic>.from(json));
       case 'machine':
         return MachineExercise.fromJson(Map<String, dynamic>.from(json));
+      case 'assisted_machine':
+        return AssistedMachineExercise.fromJson(
+          Map<String, dynamic>.from(json),
+        );
       case 'isometric':
         return IsometricExercise.fromJson(Map<String, dynamic>.from(json));
       case 'distance_cardio':

@@ -100,7 +100,7 @@
     "canAddWeight": true
   },
   {
-    "type": "machine",
+    "type": "assisted_machine",
     "id": "back_13",
     "name": "Assisted Pull-Up Machine",
     "description": "Set the desired assistance weight on the machine and kneel or stand on the platform, grasping the pull-up handles with your preferred grip. The platform will support some of your bodyweight, making the movement easier. Pull yourself up by driving your elbows down and back, bringing your chin above the bar while keeping your core engaged. Lower yourself with control back to full arm extension. This machine is perfect for building pull-up strength progressively by reducing assistance weight over time.",
@@ -408,5 +408,29 @@
     "isCustom": false,
     "targetMuscles": ["back", "legs"],
     "canAddWeight": false
+  },
+  {
+    "type": "assisted_machine",
+    "id": "back_51",
+    "name": "Assisted Chin-Up Machine",
+    "description": "Set the desired assistance weight on the machine and kneel or stand on the platform, grasping the chin-up handles with an underhand grip (palms facing you) at shoulder-width. The platform will support some of your bodyweight, making the movement easier. Pull yourself up by driving your elbows down and back, bringing your chin above the bar while keeping your chest up. Lower yourself with control back to full arm extension. The underhand grip emphasizes biceps more than standard pull-ups while still heavily working the lats. Perfect for building chin-up strength progressively.",
+    "isCustom": false,
+    "targetMuscles": ["back", "arms"]
+  },
+  {
+    "type": "assisted_machine",
+    "id": "back_52",
+    "name": "Assisted Wide-Grip Pull-Up Machine",
+    "description": "Set the desired assistance weight on the machine and kneel or stand on the platform, grasping the pull-up handles with a wide overhand grip. The platform will support some of your bodyweight, making the movement easier. Pull yourself up by driving your elbows down and out to the sides, bringing your upper chest toward the bar. Lower yourself with control back to full arm extension. The wide grip maximizes lat width development while the assistance allows you to maintain proper form. Excellent for building the V-taper back shape.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
+  },
+  {
+    "type": "assisted_machine",
+    "id": "back_53",
+    "name": "Assisted Neutral-Grip Pull-Up Machine",
+    "description": "Set the desired assistance weight on the machine and kneel or stand on the platform, grasping the parallel handles with palms facing each other. The platform will support some of your bodyweight, making the movement easier. Pull yourself up by driving your elbows down and back, bringing your chin over the bar level. Lower yourself with control back to full arm extension. The neutral grip is the most shoulder-friendly pull-up variation and allows for a strong contraction of the lats and middle back. Perfect for those with wrist or elbow discomfort.",
+    "isCustom": false,
+    "targetMuscles": ["back"]
   }
 ]

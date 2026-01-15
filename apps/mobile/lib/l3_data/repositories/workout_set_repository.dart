@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import '../../l2_domain/models/workout_sets/workout_set.dart';
 import '../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
 import '../../l2_domain/models/workout_sets/weighted_workout_set.dart';
+import '../../l2_domain/models/workout_sets/assisted_machine_workout_set.dart';
 import '../../l2_domain/models/workout_sets/isometric_workout_set.dart';
 import '../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
 import '../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
@@ -25,6 +26,10 @@ class WorkoutSetRepository {
         return BodyweightWorkoutSet.fromJson(Map<String, dynamic>.from(json));
       case 'weighted':
         return WeightedWorkoutSet.fromJson(Map<String, dynamic>.from(json));
+      case 'assisted_machine':
+        return AssistedMachineWorkoutSet.fromJson(
+          Map<String, dynamic>.from(json),
+        );
       case 'isometric':
         return IsometricWorkoutSet.fromJson(Map<String, dynamic>.from(json));
       case 'distance_cardio':
