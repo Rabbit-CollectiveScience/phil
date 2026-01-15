@@ -9,6 +9,7 @@ import '../../../../l2_domain/models/common/muscle_group.dart';
 import '../../../../l2_domain/models/workout_sets/workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/assisted_machine_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
 import '../../../../l3_data/repositories/workout_set_repository.dart';

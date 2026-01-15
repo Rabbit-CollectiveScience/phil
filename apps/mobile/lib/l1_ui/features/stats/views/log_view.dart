@@ -12,12 +12,14 @@ import '../../../../l2_domain/models/exercises/strength_exercise.dart';
 import '../../../../l2_domain/models/exercises/bodyweight_exercise.dart';
 import '../../../../l2_domain/models/exercises/free_weight_exercise.dart';
 import '../../../../l2_domain/models/exercises/machine_exercise.dart';
+import '../../../../l2_domain/models/exercises/assisted_machine_exercise.dart';
 import '../../../../l2_domain/models/exercises/isometric_exercise.dart';
 import '../../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
 import '../../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
 import '../../../../l2_domain/models/workout_sets/workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/assisted_machine_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/isometric_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
@@ -597,6 +599,9 @@ class _AddSetDialogState extends State<_AddSetDialog> {
       if (exercise is IsometricExercise) {
         _fieldControllers['duration'] = TextEditingController();
         _fieldControllers['weight'] = TextEditingController();
+      } else if (exercise is AssistedMachineExercise) {
+        _fieldControllers['assistanceWeight'] = TextEditingController();
+        _fieldControllers['reps'] = TextEditingController();
       } else if (exercise is BodyweightExercise) {
         _fieldControllers['reps'] = TextEditingController();
         _fieldControllers['weight'] = TextEditingController();
@@ -685,6 +690,26 @@ class _AddSetDialogState extends State<_AddSetDialog> {
           controller: _fieldControllers['weight']!,
           hint: 'Enter additional weight (optional)',
           suffix: 'kg',
+        ),
+      );
+    } else if (exercise is AssistedMachineExercise) {
+      // Assistance Weight field
+      widgets.add(
+        _buildInputField(
+          label: 'ASSISTANCE',
+          controller: _fieldControllers['assistanceWeight']!,
+          hint: 'Enter assistance weight',
+          suffix: 'kg',
+        ),
+      );
+
+      // Reps field
+      widgets.add(
+        _buildInputField(
+          label: 'REPS',
+          controller: _fieldControllers['reps']!,
+          hint: 'Enter reps',
+          suffix: null,
         ),
       );
     } else if (exercise is StrengthExercise) {
@@ -951,6 +976,8 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                       String fieldPreview = '';
                       if (exercise is IsometricExercise) {
                         fieldPreview = 'sec · kg';
+                      } else if (exercise is AssistedMachineExercise) {
+                        fieldPreview = 'reps · kg assistance';
                       } else if (exercise is FreeWeightExercise ||
                           exercise is MachineExercise) {
                         fieldPreview = 'kg · reps';
@@ -1081,6 +1108,25 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                   duration: duration,
                                   weight: weight,
                                   isBodyweightBased: isBodyweightBased,
+                                );
+                              } else if (exercise is AssistedMachineExercise) {
+                                final assistanceWeightText =
+                                    _fieldControllers['assistanceWeight']!.text
+                                        .trim();
+                                final repsText = _fieldControllers['reps']!.text
+                                    .trim();
+
+                                final assistanceWeight = Weight(
+                                  double.parse(assistanceWeightText),
+                                );
+                                final reps = int.parse(repsText);
+
+                                workoutSet = AssistedMachineWorkoutSet(
+                                  id: const Uuid().v4(),
+                                  exerciseId: exercise.id,
+                                  timestamp: widget.selectedDate,
+                                  assistanceWeight: assistanceWeight,
+                                  reps: reps,
                                 );
                               } else if (exercise is FreeWeightExercise ||
                                   exercise is MachineExercise) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../view_models/exercise_detail_today.dart';
 import '../../../../l2_domain/models/exercises/isometric_exercise.dart';
+import '../../../../l2_domain/models/exercises/assisted_machine_exercise.dart';
 import '../../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
 import '../../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
 import '../../../../l2_domain/models/exercises/bodyweight_exercise.dart';
@@ -145,6 +146,8 @@ class ExerciseDetailCard extends StatelessWidget {
     // Determine exercise type and build appropriate metrics
     if (exercise is IsometricExercise) {
       return _buildIsometricMetrics();
+    } else if (exercise is AssistedMachineExercise) {
+      return _buildAssistedMachineMetrics();
     } else if (exercise is DistanceCardioExercise) {
       return _buildDistanceCardioMetrics();
     } else if (exercise is DurationCardioExercise) {
@@ -244,6 +247,30 @@ class ExerciseDetailCard extends StatelessWidget {
                 : '-',
             isPR:
                 false, // Additional weight doesn't have separate PR tracking yet
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAssistedMachineMetrics() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildMetricColumn(
+            'Max Reps',
+            maxReps != null ? '$maxReps' : '-',
+            isPR: _hasPR('maxReps'),
+          ),
+        ),
+        _buildDivider(),
+        Expanded(
+          child: _buildMetricColumn(
+            'Min Assistance',
+            (maxWeightToday != null && maxWeightToday! > 0)
+                ? '${maxWeightToday!.toInt()} kg'
+                : '-',
+            isPR: _hasPR('maxWeight'),
           ),
         ),
       ],

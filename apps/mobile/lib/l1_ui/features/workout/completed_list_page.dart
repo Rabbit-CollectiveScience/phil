@@ -8,6 +8,7 @@ import '../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.da
 import '../../../l2_domain/models/workout_sets/workout_set.dart';
 import '../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
+import '../../../l2_domain/models/workout_sets/assisted_machine_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/isometric_workout_set.dart';

@@ -23,11 +23,13 @@ import '../../../l2_domain/use_cases/filters/should_show_filter_page_use_case.da
 import '../../../l2_domain/models/exercises/strength_exercise.dart';
 import '../../../l2_domain/models/exercises/isometric_exercise.dart';
 import '../../../l2_domain/models/exercises/bodyweight_exercise.dart';
+import '../../../l2_domain/models/exercises/assisted_machine_exercise.dart';
 import '../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
 import '../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
 import '../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/isometric_workout_set.dart';
+import '../../../l2_domain/models/workout_sets/assisted_machine_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
 import '../../../l2_domain/models/common/weight.dart';
@@ -274,6 +276,26 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                 : null,
             weight: weight != null && weight > 0 ? Weight(weight) : null,
             isBodyweightBased: exercise.isBodyweightBased,
+          );
+          await recordUseCase.execute(workoutSet: workoutSet);
+        } else if (exercise is AssistedMachineExercise) {
+          // Parse assistance weight and reps
+          final assistanceWeightStr = fieldValues?['assistanceWeight'];
+          final repsStr = fieldValues?['reps'];
+
+          final assistanceWeight = assistanceWeightStr != null
+              ? double.tryParse(assistanceWeightStr)
+              : null;
+          final reps = repsStr != null ? int.tryParse(repsStr) : null;
+
+          final workoutSet = AssistedMachineWorkoutSet(
+            id: uuid.v4(),
+            exerciseId: exercise.id,
+            timestamp: DateTime.now(),
+            assistanceWeight: assistanceWeight != null
+                ? Weight(assistanceWeight)
+                : null,
+            reps: reps,
           );
           await recordUseCase.execute(workoutSet: workoutSet);
         } else if (exercise is StrengthExercise) {
