@@ -8,6 +8,7 @@ import '../view_models/card_model.dart';
 import '../../../../l2_domain/models/exercises/strength_exercise.dart';
 import '../../../../l2_domain/models/exercises/isometric_exercise.dart';
 import '../../../../l2_domain/models/exercises/bodyweight_exercise.dart';
+import '../../../../l2_domain/models/exercises/assisted_machine_exercise.dart';
 import '../../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
 import '../../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
 
@@ -204,6 +205,30 @@ class SwipeableCardState extends State<SwipeableCard>
           _fieldTimers['weight']?.cancel();
         }
       });
+    } else if (exercise is AssistedMachineExercise) {
+      // Assisted machine exercises: reps + assistance weight (bodyweight-based)
+      _fieldControllers['reps'] = TextEditingController(text: '- reps');
+      _fieldControllers['assistanceWeight'] = TextEditingController(
+        text: 'bodyweight',
+      );
+      _fieldFocusNodes['reps'] = FocusNode();
+      _fieldFocusNodes['assistanceWeight'] = FocusNode();
+
+      _fieldFocusNodes['reps']!.addListener(() {
+        if (_fieldFocusNodes['reps']!.hasFocus) {
+          _startFieldTimer('reps');
+        } else {
+          _fieldTimers['reps']?.cancel();
+        }
+      });
+
+      _fieldFocusNodes['assistanceWeight']!.addListener(() {
+        if (_fieldFocusNodes['assistanceWeight']!.hasFocus) {
+          _startFieldTimer('assistanceWeight');
+        } else {
+          _fieldTimers['assistanceWeight']?.cancel();
+        }
+      });
     } else if (exercise is StrengthExercise) {
       // Other strength exercises (free weight, machine): weight + reps
       _fieldControllers['weight'] = TextEditingController(text: '- kg');
@@ -281,6 +306,15 @@ class SwipeableCardState extends State<SwipeableCard>
         } else if (text == 'bodyweight') {
           values[entry.key] = '0';
         }
+      } else if (entry.key == 'assistanceWeight' &&
+          text.toLowerCase().contains('bw')) {
+        // Extract number from "BW-Xkg" format (inverted for assisted machines)
+        final match = RegExp(r'BW-(\d+)').firstMatch(text);
+        if (match != null) {
+          values[entry.key] = match.group(1)!;
+        } else if (text == 'bodyweight') {
+          values[entry.key] = '0';
+        }
       } else {
         // Extract text and remove common units
         text = text
@@ -345,6 +379,14 @@ class SwipeableCardState extends State<SwipeableCard>
               }
             } else {
               displayText = '$newValue kg';
+            }
+          } else if (entry.key == 'assistanceWeight') {
+            // Handle assistanceWeight field for assisted machine exercises
+            int value = int.tryParse(newValue) ?? 0;
+            if (value == 0) {
+              displayText = 'bodyweight';
+            } else {
+              displayText = 'BW-${value}kg';
             }
           } else if (entry.key == 'reps') {
             int value = int.tryParse(newValue) ?? 0;
@@ -750,6 +792,19 @@ class SwipeableCardState extends State<SwipeableCard>
             child: _buildSimpleFieldInput('weight', 'kg', 2),
           ),
       ];
+    } else if (exercise is AssistedMachineExercise) {
+      return [
+        if (_fieldControllers.containsKey('reps'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('reps', 'reps', 1),
+          ),
+        if (_fieldControllers.containsKey('assistanceWeight'))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: _buildSimpleFieldInput('assistanceWeight', 'kg', 2),
+          ),
+      ];
     } else if (exercise is StrengthExercise) {
       return [
         if (_fieldControllers.containsKey('weight'))
@@ -798,7 +853,8 @@ class SwipeableCardState extends State<SwipeableCard>
       return const SizedBox.shrink();
     }
 
-    final int minValue = fieldName == 'weight' ? step : 1;
+    final int minValue =
+        (fieldName == 'weight' || fieldName == 'assistanceWeight') ? step : 1;
 
     // Check if this is a bodyweight-based exercise
     final exercise = widget.card.exercise;
@@ -806,6 +862,8 @@ class SwipeableCardState extends State<SwipeableCard>
         fieldName == 'weight' &&
         (exercise is BodyweightExercise ||
             (exercise is IsometricExercise && exercise.isBodyweightBased));
+    final isAssistedMachineField =
+        fieldName == 'assistanceWeight' && exercise is AssistedMachineExercise;
 
     return ListenableBuilder(
       listenable: controller,
@@ -817,7 +875,11 @@ class SwipeableCardState extends State<SwipeableCard>
           keyboardType: TextInputType.number,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: controller.text == 'bodyweight' ? 26 : 32,
+            fontSize:
+                (controller.text == 'bodyweight' ||
+                    controller.text.startsWith('BW'))
+                ? 26
+                : 32,
             color: AppColors.offWhite,
             fontWeight: FontWeight.w300,
             letterSpacing: 1.5,
@@ -830,7 +892,7 @@ class SwipeableCardState extends State<SwipeableCard>
             prefixIcon: ListenableBuilder(
               listenable: Listenable.merge([focusNode, controller]),
               builder: (context, child) {
-                final isEmpty = isBodyweightField
+                final isEmpty = (isBodyweightField || isAssistedMachineField)
                     ? controller.text == 'bodyweight'
                     : controller.text == '- $unit';
                 return Opacity(
@@ -859,6 +921,12 @@ class SwipeableCardState extends State<SwipeableCard>
                       } else {
                         controller.text = 'BW+${newValue}kg';
                       }
+                    } else if (isAssistedMachineField) {
+                      if (newValue == 0) {
+                        controller.text = 'bodyweight';
+                      } else {
+                        controller.text = 'BW-${newValue}kg';
+                      }
                     } else {
                       String displayUnit = unit;
                       if (unit == 'reps' && newValue == 1) {
@@ -886,7 +954,7 @@ class SwipeableCardState extends State<SwipeableCard>
             suffixIcon: ListenableBuilder(
               listenable: Listenable.merge([focusNode, controller]),
               builder: (context, child) {
-                final isEmpty = isBodyweightField
+                final isEmpty = (isBodyweightField || isAssistedMachineField)
                     ? controller.text == 'bodyweight'
                     : controller.text == '- $unit';
                 return Opacity(
@@ -913,6 +981,12 @@ class SwipeableCardState extends State<SwipeableCard>
                       controller.text = 'bodyweight';
                     } else {
                       controller.text = 'BW+${newValue}kg';
+                    }
+                  } else if (isAssistedMachineField) {
+                    if (newValue == 0) {
+                      controller.text = 'bodyweight';
+                    } else {
+                      controller.text = 'BW-${newValue}kg';
                     }
                   } else {
                     String displayUnit = unit;
