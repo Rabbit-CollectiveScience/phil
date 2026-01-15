@@ -1,5 +1,6 @@
 import '../../models/workout_sets/weighted_workout_set.dart';
 import '../../models/workout_sets/bodyweight_workout_set.dart';
+import '../../models/workout_sets/assisted_machine_workout_set.dart';
 import '../../models/workout_sets/isometric_workout_set.dart';
 import '../../models/workout_sets/distance_cardio_workout_set.dart';
 import '../../models/workout_sets/duration_cardio_workout_set.dart';
@@ -80,6 +81,16 @@ class GetTodayExerciseDetailsUseCase {
               (maxAdditionalWeight == null ||
                   set.additionalWeight!.kg > maxAdditionalWeight)) {
             maxAdditionalWeight = set.additionalWeight!.kg;
+          }
+        } else if (set is AssistedMachineWorkoutSet) {
+          if (set.reps != null && (maxReps == null || set.reps! > maxReps)) {
+            maxReps = set.reps;
+          }
+
+          // Track MINIMUM assistance weight (lower = better for assisted machines)
+          if (set.assistanceWeight != null &&
+              (maxWeight == null || set.assistanceWeight!.kg < maxWeight)) {
+            maxWeight = set.assistanceWeight!.kg;
           }
         } else if (set is IsometricWorkoutSet) {
           // Duration tracking for isometric exercises
