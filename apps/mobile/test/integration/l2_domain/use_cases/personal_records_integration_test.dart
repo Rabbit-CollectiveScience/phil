@@ -14,12 +14,16 @@ import 'package:phil/l2_domain/models/personal_records/distance_pr.dart';
 import 'package:phil/l2_domain/models/personal_records/pace_pr.dart';
 import 'package:phil/l2_domain/models/workout_sets/weighted_workout_set.dart';
 import 'package:phil/l2_domain/models/workout_sets/bodyweight_workout_set.dart';
+import 'package:phil/l2_domain/models/workout_sets/isometric_workout_set.dart';
 import 'package:phil/l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
+import 'package:phil/l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
 import 'package:phil/l2_domain/models/common/weight.dart';
 import 'package:phil/l2_domain/models/common/distance.dart';
 import 'package:phil/l2_domain/models/exercises/free_weight_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/bodyweight_exercise.dart';
+import 'package:phil/l2_domain/models/exercises/isometric_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/distance_cardio_exercise.dart';
+import 'package:phil/l2_domain/models/exercises/duration_cardio_exercise.dart';
 import 'package:phil/l2_domain/models/common/muscle_group.dart';
 
 void main() {
@@ -433,6 +437,150 @@ void main() {
 
       final prs = await prRepository.getByExerciseId('bench');
       expect(prs, isEmpty);
+    });
+
+    test('calculates isometric exercise PRs (duration + weight)', () async {
+      final exercise = IsometricExercise(
+        id: 'loaded_hold',
+        name: 'Loaded Hold',
+        description: 'Test',
+        isCustom: false,
+        targetMuscles: [MuscleGroup.core],
+        isBodyweightBased: false,
+      );
+
+      await exerciseRepository.save(exercise);
+
+      await workoutSetRepository.save(
+        IsometricWorkoutSet(
+          id: 'set1',
+          exerciseId: 'loaded_hold',
+          timestamp: DateTime.now(),
+          duration: const Duration(seconds: 45),
+          weight: Weight(50.0),
+          isBodyweightBased: false,
+        ),
+      );
+
+      await workoutSetRepository.save(
+        IsometricWorkoutSet(
+          id: 'set2',
+          exerciseId: 'loaded_hold',
+          timestamp: DateTime.now(),
+          duration: const Duration(seconds: 60),
+          weight: Weight(40.0),
+          isBodyweightBased: false,
+        ),
+      );
+
+      final useCase = RecalculatePRsForExerciseUseCase(
+        prRepository,
+        workoutSetRepository,
+        exerciseRepository,
+      );
+
+      await useCase.execute('loaded_hold');
+
+      final prs = await prRepository.getByExerciseId('loaded_hold');
+      expect(prs.isNotEmpty, true);
+
+      // Should have both duration and weight PRs for loaded holds
+      expect(prs.any((pr) => pr is DurationPR), true);
+      expect(prs.any((pr) => pr is WeightPR), true);
+    });
+
+    test(
+      'calculates isometric exercise PRs (bodyweight - duration only)',
+      () async {
+        final exercise = IsometricExercise(
+          id: 'plank',
+          name: 'Plank',
+          description: 'Test',
+          isCustom: false,
+          targetMuscles: [MuscleGroup.core],
+          isBodyweightBased: true,
+        );
+
+        await exerciseRepository.save(exercise);
+
+        await workoutSetRepository.save(
+          IsometricWorkoutSet(
+            id: 'set1',
+            exerciseId: 'plank',
+            timestamp: DateTime.now(),
+            duration: const Duration(seconds: 45),
+            isBodyweightBased: true,
+          ),
+        );
+
+        await workoutSetRepository.save(
+          IsometricWorkoutSet(
+            id: 'set2',
+            exerciseId: 'plank',
+            timestamp: DateTime.now(),
+            duration: const Duration(seconds: 60),
+            isBodyweightBased: true,
+          ),
+        );
+
+        final useCase = RecalculatePRsForExerciseUseCase(
+          prRepository,
+          workoutSetRepository,
+          exerciseRepository,
+        );
+
+        await useCase.execute('plank');
+
+        final prs = await prRepository.getByExerciseId('plank');
+        expect(prs.isNotEmpty, true);
+
+        // Should have duration PR but NOT weight PR for bodyweight isometric
+        expect(prs.any((pr) => pr is DurationPR), true);
+        expect(prs.any((pr) => pr is WeightPR), false);
+      },
+    );
+
+    test('calculates duration cardio exercise PRs', () async {
+      final exercise = DurationCardioExercise(
+        id: 'cycling',
+        name: 'Cycling',
+        description: 'Test',
+        isCustom: false,
+      );
+
+      await exerciseRepository.save(exercise);
+
+      await workoutSetRepository.save(
+        DurationCardioWorkoutSet(
+          id: 'set1',
+          exerciseId: 'cycling',
+          timestamp: DateTime.now(),
+          duration: const Duration(minutes: 20),
+        ),
+      );
+
+      await workoutSetRepository.save(
+        DurationCardioWorkoutSet(
+          id: 'set2',
+          exerciseId: 'cycling',
+          timestamp: DateTime.now(),
+          duration: const Duration(minutes: 45),
+        ),
+      );
+
+      final useCase = RecalculatePRsForExerciseUseCase(
+        prRepository,
+        workoutSetRepository,
+        exerciseRepository,
+      );
+
+      await useCase.execute('cycling');
+
+      final prs = await prRepository.getByExerciseId('cycling');
+      expect(prs.isNotEmpty, true);
+
+      // Should have duration PR
+      expect(prs.any((pr) => pr is DurationPR), true);
     });
   });
 }

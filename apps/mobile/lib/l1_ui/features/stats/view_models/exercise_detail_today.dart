@@ -17,14 +17,24 @@ class ExerciseDetailToday {
   final int sets;
   final double volumeToday;
   final double? maxWeightToday;
+  final int? maxReps;
+  final Duration? maxDuration;
+  final double? maxDistance; // in meters
+  final double? maxAdditionalWeight;
   final List<PRToday> prsToday;
+  final dynamic exercise; // Exercise object for type checking
 
   ExerciseDetailToday({
     required this.name,
     required this.sets,
     required this.volumeToday,
     this.maxWeightToday,
+    this.maxReps,
+    this.maxDuration,
+    this.maxDistance,
+    this.maxAdditionalWeight,
     this.prsToday = const [],
+    this.exercise,
   });
 
   factory ExerciseDetailToday.fromMap(Map<String, dynamic> map) {
@@ -32,6 +42,11 @@ class ExerciseDetailToday {
     final prs = prsData
         .map((pr) => PRToday.fromMap(pr as Map<String, dynamic>))
         .toList();
+
+    Duration? maxDuration;
+    if (map['maxDuration'] != null) {
+      maxDuration = map['maxDuration'] as Duration;
+    }
 
     return ExerciseDetailToday(
       name: map['exerciseName'] as String,
@@ -42,7 +57,16 @@ class ExerciseDetailToday {
       maxWeightToday: map['maxWeight'] != null
           ? (map['maxWeight'] as num).toDouble()
           : null,
+      maxReps: map['maxReps'] as int?,
+      maxDuration: maxDuration,
+      maxDistance: map['maxDistance'] != null
+          ? (map['maxDistance'] as num).toDouble()
+          : null,
+      maxAdditionalWeight: map['maxAdditionalWeight'] != null
+          ? (map['maxAdditionalWeight'] as num).toDouble()
+          : null,
       prsToday: prs,
+      exercise: map['exercise'],
     );
   }
 }

@@ -109,6 +109,14 @@ class RecalculatePRsForExerciseUseCase {
           maxDuration = set.duration;
           maxDurationSetId = set.id;
         }
+
+        // Weight PR - only if NOT bodyweight-based (loaded static holds)
+        if (!set.isBodyweightBased &&
+            set.weight != null &&
+            (maxWeight == null || set.weight!.kg > maxWeight)) {
+          maxWeight = set.weight!.kg;
+          maxWeightSetId = set.id;
+        }
       }
     }
 

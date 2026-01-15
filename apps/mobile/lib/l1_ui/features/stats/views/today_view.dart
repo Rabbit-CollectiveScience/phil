@@ -206,7 +206,12 @@ class _TodayViewState extends State<TodayView> {
                     sets: exercise.sets,
                     volumeToday: exercise.volumeToday,
                     maxWeightToday: exercise.maxWeightToday,
+                    maxReps: exercise.maxReps,
+                    maxDuration: exercise.maxDuration,
+                    maxDistance: exercise.maxDistance,
+                    maxAdditionalWeight: exercise.maxAdditionalWeight,
                     prsToday: exercise.prsToday,
+                    exercise: exercise.exercise,
                   ),
                 );
               }),

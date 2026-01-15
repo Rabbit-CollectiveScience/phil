@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../view_models/exercise_detail_today.dart';
+import '../../../../l2_domain/models/exercises/isometric_exercise.dart';
+import '../../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
+import '../../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
+import '../../../../l2_domain/models/exercises/bodyweight_exercise.dart';
 
 /// Detail card for individual exercise stats with PR tracking
 class ExerciseDetailCard extends StatelessWidget {
@@ -8,7 +12,12 @@ class ExerciseDetailCard extends StatelessWidget {
   final int sets;
   final double volumeToday;
   final double? maxWeightToday;
+  final int? maxReps;
+  final Duration? maxDuration;
+  final double? maxDistance;
+  final double? maxAdditionalWeight;
   final List<PRToday> prsToday;
+  final dynamic exercise;
 
   const ExerciseDetailCard({
     super.key,
@@ -16,7 +25,12 @@ class ExerciseDetailCard extends StatelessWidget {
     required this.sets,
     required this.volumeToday,
     this.maxWeightToday,
+    this.maxReps,
+    this.maxDuration,
+    this.maxDistance,
+    this.maxAdditionalWeight,
     this.prsToday = const [],
+    this.exercise,
   });
 
   @override
@@ -84,37 +98,8 @@ class ExerciseDetailCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          // Metrics grid
-          Row(
-            children: [
-              Expanded(
-                child: _buildMetricColumn(
-                  'Volume',
-                  volumeToday > 0
-                      ? '${volumeToday.toInt()} kg'
-                      : volumeToday == 0
-                      ? '-'
-                      : '${volumeToday.toInt()} reps',
-                  isPR: _hasPR('maxVolume'),
-                ),
-              ),
-              Container(
-                width: 1,
-                height: 50,
-                color: AppColors.darkGrey.withOpacity(0.2),
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-              Expanded(
-                child: _buildMetricColumn(
-                  'Max Weight',
-                  (maxWeightToday != null && maxWeightToday! > 0)
-                      ? '${maxWeightToday!.toInt()} kg'
-                      : '-',
-                  isPR: _hasPR('maxWeight'),
-                ),
-              ),
-            ],
-          ),
+          // Metrics grid - dynamic based on exercise type
+          _buildMetricsGrid(),
           // PR badges at the bottom (if any)
           if (prsToday.isNotEmpty) ...[
             const SizedBox(height: 16),
@@ -153,6 +138,148 @@ class ExerciseDetailCard extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildMetricsGrid() {
+    // Determine exercise type and build appropriate metrics
+    if (exercise is IsometricExercise) {
+      return _buildIsometricMetrics();
+    } else if (exercise is DistanceCardioExercise) {
+      return _buildDistanceCardioMetrics();
+    } else if (exercise is DurationCardioExercise) {
+      return _buildDurationCardioMetrics();
+    } else if (exercise is BodyweightExercise) {
+      return _buildBodyweightMetrics();
+    } else {
+      // Default: weighted strength exercises
+      return _buildWeightedMetrics();
+    }
+  }
+
+  Widget _buildIsometricMetrics() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildMetricColumn(
+            'Max Duration',
+            maxDuration != null ? '${maxDuration!.inSeconds} sec' : '-',
+            isPR: _hasPR('maxDuration'),
+          ),
+        ),
+        _buildDivider(),
+        Expanded(
+          child: _buildMetricColumn(
+            'Max Reps',
+            maxReps != null ? '$maxReps' : '-',
+            isPR: _hasPR('maxReps'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDistanceCardioMetrics() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildMetricColumn(
+            'Max Distance',
+            maxDistance != null
+                ? '${(maxDistance! / 1000).toStringAsFixed(1)} km'
+                : '-',
+            isPR: _hasPR('maxDistance'),
+          ),
+        ),
+        _buildDivider(),
+        Expanded(
+          child: _buildMetricColumn(
+            'Max Duration',
+            maxDuration != null ? '${maxDuration!.inMinutes} min' : '-',
+            isPR: _hasPR('maxDuration'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDurationCardioMetrics() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildMetricColumn(
+            'Max Duration',
+            maxDuration != null ? '${maxDuration!.inMinutes} min' : '-',
+            isPR: _hasPR('maxDuration'),
+          ),
+        ),
+        _buildDivider(),
+        Expanded(
+          child: _buildMetricColumn(
+            'Volume',
+            volumeToday > 0 ? '${volumeToday.toInt()} min' : '-',
+            isPR: _hasPR('maxVolume'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBodyweightMetrics() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildMetricColumn(
+            'Max Reps',
+            maxReps != null ? '$maxReps' : '-',
+            isPR: _hasPR('maxReps'),
+          ),
+        ),
+        _buildDivider(),
+        Expanded(
+          child: _buildMetricColumn(
+            'Max Added Weight',
+            (maxAdditionalWeight != null && maxAdditionalWeight! > 0)
+                ? '${maxAdditionalWeight!.toInt()} kg'
+                : '-',
+            isPR:
+                false, // Additional weight doesn't have separate PR tracking yet
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWeightedMetrics() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildMetricColumn(
+            'Volume',
+            volumeToday > 0 ? '${volumeToday.toInt()} kg' : '-',
+            isPR: _hasPR('maxVolume'),
+          ),
+        ),
+        _buildDivider(),
+        Expanded(
+          child: _buildMetricColumn(
+            'Max Weight',
+            (maxWeightToday != null && maxWeightToday! > 0)
+                ? '${maxWeightToday!.toInt()} kg'
+                : '-',
+            isPR: _hasPR('maxWeight'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      width: 1,
+      height: 50,
+      color: AppColors.darkGrey.withOpacity(0.2),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
     );
   }
 
