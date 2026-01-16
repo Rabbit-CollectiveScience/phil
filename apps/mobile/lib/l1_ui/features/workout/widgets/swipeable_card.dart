@@ -502,6 +502,7 @@ class SwipeableCardState extends State<SwipeableCard>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       barrierColor: Colors.black.withOpacity(0.5),
+      useSafeArea: false,
       builder: (context) => _CustomInputPanel(
         fieldName: fieldName,
         unit: unit,
@@ -1157,7 +1158,8 @@ class _CustomInputPanel extends StatelessWidget {
         Navigator.pop(context);
       },
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.5,
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 0.4,
         decoration: BoxDecoration(
           color: AppColors.boldGrey,
           borderRadius: const BorderRadius.vertical(
