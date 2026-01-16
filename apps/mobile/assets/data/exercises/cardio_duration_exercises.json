@@ -1,20 +1,6 @@
 [
   {
     "type": "duration_cardio",
-    "id": "cardio_1",
-    "name": "Treadmill",
-    "description": "Step onto the treadmill and start at a walking pace to warm up. Gradually increase the speed to your desired pace using the speed controls. Maintain an upright posture with shoulders back, look forward, and pump your arms naturally at your sides. Land mid-foot with each step and keep your stride smooth and controlled. Monitor your heart rate and adjust speed as needed for your target training zone.",
-    "isCustom": false
-  },
-  {
-    "type": "duration_cardio",
-    "id": "cardio_2",
-    "name": "Incline Treadmill",
-    "description": "Set the treadmill to a steep incline (typically 8-15%) and maintain a moderate walking speed (3-5 km/h). Keep your posture upright - avoid leaning forward or holding onto the rails, as this reduces the effectiveness. Engage your glutes and hamstrings as you push through each step. Take deliberate, controlled steps and maintain steady breathing. This exercise is excellent for building lower body strength while providing cardiovascular benefits with less joint impact than running.",
-    "isCustom": false
-  },
-  {
-    "type": "duration_cardio",
     "id": "cardio_3",
     "name": "Stationary Bike",
     "description": "Adjust the seat height so your knee is slightly bent when the pedal is at its lowest position. Sit on the saddle with feet secured in pedal straps or cages. Start pedaling at a comfortable pace and gradually increase your speed and resistance to your target intensity. Keep your upper body relaxed with a slight forward lean, hands resting lightly on the handlebars. Maintain a steady cadence (pedal rotations per minute) throughout your workout. Adjust resistance to control effort level.",

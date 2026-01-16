@@ -69,8 +69,12 @@ class MockDataGenerator {
     final isometricBodyweight = isometricExercises.length > 1
         ? isometricExercises[1]
         : null;
+    // Always select Treadmill (cardio_1) for consistent testing
     final distanceCardio = distanceCardioExercises.isNotEmpty
-        ? distanceCardioExercises.first
+        ? distanceCardioExercises.firstWhere(
+            (e) => e.id == 'cardio_1',
+            orElse: () => distanceCardioExercises.first,
+          )
         : null;
     final durationCardio = durationCardioExercises.isNotEmpty
         ? durationCardioExercises.first

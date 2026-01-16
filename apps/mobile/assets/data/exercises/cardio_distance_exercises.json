@@ -1,6 +1,20 @@
 [
   {
     "type": "distance_cardio",
+    "id": "cardio_1",
+    "name": "Treadmill",
+    "description": "Step onto the treadmill and start at a walking pace to warm up. Gradually increase the speed to your desired pace using the speed controls. Maintain an upright posture with shoulders back, look forward, and pump your arms naturally at your sides. Land mid-foot with each step and keep your stride smooth and controlled. Monitor your heart rate and adjust speed as needed for your target training zone.",
+    "isCustom": false
+  },
+  {
+    "type": "distance_cardio",
+    "id": "cardio_2",
+    "name": "Incline Treadmill",
+    "description": "Set the treadmill to a steep incline (typically 8-15%) and maintain a moderate walking speed (3-5 km/h). Keep your posture upright - avoid leaning forward or holding onto the rails, as this reduces the effectiveness. Engage your glutes and hamstrings as you push through each step. Take deliberate, controlled steps and maintain steady breathing. This exercise is excellent for building lower body strength while providing cardiovascular benefits with less joint impact than running.",
+    "isCustom": false
+  },
+  {
+    "type": "distance_cardio",
     "id": "cardio_5",
     "name": "Rowing Machine",
     "description": "Sit on the rowing machine seat and secure your feet in the foot straps. Grab the handle with both hands. The rowing motion has four phases: catch (knees bent, arms extended), drive (push with legs, then lean back, then pull arms), finish (legs extended, handle at chest), and recovery (extend arms, lean forward, bend knees). Drive powerfully with your legs first, then engage your core and pull with your arms. Keep your back straight and core engaged throughout. The motion should be smooth and continuous: 60% leg drive, 20% core, 20% arm pull.",
