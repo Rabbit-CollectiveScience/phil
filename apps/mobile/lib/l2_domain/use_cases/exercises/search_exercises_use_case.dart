@@ -1,4 +1,5 @@
 import '../../models/exercises/exercise.dart';
+import '../../models/exercise_searcher.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 
 // Use Case: Search all exercises by name
@@ -15,8 +16,10 @@ import '../../../l3_data/repositories/exercise_repository.dart';
 
 class SearchExercisesUseCase {
   final ExerciseRepository _exerciseRepository;
+  final ExerciseSearcher _searcher;
 
-  SearchExercisesUseCase(this._exerciseRepository);
+  SearchExercisesUseCase(this._exerciseRepository)
+      : _searcher = ExerciseSearcher();
 
   Future<List<Exercise>> execute({required String searchQuery}) async {
     // Get all exercises
@@ -27,31 +30,7 @@ class SearchExercisesUseCase {
       return [];
     }
 
-    // Filter by name match (case-insensitive)
-    final query = searchQuery.toLowerCase();
-    final filtered = allExercises
-        .where((exercise) => exercise.name.toLowerCase().contains(query))
-        .toList();
-
-    // Sort by relevance: exact matches first, then starts-with, then contains
-    filtered.sort((a, b) {
-      final aName = a.name.toLowerCase();
-      final bName = b.name.toLowerCase();
-
-      // Exact match
-      if (aName == query) return -1;
-      if (bName == query) return 1;
-
-      // Starts with query
-      final aStarts = aName.startsWith(query);
-      final bStarts = bName.startsWith(query);
-      if (aStarts && !bStarts) return -1;
-      if (!aStarts && bStarts) return 1;
-
-      // Alphabetical for same relevance
-      return aName.compareTo(bName);
-    });
-
-    return filtered;
+    // Use sophisticated token-based search
+    return _searcher.search(allExercises, searchQuery);
   }
 }

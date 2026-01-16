@@ -2,6 +2,7 @@ import '../../models/exercises/exercise.dart';
 import '../../models/exercises/strength_exercise.dart';
 import '../../models/exercises/cardio_exercise.dart';
 import '../../models/common/muscle_group.dart';
+import '../../models/exercise_searcher.dart';
 import '../../../l3_data/repositories/exercise_repository.dart';
 
 // Use Case: Get recommended exercises for workout session
@@ -13,15 +14,17 @@ import '../../../l3_data/repositories/exercise_repository.dart';
 //
 // Business Rules:
 // - Search query overrides type filter
-// - Search is case-insensitive
-// - Search prioritizes: starts-with > contains
+// - Search uses token-based matching across name, description, and target muscles
+// - Search prioritizes: name match > target muscles > description
 //
 // Used by: WorkoutHomePage on app start and search
 
 class GetRecommendedExercisesUseCase {
   final ExerciseRepository _repository;
+  final ExerciseSearcher _searcher;
 
-  GetRecommendedExercisesUseCase(this._repository);
+  GetRecommendedExercisesUseCase(this._repository)
+      : _searcher = ExerciseSearcher();
 
   Future<List<Exercise>> execute({
     String? filterCategory,
@@ -32,7 +35,7 @@ class GetRecommendedExercisesUseCase {
 
     // Business Rule: Search overrides type filter
     if (searchQuery != null && searchQuery.isNotEmpty) {
-      return _searchExercises(exercises, searchQuery);
+      return _searcher.search(exercises, searchQuery);
     }
 
     // If filter is provided and not 'all', filter by type/muscle group
@@ -68,27 +71,5 @@ class GetRecommendedExercisesUseCase {
       // Category not recognized, return all
       return exercises;
     }
-  }
-
-  /// Search exercises by name with prioritization
-  /// Priority: starts-with > contains
-  List<Exercise> _searchExercises(List<Exercise> exercises, String query) {
-    final queryLower = query.toLowerCase();
-
-    final startsWith = <Exercise>[];
-    final contains = <Exercise>[];
-
-    for (final exercise in exercises) {
-      final nameLower = exercise.name.toLowerCase();
-
-      if (nameLower.startsWith(queryLower)) {
-        startsWith.add(exercise);
-      } else if (nameLower.contains(queryLower)) {
-        contains.add(exercise);
-      }
-    }
-
-    // Return prioritized results
-    return [...startsWith, ...contains];
   }
 }

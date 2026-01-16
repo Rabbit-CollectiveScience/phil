@@ -233,9 +233,9 @@ void main() {
 
       final useCase = SearchExercisesUseCase(exerciseRepository);
 
-      final result = await useCase.execute(searchQuery: 'p');
+      final result = await useCase.execute(searchQuery: 'press');
 
-      expect(result.length, 3); // Push-up, Press, and Chest Press
+      expect(result.length, 2); // Press and Chest Press (contains "press")
     });
 
     test('handles special characters in search', () async {
