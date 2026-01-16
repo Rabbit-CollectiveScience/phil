@@ -24,7 +24,9 @@ class WorkoutInputPanel extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: panelHeight,
-      decoration: BoxDecoration(color: AppColors.boldGrey),
+      decoration: BoxDecoration(
+        color: AppColors.darkGrey,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
