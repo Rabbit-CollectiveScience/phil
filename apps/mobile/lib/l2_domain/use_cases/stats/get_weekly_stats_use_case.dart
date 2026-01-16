@@ -75,7 +75,26 @@ class GetWeeklyStatsUseCase {
       if (exercise is StrengthExercise) {
         // Use primary muscle group if available
         if (exercise.targetMuscles.isNotEmpty) {
-          type = exercise.targetMuscles.first.name.toUpperCase();
+          switch (exercise.targetMuscles.first) {
+            case MuscleGroup.chest:
+              type = 'CHEST';
+              break;
+            case MuscleGroup.back:
+              type = 'BACK';
+              break;
+            case MuscleGroup.legs:
+              type = 'LEGS';
+              break;
+            case MuscleGroup.shoulders:
+              type = 'SHOULDERS';
+              break;
+            case MuscleGroup.arms:
+              type = 'ARMS';
+              break;
+            case MuscleGroup.core:
+              type = 'CORE';
+              break;
+          }
         } else {
           type = 'STRENGTH';
         }

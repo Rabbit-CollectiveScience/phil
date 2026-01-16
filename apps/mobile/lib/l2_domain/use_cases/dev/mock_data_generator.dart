@@ -18,6 +18,7 @@ import '../../models/exercises/distance_cardio_exercise.dart';
 import '../../models/exercises/duration_cardio_exercise.dart';
 import '../../models/common/weight.dart';
 import '../../models/common/distance.dart';
+import '../../models/common/muscle_group.dart';
 
 /// Generates realistic mock workout data for testing with typed models
 /// Each day includes one exercise of each type (8 exercises total per day)
@@ -52,23 +53,67 @@ class MockDataGenerator {
         .whereType<DurationCardioExercise>()
         .toList();
 
-    // Select one of each type for consistent tracking
+    // Select exercises from different muscle groups for variety
+    // Use exercise types that are likely to have each muscle group
     final freeWeight = freeWeightExercises.isNotEmpty
-        ? freeWeightExercises.first
+        ? freeWeightExercises.firstWhere(
+            (e) =>
+                e.targetMuscles.isNotEmpty &&
+                e.targetMuscles.first == MuscleGroup.chest,
+            orElse: () => freeWeightExercises.first,
+          )
         : null;
-    final machine = machineExercises.isNotEmpty ? machineExercises.first : null;
+    final machine = machineExercises.isNotEmpty
+        ? machineExercises.firstWhere(
+            (e) =>
+                e.targetMuscles.isNotEmpty &&
+                e.targetMuscles.first == MuscleGroup.back,
+            orElse: () => machineExercises.first,
+          )
+        : null;
     final assistedMachine = assistedMachineExercises.isNotEmpty
-        ? assistedMachineExercises.first
+        ? assistedMachineExercises.firstWhere(
+            (e) =>
+                e.targetMuscles.isNotEmpty &&
+                e.targetMuscles.first == MuscleGroup.arms,
+            orElse: () => assistedMachineExercises.first,
+          )
         : null;
     final bodyweight = bodyweightExercises.isNotEmpty
-        ? bodyweightExercises.first
+        ? bodyweightExercises.firstWhere(
+            (e) =>
+                e.targetMuscles.isNotEmpty &&
+                e.targetMuscles.first == MuscleGroup.legs,
+            orElse: () => bodyweightExercises.first,
+          )
         : null;
     final isometricWeighted = isometricExercises.isNotEmpty
-        ? isometricExercises.first
+        ? isometricExercises.firstWhere(
+            (e) =>
+                e.targetMuscles.isNotEmpty &&
+                e.targetMuscles.first == MuscleGroup.core,
+            orElse: () => isometricExercises.first,
+          )
         : null;
-    final isometricBodyweight = isometricExercises.length > 1
-        ? isometricExercises[1]
-        : null;
+    // Use machine or free weight for shoulders since isometric shoulders are rare
+    final isometricBodyweight = (machineExercises.isNotEmpty
+            ? machineExercises.firstWhere(
+                (e) =>
+                    e.targetMuscles.isNotEmpty &&
+                    e.targetMuscles.first == MuscleGroup.shoulders,
+                orElse: () => machineExercises.length > 1
+                    ? machineExercises[1]
+                    : machineExercises.first,
+              )
+            : null) ??
+        (freeWeightExercises.length > 1
+            ? freeWeightExercises.firstWhere(
+                (e) =>
+                    e.targetMuscles.isNotEmpty &&
+                    e.targetMuscles.first == MuscleGroup.shoulders,
+                orElse: () => freeWeightExercises[1],
+              )
+            : null);
     // Always select Treadmill (cardio_1) for consistent testing
     final distanceCardio = distanceCardioExercises.isNotEmpty
         ? distanceCardioExercises.firstWhere(
@@ -110,14 +155,25 @@ class MockDataGenerator {
         );
       }
       if (isometricBodyweight != null) {
-        workoutSets.addAll(
-          _generateIsometricSets(
-            isometricBodyweight,
-            date,
-            daysAgo,
-            isBodyweightBased: true,
-          ),
-        );
+        // Check exercise type and generate appropriate sets
+        if (isometricBodyweight is IsometricExercise) {
+          workoutSets.addAll(
+            _generateIsometricSets(
+              isometricBodyweight,
+              date,
+              daysAgo,
+              isBodyweightBased: true,
+            ),
+          );
+        } else if (isometricBodyweight is MachineExercise) {
+          workoutSets.addAll(
+            _generateMachineSets(isometricBodyweight, date, daysAgo),
+          );
+        } else if (isometricBodyweight is FreeWeightExercise) {
+          workoutSets.addAll(
+            _generateFreeWeightSets(isometricBodyweight, date, daysAgo),
+          );
+        }
       }
       if (distanceCardio != null) {
         workoutSets.add(
