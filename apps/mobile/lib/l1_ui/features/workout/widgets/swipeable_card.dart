@@ -14,6 +14,7 @@ import '../../../../l2_domain/models/exercises/bodyweight_exercise.dart';
 import '../../../../l2_domain/models/exercises/assisted_machine_exercise.dart';
 import '../../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
 import '../../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
+import 'workout_input_panel.dart';
 
 /// Card interaction states for gesture handling
 enum CardInteractionState {
@@ -503,7 +504,7 @@ class SwipeableCardState extends State<SwipeableCard>
       backgroundColor: Colors.transparent,
       barrierColor: Colors.black.withOpacity(0.5),
       useSafeArea: false,
-      builder: (context) => _CustomInputPanel(
+      builder: (context) => WorkoutInputPanel(
         fieldName: fieldName,
         unit: unit,
       ),
@@ -1136,76 +1137,6 @@ class SwipeableCardState extends State<SwipeableCard>
           ),
         ),
       ],
-    );
-  }
-}
-
-/// Custom input panel for entering workout values
-class _CustomInputPanel extends StatelessWidget {
-  final String fieldName;
-  final String unit;
-
-  const _CustomInputPanel({
-    required this.fieldName,
-    required this.unit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        Navigator.pop(context);
-      },
-      child: Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.4,
-        decoration: BoxDecoration(
-          color: AppColors.boldGrey,
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(20),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Custom Input Panel',
-              style: TextStyle(
-                color: AppColors.offWhite,
-                fontSize: 24,
-                fontWeight: FontWeight.w300,
-                letterSpacing: 1.5,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Field: $fieldName',
-              style: TextStyle(
-                color: AppColors.offWhite.withOpacity(0.7),
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Unit: $unit',
-              style: TextStyle(
-                color: AppColors.offWhite.withOpacity(0.7),
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 40),
-            Text(
-              'Tap anywhere to close',
-              style: TextStyle(
-                color: AppColors.limeGreen,
-                fontSize: 14,
-                letterSpacing: 1.2,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
