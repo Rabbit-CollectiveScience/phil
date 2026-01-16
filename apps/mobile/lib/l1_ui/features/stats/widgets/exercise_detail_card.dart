@@ -269,8 +269,8 @@ class ExerciseDetailCard extends StatelessWidget {
             'Min Assistance',
             maxWeightToday != null
                 ? (maxWeightToday! == 0
-                    ? 'bodyweight'
-                    : '${maxWeightToday!.toInt()} kg')
+                      ? 'bodyweight'
+                      : '${maxWeightToday!.toInt()} kg')
                 : '-',
             isPR: _hasPR('maxWeight'),
           ),
