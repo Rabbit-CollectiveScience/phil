@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 import '../../shared/theme/app_colors.dart';
+import '../../shared/providers/preferences_provider.dart';
 import '../../../l2_domain/use_cases/workout_sets/get_today_completed_list_use_case.dart';
 import '../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
 import '../../../l2_domain/models/workout_sets/workout_set.dart';
@@ -10,10 +12,8 @@ import '../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/assisted_machine_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
-import '../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/isometric_workout_set.dart';
 import '../../../l2_domain/models/exercises/exercise.dart';
-import '../../../l2_domain/models/exercises/isometric_exercise.dart';
 import 'view_models/workout_group.dart';
 
 class CompletedListPage extends StatefulWidget {
@@ -141,7 +141,66 @@ class _CompletedListPageState extends State<CompletedListPage>
 
   /// Format WorkoutSet values for display based on its type
   String _formatSetValues(WorkoutSet workoutSet, {Exercise? exercise}) {
-    return workoutSet.formatForDisplay();
+    final formatters = context.read<PreferencesProvider>().formatters;
+    final baseFormat = workoutSet.formatForDisplay();
+
+    // Add units back based on workout set type
+    if (workoutSet is WeightedWorkoutSet) {
+      // Format: "50.0 × 10 reps" -> "50.0 kg × 10 reps"
+      final weight = workoutSet.weight;
+      if (weight != null) {
+        final parts = baseFormat.split(' × ');
+        if (parts.length == 2) {
+          return '${formatters.formatWeight(weight)} × ${parts[1]}';
+        }
+      }
+    } else if (workoutSet is BodyweightWorkoutSet) {
+      // Format: "8 reps · BW + 10.0" -> "8 reps · BW + 10.0 kg"
+      final additionalWeight = workoutSet.additionalWeight;
+      if (additionalWeight != null && additionalWeight.kg > 0) {
+        final parts = baseFormat.split(' + ');
+        if (parts.length == 2) {
+          return '${parts[0]} + ${formatters.formatWeight(additionalWeight)}';
+        }
+      }
+    } else if (workoutSet is AssistedMachineWorkoutSet) {
+      // Format: "10 reps · 22.0 assistance" -> "10 reps · 22.0 kg assistance"
+      final assistanceWeight = workoutSet.assistanceWeight;
+      if (assistanceWeight != null) {
+        final parts = baseFormat.split(' · ');
+        if (parts.length == 2) {
+          final assistanceParts = parts[1].split(' assistance');
+          if (assistanceParts.length == 2) {
+            return '${parts[0]} · ${formatters.formatWeight(assistanceWeight)} assistance';
+          }
+        }
+      }
+    } else if (workoutSet is DistanceCardioWorkoutSet) {
+      // Format: "5.0 · 30 min" -> "5.0 km · 30 min"
+      final distance = workoutSet.distance;
+      if (distance != null) {
+        final parts = baseFormat.split(' · ');
+        if (parts.length == 2) {
+          return '${formatters.formatDistance(distance)} · ${parts[1]}';
+        }
+      }
+    } else if (workoutSet is IsometricWorkoutSet) {
+      // Format: "60 sec · 15" -> "60 sec · 15 kg"
+      // or "60 sec · BW + 10" -> "60 sec · BW + 10 kg"
+      final weight = workoutSet.weight;
+      if (weight != null && weight.kg > 0) {
+        final parts = baseFormat.split(' · ');
+        if (parts.length == 2) {
+          if (parts[1].startsWith('BW + ')) {
+            return '${parts[0]} · BW + ${formatters.formatWeight(weight)}';
+          } else {
+            return '${parts[0]} · ${formatters.formatWeight(weight)}';
+          }
+        }
+      }
+    }
+
+    return baseFormat;
   }
 
   void _removeSetLocally(WorkoutSetWithDetails setToRemove) async {

@@ -160,12 +160,15 @@ class SwipeableCardState extends State<SwipeableCard>
   /// Initialize input fields based on exercise type
   void _initializeInputFields() {
     final exercise = widget.card.exercise;
+    final formatters = context.read<PreferencesProvider>().formatters;
 
     if (exercise is IsometricExercise) {
       // Isometric exercises: duration + optional weight
       _fieldControllers['duration'] = TextEditingController(text: '- sec');
       _fieldControllers['weight'] = TextEditingController(
-        text: exercise.isBodyweightBased ? 'bodyweight' : '- kg',
+        text: exercise.isBodyweightBased
+            ? 'bodyweight'
+            : '- ${formatters.getWeightUnit()}',
       );
       _fieldFocusNodes['duration'] = FocusNode();
       _fieldFocusNodes['weight'] = FocusNode();
@@ -233,7 +236,9 @@ class SwipeableCardState extends State<SwipeableCard>
       });
     } else if (exercise is StrengthExercise) {
       // Other strength exercises (free weight, machine): weight + reps
-      _fieldControllers['weight'] = TextEditingController(text: '- kg');
+      _fieldControllers['weight'] = TextEditingController(
+        text: '- ${formatters.getWeightUnit()}',
+      );
       _fieldControllers['reps'] = TextEditingController(text: '- reps');
       _fieldFocusNodes['weight'] = FocusNode();
       _fieldFocusNodes['reps'] = FocusNode();
@@ -319,11 +324,12 @@ class SwipeableCardState extends State<SwipeableCard>
         }
       } else {
         // Extract text and remove common units
+        final formatters = context.read<PreferencesProvider>().formatters;
         text = text
-            .replaceAll(' kg', '')
+            .replaceAll(' ${formatters.getWeightUnit()}', '')
             .replaceAll(' reps', '')
             .replaceAll(' rep', '')
-            .replaceAll(' km', '')
+            .replaceAll(' ${formatters.getDistanceUnit()}', '')
             .replaceAll(' min', '')
             .replaceAll(' sec', '')
             .trim();
@@ -372,23 +378,25 @@ class SwipeableCardState extends State<SwipeableCard>
                 exercise is BodyweightExercise ||
                 (exercise is IsometricExercise && exercise.isBodyweightBased);
 
+            final formatters = context.read<PreferencesProvider>().formatters;
             if (isBodyweightBased) {
               int value = int.tryParse(newValue) ?? 0;
               if (value == 0) {
                 displayText = 'bodyweight';
               } else {
-                displayText = 'BW+${value}kg';
+                displayText = 'BW+$value${formatters.getWeightUnit()}';
               }
             } else {
-              displayText = '$newValue kg';
+              displayText = '$newValue ${formatters.getWeightUnit()}';
             }
           } else if (entry.key == 'assistanceWeight') {
             // Handle assistanceWeight field for assisted machine exercises
+            final formatters = context.read<PreferencesProvider>().formatters;
             int value = int.tryParse(newValue) ?? 0;
             if (value == 0) {
               displayText = 'bodyweight';
             } else {
-              displayText = 'BW-${value}kg';
+              displayText = 'BW-$value${formatters.getWeightUnit()}';
             }
           } else if (entry.key == 'reps') {
             int value = int.tryParse(newValue) ?? 0;
@@ -937,17 +945,22 @@ class SwipeableCardState extends State<SwipeableCard>
                   if (current >= minValue) {
                     int newValue = current - step;
 
+                    final formatters = context
+                        .read<PreferencesProvider>()
+                        .formatters;
                     if (isBodyweightField) {
                       if (newValue == 0) {
                         controller.text = 'bodyweight';
                       } else {
-                        controller.text = 'BW+${newValue}kg';
+                        controller.text =
+                            'BW+$newValue${formatters.getWeightUnit()}';
                       }
                     } else if (isAssistedMachineField) {
                       if (newValue == 0) {
                         controller.text = 'bodyweight';
                       } else {
-                        controller.text = 'BW-${newValue}kg';
+                        controller.text =
+                            'BW-$newValue${formatters.getWeightUnit()}';
                       }
                     } else {
                       String displayUnit = unit;
@@ -998,17 +1011,22 @@ class SwipeableCardState extends State<SwipeableCard>
                   int current = int.tryParse(text) ?? 0;
                   int newValue = current + step;
 
+                  final formatters = context
+                      .read<PreferencesProvider>()
+                      .formatters;
                   if (isBodyweightField) {
                     if (newValue == 0) {
                       controller.text = 'bodyweight';
                     } else {
-                      controller.text = 'BW+${newValue}kg';
+                      controller.text =
+                          'BW+$newValue${formatters.getWeightUnit()}';
                     }
                   } else if (isAssistedMachineField) {
                     if (newValue == 0) {
                       controller.text = 'bodyweight';
                     } else {
-                      controller.text = 'BW-${newValue}kg';
+                      controller.text =
+                          'BW-$newValue${formatters.getWeightUnit()}';
                     }
                   } else {
                     String displayUnit = unit;
