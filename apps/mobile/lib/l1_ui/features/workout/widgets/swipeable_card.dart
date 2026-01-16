@@ -260,7 +260,9 @@ class SwipeableCardState extends State<SwipeableCard>
       });
     } else if (exercise is DistanceCardioExercise) {
       // Distance cardio: distance + duration
-      _fieldControllers['distance'] = TextEditingController(text: '- km');
+      _fieldControllers['distance'] = TextEditingController(
+        text: '- ${formatters.getDistanceUnit()}',
+      );
       _fieldControllers['duration'] = TextEditingController(text: '- min');
       _fieldFocusNodes['distance'] = FocusNode();
       _fieldFocusNodes['duration'] = FocusNode();
@@ -410,7 +412,8 @@ class SwipeableCardState extends State<SwipeableCard>
                 : 'sec';
             displayText = '$newValue $unit';
           } else if (entry.key == 'distance') {
-            displayText = '$newValue km';
+            final formatters = context.read<PreferencesProvider>().formatters;
+            displayText = '$newValue ${formatters.getDistanceUnit()}';
           } else {
             displayText = newValue;
           }

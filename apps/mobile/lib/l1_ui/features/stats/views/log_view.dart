@@ -26,8 +26,6 @@ import '../../../../l2_domain/models/workout_sets/assisted_machine_workout_set.d
 import '../../../../l2_domain/models/workout_sets/isometric_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
-import '../../../../l2_domain/models/common/weight.dart';
-import '../../../../l2_domain/models/common/distance.dart';
 import 'package:uuid/uuid.dart';
 
 class LogView extends StatefulWidget {
@@ -167,7 +165,6 @@ class _LogViewState extends State<LogView> {
       );
     }
 
-    final formatters = context.watch<PreferencesProvider>().formatters;
     final hasSets = _sets.isNotEmpty;
 
     // Calculate approximate content height
@@ -349,7 +346,61 @@ class _LogViewState extends State<LogView> {
 
   /// Format workout set values for display based on workout set type
   String _formatSetValues(byDate.WorkoutSetWithDetails setDetails) {
-    return setDetails.workoutSet.formatForDisplay();
+    final formatters = context.read<PreferencesProvider>().formatters;
+    final workoutSet = setDetails.workoutSet;
+    final baseFormat = workoutSet.formatForDisplay();
+
+    // Add units back based on workout set type
+    if (workoutSet is WeightedWorkoutSet) {
+      final weight = workoutSet.weight;
+      if (weight != null) {
+        final parts = baseFormat.split(' × ');
+        if (parts.length == 2) {
+          return '${formatters.formatWeight(weight)} × ${parts[1]}';
+        }
+      }
+    } else if (workoutSet is BodyweightWorkoutSet) {
+      final additionalWeight = workoutSet.additionalWeight;
+      if (additionalWeight != null && additionalWeight.kg > 0) {
+        final parts = baseFormat.split(' + ');
+        if (parts.length == 2) {
+          return '${parts[0]} + ${formatters.formatWeight(additionalWeight)}';
+        }
+      }
+    } else if (workoutSet is AssistedMachineWorkoutSet) {
+      final assistanceWeight = workoutSet.assistanceWeight;
+      if (assistanceWeight != null) {
+        final parts = baseFormat.split(' · ');
+        if (parts.length == 2) {
+          final assistanceParts = parts[1].split(' assistance');
+          if (assistanceParts.length == 2) {
+            return '${parts[0]} · ${formatters.formatWeight(assistanceWeight)} assistance';
+          }
+        }
+      }
+    } else if (workoutSet is DistanceCardioWorkoutSet) {
+      final distance = workoutSet.distance;
+      if (distance != null) {
+        final parts = baseFormat.split(' · ');
+        if (parts.length == 2) {
+          return '${formatters.formatDistance(distance)} · ${parts[1]}';
+        }
+      }
+    } else if (workoutSet is IsometricWorkoutSet) {
+      final weight = workoutSet.weight;
+      if (weight != null && weight.kg > 0) {
+        final parts = baseFormat.split(' · ');
+        if (parts.length == 2) {
+          if (parts[1].startsWith('BW + ')) {
+            return '${parts[0]} · BW + ${formatters.formatWeight(weight)}';
+          } else {
+            return '${parts[0]} · ${formatters.formatWeight(weight)}';
+          }
+        }
+      }
+    }
+
+    return baseFormat;
   }
 
   Widget _buildSetRow(byDate.WorkoutSetWithDetails setWithDetails, int index) {
