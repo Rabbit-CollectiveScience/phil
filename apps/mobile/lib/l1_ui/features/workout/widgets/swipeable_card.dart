@@ -504,10 +504,7 @@ class SwipeableCardState extends State<SwipeableCard>
       backgroundColor: Colors.transparent,
       barrierColor: Colors.transparent,
       useSafeArea: false,
-      builder: (context) => WorkoutInputPanel(
-        fieldName: fieldName,
-        unit: unit,
-      ),
+      builder: (context) => WorkoutInputPanel(fieldName: fieldName, unit: unit),
     );
   }
 
@@ -934,7 +931,7 @@ class SwipeableCardState extends State<SwipeableCard>
           onTap: () {
             // Prevent if card is animating
             if (!_currentState.isStable) return;
-            
+
             HapticFeedback.lightImpact();
             _showInputPanel(context, fieldName: fieldName, unit: unit);
           },

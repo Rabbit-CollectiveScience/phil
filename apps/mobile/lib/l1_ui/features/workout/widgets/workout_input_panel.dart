@@ -24,9 +24,7 @@ class WorkoutInputPanel extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: panelHeight,
-      decoration: BoxDecoration(
-        color: AppColors.darkGrey,
-      ),
+      decoration: BoxDecoration(color: AppColors.darkGrey),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -45,7 +43,10 @@ class WorkoutInputPanel extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 8),
+            Container(
+              width: 1.5,
+              color: AppColors.limeGreen.withOpacity(0.3),
+            ),
 
             // Right: Action buttons (1 column)
             Expanded(
@@ -53,8 +54,20 @@ class WorkoutInputPanel extends StatelessWidget {
               child: Column(
                 children: [
                   Expanded(child: _buildActionButton('100%')),
+                  Container(
+                    height: 1.5,
+                    color: AppColors.limeGreen.withOpacity(0.3),
+                  ),
                   Expanded(child: _buildActionButton('90%')),
+                  Container(
+                    height: 1.5,
+                    color: AppColors.limeGreen.withOpacity(0.3),
+                  ),
                   Expanded(child: _buildActionButton('80%')),
+                  Container(
+                    height: 1.5,
+                    color: AppColors.limeGreen.withOpacity(0.3),
+                  ),
                   Expanded(child: _buildActionButton('50%')),
                 ],
               ),
@@ -88,7 +101,7 @@ class WorkoutInputPanel extends StatelessWidget {
     // Mock PR values - will be dynamic later
     String subtitle = '';
     double opacity = 0.4; // Default
-    
+
     if (label == '100%') {
       subtitle = '100 kg';
       opacity = 1.0;
@@ -106,7 +119,7 @@ class WorkoutInputPanel extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4),
       child: Material(
-        color: AppColors.limeGreen.withOpacity(opacity),
+        color: AppColors.darkGrey,
         child: InkWell(
           onTap: () {
             HapticFeedback.lightImpact();
@@ -119,7 +132,7 @@ class WorkoutInputPanel extends StatelessWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    color: AppColors.boldGrey,
+                    color: AppColors.limeGreen.withOpacity(opacity),
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.2,
@@ -130,7 +143,7 @@ class WorkoutInputPanel extends StatelessWidget {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: AppColors.boldGrey.withOpacity(0.8),
+                      color: AppColors.offWhite.withOpacity(opacity * 0.6),
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                     ),
