@@ -13,6 +13,7 @@ import '../../../../l2_domain/models/workout_sets/weighted_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/bodyweight_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/assisted_machine_workout_set.dart';
 import '../../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
+import '../../../../l2_domain/models/workout_sets/isometric_workout_set.dart';
 import '../../../../l3_data/repositories/workout_set_repository.dart';
 
 class PRView extends StatefulWidget {
@@ -183,6 +184,20 @@ class _PRViewState extends State<PRView> {
         final parts = baseFormat.split(' · ');
         if (parts.length == 2) {
           return '${formatters.formatDistance(distance)} · ${parts[1]}';
+        }
+      }
+    } else if (workoutSet is IsometricWorkoutSet) {
+      // Format: "60 sec · 15" -> "60 sec · 15 kg"
+      // or "60 sec · BW + 10" -> "60 sec · BW + 10 kg"
+      final weight = workoutSet.weight;
+      if (weight != null && weight.kg > 0) {
+        final parts = baseFormat.split(' · ');
+        if (parts.length == 2) {
+          if (parts[1].startsWith('BW + ')) {
+            return '${parts[0]} · BW + ${formatters.formatWeight(weight)}';
+          } else {
+            return '${parts[0]} · ${formatters.formatWeight(weight)}';
+          }
         }
       }
     }
