@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import '../../../shared/theme/app_colors.dart';
+import '../../../shared/providers/preferences_provider.dart';
+import '../../../shared/utils/unit_formatters.dart';
 import '../../../../l2_domain/use_cases/workout_sets/get_workout_sets_by_date_use_case.dart'
     as byDate;
 import '../../../../l2_domain/use_cases/workout_sets/remove_workout_set_use_case.dart';
@@ -164,6 +167,7 @@ class _LogViewState extends State<LogView> {
       );
     }
 
+    final formatters = context.watch<PreferencesProvider>().formatters;
     final hasSets = _sets.isNotEmpty;
 
     // Calculate approximate content height
@@ -646,7 +650,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
     }
   }
 
-  List<Widget> _buildInputFields() {
+  List<Widget> _buildInputFields(UnitFormatters formatters) {
     final exercise = _selectedExercise!;
     final widgets = <Widget>[];
 
@@ -669,7 +673,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
           label: 'WEIGHT',
           controller: _fieldControllers['weight']!,
           hint: 'Enter weight (optional)',
-          suffix: 'kg',
+          suffix: formatters.getWeightUnit(),
         ),
       );
     } else if (exercise is BodyweightExercise) {
@@ -689,7 +693,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
           label: 'WEIGHT',
           controller: _fieldControllers['weight']!,
           hint: 'Enter additional weight (optional)',
-          suffix: 'kg',
+          suffix: formatters.getWeightUnit(),
         ),
       );
     } else if (exercise is AssistedMachineExercise) {
@@ -699,7 +703,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
           label: 'ASSISTANCE',
           controller: _fieldControllers['assistanceWeight']!,
           hint: 'Enter assistance weight',
-          suffix: 'kg',
+          suffix: formatters.getWeightUnit(),
         ),
       );
 
@@ -719,7 +723,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
           label: 'WEIGHT',
           controller: _fieldControllers['weight']!,
           hint: 'Enter weight',
-          suffix: 'kg',
+          suffix: formatters.getWeightUnit(),
         ),
       );
 
@@ -739,7 +743,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
           label: 'DISTANCE',
           controller: _fieldControllers['distance']!,
           hint: 'Enter distance',
-          suffix: 'km',
+          suffix: formatters.getDistanceUnit(),
         ),
       );
 
@@ -827,6 +831,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final formatters = context.watch<PreferencesProvider>().formatters;
     final canSubmit = _selectedExercise != null;
 
     return Dialog(
@@ -974,17 +979,19 @@ class _AddSetDialogState extends State<_AddSetDialog> {
 
                       // Generate field preview based on exercise type
                       String fieldPreview = '';
+                      final weightUnit = formatters.getWeightUnit();
+                      final distanceUnit = formatters.getDistanceUnit();
                       if (exercise is IsometricExercise) {
-                        fieldPreview = 'sec · kg';
+                        fieldPreview = 'sec · $weightUnit';
                       } else if (exercise is AssistedMachineExercise) {
-                        fieldPreview = 'reps · kg assistance';
+                        fieldPreview = 'reps · $weightUnit assistance';
                       } else if (exercise is FreeWeightExercise ||
                           exercise is MachineExercise) {
-                        fieldPreview = 'kg · reps';
+                        fieldPreview = '$weightUnit · reps';
                       } else if (exercise is BodyweightExercise) {
-                        fieldPreview = 'reps · kg';
+                        fieldPreview = 'reps · $weightUnit';
                       } else if (exercise is DistanceCardioExercise) {
-                        fieldPreview = 'km · min';
+                        fieldPreview = '$distanceUnit · min';
                       } else if (exercise is DurationCardioExercise) {
                         fieldPreview = 'min';
                       }
@@ -1036,7 +1043,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
             ],
 
             // Dynamic fields based on selected exercise
-            if (_selectedExercise != null) ..._buildInputFields(),
+            if (_selectedExercise != null) ..._buildInputFields(formatters),
 
             const SizedBox(height: 24),
 
@@ -1093,13 +1100,11 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                     : null;
                                 final weight =
                                     weightText != null && weightText.isNotEmpty
-                                    ? Weight(double.parse(weightText))
+                                    ? formatters.parseWeight(weightText)
                                     : null;
 
                                 final isBodyweightBased =
-                                    exercise is IsometricExercise
-                                    ? exercise.isBodyweightBased
-                                    : true; // Default to true for safety
+                                    exercise.isBodyweightBased;
 
                                 workoutSet = IsometricWorkoutSet(
                                   id: const Uuid().v4(),
@@ -1116,8 +1121,8 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                 final repsText = _fieldControllers['reps']!.text
                                     .trim();
 
-                                final assistanceWeight = Weight(
-                                  double.parse(assistanceWeightText),
+                                final assistanceWeight = formatters.parseWeight(
+                                  assistanceWeightText,
                                 );
                                 final reps = int.parse(repsText);
 
@@ -1136,7 +1141,9 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                 final repsText = _fieldControllers['reps']!.text
                                     .trim();
 
-                                final weight = Weight(double.parse(weightText));
+                                final weight = formatters.parseWeight(
+                                  weightText,
+                                );
                                 final reps = int.parse(repsText);
 
                                 workoutSet = WeightedWorkoutSet(
@@ -1156,7 +1163,7 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                 final reps = int.parse(repsText);
                                 final additionalWeight =
                                     weightText != null && weightText.isNotEmpty
-                                    ? Weight(double.parse(weightText))
+                                    ? formatters.parseWeight(weightText)
                                     : null;
 
                                 workoutSet = BodyweightWorkoutSet(
@@ -1172,14 +1179,16 @@ class _AddSetDialogState extends State<_AddSetDialog> {
                                 final durationText =
                                     _fieldControllers['duration']!.text.trim();
 
-                                final distanceKm = double.parse(distanceText);
+                                final distance = formatters.parseDistance(
+                                  distanceText,
+                                );
                                 final durationMin = int.parse(durationText);
 
                                 workoutSet = DistanceCardioWorkoutSet(
                                   id: const Uuid().v4(),
                                   exerciseId: exercise.id,
                                   timestamp: widget.selectedDate,
-                                  distance: Distance(distanceKm * 1000),
+                                  distance: distance,
                                   duration: Duration(minutes: durationMin),
                                 );
                               } else if (exercise is DurationCardioExercise) {

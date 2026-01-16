@@ -29,8 +29,8 @@ class AssistedMachineWorkoutSet extends WorkoutSet {
         ? '$reps ${reps == 1 ? "rep" : "reps"}'
         : '-- rep';
     final assistStr = assistanceWeight != null
-        ? '${assistanceWeight!.kg.toStringAsFixed(1)} kg assistance'
-        : '-- kg assistance';
+        ? '${assistanceWeight!.kg.toStringAsFixed(1)} assistance'
+        : '-- assistance';
     return '$repsStr · $assistStr';
   }
 

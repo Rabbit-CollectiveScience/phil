@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../../../l2_domain/use_cases/dev/add_mock_data_use_case.dart';
 import '../../../l2_domain/use_cases/dev/clear_all_data_use_case.dart';
 import '../../../l2_domain/use_cases/dev/export_data_use_case.dart';
 import '../../../l2_domain/use_cases/dev/import_data_use_case.dart';
+import '../../../l2_domain/models/user_preferences.dart';
 import '../../../main.dart';
 import '../../shared/theme/app_colors.dart';
+import '../../shared/providers/preferences_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -224,6 +227,149 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Widget _buildMeasurementSystemSection() {
+    return Consumer<PreferencesProvider>(
+      builder: (context, prefsProvider, child) {
+        final currentSystem = prefsProvider.measurementSystem;
+        final isMetric = currentSystem == MeasurementSystem.metric;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'UNITS',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
+                color: AppColors.offWhite.withOpacity(0.5),
+                letterSpacing: 1.5,
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Measurement System Toggle
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.boldGrey,
+                borderRadius: BorderRadius.zero,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.pureBlack.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  // Metric Button
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: isMetric
+                          ? null
+                          : () async {
+                              await prefsProvider.updateMeasurementSystem(
+                                MeasurementSystem.metric,
+                              );
+                            },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: isMetric
+                              ? AppColors.limeGreen
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Text(
+                                'METRIC',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w900,
+                                  color: isMetric
+                                      ? AppColors.pureBlack
+                                      : AppColors.offWhite,
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'kg · km',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: isMetric
+                                      ? AppColors.pureBlack.withOpacity(0.7)
+                                      : AppColors.offWhite.withOpacity(0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Imperial Button
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: !isMetric
+                          ? null
+                          : () async {
+                              await prefsProvider.updateMeasurementSystem(
+                                MeasurementSystem.imperial,
+                              );
+                            },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: !isMetric
+                              ? AppColors.limeGreen
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Text(
+                                'IMPERIAL',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w900,
+                                  color: !isMetric
+                                      ? AppColors.pureBlack
+                                      : AppColors.offWhite,
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'lb · mi',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: !isMetric
+                                      ? AppColors.pureBlack.withOpacity(0.7)
+                                      : AppColors.offWhite.withOpacity(0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -279,6 +425,27 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    // Measurement System Section
+                    _buildMeasurementSystemSection(),
+                    const SizedBox(height: 24),
+
+                    // Divider
+                    Container(height: 1, color: AppColors.darkGrey),
+                    const SizedBox(height: 24),
+
+                    // Dev Tools Section Label
+                    Text(
+                      'DEVELOPER TOOLS',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.offWhite.withOpacity(0.5),
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Add Mock Data Button
                     GestureDetector(
                       onTap: _isAddingMockData ? null : _addMockData,
                       child: Container(

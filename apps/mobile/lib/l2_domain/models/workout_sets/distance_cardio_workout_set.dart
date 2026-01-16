@@ -28,8 +28,8 @@ class DistanceCardioWorkoutSet extends WorkoutSet {
   @override
   String formatForDisplay() {
     final distanceStr = distance != null
-        ? '${distance!.getInKm().toStringAsFixed(1)} km'
-        : '-- km';
+        ? distance!.getInKm().toStringAsFixed(1)
+        : '--';
     final durationStr = duration != null
         ? '${duration!.inMinutes} min'
         : '-- min';

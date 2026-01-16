@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:provider/provider.dart';
 import '../../../shared/theme/app_colors.dart';
+import '../../../shared/providers/preferences_provider.dart';
 import '../view_models/card_model.dart';
 import '../../../../l2_domain/models/exercises/strength_exercise.dart';
 import '../../../../l2_domain/models/exercises/isometric_exercise.dart';
@@ -776,7 +778,11 @@ class SwipeableCardState extends State<SwipeableCard>
         if (_fieldControllers.containsKey('weight'))
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
-            child: _buildSimpleFieldInput('weight', 'kg', 2),
+            child: _buildSimpleFieldInput(
+              'weight',
+              context.watch<PreferencesProvider>().formatters.getWeightUnit(),
+              2,
+            ),
           ),
       ];
     } else if (exercise is BodyweightExercise) {
@@ -789,7 +795,11 @@ class SwipeableCardState extends State<SwipeableCard>
         if (_fieldControllers.containsKey('weight'))
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
-            child: _buildSimpleFieldInput('weight', 'kg', 2),
+            child: _buildSimpleFieldInput(
+              'weight',
+              context.watch<PreferencesProvider>().formatters.getWeightUnit(),
+              2,
+            ),
           ),
       ];
     } else if (exercise is AssistedMachineExercise) {
@@ -802,7 +812,11 @@ class SwipeableCardState extends State<SwipeableCard>
         if (_fieldControllers.containsKey('assistanceWeight'))
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
-            child: _buildSimpleFieldInput('assistanceWeight', 'kg', 2),
+            child: _buildSimpleFieldInput(
+              'assistanceWeight',
+              context.watch<PreferencesProvider>().formatters.getWeightUnit(),
+              2,
+            ),
           ),
       ];
     } else if (exercise is StrengthExercise) {
@@ -810,7 +824,11 @@ class SwipeableCardState extends State<SwipeableCard>
         if (_fieldControllers.containsKey('weight'))
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
-            child: _buildSimpleFieldInput('weight', 'kg', 2),
+            child: _buildSimpleFieldInput(
+              'weight',
+              context.watch<PreferencesProvider>().formatters.getWeightUnit(),
+              2,
+            ),
           ),
         if (_fieldControllers.containsKey('reps'))
           Padding(
@@ -823,7 +841,11 @@ class SwipeableCardState extends State<SwipeableCard>
         if (_fieldControllers.containsKey('distance'))
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
-            child: _buildSimpleFieldInput('distance', 'km', 1),
+            child: _buildSimpleFieldInput(
+              'distance',
+              context.watch<PreferencesProvider>().formatters.getDistanceUnit(),
+              1,
+            ),
           ),
         if (_fieldControllers.containsKey('duration'))
           Padding(

@@ -85,7 +85,7 @@ void main() {
 
       final display = set.formatForDisplay();
 
-      expect(display, '8 reps · 30.0 kg assistance');
+      expect(display, '8 reps · 30.0 assistance');
     });
 
     test('formatForDisplay should handle null values', () {
@@ -99,7 +99,7 @@ void main() {
 
       final display = set.formatForDisplay();
 
-      expect(display, '-- rep · -- kg assistance');
+      expect(display, '-- rep · -- assistance');
     });
 
     test('toJson should serialize correctly with assisted_machine type', () {

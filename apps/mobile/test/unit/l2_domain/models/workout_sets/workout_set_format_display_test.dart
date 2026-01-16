@@ -18,7 +18,7 @@ void main() {
           weight: Weight(50.0),
           reps: 10,
         );
-        expect(set.formatForDisplay(), '50.0 kg × 10 reps');
+        expect(set.formatForDisplay(), '50.0 × 10 reps');
       });
 
       test('formats with single rep', () {
@@ -29,7 +29,7 @@ void main() {
           weight: Weight(100.0),
           reps: 1,
         );
-        expect(set.formatForDisplay(), '100.0 kg × 1 rep');
+        expect(set.formatForDisplay(), '100.0 × 1 rep');
       });
 
       test('handles null weight', () {
@@ -40,7 +40,7 @@ void main() {
           weight: null,
           reps: 5,
         );
-        expect(set.formatForDisplay(), '-- kg × 5 reps');
+        expect(set.formatForDisplay(), '-- × 5 reps');
       });
 
       test('handles null reps', () {
@@ -51,7 +51,7 @@ void main() {
           weight: Weight(60.0),
           reps: null,
         );
-        expect(set.formatForDisplay(), '60.0 kg × -- rep');
+        expect(set.formatForDisplay(), '60.0 × -- rep');
       });
     });
 
@@ -75,7 +75,7 @@ void main() {
           reps: 8,
           additionalWeight: Weight(10.0),
         );
-        expect(set.formatForDisplay(), '8 reps · BW + 10.0 kg');
+        expect(set.formatForDisplay(), '8 reps · BW + 10.0');
       });
 
       test('formats with additional weight as zero', () {
@@ -97,7 +97,7 @@ void main() {
           reps: 1,
           additionalWeight: Weight(5.0),
         );
-        expect(set.formatForDisplay(), '1 rep · BW + 5.0 kg');
+        expect(set.formatForDisplay(), '1 rep · BW + 5.0');
       });
     });
 
@@ -111,7 +111,7 @@ void main() {
           weight: Weight(10.0),
           isBodyweightBased: true,
         );
-        expect(set.formatForDisplay(), '60 sec · BW + 10 kg');
+        expect(set.formatForDisplay(), '60 sec · BW + 10');
       });
 
       test('formats bodyweight-based without weight', () {
@@ -135,7 +135,7 @@ void main() {
           weight: Weight(50.0),
           isBodyweightBased: false,
         );
-        expect(set.formatForDisplay(), '30 sec · 50 kg');
+        expect(set.formatForDisplay(), '30 sec · 50');
       });
 
       test('formats loaded static hold without weight', () {
@@ -159,7 +159,7 @@ void main() {
           weight: Weight(15.0),
           isBodyweightBased: true,
         );
-        expect(set.formatForDisplay(), '40 sec · BW + 15 kg');
+        expect(set.formatForDisplay(), '40 sec · BW + 15');
       });
     });
 
@@ -172,7 +172,7 @@ void main() {
           distance: Distance(5000.0), // 5km in meters
           duration: Duration(minutes: 30),
         );
-        expect(set.formatForDisplay(), '5.0 km · 30 min');
+        expect(set.formatForDisplay(), '5.0 · 30 min');
       });
 
       test('handles null distance', () {
@@ -183,7 +183,7 @@ void main() {
           distance: null,
           duration: Duration(minutes: 20),
         );
-        expect(set.formatForDisplay(), '-- km · 20 min');
+        expect(set.formatForDisplay(), '-- · 20 min');
       });
 
       test('handles null duration', () {
@@ -194,7 +194,7 @@ void main() {
           distance: Distance(3500.0), // 3.5km in meters
           duration: null,
         );
-        expect(set.formatForDisplay(), '3.5 km · -- min');
+        expect(set.formatForDisplay(), '3.5 · -- min');
       });
     });
 

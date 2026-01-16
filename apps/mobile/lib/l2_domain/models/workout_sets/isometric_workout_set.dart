@@ -24,24 +24,24 @@ class IsometricWorkoutSet extends WorkoutSet {
     final weightKg = weight?.kg;
 
     if (isBodyweightBased) {
-      // Bodyweight-based exercises: "bodyweight" or "BW + Xkg"
+      // Bodyweight-based exercises: "bodyweight" or "BW + X"
       if (durationSec != null && weightKg != null && weightKg > 0) {
-        return '$durationSec sec · BW + ${_formatWeight(weightKg)} kg';
+        return '$durationSec sec · BW + ${_formatWeight(weightKg)}';
       } else if (durationSec != null && (weightKg == null || weightKg == 0)) {
         return '$durationSec sec · bodyweight';
       } else if (weightKg != null && weightKg > 0) {
-        return 'BW + ${_formatWeight(weightKg)} kg';
+        return 'BW + ${_formatWeight(weightKg)}';
       } else {
         return 'bodyweight';
       }
     } else {
-      // Loaded static holds: "Xkg" or "Xkg · Ysec"
+      // Loaded static holds: "X" or "X · Ysec"
       if (durationSec != null && weightKg != null && weightKg > 0) {
-        return '$durationSec sec · ${_formatWeight(weightKg)} kg';
+        return '$durationSec sec · ${_formatWeight(weightKg)}';
       } else if (durationSec != null) {
         return '$durationSec sec';
       } else if (weightKg != null && weightKg > 0) {
-        return '${_formatWeight(weightKg)} kg';
+        return _formatWeight(weightKg);
       } else {
         return '-';
       }

@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'l1_ui/features/workout/workout_home_page.dart';
 import 'l1_ui/shared/theme/app_colors.dart';
+import 'l1_ui/shared/providers/preferences_provider.dart';
+import 'l2_domain/use_cases/preferences/get_user_preferences_use_case.dart';
+import 'l2_domain/use_cases/preferences/update_user_preferences_use_case.dart';
+import 'l3_data/repositories/user_preferences_repository.dart';
 import 'l2_domain/use_cases/exercises/get_recommended_exercises_use_case.dart';
 import 'l2_domain/use_cases/exercises/search_exercises_use_case.dart';
 import 'l2_domain/use_cases/workout_sets/record_workout_set_use_case.dart';
@@ -68,6 +73,9 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
   getIt.registerSingleton<PreferencesRepository>(
     LocalPreferencesRepository(sharedPreferences),
   );
+  getIt.registerSingleton<UserPreferencesRepository>(
+    UserPreferencesRepository(),
+  );
 
   // Register L2 - Domain Layer (Use Cases)
   getIt.registerFactory<GetRecommendedExercisesUseCase>(
@@ -123,6 +131,18 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
     () => GetWeeklyStatsUseCase(
       getIt<GetWorkoutSetsByDateUseCase>(),
       getIt<ExerciseRepository>(),
+    ),
+  );
+
+  // Preferences use cases
+  getIt.registerFactory<GetUserPreferencesUseCase>(
+    () => GetUserPreferencesUseCase(
+      repository: getIt<UserPreferencesRepository>(),
+    ),
+  );
+  getIt.registerFactory<UpdateUserPreferencesUseCase>(
+    () => UpdateUserPreferencesUseCase(
+      repository: getIt<UserPreferencesRepository>(),
     ),
   );
 
@@ -183,18 +203,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Phil',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.white,
-          brightness: Brightness.dark,
+    return ChangeNotifierProvider(
+      create: (context) => PreferencesProvider(
+        getUserPreferencesUseCase: getIt<GetUserPreferencesUseCase>(),
+        updateUserPreferencesUseCase: getIt<UpdateUserPreferencesUseCase>(),
+      )..initialize(),
+      child: MaterialApp(
+        title: 'Phil',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.white,
+            brightness: Brightness.dark,
+          ),
+          scaffoldBackgroundColor: AppColors.deepCharcoal,
+          useMaterial3: true,
         ),
-        scaffoldBackgroundColor: AppColors.deepCharcoal,
-        useMaterial3: true,
+        home: const WorkoutHomePage(),
       ),
-      home: const WorkoutHomePage(),
     );
   }
 }

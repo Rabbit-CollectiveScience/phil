@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../shared/theme/app_colors.dart';
+import '../../../shared/providers/preferences_provider.dart';
 import 'metric_item.dart';
 
 class TypeCard extends StatelessWidget {
@@ -28,6 +30,7 @@ class TypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatters = context.watch<PreferencesProvider>().formatters;
     final typeKey = type.toLowerCase();
     final iconPath = 'assets/images/exercise_types/$typeKey.png';
     final isCardio = typeKey == 'cardio';
@@ -110,7 +113,9 @@ class TypeCard extends StatelessWidget {
                 value: isCardio
                     ? '${(duration ?? 0).toInt()}'
                     : '${volume.toInt()}',
-                label: isCardio ? 'Duration (min)' : 'Volume (kg)',
+                label: isCardio
+                    ? 'Duration (min)'
+                    : 'Volume (${formatters.getWeightUnit()})',
                 hasData: hasData,
               ),
             ],

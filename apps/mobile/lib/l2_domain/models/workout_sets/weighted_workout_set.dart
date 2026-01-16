@@ -19,9 +19,7 @@ class WeightedWorkoutSet extends WorkoutSet {
 
   @override
   String formatForDisplay() {
-    final weightStr = weight != null
-        ? '${weight!.kg.toStringAsFixed(1)} kg'
-        : '-- kg';
+    final weightStr = weight != null ? weight!.kg.toStringAsFixed(1) : '--';
     final repsStr = reps != null
         ? '$reps ${reps == 1 ? "rep" : "reps"}'
         : '-- rep';

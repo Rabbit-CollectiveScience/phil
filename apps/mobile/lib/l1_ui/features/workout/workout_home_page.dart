@@ -2,7 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import '../../shared/theme/app_colors.dart';
+import '../../shared/providers/preferences_provider.dart';
 import 'view_models/card_model.dart';
 import 'widgets/swipeable_card.dart';
 import 'widgets/expandable_search_bar.dart';
@@ -33,7 +35,6 @@ import '../../../l2_domain/models/workout_sets/assisted_machine_workout_set.dart
 import '../../../l2_domain/models/workout_sets/distance_cardio_workout_set.dart';
 import '../../../l2_domain/models/workout_sets/duration_cardio_workout_set.dart';
 import '../../../l2_domain/models/common/weight.dart';
-import '../../../l2_domain/models/common/distance.dart';
 import 'package:uuid/uuid.dart';
 
 class WorkoutHomePage extends StatefulWidget {
@@ -236,6 +237,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
   void _completeTopCard(
     Offset buttonPosition,
     VoidCallback onAnimationComplete,
+    BuildContext context,
   ) async {
     if (_isTokenAnimating) return; // Prevent multiple animations
 
@@ -248,6 +250,8 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
       final completedCard = _cards[topIndex];
 
       try {
+        // Get formatters from context
+        final formatters = context.read<PreferencesProvider>().formatters;
         // Extract field values from card
         final fieldValues = _topCardKey?.currentState?.getFieldValues();
         final exercise = completedCard.exercise;
@@ -337,7 +341,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
           final durationStr = fieldValues?['duration'];
 
           final distance = distanceStr != null
-              ? double.tryParse(distanceStr)
+              ? formatters.parseDistance(distanceStr)
               : null;
           final durationMinutes = durationStr != null
               ? double.tryParse(durationStr)
@@ -347,9 +351,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
             id: uuid.v4(),
             exerciseId: exercise.id,
             timestamp: DateTime.now(),
-            distance: distance != null
-                ? Distance(distance * 1000)
-                : null, // Convert km to meters
+            distance: distance,
             duration: durationMinutes != null
                 ? Duration(minutes: durationMinutes.toInt())
                 : null,
@@ -443,7 +445,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
           await _loadTodayCount();
           _completeTopCard(position, () {
             // No callback needed for drag completion
-          });
+          }, context);
         }
       }
 
@@ -686,7 +688,13 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                                                   _isTransitioningCards = true;
                                                 });
                                               },
-                                              onCompleted: _completeTopCard,
+                                              onCompleted:
+                                                  (position, callback) =>
+                                                      _completeTopCard(
+                                                        position,
+                                                        callback,
+                                                        context,
+                                                      ),
                                               onTokenDrag: _handleTokenDrag,
                                               onInteractionStart: () {
                                                 _searchBarKey.currentState

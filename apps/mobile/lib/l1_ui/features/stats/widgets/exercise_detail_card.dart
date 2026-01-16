@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../shared/theme/app_colors.dart';
+import '../../../shared/providers/preferences_provider.dart';
+import '../../../shared/utils/unit_formatters.dart';
+import '../../../../l2_domain/models/common/weight.dart';
+import '../../../../l2_domain/models/common/distance.dart';
 import '../view_models/exercise_detail_today.dart';
 import '../../../../l2_domain/models/exercises/isometric_exercise.dart';
 import '../../../../l2_domain/models/exercises/assisted_machine_exercise.dart';
@@ -37,6 +42,7 @@ class ExerciseDetailCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasPRs = prsToday.isNotEmpty;
+    final formatters = context.watch<PreferencesProvider>().formatters;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -100,7 +106,7 @@ class ExerciseDetailCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           // Metrics grid - dynamic based on exercise type
-          _buildMetricsGrid(),
+          _buildMetricsGrid(formatters),
           // PR badges at the bottom (if any)
           if (prsToday.isNotEmpty) ...[
             const SizedBox(height: 16),
@@ -142,25 +148,25 @@ class ExerciseDetailCard extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricsGrid() {
+  Widget _buildMetricsGrid(UnitFormatters formatters) {
     // Determine exercise type and build appropriate metrics
     if (exercise is IsometricExercise) {
-      return _buildIsometricMetrics();
+      return _buildIsometricMetrics(formatters);
     } else if (exercise is AssistedMachineExercise) {
-      return _buildAssistedMachineMetrics();
+      return _buildAssistedMachineMetrics(formatters);
     } else if (exercise is DistanceCardioExercise) {
-      return _buildDistanceCardioMetrics();
+      return _buildDistanceCardioMetrics(formatters);
     } else if (exercise is DurationCardioExercise) {
       return _buildDurationCardioMetrics();
     } else if (exercise is BodyweightExercise) {
-      return _buildBodyweightMetrics();
+      return _buildBodyweightMetrics(formatters);
     } else {
       // Default: weighted strength exercises
-      return _buildWeightedMetrics();
+      return _buildWeightedMetrics(formatters);
     }
   }
 
-  Widget _buildIsometricMetrics() {
+  Widget _buildIsometricMetrics(UnitFormatters formatters) {
     return Row(
       children: [
         Expanded(
@@ -175,7 +181,7 @@ class ExerciseDetailCard extends StatelessWidget {
           child: _buildMetricColumn(
             'Max Weight',
             (maxAdditionalWeight != null && maxAdditionalWeight! > 0)
-                ? '${maxAdditionalWeight!.toInt()} kg'
+                ? formatters.formatWeight(Weight(maxAdditionalWeight!))
                 : 'bodyweight',
             isPR: false,
           ),
@@ -184,14 +190,14 @@ class ExerciseDetailCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDistanceCardioMetrics() {
+  Widget _buildDistanceCardioMetrics(UnitFormatters formatters) {
     return Row(
       children: [
         Expanded(
           child: _buildMetricColumn(
             'Distance',
             maxDistance != null
-                ? '${(maxDistance! / 1000).toStringAsFixed(1)} km'
+                ? formatters.formatDistance(Distance(maxDistance!))
                 : '-',
             isPR: _hasPR('maxDistance'),
           ),
@@ -222,7 +228,7 @@ class ExerciseDetailCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBodyweightMetrics() {
+  Widget _buildBodyweightMetrics(UnitFormatters formatters) {
     return Row(
       children: [
         Expanded(
@@ -237,7 +243,7 @@ class ExerciseDetailCard extends StatelessWidget {
           child: _buildMetricColumn(
             'Max Added Weight',
             (maxAdditionalWeight != null && maxAdditionalWeight! > 0)
-                ? '${maxAdditionalWeight!.toInt()} kg'
+                ? formatters.formatWeight(Weight(maxAdditionalWeight!))
                 : '-',
             isPR:
                 false, // Additional weight doesn't have separate PR tracking yet
@@ -247,7 +253,7 @@ class ExerciseDetailCard extends StatelessWidget {
     );
   }
 
-  Widget _buildAssistedMachineMetrics() {
+  Widget _buildAssistedMachineMetrics(UnitFormatters formatters) {
     return Row(
       children: [
         Expanded(
@@ -264,7 +270,7 @@ class ExerciseDetailCard extends StatelessWidget {
             maxWeightToday != null
                 ? (maxWeightToday! == 0
                       ? 'bodyweight'
-                      : '${maxWeightToday!.toInt()} kg')
+                      : formatters.formatWeight(Weight(maxWeightToday!)))
                 : '-',
             isPR: _hasPR('maxWeight'),
           ),
@@ -273,13 +279,13 @@ class ExerciseDetailCard extends StatelessWidget {
     );
   }
 
-  Widget _buildWeightedMetrics() {
+  Widget _buildWeightedMetrics(UnitFormatters formatters) {
     return Row(
       children: [
         Expanded(
           child: _buildMetricColumn(
             'Volume',
-            volumeToday > 0 ? '${volumeToday.toInt()} kg' : '-',
+            volumeToday > 0 ? formatters.formatVolume(volumeToday) : '-',
             isPR: _hasPR('maxVolume'),
           ),
         ),
@@ -288,7 +294,7 @@ class ExerciseDetailCard extends StatelessWidget {
           child: _buildMetricColumn(
             'Max Weight',
             (maxWeightToday != null && maxWeightToday! > 0)
-                ? '${maxWeightToday!.toInt()} kg'
+                ? formatters.formatWeight(Weight(maxWeightToday!))
                 : '-',
             isPR: _hasPR('maxWeight'),
           ),

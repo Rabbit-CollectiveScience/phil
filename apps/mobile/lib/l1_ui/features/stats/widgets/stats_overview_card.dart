@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../shared/theme/app_colors.dart';
+import '../../../shared/providers/preferences_provider.dart';
 import 'metric_tile.dart';
 import '../../../shared/widgets/exercise_type_chip.dart';
 
@@ -22,6 +24,8 @@ class StatsOverviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatters = context.watch<PreferencesProvider>().formatters;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -60,7 +64,10 @@ class StatsOverviewCard extends StatelessWidget {
             children: [
               MetricTile(value: setsCount.toString(), label: 'SETS'),
               MetricTile(value: exercisesCount.toString(), label: 'EXERCISES'),
-              MetricTile(value: '${totalVolume.toInt()}', label: 'VOLUME (KG)'),
+              MetricTile(
+                value: formatters.formatVolume(totalVolume, includeUnit: false),
+                label: formatters.getVolumeLabel(),
+              ),
               MetricTile(value: avgReps.toStringAsFixed(1), label: 'AVG REPS'),
             ],
           ),

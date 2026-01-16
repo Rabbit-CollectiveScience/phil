@@ -23,7 +23,7 @@ class BodyweightWorkoutSet extends WorkoutSet {
         : '-- rep';
 
     if (additionalWeight != null && additionalWeight!.kg > 0) {
-      return '$repsStr · BW + ${additionalWeight!.kg.toStringAsFixed(1)} kg';
+      return '$repsStr · BW + ${additionalWeight!.kg.toStringAsFixed(1)}';
     }
     return '$repsStr · bodyweight';
   }
