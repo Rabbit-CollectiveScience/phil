@@ -57,29 +57,29 @@ void main() {
       });
     });
 
-    group('setInLbs', () {
+    group('fromLbs', () {
       test('creates Weight from lbs value', () {
-        final weight = Weight(0).setInLbs(22.0462);
+        final weight = Weight.fromLbs(22.0462);
         expect(weight.kg, closeTo(10.0, 0.001));
       });
 
       test('creates Weight from zero lbs', () {
-        final weight = Weight(0).setInLbs(0.0);
+        final weight = Weight.fromLbs(0.0);
         expect(weight.kg, 0.0);
       });
 
       test('creates Weight from 1 lb', () {
-        final weight = Weight(0).setInLbs(1.0);
+        final weight = Weight.fromLbs(1.0);
         expect(weight.kg, closeTo(0.453592, 0.000001));
       });
 
       test('creates Weight from negative lbs', () {
-        final weight = Weight(0).setInLbs(-22.0462);
+        final weight = Weight.fromLbs(-22.0462);
         expect(weight.kg, closeTo(-10.0, 0.001));
       });
 
       test('creates Weight from decimal lbs', () {
-        final weight = Weight(0).setInLbs(5.5);
+        final weight = Weight.fromLbs(5.5);
         expect(weight.kg, closeTo(2.49476, 0.00001));
       });
     });
@@ -204,12 +204,12 @@ void main() {
       test('handles conversion round-trip kg -> lbs -> kg', () {
         final original = Weight(10.0);
         final lbs = original.getInLbs();
-        final converted = original.setInLbs(lbs);
+        final converted = Weight.fromLbs(lbs);
         expect(converted.kg, closeTo(original.kg, 0.0001));
       });
 
       test('handles conversion round-trip lbs -> kg -> lbs', () {
-        final original = Weight(0).setInLbs(22.0);
+        final original = Weight.fromLbs(22.0);
         final lbs = original.getInLbs();
         expect(lbs, closeTo(22.0, 0.001));
       });

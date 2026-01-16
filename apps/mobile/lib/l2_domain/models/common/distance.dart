@@ -4,16 +4,27 @@ class Distance {
   const Distance(this.meters);
 
   // Conversion constants
-  static const double metersToKmFactor = 0.001;
-  static const double metersToMilesFactor = 0.000621371;
+  static const double metersToKm = 0.001;
+  static const double metersToMiles = 0.000621371;
+  static const double kmToMeters = 1000.0;
+  static const double milesToMeters = 1609.344;
 
-  double getInKm() => meters * metersToKmFactor;
+  /// Convert distance to kilometers
+  double getInKilometers() => meters * metersToKm;
 
-  double getInMiles() => meters * metersToMilesFactor;
+  /// Convert distance to miles
+  double getInMiles() => meters * metersToMiles;
 
-  Distance setInKm(double km) => Distance(km / metersToKmFactor);
+  /// Create Distance from kilometers
+  static Distance fromKm(double km) => Distance(km * kmToMeters);
 
-  Distance setInMiles(double miles) => Distance(miles / metersToMilesFactor);
+  /// Create Distance from miles
+  static Distance fromMiles(double miles) => Distance(miles * milesToMeters);
+
+  // Kept for backward compatibility
+  double getInKm() => getInKilometers();
+  Distance setInKm(double km) => fromKm(km);
+  Distance setInMiles(double miles) => fromMiles(miles);
 
   // JSON serialization
   Map<String, dynamic> toJson() => {'meters': meters};

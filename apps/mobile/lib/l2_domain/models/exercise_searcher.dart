@@ -88,8 +88,9 @@ class ExerciseSearcher {
 
       // Target muscles match (for strength exercises)
       if (exercise is StrengthExercise) {
-        if (exercise.targetMuscles
-            .any((muscle) => muscle.name.toLowerCase().contains(token))) {
+        if (exercise.targetMuscles.any(
+          (muscle) => muscle.name.toLowerCase().contains(token),
+        )) {
           score += _targetMuscleMatchScore;
         }
       }

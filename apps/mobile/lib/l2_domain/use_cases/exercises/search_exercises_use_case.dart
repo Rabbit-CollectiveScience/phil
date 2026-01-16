@@ -19,7 +19,7 @@ class SearchExercisesUseCase {
   final ExerciseSearcher _searcher;
 
   SearchExercisesUseCase(this._exerciseRepository)
-      : _searcher = ExerciseSearcher();
+    : _searcher = ExerciseSearcher();
 
   Future<List<Exercise>> execute({required String searchQuery}) async {
     // Get all exercises

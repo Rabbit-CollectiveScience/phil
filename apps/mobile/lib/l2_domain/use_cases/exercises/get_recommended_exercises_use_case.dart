@@ -24,7 +24,7 @@ class GetRecommendedExercisesUseCase {
   final ExerciseSearcher _searcher;
 
   GetRecommendedExercisesUseCase(this._repository)
-      : _searcher = ExerciseSearcher();
+    : _searcher = ExerciseSearcher();
 
   Future<List<Exercise>> execute({
     String? filterCategory,

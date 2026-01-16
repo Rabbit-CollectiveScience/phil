@@ -4,11 +4,14 @@ class Weight {
   const Weight(this.kg);
 
   // Conversion constants
-  static const double kgToLbsFactor = 2.20462;
+  static const double kgToLb = 2.20462;
+  static const double lbToKg = 0.453592;
 
-  double getInLbs() => kg * kgToLbsFactor;
+  /// Convert weight to pounds
+  double getInLbs() => kg * kgToLb;
 
-  Weight setInLbs(double lbs) => Weight(lbs / kgToLbsFactor);
+  /// Create Weight from pounds value
+  static Weight fromLbs(double lbs) => Weight(lbs * lbToKg);
 
   // JSON serialization
   Map<String, dynamic> toJson() => {'kg': kg};
