@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
 import '../../../shared/theme/app_colors.dart';
@@ -491,6 +492,23 @@ class SwipeableCardState extends State<SwipeableCard>
     });
   }
 
+  void _showInputPanel(
+    BuildContext context, {
+    required String fieldName,
+    required String unit,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (context) => _CustomInputPanel(
+        fieldName: fieldName,
+        unit: unit,
+      ),
+    );
+  }
+
   void _handleTap() {
     if (kDebugMode) {
       debugPrint(
@@ -886,18 +904,6 @@ class SwipeableCardState extends State<SwipeableCard>
       return const SizedBox.shrink();
     }
 
-    final int minValue =
-        (fieldName == 'weight' || fieldName == 'assistanceWeight') ? step : 1;
-
-    // Check if this is a bodyweight-based exercise
-    final exercise = widget.card.exercise;
-    final isBodyweightField =
-        fieldName == 'weight' &&
-        (exercise is BodyweightExercise ||
-            (exercise is IsometricExercise && exercise.isBodyweightBased));
-    final isAssistedMachineField =
-        fieldName == 'assistanceWeight' && exercise is AssistedMachineExercise;
-
     return ListenableBuilder(
       listenable: controller,
       builder: (context, child) {
@@ -922,142 +928,13 @@ class SwipeableCardState extends State<SwipeableCard>
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(vertical: 12),
-            prefixIcon: ListenableBuilder(
-              listenable: Listenable.merge([focusNode, controller]),
-              builder: (context, child) {
-                final isEmpty = (isBodyweightField || isAssistedMachineField)
-                    ? controller.text == 'bodyweight'
-                    : controller.text == '- $unit';
-                return Opacity(
-                  opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
-                  child: IgnorePointer(
-                    ignoring: !(isEmpty || focusNode.hasFocus),
-                    child: child!,
-                  ),
-                );
-              },
-              child: IconButton(
-                onPressed: () {
-                  focusNode.requestFocus();
-                  _startFieldTimer(fieldName);
-                  String text = controller.text.replaceAll(
-                    RegExp(r'[^0-9]'),
-                    '',
-                  );
-                  int current = int.tryParse(text) ?? 0;
-                  if (current >= minValue) {
-                    int newValue = current - step;
-
-                    final formatters = context
-                        .read<PreferencesProvider>()
-                        .formatters;
-                    if (isBodyweightField) {
-                      if (newValue == 0) {
-                        controller.text = 'bodyweight';
-                      } else {
-                        controller.text =
-                            'BW+$newValue${formatters.getWeightUnit()}';
-                      }
-                    } else if (isAssistedMachineField) {
-                      if (newValue == 0) {
-                        controller.text = 'bodyweight';
-                      } else {
-                        controller.text =
-                            'BW-$newValue${formatters.getWeightUnit()}';
-                      }
-                    } else {
-                      String displayUnit = unit;
-                      if (unit == 'reps' && newValue == 1) {
-                        displayUnit = 'rep';
-                      }
-                      controller.text = '$newValue $displayUnit';
-                    }
-
-                    // Update field value in card model
-                    final updatedData = Map<String, String>.from(
-                      widget.card.userData,
-                    );
-                    updatedData[fieldName] = newValue.toString();
-                    widget.onCardUpdate(
-                      widget.card.copyWith(userData: updatedData),
-                    );
-                  }
-                },
-                icon: const Icon(Icons.chevron_left),
-                color: AppColors.limeGreen,
-                iconSize: 28,
-                style: IconButton.styleFrom(padding: const EdgeInsets.all(4)),
-              ),
-            ),
-            suffixIcon: ListenableBuilder(
-              listenable: Listenable.merge([focusNode, controller]),
-              builder: (context, child) {
-                final isEmpty = (isBodyweightField || isAssistedMachineField)
-                    ? controller.text == 'bodyweight'
-                    : controller.text == '- $unit';
-                return Opacity(
-                  opacity: (isEmpty || focusNode.hasFocus) ? 1.0 : 0.0,
-                  child: IgnorePointer(
-                    ignoring: !(isEmpty || focusNode.hasFocus),
-                    child: child!,
-                  ),
-                );
-              },
-              child: IconButton(
-                onPressed: () {
-                  focusNode.requestFocus();
-                  _startFieldTimer(fieldName);
-                  String text = controller.text.replaceAll(
-                    RegExp(r'[^0-9]'),
-                    '',
-                  );
-                  int current = int.tryParse(text) ?? 0;
-                  int newValue = current + step;
-
-                  final formatters = context
-                      .read<PreferencesProvider>()
-                      .formatters;
-                  if (isBodyweightField) {
-                    if (newValue == 0) {
-                      controller.text = 'bodyweight';
-                    } else {
-                      controller.text =
-                          'BW+$newValue${formatters.getWeightUnit()}';
-                    }
-                  } else if (isAssistedMachineField) {
-                    if (newValue == 0) {
-                      controller.text = 'bodyweight';
-                    } else {
-                      controller.text =
-                          'BW-$newValue${formatters.getWeightUnit()}';
-                    }
-                  } else {
-                    String displayUnit = unit;
-                    if (unit == 'reps' && newValue == 1) {
-                      displayUnit = 'rep';
-                    }
-                    controller.text = '$newValue $displayUnit';
-                  }
-
-                  // Update field value in card model
-                  final updatedData = Map<String, String>.from(
-                    widget.card.userData,
-                  );
-                  updatedData[fieldName] = newValue.toString();
-                  widget.onCardUpdate(
-                    widget.card.copyWith(userData: updatedData),
-                  );
-                },
-                icon: const Icon(Icons.chevron_right),
-                color: AppColors.limeGreen,
-                iconSize: 28,
-                style: IconButton.styleFrom(padding: const EdgeInsets.all(4)),
-              ),
-            ),
           ),
           onTap: () {
-            focusNode.requestFocus();
-            _startFieldTimer(fieldName);
+            // Prevent if card is animating
+            if (!_currentState.isStable) return;
+            
+            HapticFeedback.lightImpact();
+            _showInputPanel(context, fieldName: fieldName, unit: unit);
           },
         );
       },
@@ -1258,6 +1135,75 @@ class SwipeableCardState extends State<SwipeableCard>
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Custom input panel for entering workout values
+class _CustomInputPanel extends StatelessWidget {
+  final String fieldName;
+  final String unit;
+
+  const _CustomInputPanel({
+    required this.fieldName,
+    required this.unit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        Navigator.pop(context);
+      },
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.5,
+        decoration: BoxDecoration(
+          color: AppColors.boldGrey,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Custom Input Panel',
+              style: TextStyle(
+                color: AppColors.offWhite,
+                fontSize: 24,
+                fontWeight: FontWeight.w300,
+                letterSpacing: 1.5,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Field: $fieldName',
+              style: TextStyle(
+                color: AppColors.offWhite.withOpacity(0.7),
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Unit: $unit',
+              style: TextStyle(
+                color: AppColors.offWhite.withOpacity(0.7),
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 40),
+            Text(
+              'Tap anywhere to close',
+              style: TextStyle(
+                color: AppColors.limeGreen,
+                fontSize: 14,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
