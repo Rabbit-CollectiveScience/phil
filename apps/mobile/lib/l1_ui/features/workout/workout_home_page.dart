@@ -862,11 +862,11 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                               ),
                               child: const Center(
                                 child: Text(
-                                  'ZET',
+                                  'Z',
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 24,
                                     fontWeight: FontWeight.w900,
-                                    letterSpacing: 2.0,
+                                    letterSpacing: 0,
                                     color: Colors.black,
                                   ),
                                 ),
@@ -889,11 +889,11 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
                           ),
                           child: const Center(
                             child: Text(
-                              'ZET',
+                              'Z',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 24,
                                 fontWeight: FontWeight.w900,
-                                letterSpacing: 2.0,
+                                letterSpacing: 0,
                                 color: Colors.black,
                               ),
                             ),

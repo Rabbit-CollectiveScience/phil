@@ -84,7 +84,7 @@ class SwipeableCardState extends State<SwipeableCard>
   Offset? _lastTapPosition;
   Offset? _dragStartLocalPosition;
   bool _gestureCommitted = false;
-  int _currentSetNumber = 1;
+  int _currentSetNumber = 0;
 
   // State transition with logging
   void _transitionState(CardInteractionState newState) {
@@ -1114,7 +1114,7 @@ class SwipeableCardState extends State<SwipeableCard>
                     ),
                   ),
                   child: Text(
-                    'SET $_currentSetNumber',
+                    '$_currentSetNumber SET',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w900,
