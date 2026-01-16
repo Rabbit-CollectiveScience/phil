@@ -173,9 +173,11 @@ class ExerciseDetailCard extends StatelessWidget {
         _buildDivider(),
         Expanded(
           child: _buildMetricColumn(
-            'Max Reps',
-            maxReps != null ? '$maxReps' : '-',
-            isPR: _hasPR('maxReps'),
+            'Max Weight',
+            (maxAdditionalWeight != null && maxAdditionalWeight! > 0)
+                ? '${maxAdditionalWeight!.toInt()} kg'
+                : 'bodyweight',
+            isPR: false,
           ),
         ),
       ],
@@ -187,7 +189,7 @@ class ExerciseDetailCard extends StatelessWidget {
       children: [
         Expanded(
           child: _buildMetricColumn(
-            'Max Distance',
+            'Distance',
             maxDistance != null
                 ? '${(maxDistance! / 1000).toStringAsFixed(1)} km'
                 : '-',
@@ -197,7 +199,7 @@ class ExerciseDetailCard extends StatelessWidget {
         _buildDivider(),
         Expanded(
           child: _buildMetricColumn(
-            'Max Duration',
+            'Duration',
             maxDuration != null ? '${maxDuration!.inMinutes} min' : '-',
             isPR: _hasPR('maxDuration'),
           ),
@@ -211,17 +213,9 @@ class ExerciseDetailCard extends StatelessWidget {
       children: [
         Expanded(
           child: _buildMetricColumn(
-            'Max Duration',
+            'Duration',
             maxDuration != null ? '${maxDuration!.inMinutes} min' : '-',
             isPR: _hasPR('maxDuration'),
-          ),
-        ),
-        _buildDivider(),
-        Expanded(
-          child: _buildMetricColumn(
-            'Volume',
-            volumeToday > 0 ? '${volumeToday.toInt()} min' : '-',
-            isPR: _hasPR('maxVolume'),
           ),
         ),
       ],
@@ -297,6 +291,14 @@ class ExerciseDetailCard extends StatelessWidget {
                 ? '${maxWeightToday!.toInt()} kg'
                 : '-',
             isPR: _hasPR('maxWeight'),
+          ),
+        ),
+        _buildDivider(),
+        Expanded(
+          child: _buildMetricColumn(
+            'Max Reps',
+            maxReps != null ? '$maxReps' : '-',
+            isPR: _hasPR('maxReps'),
           ),
         ),
       ],
