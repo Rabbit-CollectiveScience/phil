@@ -112,10 +112,8 @@ class TypeCard extends StatelessWidget {
               MetricItem(
                 value: isCardio
                     ? '${(duration ?? 0).toInt()}'
-                    : '${volume.toInt()}',
-                label: isCardio
-                    ? 'Duration (min)'
-                    : 'Volume (${formatters.getWeightUnit()})',
+                    : formatters.formatVolume(volume),
+                label: isCardio ? 'Duration (min)' : 'Volume',
                 hasData: hasData,
               ),
             ],
