@@ -42,6 +42,12 @@ class UserPreferencesRepository {
     await setMeasurementSystem(preferences.measurementSystem);
   }
 
+  /// Check if this is the first launch (no saved preference exists)
+  Future<bool> isFirstLaunch() async {
+    final prefs = await SharedPreferences.getInstance();
+    return !prefs.containsKey(_measurementSystemKey);
+  }
+
   /// Clear all preferences (useful for testing or reset)
   Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();

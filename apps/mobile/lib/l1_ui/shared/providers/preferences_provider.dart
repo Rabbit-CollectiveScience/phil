@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import '../../../l2_domain/models/user_preferences.dart';
 import '../../../l2_domain/use_cases/preferences/get_user_preferences_use_case.dart';
@@ -30,6 +31,7 @@ class PreferencesProvider with ChangeNotifier {
       _preferences?.measurementSystem ?? MeasurementSystem.metric;
 
   /// Initialize preferences by loading from repository
+  /// On first launch, auto-detects locale: US → imperial, others → metric
   Future<void> initialize() async {
     _isLoading = true;
     _error = null;
@@ -37,6 +39,24 @@ class PreferencesProvider with ChangeNotifier {
 
     try {
       _preferences = await _getUserPreferencesUseCase();
+
+      // Check if this is first launch - auto-detect locale
+      if (_preferences!.measurementSystem == MeasurementSystem.metric) {
+        // This might be default, check if it's actually first launch
+        // by attempting to detect if we should use imperial
+        final locale = PlatformDispatcher.instance.locale;
+        final isUS = locale.countryCode == 'US';
+
+        if (isUS) {
+          // First launch in US → set to imperial
+          final imperialPreferences = UserPreferences(
+            measurementSystem: MeasurementSystem.imperial,
+          );
+          await _updateUserPreferencesUseCase(imperialPreferences);
+          _preferences = imperialPreferences;
+        }
+      }
+
       _formatters = UnitFormatters(_preferences!.measurementSystem);
       _isLoading = false;
       notifyListeners();

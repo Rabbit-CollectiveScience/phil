@@ -612,6 +612,12 @@ class _WorkoutHomePageState extends State<WorkoutHomePage>
 
   @override
   Widget build(BuildContext context) {
+    // Wait for preferences to load before showing any UI with units
+    final preferencesProvider = context.watch<PreferencesProvider>();
+    if (preferencesProvider.isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
