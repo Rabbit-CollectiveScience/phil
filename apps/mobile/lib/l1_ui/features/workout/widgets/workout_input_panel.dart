@@ -85,20 +85,26 @@ class WorkoutInputPanel extends StatelessWidget {
   Widget _buildActionButton(String label) {
     // Mock PR values - will be dynamic later
     String subtitle = '';
+    double opacity = 0.4; // Default
+    
     if (label == '100%') {
       subtitle = '100 kg';
+      opacity = 1.0;
     } else if (label == '90%') {
       subtitle = '90 kg';
+      opacity = 0.8;
     } else if (label == '80%') {
       subtitle = '80 kg';
+      opacity = 0.6;
     } else if (label == '50%') {
       subtitle = '50 kg';
+      opacity = 0.4;
     }
 
     return Padding(
       padding: const EdgeInsets.all(4),
       child: Material(
-        color: AppColors.limeGreen.withOpacity(0.2),
+        color: AppColors.limeGreen.withOpacity(opacity),
         child: InkWell(
           onTap: () {
             HapticFeedback.lightImpact();
@@ -111,7 +117,7 @@ class WorkoutInputPanel extends StatelessWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    color: AppColors.limeGreen,
+                    color: AppColors.boldGrey,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.2,
@@ -122,7 +128,7 @@ class WorkoutInputPanel extends StatelessWidget {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: AppColors.offWhite.withOpacity(0.6),
+                      color: AppColors.boldGrey.withOpacity(0.8),
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                     ),

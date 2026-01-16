@@ -502,7 +502,7 @@ class SwipeableCardState extends State<SwipeableCard>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.transparent,
       useSafeArea: false,
       builder: (context) => WorkoutInputPanel(
         fieldName: fieldName,
