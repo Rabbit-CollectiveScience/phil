@@ -16,14 +16,15 @@ class WorkoutInputPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final panelHeight = (MediaQuery.of(context).size.height * 0.4).clamp(300.0, 400.0);
-    
+    final panelHeight = (MediaQuery.of(context).size.height * 0.4).clamp(
+      300.0,
+      400.0,
+    );
+
     return Container(
       width: double.infinity,
       height: panelHeight,
-      decoration: BoxDecoration(
-        color: AppColors.boldGrey,
-      ),
+      decoration: BoxDecoration(color: AppColors.boldGrey),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -41,9 +42,9 @@ class WorkoutInputPanel extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(width: 8),
-            
+
             // Right: Action buttons (1 column)
             Expanded(
               flex: 1,
@@ -52,7 +53,7 @@ class WorkoutInputPanel extends StatelessWidget {
                   Expanded(child: _buildActionButton('100%')),
                   Expanded(child: _buildActionButton('90%')),
                   Expanded(child: _buildActionButton('80%')),
-                  Expanded(child: _buildActionButton('Last')),
+                  Expanded(child: _buildActionButton('50%')),
                 ],
               ),
             ),
@@ -61,7 +62,7 @@ class WorkoutInputPanel extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildNumberRow(List<String> numbers) {
     return Row(
       children: numbers.map((number) {
@@ -80,7 +81,7 @@ class WorkoutInputPanel extends StatelessWidget {
       }).toList(),
     );
   }
-  
+
   Widget _buildActionButton(String label) {
     // Mock PR values - will be dynamic later
     String subtitle = '';
@@ -90,8 +91,8 @@ class WorkoutInputPanel extends StatelessWidget {
       subtitle = '90 kg';
     } else if (label == '80%') {
       subtitle = '80 kg';
-    } else if (label == 'Last') {
-      subtitle = '45 kg';
+    } else if (label == '50%') {
+      subtitle = '50 kg';
     }
 
     return Padding(
@@ -134,10 +135,16 @@ class WorkoutInputPanel extends StatelessWidget {
       ),
     );
   }
-  
-  Widget _buildButton(String label, {required VoidCallback onTap, bool isAction = false}) {
+
+  Widget _buildButton(
+    String label, {
+    required VoidCallback onTap,
+    bool isAction = false,
+  }) {
     return Material(
-      color: isAction ? AppColors.limeGreen.withOpacity(0.2) : AppColors.darkGrey,
+      color: isAction
+          ? AppColors.limeGreen.withOpacity(0.2)
+          : AppColors.darkGrey,
       child: InkWell(
         onTap: onTap,
         child: Center(
