@@ -111,67 +111,9 @@ extension EquipmentWeights on EquipmentType {
         return [2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 48];
 
       case EquipmentType.machine:
-        // Most machines use 5kg weight stack increments
-        return [
-          5,
-          10,
-          15,
-          20,
-          25,
-          30,
-          35,
-          40,
-          45,
-          50,
-          55,
-          60,
-          65,
-          70,
-          75,
-          80,
-          85,
-          90,
-          95,
-          100,
-          105,
-          110,
-          115,
-          120,
-          130,
-          140,
-          150,
-          160,
-          170,
-          180,
-          200,
-        ];
-
       case EquipmentType.cable:
-        // Typically finer increment (2.5kg)
-        return [
-          2.5,
-          5,
-          7.5,
-          10,
-          12.5,
-          15,
-          17.5,
-          20,
-          22.5,
-          25,
-          27.5,
-          30,
-          35,
-          40,
-          45,
-          50,
-          55,
-          60,
-          65,
-          70,
-          75,
-          80,
-        ];
+        // Use modulo rounding (5kg increments) - see roundToNearest()
+        return [];
 
       case EquipmentType.none:
         return []; // Free-form, no constraints
@@ -276,72 +218,9 @@ extension EquipmentWeights on EquipmentType {
         return [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 70, 80, 90, 100];
 
       case EquipmentType.machine:
-        // Most machines use 10lb weight stack increments
-        return [
-          10,
-          20,
-          30,
-          40,
-          50,
-          60,
-          70,
-          80,
-          90,
-          100,
-          110,
-          120,
-          130,
-          140,
-          150,
-          160,
-          170,
-          180,
-          190,
-          200,
-          220,
-          240,
-          260,
-          280,
-          300,
-          320,
-          340,
-          360,
-          380,
-          400,
-        ];
-
       case EquipmentType.cable:
-        // 5lb increment
-        return [
-          5,
-          10,
-          15,
-          20,
-          25,
-          30,
-          35,
-          40,
-          45,
-          50,
-          55,
-          60,
-          65,
-          70,
-          75,
-          80,
-          85,
-          90,
-          95,
-          100,
-          110,
-          120,
-          130,
-          140,
-          150,
-          160,
-          170,
-          180,
-        ];
+        // Use modulo rounding (10lb increments) - see roundToNearest()
+        return [];
 
       case EquipmentType.none:
         return [];
@@ -349,8 +228,16 @@ extension EquipmentWeights on EquipmentType {
   }
 
   /// Round a target weight to the nearest available weight for this equipment
-  /// Returns the original value if no constraints (none type) or empty list
+  /// Returns the original value if no constraints (none type)
   double roundToNearest(double targetWeight, bool isMetric) {
+    // Machines and cables use modulo-based rounding (conservative approach)
+    // Works with all equipment brands regardless of increment pattern
+    if (this == EquipmentType.machine || this == EquipmentType.cable) {
+      final increment = isMetric ? 5.0 : 10.0;
+      return (targetWeight / increment).round() * increment;
+    }
+
+    // Other equipment types use fixed weight arrays
     final available = isMetric ? availableWeightsKg : availableWeightsLbs;
 
     if (available.isEmpty) return targetWeight;
