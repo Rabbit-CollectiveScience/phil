@@ -115,10 +115,7 @@ class _WorkoutInputPanelState extends State<WorkoutInputPanel> {
               ),
             ),
 
-            Container(
-              width: 1.5,
-              color: AppColors.limeGreen.withOpacity(0.3),
-            ),
+            Container(width: 1.5, color: AppColors.limeGreen.withOpacity(0.3)),
 
             // Right: Action buttons (1 column)
             Expanded(

@@ -91,6 +91,7 @@ class SwipeableCardState extends State<SwipeableCard>
   Offset? _dragStartLocalPosition;
   bool _gestureCommitted = false;
   int _currentSetNumber = 0;
+  String? _activeInputField; // Track which field has input panel open
 
   // State transition with logging
   void _transitionState(CardInteractionState newState) {
@@ -503,6 +504,9 @@ class SwipeableCardState extends State<SwipeableCard>
     // Get use case from GetIt (lazy instantiation following app pattern)
     final calculatePRUseCase = GetIt.instance<CalculatePRPercentagesUseCase>();
 
+    // Mark field as active
+    setState(() => _activeInputField = fieldName);
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -524,7 +528,12 @@ class SwipeableCardState extends State<SwipeableCard>
           }
         },
       ),
-    );
+    ).then((_) {
+      // Clear active field when panel closes
+      if (mounted) {
+        setState(() => _activeInputField = null);
+      }
+    });
   }
 
   void _handleTap() {
@@ -922,38 +931,58 @@ class SwipeableCardState extends State<SwipeableCard>
       return const SizedBox.shrink();
     }
 
+    final isActive = _activeInputField == fieldName;
+
     return ListenableBuilder(
       listenable: controller,
       builder: (context, child) {
-        return TextField(
-          controller: controller,
-          focusNode: focusNode,
-          readOnly: true,
-          keyboardType: TextInputType.number,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize:
-                (controller.text == 'bodyweight' ||
-                    controller.text.startsWith('BW'))
-                ? 26
-                : 32,
-            color: AppColors.offWhite,
-            fontWeight: FontWeight.w300,
-            letterSpacing: 1.5,
-          ),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-          onTap: () {
-            // Prevent if card is animating
-            if (!_currentState.isStable) return;
+        return Container(
+          decoration: isActive
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: AppColors.limeGreen,
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.limeGreen.withOpacity(0.3),
+                      blurRadius: 8,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                )
+              : null,
+          child: TextField(
+            controller: controller,
+            focusNode: focusNode,
+            readOnly: true,
+            keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize:
+                  (controller.text == 'bodyweight' ||
+                      controller.text.startsWith('BW'))
+                  ? 26
+                  : 32,
+              color: AppColors.offWhite,
+              fontWeight: FontWeight.w300,
+              letterSpacing: 1.5,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+            onTap: () {
+              // Prevent if card is animating
+              if (!_currentState.isStable) return;
 
-            HapticFeedback.lightImpact();
-            _showInputPanel(context, fieldName: fieldName, unit: unit);
-          },
+              HapticFeedback.lightImpact();
+              _showInputPanel(context, fieldName: fieldName, unit: unit);
+            },
+          ),
         );
       },
     );
