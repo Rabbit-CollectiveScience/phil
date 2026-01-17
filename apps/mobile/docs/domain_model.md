@@ -172,8 +172,7 @@ classDiagram
     class EquipmentType {
         <<enumeration>>
         DUMBBELL
-        BARBELL
-        EZ_BAR
+        PLATE
         KETTLEBELL
         MACHINE
         CABLE
@@ -358,17 +357,19 @@ classDiagram
 
 **EquipmentType Enum:**
 - `dumbbell`: Fixed-increment gym dumbbells (0.5kg-80kg, 1lb-150lb)
-- `barbell`: Olympic bars + standard plates (5kg-200kg, 45lb-455lb)
-- `ezBar`: EZ curl bars with same plate system as barbell
+- `plate`: Olympic plate loading system (5kg-200kg, 45lb-455lb, 2.5kg/5lb increments)
+  - Used by: barbells, EZ bars, weighted dips, weighted pull-ups, any plate-loadable exercise
+  - Represents the loading mechanism, not the specific bar type
 - `kettlebell`: Competition/gym standard (4kg-48kg, 10lb-100lb)
 - `machine`: Weight stack machines (5kg/10lb modulo rounding)
 - `cable`: Cable systems (5kg/10lb modulo rounding)
 - `other`: Custom/flexible equipment (rounds to 1 decimal place)
 
 **Rounding Behavior:**
-- **Array-based** (dumbbell/barbell/kettlebell/ezBar): Rounds to nearest available gym weight
+- **Array-based** (dumbbell/plate/kettlebell): Rounds to nearest available gym weight
   - Example: 22.7kg dumbbell → 22.5kg (closest in array)
-  - Prevents suggesting non-existent weights like "23.3kg dumbbell"
+  - Example: 101.8kg plate-loaded → 100kg (2.5kg plate increment)
+  - Prevents suggesting non-existent weights like "23.3kg dumbbell" or "103.7kg barbell"
 - **Modulo-based** (machine/cable): Conservative 5kg/10lb increments
   - Example: 114.3kg machine → 115kg (5kg increment)
   - Works with all brands (10lb, 20lb, 5kg, 10kg stacks)
@@ -383,8 +384,9 @@ classDiagram
 
 **Equipment Selection for Bodyweight Exercises:**
 - When bodyweight exercises allow added weight (weighted pull-ups), equipment type indicates what user typically adds:
+  - `plate`: Using plates on dip belt or weight belt (most common)
   - `dumbbell`: Using dumbbell between legs or dip belt with dumbbells
-  - `other`: Using plates on belt, weight vest, or mixed equipment
+  - `other`: Using weight vest or mixed equipment
 - This affects rounding for `additionalWeight` field on BodyweightWorkoutSet
 
 ### Smart PR Percentage Calculations
@@ -396,7 +398,7 @@ classDiagram
 - Returns `PRPercentages` value object or null if no PR exists
 
 **Example Flow:**
-1. User opens "Barbell Bench Press" (equipmentType = barbell)
+1. User opens "Barbell Bench Press" (equipmentType = plate)
 2. Use case finds PR: 100kg
 3. Calculates: 100%, 90kg, 80kg, 50kg
 4. Rounds: 100kg → 100kg, 90kg → 90kg, 80kg → 80kg, 50kg → 50kg ✓

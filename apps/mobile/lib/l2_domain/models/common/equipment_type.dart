@@ -2,8 +2,7 @@
 /// Each type has predefined available weights for smart rounding
 enum EquipmentType {
   dumbbell,
-  barbell,
-  ezBar,
+  plate, // Olympic plate loading system (barbells, EZ bars, weighted dips/pull-ups)
   kettlebell,
   machine,
   cable,
@@ -49,9 +48,9 @@ extension EquipmentWeights on EquipmentType {
           80,
         ];
 
-      case EquipmentType.barbell:
-      case EquipmentType.ezBar:
-        // Training bars, women's bars, and Olympic bars + plate increments
+      case EquipmentType.plate:
+        // Olympic plate loading system: 2.5kg plate increments
+        // Used by barbells, EZ bars, weighted dips, weighted pull-ups, etc.
         return [
           5,
           10,
@@ -156,9 +155,9 @@ extension EquipmentWeights on EquipmentType {
           150,
         ];
 
-      case EquipmentType.barbell:
-      case EquipmentType.ezBar:
-        // Training bars, women's bars, and Olympic bars + plate increments
+      case EquipmentType.plate:
+        // Olympic plate loading system: 5lb plate increments
+        // Used by barbells, EZ bars, weighted dips, weighted pull-ups, etc.
         return [
           15,
           25,
