@@ -7,7 +7,6 @@ enum EquipmentType {
   kettlebell,
   machine,
   cable,
-  bodyweight,
   none,
 }
 
@@ -172,26 +171,6 @@ extension EquipmentWeights on EquipmentType {
           70,
           75,
           80,
-        ];
-
-      case EquipmentType.bodyweight:
-        // Added weight using dumbbells or weight vest
-        return [
-          2.5,
-          5,
-          7.5,
-          10,
-          12.5,
-          15,
-          17.5,
-          20,
-          22.5,
-          25,
-          30,
-          35,
-          40,
-          45,
-          50,
         ];
 
       case EquipmentType.none:
@@ -363,9 +342,6 @@ extension EquipmentWeights on EquipmentType {
           170,
           180,
         ];
-
-      case EquipmentType.bodyweight:
-        return [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 70, 80, 90, 100];
 
       case EquipmentType.none:
         return [];
