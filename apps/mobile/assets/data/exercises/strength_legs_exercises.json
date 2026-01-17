@@ -5,7 +5,8 @@
     "name": "Barbell Back Squat",
     "description": "Position a barbell on your upper traps and rear delts in a squat rack, feet shoulder-width apart with toes slightly pointed out. Unrack the bar and step back, maintaining a proud chest and tight core. Descend by pushing your hips back and bending your knees, keeping your chest up and weight on your midfoot. Lower until your thighs are at least parallel to the ground or deeper if mobility allows. Drive through your heels to return to standing, keeping your knees tracking over your toes throughout. This is the king of leg exercises for building overall lower body mass and strength.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "plate"
   },
   {
     "type": "free_weight",
@@ -13,7 +14,8 @@
     "name": "Front Squat",
     "description": "Rest a barbell across the front of your shoulders in a front rack position with elbows up high and feet shoulder-width apart. Keep your torso as upright as possible with core braced and chest proud. Descend by bending your knees and hips simultaneously, keeping your elbows elevated to prevent the bar from rolling forward. Drop into a deep squat while maintaining an upright torso position. Drive through your whole foot to stand back up, squeezing your glutes at the top. The front-loaded position emphasizes the quads more than back squats while being easier on the lower back.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "plate"
   },
   {
     "type": "free_weight",
@@ -21,7 +23,8 @@
     "name": "Goblet Squat",
     "description": "Hold a dumbbell or kettlebell vertically at chest level with both hands cupping the top end, elbows pointing down. Stand with feet slightly wider than shoulder-width and toes pointed slightly outward. Squat down by pushing your hips back and bending your knees, using your elbows to push your knees out as you descend. Lower until your elbows brush the inside of your knees or deeper if mobility allows. Drive through your heels to stand back up, squeezing your glutes at the top. This beginner-friendly squat variation teaches proper form and builds leg strength.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "other"
   },
   {
     "type": "free_weight",
@@ -29,7 +32,8 @@
     "name": "Box Squat",
     "description": "Set up a box or bench behind you at a height that puts your thighs parallel to the ground when seated. Position a barbell on your upper back in a squat rack with feet shoulder-width apart. Squat down under control until your glutes touch the box, maintaining a proud chest and tight core throughout. Pause briefly on the box without relaxing, keeping your muscles engaged. Explosively drive through your heels to stand back up, focusing on pushing your hips forward and squeezing your glutes at the top. This variation teaches proper squat mechanics and builds explosive power.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "plate"
   },
   {
     "type": "free_weight",
@@ -37,7 +41,8 @@
     "name": "Overhead Squat",
     "description": "Hold a barbell overhead with a wide snatch grip, arms fully extended and locked out. Stand with feet shoulder-width apart and maintain an upright torso. Descend into a squat while keeping the bar directly over your midfoot, maintaining shoulder mobility and stability throughout. Drop as low as your mobility allows while keeping the bar overhead and torso upright. Drive back up to standing. This advanced movement requires exceptional mobility, stability, and balance while building total body strength and coordination.",
     "isCustom": false,
-    "targetMuscles": ["legs", "shoulders"]
+    "targetMuscles": ["legs", "shoulders"],
+    "equipmentType": "plate"
   },
   {
     "type": "free_weight",
@@ -45,7 +50,8 @@
     "name": "Safety Bar Squat",
     "description": "Position a safety squat bar on your upper back with the padded yoke resting on your shoulders and grip the handles in front. The cambered design shifts the load forward slightly. Stand with feet shoulder-width apart and descend into a squat, maintaining an upright torso. The handles and pad make this variation more comfortable and accessible than traditional back squats, especially for those with shoulder mobility issues, while still providing excellent quad and glute development.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "plate"
   },
   {
     "type": "free_weight",
@@ -53,7 +59,8 @@
     "name": "Zercher Squat",
     "description": "Hold a barbell in the crooks of your elbows, clasping your hands together in front of your chest. Stand with feet shoulder-width apart and maintain an upright torso. Descend into a squat while keeping your elbows up and the bar secure in your arm crooks. The front-loaded position forces an upright torso and heavily emphasizes the quads and upper back while building core strength. This unique variation also improves grip strength and mental toughness due to the uncomfortable bar position.",
     "isCustom": false,
-    "targetMuscles": ["legs", "core"]
+    "targetMuscles": ["legs", "core"],
+    "equipmentType": "plate"
   },
   {
     "type": "machine",
@@ -61,7 +68,8 @@
     "name": "Smith Machine Squat",
     "description": "Position yourself under a Smith machine bar set at shoulder height, placing it on your upper traps. Set your feet slightly in front of the bar's path, shoulder-width apart. Unrack by rotating the bar and descend into a squat, keeping your back against the vertical bar path. The fixed path allows you to position your feet further forward and lean back into the bar, creating unique quad emphasis. This stable setup is ideal for training to failure safely or focusing purely on leg contraction without balance concerns.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -69,7 +77,8 @@
     "name": "Hack Squat",
     "description": "Position yourself in a hack squat machine with your back against the pad and shoulders under the supports, feet shoulder-width apart on the platform. Release the safety handles and lower yourself by bending your knees, keeping your back flat against the pad throughout. Descend until your thighs are parallel to the platform or deeper, maintaining control and tension in your quads. Push through your heels and midfoot to extend your legs back to the starting position, stopping just short of full lockout. The angled machine path heavily emphasizes quad development.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -77,7 +86,8 @@
     "name": "Leg Press",
     "description": "Sit in a leg press machine with your back and head resting against the padded support, feet shoulder-width apart on the platform at mid-level. Release the safety handles and lower the platform by bending your knees, bringing them toward your chest while keeping your lower back pressed against the pad. Descend until your knees are at about 90 degrees or slightly deeper. Press through your whole foot to extend your legs back to starting position, avoiding locking out your knees completely at the top. This machine allows for heavy loading with reduced spinal compression.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -85,7 +95,8 @@
     "name": "Single-Leg Press",
     "description": "Sit in a leg press machine and position one foot in the center of the platform at mid-level, with your other leg resting off to the side. Keep your working leg's entire foot on the platform and back pressed firmly against the pad. Release the safety handles and lower the platform by bending your knee, bringing it toward your chest while maintaining lower back contact. Press through your whole foot to extend your leg back up, focusing on controlled movement. This unilateral variation addresses strength imbalances and builds single-leg stability.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -93,7 +104,8 @@
     "name": "Narrow Stance Leg Press",
     "description": "Sit in a leg press machine but place your feet closer together than shoulder-width, positioned in the center of the platform. Follow standard leg press form, lowering until knees reach 90 degrees or deeper, then pressing back up. The narrow stance shifts more emphasis to the outer quads (vastus lateralis) and requires greater quad strength and stability compared to wider stances, providing a different stimulus for leg development.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -101,7 +113,8 @@
     "name": "Wide Stance Leg Press",
     "description": "Sit in a leg press machine and place your feet significantly wider than shoulder-width on the platform, with toes pointed outward at 30-45 degrees. Lower the platform until your knees track over your toes at about 90 degrees or deeper. Press back up through your whole foot. The wide stance increases adductor (inner thigh) involvement and glute activation while reducing the range of motion compared to standard stance, allowing for potentially heavier loads.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -109,7 +122,8 @@
     "name": "Leg Extension",
     "description": "Sit in a leg extension machine with your back against the pad and ankles secured behind the lower leg roller. Grip the handles on the sides of the seat for stability and position your knees at the edge of the seat. Extend your legs by contracting your quadriceps, lifting the weight until your legs are nearly straight but not locked. Squeeze your quads hard at the top position, then lower the weight with control back to the starting position, maintaining tension throughout. This isolation movement directly targets all four quadriceps muscles.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "free_weight",
@@ -117,7 +131,8 @@
     "name": "Bulgarian Split Squat",
     "description": "Stand a few feet in front of a bench with one foot elevated on the bench behind you, hands at your sides or holding dumbbells. Keep your torso upright and core engaged as you lower your back knee toward the ground. Descend until your front thigh is parallel to the ground, ensuring your front knee stays in line with your toes. Push through your front heel to return to the starting position, focusing on keeping your balance and feeling the burn in your front leg quad and glute. This unilateral movement builds single-leg strength and stability.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "other"
   },
   {
     "type": "free_weight",
@@ -125,7 +140,8 @@
     "name": "Walking Lunges",
     "description": "Stand tall with feet together, holding dumbbells at your sides or a barbell across your upper back. Step forward with one leg and lower your body until both knees are bent at 90 degrees, with your back knee hovering just above the ground. Keep your torso upright and front knee aligned with your ankle. Push through your front heel to bring your back leg forward into the next lunge step. Continue alternating legs as you walk forward, maintaining controlled rhythm and balance. This dynamic movement builds leg strength, balance, and muscular endurance.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "other"
   },
   {
     "type": "free_weight",
@@ -133,7 +149,8 @@
     "name": "Reverse Lunges",
     "description": "Stand with feet hip-width apart, holding dumbbells or with a barbell on your back. Step backward with one leg and lower your body until both knees are at 90 degrees, back knee hovering above the ground. Keep your torso upright and front knee over your ankle. Push through your front heel to return to standing, bringing your back foot forward. Alternate legs or complete all reps on one side. Reverse lunges are often easier on the knees than forward lunges while still effectively targeting quads, glutes, and hamstrings.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "other"
   },
   {
     "type": "free_weight",
@@ -141,7 +158,8 @@
     "name": "Stationary Lunges",
     "description": "Stand in a split stance with one foot forward and one back, about 2-3 feet apart, holding dumbbells or bodyweight. Lower your body straight down by bending both knees until your back knee nearly touches the ground and front thigh is parallel to the floor. Keep your torso upright throughout. Push through your front heel to rise back up to the starting split stance position. Complete all reps on one leg before switching. This static variation allows you to focus purely on the up-down movement without balance challenges.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "other"
   },
   {
     "type": "free_weight",
@@ -149,7 +167,8 @@
     "name": "Lateral Lunges",
     "description": "Stand with feet together, holding dumbbells at your sides or hands at chest level. Take a wide step directly to one side, keeping your other leg straight. Sit back into the lunging leg by pushing your hips back and bending that knee while keeping your chest up and foot flat. Push off through your lunging foot to return to the starting position. The lateral movement pattern targets the adductors, abductors, and glutes from a different angle while improving hip mobility and lateral stability.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "other"
   },
   {
     "type": "free_weight",
@@ -157,7 +176,8 @@
     "name": "Curtsy Lunges",
     "description": "Stand with feet hip-width apart, holding dumbbells or bodyweight. Step one leg diagonally backward behind your other leg, as if performing a curtsy. Lower your body until your front thigh is parallel to the ground and back knee hovers above the floor. Keep your torso upright and front knee tracking over your toes. Push through your front heel to return to standing. This unique lunge variation emphasizes the glutes, particularly the gluteus medius, while also working the quads and inner thighs.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "other"
   },
   {
     "type": "free_weight",
@@ -165,7 +185,8 @@
     "name": "Romanian Deadlift",
     "description": "Stand holding a barbell or dumbbells at thigh level with feet hip-width apart. Hinge at the hips by pushing them back while keeping knees slightly bent. Lower the weight down your legs while maintaining a flat back until you feel a deep stretch in your hamstrings. Drive your hips forward to return to standing. This movement primarily targets the hamstrings and glutes through hip hinge mechanics.",
     "isCustom": false,
-    "targetMuscles": ["legs", "back"]
+    "targetMuscles": ["legs", "back"],
+    "equipmentType": "other"
   },
   {
     "type": "free_weight",
@@ -173,7 +194,8 @@
     "name": "Stiff-Legged Deadlift",
     "description": "Similar to Romanian deadlifts but with straighter legs throughout. Stand holding a barbell with nearly locked knees. Hinge at the hips to lower the bar while keeping your back flat. This variation places even more emphasis on the hamstrings and requires good flexibility.",
     "isCustom": false,
-    "targetMuscles": ["legs", "back"]
+    "targetMuscles": ["legs", "back"],
+    "equipmentType": "plate"
   },
   {
     "type": "free_weight",
@@ -181,7 +203,8 @@
     "name": "Single-Leg Romanian Deadlift",
     "description": "Stand on one leg holding dumbbells or a kettlebell. Hinge at the hip while extending your free leg behind you for balance. Lower the weight while maintaining a flat back until you feel a hamstring stretch. Return to standing. This unilateral variation challenges balance while targeting the hamstrings and glutes.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "other"
   },
   {
     "type": "machine",
@@ -189,7 +212,8 @@
     "name": "Lying Leg Curl",
     "description": "Lie face down on a leg curl machine with ankles secured under the roller pad. Curl your heels toward your glutes by contracting your hamstrings. Squeeze at the top, then lower with control. This isolation exercise directly targets the hamstrings.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -197,7 +221,8 @@
     "name": "Seated Leg Curl",
     "description": "Sit in a seated leg curl machine with the pad positioned on your lower legs. Curl your legs down and back by contracting your hamstrings. The seated position changes the angle and can target different portions of the hamstrings compared to lying variations.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -205,7 +230,8 @@
     "name": "Standing Leg Curl",
     "description": "Stand in a standing leg curl machine with one ankle secured under the roller. Curl your heel toward your glute while keeping your thigh vertical. This unilateral machine variation allows for focused hamstring work one leg at a time.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "free_weight",
@@ -213,7 +239,8 @@
     "name": "Good Morning",
     "description": "Stand with a barbell across your upper back. Hinge at the hips and lean your torso forward while keeping your back flat and knees slightly bent. Lower until your torso is nearly parallel to the ground, feeling a stretch in your hamstrings. Drive your hips forward to return to standing. This exercise builds posterior chain strength with emphasis on hamstrings and lower back.",
     "isCustom": false,
-    "targetMuscles": ["legs", "back"]
+    "targetMuscles": ["legs", "back"],
+    "equipmentType": "plate"
   },
   {
     "type": "free_weight",
@@ -221,7 +248,8 @@
     "name": "Barbell Hip Thrust",
     "description": "Sit on the ground with your upper back against a bench and a padded barbell over your hips. Plant your feet flat and drive through your heels to lift your hips, raising the barbell until your thighs and torso form a straight line. Squeeze your glutes hard at the top. Lower with control. This is one of the best exercises for building glute strength and mass.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "plate"
   },
   {
     "type": "free_weight",
@@ -229,7 +257,8 @@
     "name": "Dumbbell Hip Thrust",
     "description": "Sit with your upper back against a bench and place a dumbbell on your hips. Drive through your heels to lift your hips up until your body forms a straight line. Squeeze glutes at the top. The dumbbell variation is more accessible than barbell for beginners.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "dumbbell"
   },
   {
     "type": "free_weight",
@@ -237,7 +266,8 @@
     "name": "Single-Leg Hip Thrust",
     "description": "Perform a hip thrust with one leg extended in the air. This unilateral variation increases the challenge and ensures both sides develop equally while requiring greater core stability.",
     "isCustom": false,
-    "targetMuscles": ["legs", "core"]
+    "targetMuscles": ["legs", "core"],
+    "equipmentType": "other"
   },
   {
     "type": "bodyweight",
@@ -246,7 +276,8 @@
     "description": "Lie on your back with knees bent and feet flat on the ground. Drive through your heels to lift your hips up, squeezing your glutes at the top. Lower with control. This bodyweight exercise effectively targets the glutes and can be done anywhere.",
     "isCustom": false,
     "targetMuscles": ["legs"],
-    "canAddWeight": true
+    "canAddWeight": true,
+    "equipmentType": "other"
   },
   {
     "type": "bodyweight",
@@ -255,7 +286,8 @@
     "description": "Lie on your back with one leg extended and the other foot flat on the ground. Drive through your planted heel to lift your hips. This unilateral variation increases the challenge and addresses imbalances.",
     "isCustom": false,
     "targetMuscles": ["legs"],
-    "canAddWeight": true
+    "canAddWeight": true,
+    "equipmentType": "other"
   },
   {
     "type": "machine",
@@ -263,7 +295,8 @@
     "name": "Hip Abduction Machine",
     "description": "Sit in a hip abduction machine with the pads on the outside of your thighs. Push your legs apart against the resistance by contracting your outer glutes and hip abductors. Control back to starting position. This isolation exercise targets the gluteus medius and hip abductors.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -271,7 +304,8 @@
     "name": "Hip Adduction Machine",
     "description": "Sit in a hip adduction machine with pads on the inside of your thighs. Squeeze your legs together against resistance by contracting your inner thighs (adductors). This isolation exercise strengthens the often-neglected inner thigh muscles.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -279,7 +313,8 @@
     "name": "Cable Pull-Through",
     "description": "Stand facing away from a cable machine with the cable between your legs. Hold a rope attachment and step forward to create tension. Hinge at the hips by pushing them back, then drive forward by squeezing your glutes. This exercise teaches the hip hinge pattern while targeting the posterior chain.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "cable"
   },
   {
     "type": "free_weight",
@@ -287,7 +322,8 @@
     "name": "Kettlebell Swing",
     "description": "Stand with feet shoulder-width apart holding a kettlebell with both hands. Hinge at the hips to swing the kettlebell between your legs, then explosively drive your hips forward to swing it up to chest height. This ballistic movement builds explosive hip power and targets the entire posterior chain.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "kettlebell"
   },
   {
     "type": "bodyweight",
@@ -296,7 +332,8 @@
     "description": "Stand with feet shoulder-width apart and hands at chest level or behind your head. Squat down by bending your knees and pushing your hips back. Descend until thighs are parallel to the ground, then drive back up. This fundamental movement pattern can be done anywhere and is perfect for high reps or warm-ups.",
     "isCustom": false,
     "targetMuscles": ["legs"],
-    "canAddWeight": false
+    "canAddWeight": false,
+    "equipmentType": "other"
   },
   {
     "type": "bodyweight",
@@ -305,7 +342,8 @@
     "description": "Perform a bodyweight squat but explode up into a jump at the top. Land softly and immediately descend into the next rep. This plyometric exercise builds explosive power in the legs.",
     "isCustom": false,
     "targetMuscles": ["legs"],
-    "canAddWeight": false
+    "canAddWeight": false,
+    "equipmentType": "other"
   },
   {
     "type": "bodyweight",
@@ -314,7 +352,8 @@
     "description": "Stand on one leg with the other extended in front of you. Squat down on one leg while keeping the other leg extended, descending as low as possible. Push back up to standing. This advanced bodyweight exercise requires tremendous leg strength, balance, and mobility.",
     "isCustom": false,
     "targetMuscles": ["legs"],
-    "canAddWeight": false
+    "canAddWeight": false,
+    "equipmentType": "other"
   },
   {
     "type": "bodyweight",
@@ -323,7 +362,8 @@
     "description": "Lean against a wall and lower into a squat position with thighs parallel to the ground, as if sitting in an invisible chair. Hold this position. This isometric exercise builds quad endurance and mental toughness.",
     "isCustom": false,
     "targetMuscles": ["legs"],
-    "canAddWeight": false
+    "canAddWeight": false,
+    "equipmentType": "other"
   },
   {
     "type": "bodyweight",
@@ -332,7 +372,8 @@
     "description": "Stand facing a bench or box. Step up onto it with one foot, driving through that heel to stand fully on the box. Step back down with control. Can be done with bodyweight or holding dumbbells. This unilateral exercise builds single-leg strength and stability.",
     "isCustom": false,
     "targetMuscles": ["legs"],
-    "canAddWeight": true
+    "canAddWeight": true,
+    "equipmentType": "other"
   },
   {
     "type": "bodyweight",
@@ -341,7 +382,8 @@
     "description": "Stand facing a sturdy box or platform. Swing your arms and explosively jump onto the box, landing softly with both feet. Step back down and repeat. This plyometric exercise builds explosive power and athletic ability.",
     "isCustom": false,
     "targetMuscles": ["legs"],
-    "canAddWeight": false
+    "canAddWeight": false,
+    "equipmentType": "other"
   },
   {
     "type": "bodyweight",
@@ -350,7 +392,8 @@
     "description": "Stand with feet shoulder-width apart. Swing your arms back and explosively jump forward as far as possible. Land softly and reset. This horizontal plyometric builds explosive hip and leg power.",
     "isCustom": false,
     "targetMuscles": ["legs"],
-    "canAddWeight": false
+    "canAddWeight": false,
+    "equipmentType": "other"
   },
   {
     "type": "machine",
@@ -358,7 +401,8 @@
     "name": "Calf Raise Machine",
     "description": "Stand in a calf raise machine with shoulders under the pads and balls of feet on the platform. Rise up onto your toes by contracting your calves, squeezing at the top. Lower your heels below the platform for a full stretch. This isolates the calf muscles for focused development.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -366,7 +410,8 @@
     "name": "Seated Calf Raise",
     "description": "Sit in a seated calf raise machine with the pad on your thighs and balls of feet on the platform. Rise up onto your toes, squeezing your calves. The seated position emphasizes the soleus muscle of the calf.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "free_weight",
@@ -374,7 +419,8 @@
     "name": "Standing Dumbbell Calf Raise",
     "description": "Stand holding dumbbells at your sides with balls of feet on a raised surface. Rise onto your toes, contracting your calves. Lower your heels below the platform for a full stretch. This free weight variation allows for calf training anywhere.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "dumbbell"
   },
   {
     "type": "free_weight",
@@ -382,7 +428,8 @@
     "name": "Single-Leg Calf Raise",
     "description": "Stand on one leg with the ball of your foot on a raised surface. Rise up onto your toes, then lower your heel below the platform. This unilateral variation ensures balanced calf development and increases the challenge.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "other"
   },
   {
     "type": "machine",
@@ -390,7 +437,8 @@
     "name": "Leg Press Calf Raise",
     "description": "Sit in a leg press machine with legs extended and only the balls of your feet on the bottom of the platform. Push through your toes to extend your ankles, working your calves. This variation allows for very heavy loading of the calves.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "free_weight",
@@ -398,7 +446,8 @@
     "name": "Barbell Lunge",
     "description": "Hold a barbell across your upper back. Step forward into a lunge position and lower your back knee toward the ground. Push back to standing and repeat, alternating legs. This loaded variation of lunges builds significant leg strength and balance.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "plate"
   },
   {
     "type": "bodyweight",
@@ -407,7 +456,8 @@
     "description": "Kneel on a pad with ankles secured under a barbell or by a partner. Keeping your hips extended and body straight, slowly lower your torso forward by allowing your knees to extend, using your hamstrings to control the descent. Catch yourself with your hands and push back up. This eccentric-focused exercise builds tremendous hamstring strength and helps prevent injuries.",
     "isCustom": false,
     "targetMuscles": ["legs"],
-    "canAddWeight": false
+    "canAddWeight": false,
+    "equipmentType": "other"
   },
   {
     "type": "machine",
@@ -415,7 +465,8 @@
     "name": "Hip Thrust Machine",
     "description": "Position yourself in a hip thrust machine with your upper back against the pad and feet flat on the platform. The padded bar or weight stack should rest across your hips. Drive through your heels to lift your hips by squeezing your glutes, raising the weight until your thighs and torso form a straight line. Pause at the top with maximum glute contraction, then lower with control. This machine variation provides consistent resistance throughout the movement and is more comfortable than barbell versions, making it ideal for building glute strength and mass without the discomfort of a barbell on your hips.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -423,7 +474,8 @@
     "name": "Cable Pull-Through",
     "description": "Stand facing away from a cable machine with a rope attachment set at the lowest position. Reach between your legs to grab the rope with both hands and step forward to create tension. With a slight bend in your knees and feet shoulder-width apart, hinge at the hips to lower the rope down and back between your legs, feeling a stretch in your glutes and hamstrings. Drive your hips forward explosively by contracting your glutes, bringing your torso upright while keeping your arms straight throughout. This hip-hinge movement is excellent for teaching proper deadlift mechanics while building powerful glutes and hamstrings with reduced lower back stress.",
     "isCustom": false,
-    "targetMuscles": ["legs", "back"]
+    "targetMuscles": ["legs", "back"],
+    "equipmentType": "cable"
   },
   {
     "type": "machine",
@@ -431,7 +483,8 @@
     "name": "Glute Kickback Machine",
     "description": "Stand in a glute kickback machine with one leg positioned on the moving platform or footpad and hands gripping the handles for stability. Keep your core braced and back flat. Push the platform backward by extending your hip and contracting your glute until your leg is fully extended behind you. Squeeze your glute hard at the peak contraction, then slowly return to the starting position. This isolation machine targets the glutes with a direct hip extension movement, building size and strength in the gluteus maximus while minimizing hamstring involvement.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -439,7 +492,8 @@
     "name": "Hip Abduction Machine",
     "description": "Sit in a hip abduction machine with your outer thighs against the pads and feet on the footrests. Adjust the machine so the pads start close together. Push your legs apart by contracting your outer glutes and hip abductors, opening your legs as wide as the machine allows. Hold briefly at the peak, then control the weight back to the starting position. This isolation exercise targets the gluteus medius and minimus (outer glutes), crucial for hip stability, preventing knee valgus during squats, and building rounder glutes.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -447,7 +501,8 @@
     "name": "Hip Adduction Machine",
     "description": "Sit in a hip adduction machine with your inner thighs against the pads and feet on the footrests. Adjust the machine so the pads start wide apart. Squeeze your legs together by contracting your inner thighs (adductors), bringing the pads as close together as possible. Hold the peak contraction briefly, then control the weight back out. This isolation exercise targets the adductor muscles (inner thighs), building strength for athletic movements, improving hip stability, and contributing to overall leg development.",
     "isCustom": false,
-    "targetMuscles": ["legs"]
+    "targetMuscles": ["legs"],
+    "equipmentType": "machine"
   },
   {
     "type": "machine",
@@ -455,6 +510,7 @@
     "name": "Reverse Hyperextension",
     "description": "Position yourself face-down on a reverse hyperextension machine with your hips at the edge of the pad and your legs hanging down. Grip the handles for stability. Keeping your legs relatively straight, raise them up by contracting your glutes and lower back until they're in line with your torso or slightly higher. Squeeze your glutes hard at the top, then lower your legs back down with control. This unique exercise builds powerful glutes and strengthens the lower back through hip extension while being gentler on the spine than traditional hyperextensions. It's excellent for athletes and anyone recovering from lower back issues.",
     "isCustom": false,
-    "targetMuscles": ["legs", "back"]
+    "targetMuscles": ["legs", "back"],
+    "equipmentType": "machine"
   }
 ]
