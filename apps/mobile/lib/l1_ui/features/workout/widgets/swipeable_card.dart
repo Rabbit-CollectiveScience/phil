@@ -514,10 +514,13 @@ class SwipeableCardState extends State<SwipeableCard>
         calculatePRUseCase: calculatePRUseCase,
         fieldName: fieldName,
         unit: unit,
-        onWeightSelected: (weight) {
-          // Populate weight field and close panel
-          _fieldControllers[fieldName]?.text = weight.toString();
-          Navigator.pop(context);
+        onWeightSelected: (weight, shouldClose) {
+          // Populate weight field with unit
+          _fieldControllers[fieldName]?.text = '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)} $unit';
+          // Only close panel for PR button taps, not number pad input
+          if (shouldClose) {
+            Navigator.pop(context);
+          }
         },
       ),
     );

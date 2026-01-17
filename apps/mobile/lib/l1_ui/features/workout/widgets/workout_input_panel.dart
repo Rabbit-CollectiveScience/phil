@@ -12,7 +12,7 @@ class WorkoutInputPanel extends StatefulWidget {
   final CalculatePRPercentagesUseCase calculatePRUseCase;
   final String fieldName;
   final String unit;
-  final void Function(double weight) onWeightSelected;
+  final void Function(double weight, bool shouldClose) onWeightSelected;
 
   const WorkoutInputPanel({
     super.key,
@@ -30,11 +30,37 @@ class WorkoutInputPanel extends StatefulWidget {
 class _WorkoutInputPanelState extends State<WorkoutInputPanel> {
   PRPercentages? _prPercentages;
   bool _isLoading = false;
+  String _currentInput = '';
 
   @override
   void initState() {
     super.initState();
     _loadPRData();
+  }
+
+  void _handleNumberInput(String number) {
+    setState(() {
+      if (number == '⌫') {
+        // Backspace
+        if (_currentInput.isNotEmpty) {
+          _currentInput = _currentInput.substring(0, _currentInput.length - 1);
+        }
+      } else if (number == '.') {
+        // Only allow one decimal point
+        if (!_currentInput.contains('.')) {
+          _currentInput += number;
+        }
+      } else {
+        // Append digit
+        _currentInput += number;
+      }
+    });
+
+    // Update parent field in real-time (without closing panel)
+    final parsedValue = double.tryParse(_currentInput);
+    if (parsedValue != null && parsedValue > 0) {
+      widget.onWeightSelected(parsedValue, false);
+    }
   }
 
   Future<void> _loadPRData() async {
@@ -73,45 +99,67 @@ class _WorkoutInputPanelState extends State<WorkoutInputPanel> {
       decoration: BoxDecoration(color: AppColors.darkGrey),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Column(
           children: [
-            // Left: Number pad (3 columns)
-            Expanded(
-              flex: 3,
-              child: Column(
-                children: [
-                  Expanded(child: _buildNumberRow(['1', '2', '3'])),
-                  Expanded(child: _buildNumberRow(['4', '5', '6'])),
-                  Expanded(child: _buildNumberRow(['7', '8', '9'])),
-                  Expanded(child: _buildNumberRow(['.', '0', '⌫'])),
-                ],
+            // Display current input
+            if (_currentInput.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  _currentInput,
+                  style: TextStyle(
+                    color: AppColors.limeGreen,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-            ),
-
-            Container(width: 1.5, color: AppColors.limeGreen.withOpacity(0.3)),
-
-            // Right: Action buttons (1 column)
             Expanded(
-              flex: 1,
-              child: Column(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(child: _buildActionButton('100%')),
+                  // Left: Number pad (3 columns)
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      children: [
+                        Expanded(child: _buildNumberRow(['1', '2', '3'])),
+                        Expanded(child: _buildNumberRow(['4', '5', '6'])),
+                        Expanded(child: _buildNumberRow(['7', '8', '9'])),
+                        Expanded(child: _buildNumberRow(['.', '0', '⌫'])),
+                      ],
+                    ),
+                  ),
+
                   Container(
-                    height: 1.5,
+                    width: 1.5,
                     color: AppColors.limeGreen.withOpacity(0.3),
                   ),
-                  Expanded(child: _buildActionButton('90%')),
-                  Container(
-                    height: 1.5,
-                    color: AppColors.limeGreen.withOpacity(0.3),
+
+                  // Right: Action buttons (1 column)
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        Expanded(child: _buildActionButton('100%')),
+                        Container(
+                          height: 1.5,
+                          color: AppColors.limeGreen.withOpacity(0.3),
+                        ),
+                        Expanded(child: _buildActionButton('90%')),
+                        Container(
+                          height: 1.5,
+                          color: AppColors.limeGreen.withOpacity(0.3),
+                        ),
+                        Expanded(child: _buildActionButton('80%')),
+                        Container(
+                          height: 1.5,
+                          color: AppColors.limeGreen.withOpacity(0.3),
+                        ),
+                        Expanded(child: _buildActionButton('50%')),
+                      ],
+                    ),
                   ),
-                  Expanded(child: _buildActionButton('80%')),
-                  Container(
-                    height: 1.5,
-                    color: AppColors.limeGreen.withOpacity(0.3),
-                  ),
-                  Expanded(child: _buildActionButton('50%')),
                 ],
               ),
             ),
@@ -131,7 +179,7 @@ class _WorkoutInputPanelState extends State<WorkoutInputPanel> {
               number,
               onTap: () {
                 HapticFeedback.lightImpact();
-                // TODO: Handle number input
+                _handleNumberInput(number);
               },
             ),
           ),
@@ -151,22 +199,26 @@ class _WorkoutInputPanelState extends State<WorkoutInputPanel> {
     } else if (_prPercentages != null) {
       // Use real PR data
       final unit = _prPercentages!.isMetric ? 'kg' : 'lbs';
-      
+
       if (label == '100%') {
         weightValue = _prPercentages!.percent100;
-        subtitle = '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
+        subtitle =
+            '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
         opacity = 1.0;
       } else if (label == '90%') {
         weightValue = _prPercentages!.percent90;
-        subtitle = '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
+        subtitle =
+            '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
         opacity = 0.8;
       } else if (label == '80%') {
         weightValue = _prPercentages!.percent80;
-        subtitle = '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
+        subtitle =
+            '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
         opacity = 0.6;
       } else if (label == '50%') {
         weightValue = _prPercentages!.percent50;
-        subtitle = '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
+        subtitle =
+            '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
         opacity = 0.4;
       }
     } else {
@@ -183,7 +235,7 @@ class _WorkoutInputPanelState extends State<WorkoutInputPanel> {
           onTap: weightValue != null
               ? () {
                   HapticFeedback.lightImpact();
-                  widget.onWeightSelected(weightValue!);
+                  widget.onWeightSelected(weightValue!, true);
                 }
               : null,
           child: Center(
