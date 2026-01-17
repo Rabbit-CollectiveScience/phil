@@ -52,8 +52,11 @@ extension EquipmentWeights on EquipmentType {
 
       case EquipmentType.barbell:
       case EquipmentType.ezBar:
-        // Starts at 20kg (Olympic bar weight) + plate increments
+        // Training bars, women's bars, and Olympic bars + plate increments
         return [
+          5,
+          10,
+          15,
           20,
           22.5,
           25,
@@ -105,8 +108,8 @@ extension EquipmentWeights on EquipmentType {
         ];
 
       case EquipmentType.kettlebell:
-        // Irregular progression (larger gaps at heavier weights)
-        return [4, 6, 8, 12, 16, 20, 24, 28, 32, 40, 48];
+        // Competition and gym standard weights
+        return [2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 48];
 
       case EquipmentType.machine:
         // Most machines use 5kg weight stack increments
@@ -234,8 +237,11 @@ extension EquipmentWeights on EquipmentType {
 
       case EquipmentType.barbell:
       case EquipmentType.ezBar:
-        // Starts at 45lbs (Olympic bar weight) + plate increments
+        // Training bars, women's bars, and Olympic bars + plate increments
         return [
+          15,
+          25,
+          35,
           45,
           50,
           55,
@@ -288,7 +294,7 @@ extension EquipmentWeights on EquipmentType {
         ];
 
       case EquipmentType.kettlebell:
-        return [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 70, 80, 90, 100];
+        return [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 70, 80, 90, 100];
 
       case EquipmentType.machine:
         // Most machines use 10lb weight stack increments
