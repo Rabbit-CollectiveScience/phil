@@ -99,67 +99,48 @@ class _WorkoutInputPanelState extends State<WorkoutInputPanel> {
       decoration: BoxDecoration(color: AppColors.darkGrey),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Display current input
-            if (_currentInput.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  _currentInput,
-                  style: TextStyle(
-                    color: AppColors.limeGreen,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+            // Left: Number pad (3 columns)
             Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+              flex: 3,
+              child: Column(
                 children: [
-                  // Left: Number pad (3 columns)
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      children: [
-                        Expanded(child: _buildNumberRow(['1', '2', '3'])),
-                        Expanded(child: _buildNumberRow(['4', '5', '6'])),
-                        Expanded(child: _buildNumberRow(['7', '8', '9'])),
-                        Expanded(child: _buildNumberRow(['.', '0', '⌫'])),
-                      ],
-                    ),
-                  ),
+                  Expanded(child: _buildNumberRow(['1', '2', '3'])),
+                  Expanded(child: _buildNumberRow(['4', '5', '6'])),
+                  Expanded(child: _buildNumberRow(['7', '8', '9'])),
+                  Expanded(child: _buildNumberRow(['.', '0', '⌫'])),
+                ],
+              ),
+            ),
 
+            Container(
+              width: 1.5,
+              color: AppColors.limeGreen.withOpacity(0.3),
+            ),
+
+            // Right: Action buttons (1 column)
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  Expanded(child: _buildActionButton('100%')),
                   Container(
-                    width: 1.5,
+                    height: 1.5,
                     color: AppColors.limeGreen.withOpacity(0.3),
                   ),
-
-                  // Right: Action buttons (1 column)
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        Expanded(child: _buildActionButton('100%')),
-                        Container(
-                          height: 1.5,
-                          color: AppColors.limeGreen.withOpacity(0.3),
-                        ),
-                        Expanded(child: _buildActionButton('90%')),
-                        Container(
-                          height: 1.5,
-                          color: AppColors.limeGreen.withOpacity(0.3),
-                        ),
-                        Expanded(child: _buildActionButton('80%')),
-                        Container(
-                          height: 1.5,
-                          color: AppColors.limeGreen.withOpacity(0.3),
-                        ),
-                        Expanded(child: _buildActionButton('50%')),
-                      ],
-                    ),
+                  Expanded(child: _buildActionButton('90%')),
+                  Container(
+                    height: 1.5,
+                    color: AppColors.limeGreen.withOpacity(0.3),
                   ),
+                  Expanded(child: _buildActionButton('80%')),
+                  Container(
+                    height: 1.5,
+                    color: AppColors.limeGreen.withOpacity(0.3),
+                  ),
+                  Expanded(child: _buildActionButton('50%')),
                 ],
               ),
             ),

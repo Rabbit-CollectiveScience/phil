@@ -516,7 +516,8 @@ class SwipeableCardState extends State<SwipeableCard>
         unit: unit,
         onWeightSelected: (weight, shouldClose) {
           // Populate weight field with unit
-          _fieldControllers[fieldName]?.text = '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)} $unit';
+          _fieldControllers[fieldName]?.text =
+              '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)} $unit';
           // Only close panel for PR button taps, not number pad input
           if (shouldClose) {
             Navigator.pop(context);
