@@ -1,18 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../shared/theme/app_colors.dart';
+import '../../../../l2_domain/models/exercises/exercise.dart';
+import '../../../../l2_domain/models/exercises/strength_exercise.dart';
+import '../../../../l2_domain/use_cases/personal_records/calculate_pr_percentages_use_case.dart';
 
 /// Custom input panel for entering workout values
 /// Provides a number pad and quick action buttons for efficient data entry
-class WorkoutInputPanel extends StatelessWidget {
+class WorkoutInputPanel extends StatefulWidget {
+  final Exercise exercise;
+  final CalculatePRPercentagesUseCase calculatePRUseCase;
   final String fieldName;
   final String unit;
+  final void Function(double weight) onWeightSelected;
 
   const WorkoutInputPanel({
     super.key,
+    required this.exercise,
+    required this.calculatePRUseCase,
     required this.fieldName,
     required this.unit,
+    required this.onWeightSelected,
   });
+
+  @override
+  State<WorkoutInputPanel> createState() => _WorkoutInputPanelState();
+}
+
+class _WorkoutInputPanelState extends State<WorkoutInputPanel> {
+  PRPercentages? _prPercentages;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPRData();
+  }
+
+  Future<void> _loadPRData() async {
+    if (widget.exercise is! StrengthExercise) {
+      // Only strength exercises have PR percentages
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final result = await widget.calculatePRUseCase.execute(widget.exercise);
+      if (mounted) {
+        setState(() {
+          _prPercentages = result;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,22 +141,38 @@ class WorkoutInputPanel extends StatelessWidget {
   }
 
   Widget _buildActionButton(String label) {
-    // Mock PR values - will be dynamic later
     String subtitle = '';
-    double opacity = 0.4; // Default
+    double opacity = 0.4;
+    double? weightValue;
 
-    if (label == '100%') {
-      subtitle = '100 kg';
-      opacity = 1.0;
-    } else if (label == '90%') {
-      subtitle = '90 kg';
-      opacity = 0.8;
-    } else if (label == '80%') {
-      subtitle = '80 kg';
-      opacity = 0.6;
-    } else if (label == '50%') {
-      subtitle = '50 kg';
-      opacity = 0.4;
+    if (_isLoading) {
+      subtitle = '...';
+      opacity = 0.3;
+    } else if (_prPercentages != null) {
+      // Use real PR data
+      final unit = _prPercentages!.isMetric ? 'kg' : 'lbs';
+      
+      if (label == '100%') {
+        weightValue = _prPercentages!.percent100;
+        subtitle = '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
+        opacity = 1.0;
+      } else if (label == '90%') {
+        weightValue = _prPercentages!.percent90;
+        subtitle = '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
+        opacity = 0.8;
+      } else if (label == '80%') {
+        weightValue = _prPercentages!.percent80;
+        subtitle = '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
+        opacity = 0.6;
+      } else if (label == '50%') {
+        weightValue = _prPercentages!.percent50;
+        subtitle = '${weightValue.toStringAsFixed(weightValue % 1 == 0 ? 0 : 1)} $unit';
+        opacity = 0.4;
+      }
+    } else {
+      // No PR available
+      subtitle = 'No PR';
+      opacity = 0.2;
     }
 
     return Padding(
@@ -118,10 +180,12 @@ class WorkoutInputPanel extends StatelessWidget {
       child: Material(
         color: AppColors.darkGrey,
         child: InkWell(
-          onTap: () {
-            HapticFeedback.lightImpact();
-            // TODO: Handle action
-          },
+          onTap: weightValue != null
+              ? () {
+                  HapticFeedback.lightImpact();
+                  widget.onWeightSelected(weightValue!);
+                }
+              : null,
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

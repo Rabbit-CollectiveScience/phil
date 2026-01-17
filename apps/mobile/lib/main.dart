@@ -24,6 +24,7 @@ import 'l2_domain/use_cases/filters/record_filter_selection_use_case.dart';
 import 'l2_domain/use_cases/filters/should_show_filter_page_use_case.dart';
 import 'l2_domain/use_cases/personal_records/get_all_prs_use_case.dart';
 import 'l2_domain/use_cases/personal_records/recalculate_prs_for_exercise_use_case.dart';
+import 'l2_domain/use_cases/personal_records/calculate_pr_percentages_use_case.dart';
 import 'l2_domain/use_cases/dev/add_mock_data_use_case.dart';
 import 'l2_domain/use_cases/dev/clear_all_data_use_case.dart';
 import 'l2_domain/use_cases/dev/export_data_use_case.dart';
@@ -169,6 +170,13 @@ void _setupDependencies(SharedPreferences sharedPreferences) {
       getIt<PersonalRecordRepository>(),
       getIt<WorkoutSetRepository>(),
       getIt<ExerciseRepository>(),
+    ),
+  );
+  getIt.registerFactory<CalculatePRPercentagesUseCase>(
+    () => CalculatePRPercentagesUseCase(
+      getIt<PersonalRecordRepository>(),
+      getIt<WorkoutSetRepository>(),
+      getIt<GetUserPreferencesUseCase>(),
     ),
   );
 

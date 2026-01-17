@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/providers/preferences_provider.dart';
 import '../view_models/card_model.dart';
@@ -14,6 +15,7 @@ import '../../../../l2_domain/models/exercises/bodyweight_exercise.dart';
 import '../../../../l2_domain/models/exercises/assisted_machine_exercise.dart';
 import '../../../../l2_domain/models/exercises/distance_cardio_exercise.dart';
 import '../../../../l2_domain/models/exercises/duration_cardio_exercise.dart';
+import '../../../../l2_domain/use_cases/personal_records/calculate_pr_percentages_use_case.dart';
 import 'workout_input_panel.dart';
 
 /// Card interaction states for gesture handling
@@ -498,13 +500,26 @@ class SwipeableCardState extends State<SwipeableCard>
     required String fieldName,
     required String unit,
   }) {
+    // Get use case from GetIt (lazy instantiation following app pattern)
+    final calculatePRUseCase = GetIt.instance<CalculatePRPercentagesUseCase>();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       barrierColor: Colors.transparent,
       useSafeArea: false,
-      builder: (context) => WorkoutInputPanel(fieldName: fieldName, unit: unit),
+      builder: (context) => WorkoutInputPanel(
+        exercise: widget.card.exercise,
+        calculatePRUseCase: calculatePRUseCase,
+        fieldName: fieldName,
+        unit: unit,
+        onWeightSelected: (weight) {
+          // Populate weight field and close panel
+          _fieldControllers[fieldName]?.text = weight.toString();
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 

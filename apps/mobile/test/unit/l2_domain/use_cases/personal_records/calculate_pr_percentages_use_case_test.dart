@@ -68,12 +68,15 @@ void main() {
         reps: 5,
       );
 
-      when(() => mockPRRepo.getByExerciseId('bench_1'))
-          .thenAnswer((_) async => [weightPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => workoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('bench_1'),
+      ).thenAnswer((_) async => [weightPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => workoutSet);
       when(() => mockPreferencesUseCase.call()).thenAnswer(
-        (_) async => UserPreferences(measurementSystem: MeasurementSystem.metric),
+        (_) async =>
+            UserPreferences(measurementSystem: MeasurementSystem.metric),
       );
 
       // When
@@ -114,12 +117,15 @@ void main() {
         reps: 5,
       );
 
-      when(() => mockPRRepo.getByExerciseId('bench_1'))
-          .thenAnswer((_) async => [weightPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => workoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('bench_1'),
+      ).thenAnswer((_) async => [weightPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => workoutSet);
       when(() => mockPreferencesUseCase.call()).thenAnswer(
-        (_) async => UserPreferences(measurementSystem: MeasurementSystem.metric),
+        (_) async =>
+            UserPreferences(measurementSystem: MeasurementSystem.metric),
       );
 
       // When
@@ -159,12 +165,15 @@ void main() {
         reps: 8,
       );
 
-      when(() => mockPRRepo.getByExerciseId('db_press'))
-          .thenAnswer((_) async => [weightPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => workoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('db_press'),
+      ).thenAnswer((_) async => [weightPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => workoutSet);
       when(() => mockPreferencesUseCase.call()).thenAnswer(
-        (_) async => UserPreferences(measurementSystem: MeasurementSystem.metric),
+        (_) async =>
+            UserPreferences(measurementSystem: MeasurementSystem.metric),
       );
 
       // When
@@ -204,12 +213,15 @@ void main() {
         reps: 10,
       );
 
-      when(() => mockPRRepo.getByExerciseId('leg_press'))
-          .thenAnswer((_) async => [weightPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => workoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('leg_press'),
+      ).thenAnswer((_) async => [weightPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => workoutSet);
       when(() => mockPreferencesUseCase.call()).thenAnswer(
-        (_) async => UserPreferences(measurementSystem: MeasurementSystem.metric),
+        (_) async =>
+            UserPreferences(measurementSystem: MeasurementSystem.metric),
       );
 
       // When
@@ -249,12 +261,15 @@ void main() {
         reps: 5,
       );
 
-      when(() => mockPRRepo.getByExerciseId('squat'))
-          .thenAnswer((_) async => [weightPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => workoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('squat'),
+      ).thenAnswer((_) async => [weightPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => workoutSet);
       when(() => mockPreferencesUseCase.call()).thenAnswer(
-        (_) async => UserPreferences(measurementSystem: MeasurementSystem.imperial),
+        (_) async =>
+            UserPreferences(measurementSystem: MeasurementSystem.imperial),
       );
 
       // When
@@ -265,7 +280,10 @@ void main() {
       expect(result!.percent100, equals(225.0));
       expect(result.percent90, equals(205.0)); // 202.5 → 205
       expect(result.percent80, equals(180.0)); // 180 exact
-      expect(result.percent50, equals(115.0)); // 112.5 → 115 (rounds to nearest 5)
+      expect(
+        result.percent50,
+        equals(115.0),
+      ); // 112.5 → 115 (rounds to nearest 5)
       expect(result.isMetric, isFalse);
     });
   });
@@ -281,8 +299,9 @@ void main() {
         equipmentType: EquipmentType.plate,
       );
 
-      when(() => mockPRRepo.getByExerciseId('new_exercise'))
-          .thenAnswer((_) async => []);
+      when(
+        () => mockPRRepo.getByExerciseId('new_exercise'),
+      ).thenAnswer((_) async => []);
 
       final result = await useCase.execute(exercise);
 
@@ -307,8 +326,9 @@ void main() {
         achievedAt: DateTime(2026, 1, 1),
       );
 
-      when(() => mockPRRepo.getByExerciseId('pullups'))
-          .thenAnswer((_) async => [repsPR]);
+      when(
+        () => mockPRRepo.getByExerciseId('pullups'),
+      ).thenAnswer((_) async => [repsPR]);
 
       final result = await useCase.execute(exercise);
 
@@ -340,10 +360,12 @@ void main() {
         reps: 5,
       );
 
-      when(() => mockPRRepo.getByExerciseId('bench_1'))
-          .thenAnswer((_) async => [weightPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => workoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('bench_1'),
+      ).thenAnswer((_) async => [weightPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => workoutSet);
 
       final result = await useCase.execute(exercise);
 
@@ -367,10 +389,12 @@ void main() {
         achievedAt: DateTime(2026, 1, 1),
       );
 
-      when(() => mockPRRepo.getByExerciseId('bench_1'))
-          .thenAnswer((_) async => [weightPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => null);
+      when(
+        () => mockPRRepo.getByExerciseId('bench_1'),
+      ).thenAnswer((_) async => [weightPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => null);
 
       final result = await useCase.execute(exercise);
 
@@ -419,14 +443,18 @@ void main() {
         reps: 5,
       );
 
-      when(() => mockPRRepo.getByExerciseId('bench_1'))
-          .thenAnswer((_) async => [olderPR, newerPR]);
-      when(() => mockWorkoutSetRepo.getById('set_old'))
-          .thenAnswer((_) async => oldWorkoutSet);
-      when(() => mockWorkoutSetRepo.getById('set_new'))
-          .thenAnswer((_) async => newWorkoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('bench_1'),
+      ).thenAnswer((_) async => [olderPR, newerPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_old'),
+      ).thenAnswer((_) async => oldWorkoutSet);
+      when(
+        () => mockWorkoutSetRepo.getById('set_new'),
+      ).thenAnswer((_) async => newWorkoutSet);
       when(() => mockPreferencesUseCase.call()).thenAnswer(
-        (_) async => UserPreferences(measurementSystem: MeasurementSystem.metric),
+        (_) async =>
+            UserPreferences(measurementSystem: MeasurementSystem.metric),
       );
 
       final result = await useCase.execute(exercise);
@@ -467,12 +495,15 @@ void main() {
         reps: 5,
       );
 
-      when(() => mockPRRepo.getByExerciseId('bench_1'))
-          .thenAnswer((_) async => [weightPR, repsPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => workoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('bench_1'),
+      ).thenAnswer((_) async => [weightPR, repsPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => workoutSet);
       when(() => mockPreferencesUseCase.call()).thenAnswer(
-        (_) async => UserPreferences(measurementSystem: MeasurementSystem.metric),
+        (_) async =>
+            UserPreferences(measurementSystem: MeasurementSystem.metric),
       );
 
       final result = await useCase.execute(exercise);
@@ -508,12 +539,15 @@ void main() {
         reps: 20,
       );
 
-      when(() => mockPRRepo.getByExerciseId('kb_swing'))
-          .thenAnswer((_) async => [weightPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => workoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('kb_swing'),
+      ).thenAnswer((_) async => [weightPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => workoutSet);
       when(() => mockPreferencesUseCase.call()).thenAnswer(
-        (_) async => UserPreferences(measurementSystem: MeasurementSystem.metric),
+        (_) async =>
+            UserPreferences(measurementSystem: MeasurementSystem.metric),
       );
 
       final result = await useCase.execute(exercise);
@@ -550,12 +584,15 @@ void main() {
         reps: 12,
       );
 
-      when(() => mockPRRepo.getByExerciseId('cable_fly'))
-          .thenAnswer((_) async => [weightPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => workoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('cable_fly'),
+      ).thenAnswer((_) async => [weightPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => workoutSet);
       when(() => mockPreferencesUseCase.call()).thenAnswer(
-        (_) async => UserPreferences(measurementSystem: MeasurementSystem.metric),
+        (_) async =>
+            UserPreferences(measurementSystem: MeasurementSystem.metric),
       );
 
       final result = await useCase.execute(exercise);
@@ -592,12 +629,15 @@ void main() {
         reps: 10,
       );
 
-      when(() => mockPRRepo.getByExerciseId('resistance_band'))
-          .thenAnswer((_) async => [weightPR]);
-      when(() => mockWorkoutSetRepo.getById('set_1'))
-          .thenAnswer((_) async => workoutSet);
+      when(
+        () => mockPRRepo.getByExerciseId('resistance_band'),
+      ).thenAnswer((_) async => [weightPR]);
+      when(
+        () => mockWorkoutSetRepo.getById('set_1'),
+      ).thenAnswer((_) async => workoutSet);
       when(() => mockPreferencesUseCase.call()).thenAnswer(
-        (_) async => UserPreferences(measurementSystem: MeasurementSystem.metric),
+        (_) async =>
+            UserPreferences(measurementSystem: MeasurementSystem.metric),
       );
 
       final result = await useCase.execute(exercise);
@@ -620,8 +660,9 @@ void main() {
         equipmentType: EquipmentType.other,
       );
 
-      when(() => mockPRRepo.getByExerciseId('running'))
-          .thenAnswer((_) async => []);
+      when(
+        () => mockPRRepo.getByExerciseId('running'),
+      ).thenAnswer((_) async => []);
 
       final result = await useCase.execute(exercise);
 
