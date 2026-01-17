@@ -43,10 +43,7 @@ class WorkoutInputPanel extends StatelessWidget {
               ),
             ),
 
-            Container(
-              width: 1.5,
-              color: AppColors.limeGreen.withOpacity(0.3),
-            ),
+            Container(width: 1.5, color: AppColors.limeGreen.withOpacity(0.3)),
 
             // Right: Action buttons (1 column)
             Expanded(
@@ -129,26 +126,27 @@ class WorkoutInputPanel extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: AppColors.limeGreen.withOpacity(opacity),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                if (subtitle.isNotEmpty) ...[
-                  const SizedBox(height: 2),
+                // Weight value on top (primary info)
+                if (subtitle.isNotEmpty)
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: AppColors.offWhite.withOpacity(opacity * 0.6),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
+                      color: AppColors.offWhite.withOpacity(0.9),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ],
+                // Percentage label below (context)
+                const SizedBox(height: 2),
+                Text(
+                  '$label PR',
+                  style: TextStyle(
+                    color: AppColors.limeGreen.withOpacity(opacity),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ],
             ),
           ),
