@@ -47,27 +47,45 @@ void main() {
       });
     });
 
-    group('kettlebell equipment (array-based: 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 48)', () {
-      test('rounds 11.5kg to 12kg', () {
-        expect(EquipmentType.kettlebell.roundToNearest(11.5, true), equals(12.0));
-      });
+    group(
+      'kettlebell equipment (array-based: 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 48)',
+      () {
+        test('rounds 11.5kg to 12kg', () {
+          expect(
+            EquipmentType.kettlebell.roundToNearest(11.5, true),
+            equals(12.0),
+          );
+        });
 
-      test('rounds 17.3kg to 16kg', () {
-        expect(EquipmentType.kettlebell.roundToNearest(17.3, true), equals(16.0));
-      });
+        test('rounds 17.3kg to 16kg', () {
+          expect(
+            EquipmentType.kettlebell.roundToNearest(17.3, true),
+            equals(16.0),
+          );
+        });
 
-      test('rounds 3kg to 4kg', () {
-        expect(EquipmentType.kettlebell.roundToNearest(3.0, true), equals(4.0));
-      });
+        test('rounds 3kg to 4kg', () {
+          expect(
+            EquipmentType.kettlebell.roundToNearest(3.0, true),
+            equals(4.0),
+          );
+        });
 
-      test('rounds 50kg to 48kg (maximum)', () {
-        expect(EquipmentType.kettlebell.roundToNearest(50.0, true), equals(48.0));
-      });
+        test('rounds 50kg to 48kg (maximum)', () {
+          expect(
+            EquipmentType.kettlebell.roundToNearest(50.0, true),
+            equals(48.0),
+          );
+        });
 
-      test('exact match at 32kg', () {
-        expect(EquipmentType.kettlebell.roundToNearest(32.0, true), equals(32.0));
-      });
-    });
+        test('exact match at 32kg', () {
+          expect(
+            EquipmentType.kettlebell.roundToNearest(32.0, true),
+            equals(32.0),
+          );
+        });
+      },
+    );
 
     group('machine equipment (modulo-based, 5kg increments)', () {
       test('rounds 67kg to 65kg', () {
@@ -137,9 +155,18 @@ void main() {
 
     group('edge cases', () {
       test('zero weight rounds appropriately for all types', () {
-        expect(EquipmentType.plate.roundToNearest(0.0, true), equals(5.0)); // Minimum plate weight
-        expect(EquipmentType.dumbbell.roundToNearest(0.0, true), equals(0.5)); // Minimum dumbbell
-        expect(EquipmentType.kettlebell.roundToNearest(0.0, true), equals(2.0)); // Minimum kettlebell
+        expect(
+          EquipmentType.plate.roundToNearest(0.0, true),
+          equals(5.0),
+        ); // Minimum plate weight
+        expect(
+          EquipmentType.dumbbell.roundToNearest(0.0, true),
+          equals(0.5),
+        ); // Minimum dumbbell
+        expect(
+          EquipmentType.kettlebell.roundToNearest(0.0, true),
+          equals(2.0),
+        ); // Minimum kettlebell
         expect(EquipmentType.machine.roundToNearest(0.0, true), equals(0.0));
         expect(EquipmentType.cable.roundToNearest(0.0, true), equals(0.0));
         expect(EquipmentType.other.roundToNearest(0.0, true), equals(0.0));

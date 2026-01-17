@@ -1,7 +1,12 @@
 import '../../../l3_data/repositories/personal_record_repository.dart';
 import '../../../l3_data/repositories/workout_set_repository.dart';
 import '../../models/exercises/exercise.dart';
+import '../../models/exercises/strength_exercise.dart';
+import '../../models/personal_records/weight_pr.dart';
+import '../../models/workout_sets/weighted_workout_set.dart';
+import '../../models/common/equipment_type.dart';
 import '../preferences/get_user_preferences_use_case.dart';
+import '../../models/user_preferences.dart';
 
 /// Calculates PR percentage values (100%, 90%, 80%, 50%) for an exercise
 /// with smart weight rounding based on equipment type.
@@ -21,13 +26,48 @@ class CalculatePRPercentagesUseCase {
   /// Execute the use case for a given exercise
   /// Returns PRPercentages with rounded values, or null if no PR found
   Future<PRPercentages?> execute(Exercise exercise) async {
-    // TODO: Phase 4 - Implement
+    // Only handle strength exercises with equipment type
+    if (exercise is! StrengthExercise) return null;
+    
     // 1. Find WeightPR for this exercise
-    // 2. Fetch actual WorkoutSet to get weight value
-    // 3. Get user's unit preference (metric/imperial)
-    // 4. Calculate percentages and round using exercise.roundToNearest()
-    // 5. Return PRPercentages object
-    throw UnimplementedError('Phase 4: Implement use case logic');
+    final allPRs = await _prRepository.getByExerciseId(exercise.id);
+    final weightPRs = allPRs.whereType<WeightPR>().toList();
+    
+    if (weightPRs.isEmpty) return null;
+    
+    // 2. Get most recent WeightPR
+    weightPRs.sort((a, b) => b.achievedAt.compareTo(a.achievedAt));
+    final latestPR = weightPRs.first;
+    
+    // 3. Fetch actual WorkoutSet to get weight value
+    final workoutSet = await _workoutSetRepository.getById(latestPR.workoutSetId);
+    if (workoutSet == null) return null;
+    if (workoutSet is! WeightedWorkoutSet) return null;
+    
+    final weight = workoutSet.weight;
+    if (weight == null) return null;
+    final prWeight = weight.kg;
+    if (prWeight <= 0) return null;
+    
+    // 4. Get user's unit preference (metric/imperial)
+    final prefs = await _preferencesUseCase.call();
+    final isMetric = prefs.measurementSystem == MeasurementSystem.metric;
+    
+    // 5. Calculate percentages and round using exercise.equipmentType
+    final strengthExercise = exercise as StrengthExercise;
+    final percent100 = strengthExercise.equipmentType.roundToNearest(prWeight * 1.0, isMetric);
+    final percent90 = strengthExercise.equipmentType.roundToNearest(prWeight * 0.9, isMetric);
+    final percent80 = strengthExercise.equipmentType.roundToNearest(prWeight * 0.8, isMetric);
+    final percent50 = strengthExercise.equipmentType.roundToNearest(prWeight * 0.5, isMetric);
+    
+    // 6. Return PRPercentages object
+    return PRPercentages(
+      percent100: percent100,
+      percent90: percent90,
+      percent80: percent80,
+      percent50: percent50,
+      isMetric: isMetric,
+    );
   }
 }
 
