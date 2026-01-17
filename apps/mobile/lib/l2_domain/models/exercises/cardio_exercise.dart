@@ -6,5 +6,6 @@ abstract class CardioExercise extends Exercise {
     required super.name,
     required super.description,
     required super.isCustom,
+    required super.equipmentType,
   });
 }

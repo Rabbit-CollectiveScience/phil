@@ -7,7 +7,7 @@ enum EquipmentType {
   kettlebell,
   machine,
   cable,
-  none,
+  other, // Custom/flexible equipment, cardio machines, or exercises without weight constraints
 }
 
 extension EquipmentWeights on EquipmentType {
@@ -115,8 +115,8 @@ extension EquipmentWeights on EquipmentType {
         // Use modulo rounding (5kg increments) - see roundToNearest()
         return [];
 
-      case EquipmentType.none:
-        return []; // Free-form, no constraints
+      case EquipmentType.other:
+        return []; // Free-form with decimal precision rounding
     }
   }
 
@@ -222,13 +222,13 @@ extension EquipmentWeights on EquipmentType {
         // Use modulo rounding (10lb increments) - see roundToNearest()
         return [];
 
-      case EquipmentType.none:
-        return [];
+      case EquipmentType.other:
+        return []; // Free-form with decimal precision rounding
     }
   }
 
   /// Round a target weight to the nearest available weight for this equipment
-  /// Returns the original value if no constraints (none type)
+  /// Returns the original value for 'other' type with 0.1 decimal precision
   double roundToNearest(double targetWeight, bool isMetric) {
     // Machines and cables use modulo-based rounding (conservative approach)
     // Works with all equipment brands regardless of increment pattern
@@ -237,7 +237,12 @@ extension EquipmentWeights on EquipmentType {
       return (targetWeight / increment).round() * increment;
     }
 
-    // Other equipment types use fixed weight arrays
+    // Other/custom equipment: round to 1 decimal place for flexibility
+    if (this == EquipmentType.other) {
+      return (targetWeight * 10).round() / 10;
+    }
+
+    // Fixed equipment types use weight arrays
     final available = isMetric ? availableWeightsKg : availableWeightsLbs;
 
     if (available.isEmpty) return targetWeight;

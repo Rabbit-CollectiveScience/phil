@@ -9,6 +9,7 @@ abstract class StrengthExercise extends Exercise {
     required super.name,
     required super.description,
     required super.isCustom,
+    required super.equipmentType,
     required this.targetMuscles,
   });
 

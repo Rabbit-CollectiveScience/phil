@@ -1,4 +1,6 @@
 import 'cardio_exercise.dart';
+import '../common/equipment_type.dart';
+import 'equipment_type_parser.dart';
 
 class DurationCardioExercise extends CardioExercise {
   const DurationCardioExercise({
@@ -6,6 +8,7 @@ class DurationCardioExercise extends CardioExercise {
     required super.name,
     required super.description,
     required super.isCustom,
+    required super.equipmentType,
   });
 
   DurationCardioExercise copyWith({
@@ -13,12 +16,14 @@ class DurationCardioExercise extends CardioExercise {
     String? name,
     String? description,
     bool? isCustom,
+    EquipmentType? equipmentType,
   }) {
     return DurationCardioExercise(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       isCustom: isCustom ?? this.isCustom,
+      equipmentType: equipmentType ?? this.equipmentType,
     );
   }
 
@@ -29,6 +34,7 @@ class DurationCardioExercise extends CardioExercise {
     'name': name,
     'description': description,
     'isCustom': isCustom,
+    'equipmentType': equipmentType.name,
   };
 
   factory DurationCardioExercise.fromJson(Map<String, dynamic> json) {
@@ -37,6 +43,7 @@ class DurationCardioExercise extends CardioExercise {
       name: json['name'],
       description: json['description'],
       isCustom: json['isCustom'],
+      equipmentType: parseEquipmentType(json['equipmentType']),
     );
   }
 }
