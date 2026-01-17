@@ -11,6 +11,8 @@ classDiagram
         +String name
         +String description
         +bool isCustom
+        +EquipmentType equipmentType
+        +roundToNearest(weight, isMetric) double
     }
     
     class StrengthExercise {
@@ -167,6 +169,17 @@ classDiagram
     DurationCardioWorkoutSet "1" --> "0..*" DurationPR : achieves
 
     %% Supporting Types
+    class EquipmentType {
+        <<enumeration>>
+        DUMBBELL
+        BARBELL
+        EZ_BAR
+        KETTLEBELL
+        MACHINE
+        CABLE
+        OTHER
+    }
+    
     class MuscleGroup {
         <<enumeration>>
         CHEST
@@ -186,8 +199,8 @@ classDiagram
     class Distance {
         +double meters
         +getInMiles()
-  AssistedMachineExercise → AssistedMachineWorkoutSet (tracks assistance weight + reps, inverted progress)
--   }
+        +setInKm(double)
+    }
 ```
 
 ## Key Relationships
@@ -334,11 +347,68 @@ classDiagram
 ### Explicit Design Decisions (What we DON'T have)
 - ❌ No `workoutId` grouping - derive sessions from timestamp at runtime
 - ❌ No `notes` field on WorkoutSet - keep data structure minimal
-- ❌ No equipment attributes on Exercise - semantic type is enough for filtering
 - ❌ No bodyweight volume tracking - requires user weight history (complexity not justified)
 - ❌ No loaded carries yet - different enough to warrant separate class if needed later
+
+### Equipment Type System
+- **Exercise.equipmentType**: Each exercise declares its equipment (dumbbell, barbell, machine, etc.)
+  - Enables smart weight rounding based on available gym equipment
+  - Exercise identity tied to equipment: "Barbell Bench Press" ≠ "Dumbbell Bench Press"
+  - Stored in exercise JSON data, loaded at app startup
+
+**EquipmentType Enum:**
+- `dumbbell`: Fixed-increment gym dumbbells (0.5kg-80kg, 1lb-150lb)
+- `barbell`: Olympic bars + standard plates (5kg-200kg, 45lb-455lb)
+- `ezBar`: EZ curl bars with same plate system as barbell
+- `kettlebell`: Competition/gym standard (4kg-48kg, 10lb-100lb)
+- `machine`: Weight stack machines (5kg/10lb modulo rounding)
+- `cable`: Cable systems (5kg/10lb modulo rounding)
+- `other`: Custom/flexible equipment (rounds to 1 decimal place)
+
+**Rounding Behavior:**
+- **Array-based** (dumbbell/barbell/kettlebell/ezBar): Rounds to nearest available gym weight
+  - Example: 22.7kg dumbbell → 22.5kg (closest in array)
+  - Prevents suggesting non-existent weights like "23.3kg dumbbell"
+- **Modulo-based** (machine/cable): Conservative 5kg/10lb increments
+  - Example: 114.3kg machine → 115kg (5kg increment)
+  - Works with all brands (10lb, 20lb, 5kg, 10kg stacks)
+- **Decimal precision** (other): Rounds to 0.1 precision
+  - Example: 45.67kg → 45.7kg
+  - For custom equipment, resistance bands, or flexible logging
+
+**Exercise.roundToNearest(weight, isMetric):**
+- Convenience method delegates to `EquipmentType.roundToNearest()`
+- Used in UI layer for manual input validation
+- Used in CalculatePRPercentagesUseCase for PR percentage buttons
+
+**Equipment Selection for Bodyweight Exercises:**
+- When bodyweight exercises allow added weight (weighted pull-ups), equipment type indicates what user typically adds:
+  - `dumbbell`: Using dumbbell between legs or dip belt with dumbbells
+  - `other`: Using plates on belt, weight vest, or mixed equipment
+- This affects rounding for `additionalWeight` field on BodyweightWorkoutSet
+
+### Smart PR Percentage Calculations
+**CalculatePRPercentagesUseCase**: Business logic for input panel PR buttons
+- Fetches user's WeightPR for exercise
+- Retrieves actual weight value from referenced WorkoutSet
+- Calculates 100%, 90%, 80%, 50% of PR weight
+- Rounds each percentage using `exercise.roundToNearest()`
+- Returns `PRPercentages` value object or null if no PR exists
+
+**Example Flow:**
+1. User opens "Barbell Bench Press" (equipmentType = barbell)
+2. Use case finds PR: 100kg
+3. Calculates: 100%, 90kg, 80kg, 50kg
+4. Rounds: 100kg → 100kg, 90kg → 90kg, 80kg → 80kg, 50kg → 50kg ✓
+5. UI displays buttons with exact achievable weights
+
+**Equipment-Aware Rounding Benefits:**
+- User never sees "22.5kg dumbbell" if gym only has 20kg and 25kg
+- Machine users get clean 5kg increments (no 113.7kg suggestions)
+- PR percentages always suggest realistic, loadable weights
 
 ### Searchability & Customization
 - **Exercise.description**: Enables search beyond just name matching
 - **Exercise.isCustom**: Distinguishes user-created from pre-loaded exercises
 - **Exercise.targetMuscles**: Array to support compound movements (squat targets legs, core, glutes)
+- **Exercise.equipmentType**: Required field for all exercises (default to `other` if unknown)
