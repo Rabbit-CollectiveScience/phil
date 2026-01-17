@@ -25,6 +25,7 @@ import 'package:phil/l2_domain/models/exercises/isometric_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/distance_cardio_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/duration_cardio_exercise.dart';
 import 'package:phil/l2_domain/models/common/muscle_group.dart';
+import 'package:phil/l2_domain/models/common/equipment_type.dart';
 
 void main() {
   late PersonalRecordRepository prRepository;
@@ -73,6 +74,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 
@@ -109,6 +111,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 
@@ -146,6 +149,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
 
       final runningExercise = DistanceCardioExercise(
@@ -153,6 +157,7 @@ void main() {
         name: 'Running',
         description: 'Test',
         isCustom: false,
+        equipmentType: EquipmentType.other,
       );
 
       await exerciseRepository.save(benchExercise);
@@ -253,6 +258,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
 
       await exerciseRepository.save(exercise);
@@ -286,6 +292,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
 
       await exerciseRepository.save(exercise);
@@ -336,6 +343,7 @@ void main() {
         isCustom: false,
         targetMuscles: [MuscleGroup.back],
         canAddWeight: true,
+        equipmentType: EquipmentType.other,
       );
 
       await exerciseRepository.save(exercise);
@@ -368,6 +376,7 @@ void main() {
         name: 'Running',
         description: 'Test',
         isCustom: false,
+        equipmentType: EquipmentType.other,
       );
 
       await exerciseRepository.save(exercise);
@@ -423,6 +432,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
 
       await exerciseRepository.save(exercise);
@@ -447,6 +457,7 @@ void main() {
         isCustom: false,
         targetMuscles: [MuscleGroup.core],
         isBodyweightBased: false,
+        equipmentType: EquipmentType.other,
       );
 
       await exerciseRepository.save(exercise);
@@ -499,6 +510,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         await exerciseRepository.save(exercise);
@@ -546,6 +558,7 @@ void main() {
         name: 'Cycling',
         description: 'Test',
         isCustom: false,
+        equipmentType: EquipmentType.other,
       );
 
       await exerciseRepository.save(exercise);

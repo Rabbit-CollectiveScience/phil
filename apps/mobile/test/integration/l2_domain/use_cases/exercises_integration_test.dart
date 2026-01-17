@@ -10,6 +10,7 @@ import 'package:phil/l2_domain/models/exercises/free_weight_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/machine_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/distance_cardio_exercise.dart';
 import 'package:phil/l2_domain/models/common/muscle_group.dart';
+import 'package:phil/l2_domain/models/common/equipment_type.dart';
 import 'package:phil/l2_domain/models/workout_sets/weighted_workout_set.dart';
 import 'package:phil/l2_domain/models/common/weight.dart';
 
@@ -64,6 +65,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -74,6 +76,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -93,6 +96,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -103,6 +107,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.dumbbell,
         ),
       );
 
@@ -113,6 +118,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.other,
         ),
       );
 
@@ -131,6 +137,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.shoulders],
+          equipmentType: EquipmentType.other,
         ),
       );
 
@@ -141,6 +148,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -151,6 +159,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.shoulders],
+          equipmentType: EquipmentType.other,
         ),
       );
 
@@ -169,6 +178,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.back],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -179,6 +189,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -199,6 +210,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: true,
+          equipmentType: EquipmentType.other,
         ),
       );
 
@@ -209,6 +221,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.dumbbell,
         ),
       );
 
@@ -219,6 +232,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.machine,
         ),
       );
 
@@ -228,6 +242,7 @@ void main() {
           name: 'Running',
           description: 'Test',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         ),
       );
 
@@ -246,6 +261,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.back],
+          equipmentType: EquipmentType.other,
         ),
       );
 
@@ -265,6 +281,7 @@ void main() {
           description: 'Test',
           isCustom: true,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.other,
         ),
       );
 
@@ -275,6 +292,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.other,
         ),
       );
 
@@ -295,6 +313,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -305,6 +324,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -322,6 +342,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
 
       final squat = FreeWeightExercise(
@@ -330,6 +351,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.legs],
+        equipmentType: EquipmentType.plate,
       );
 
       await exerciseRepository.save(benchPress);
@@ -362,6 +384,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -372,6 +395,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -382,6 +406,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.back, MuscleGroup.legs],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -401,6 +426,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -410,6 +436,7 @@ void main() {
           name: 'Running',
           description: 'Test',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         ),
       );
 
@@ -431,6 +458,7 @@ void main() {
           description: 'Test',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.plate,
         ),
       );
 
@@ -440,6 +468,7 @@ void main() {
           name: 'Running',
           description: 'Test',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         ),
       );
 
@@ -461,6 +490,7 @@ void main() {
             description: 'Test',
             isCustom: false,
             targetMuscles: [MuscleGroup.chest],
+            equipmentType: EquipmentType.other,
           ),
         );
 
@@ -471,6 +501,7 @@ void main() {
             description: 'Test',
             isCustom: false,
             targetMuscles: [MuscleGroup.chest],
+            equipmentType: EquipmentType.other,
           ),
         );
 
@@ -516,6 +547,7 @@ void main() {
           description: 'Test',
           isCustom: true,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.other,
         ),
       );
 

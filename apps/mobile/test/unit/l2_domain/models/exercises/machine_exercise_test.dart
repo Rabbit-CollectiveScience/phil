@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/models/exercises/machine_exercise.dart';
 import 'package:phil/l2_domain/models/common/muscle_group.dart';
+import 'package:phil/l2_domain/models/common/equipment_type.dart';
 
 void main() {
   group('MachineExercise', () {
@@ -12,6 +13,7 @@ void main() {
           description: 'Machine leg exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.machine,
         );
 
         expect(exercise.id, '1');
@@ -28,6 +30,7 @@ void main() {
           description: 'Custom machine exercise',
           isCustom: true,
           targetMuscles: [MuscleGroup.back],
+          equipmentType: EquipmentType.machine,
         );
 
         expect(exercise.isCustom, true);
@@ -44,6 +47,7 @@ void main() {
             MuscleGroup.shoulders,
             MuscleGroup.arms,
           ],
+          equipmentType: EquipmentType.machine,
         );
 
         expect(exercise.targetMuscles.length, 3);
@@ -58,6 +62,7 @@ void main() {
           description: 'Back machine exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.back, MuscleGroup.arms],
+          equipmentType: EquipmentType.machine,
         );
 
         final json = exercise.toJson();
@@ -100,6 +105,7 @@ void main() {
           description: 'Quad isolation',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.machine,
         );
 
         final updated = exercise.copyWith(
@@ -121,6 +127,7 @@ void main() {
           description: 'Back machine',
           isCustom: false,
           targetMuscles: [MuscleGroup.back],
+          equipmentType: EquipmentType.machine,
         );
 
         final exercise2 = MachineExercise(
@@ -129,6 +136,7 @@ void main() {
           description: 'Back machine',
           isCustom: false,
           targetMuscles: [MuscleGroup.back],
+          equipmentType: EquipmentType.machine,
         );
 
         expect(exercise1, exercise2);
@@ -141,6 +149,7 @@ void main() {
           description: 'Description',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.machine,
         );
 
         final exercise2 = MachineExercise(
@@ -149,6 +158,7 @@ void main() {
           description: 'Description',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.machine,
         );
 
         expect(exercise1, isNot(exercise2));
@@ -163,6 +173,7 @@ void main() {
           description: 'Guided squat machine',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs, MuscleGroup.core],
+          equipmentType: EquipmentType.machine,
         );
 
         final json = exercise.toJson();

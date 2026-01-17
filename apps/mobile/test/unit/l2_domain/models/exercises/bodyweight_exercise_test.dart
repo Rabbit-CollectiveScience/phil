@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/models/exercises/bodyweight_exercise.dart';
 import 'package:phil/l2_domain/models/common/muscle_group.dart';
+import 'package:phil/l2_domain/models/common/equipment_type.dart';
 
 void main() {
   group('BodyweightExercise', () {
@@ -13,6 +14,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest, MuscleGroup.arms],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.id, '1');
@@ -31,6 +33,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.back],
           canAddWeight: true,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.canAddWeight, true);
@@ -44,6 +47,7 @@ void main() {
           isCustom: true,
           targetMuscles: [MuscleGroup.core],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.isCustom, true);
@@ -57,6 +61,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.description, '');
@@ -75,6 +80,7 @@ void main() {
             MuscleGroup.shoulders,
           ],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.targetMuscles.length, 4);
@@ -88,6 +94,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.targetMuscles.length, 1);
@@ -104,6 +111,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest, MuscleGroup.arms],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final json = exercise.toJson();
@@ -125,6 +133,7 @@ void main() {
           isCustom: true,
           targetMuscles: [MuscleGroup.back],
           canAddWeight: true,
+          equipmentType: EquipmentType.other,
         );
 
         final json = exercise.toJson();
@@ -145,6 +154,7 @@ void main() {
             MuscleGroup.arms,
           ],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final json = exercise.toJson();
@@ -202,6 +212,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final updated = exercise.copyWith(
@@ -225,6 +236,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final updated = exercise.copyWith();
@@ -243,6 +255,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final updated = exercise.copyWith(
@@ -263,6 +276,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = BodyweightExercise(
@@ -272,6 +286,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1, exercise2);
@@ -285,6 +300,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = BodyweightExercise(
@@ -294,6 +310,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1, isNot(exercise2));
@@ -307,6 +324,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = BodyweightExercise(
@@ -316,6 +334,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: true,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1, isNot(exercise2));
@@ -331,6 +350,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = BodyweightExercise(
@@ -340,6 +360,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1.hashCode, exercise2.hashCode);
@@ -353,6 +374,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = BodyweightExercise(
@@ -362,6 +384,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: true,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1.hashCode, isNot(exercise2.hashCode));
@@ -377,6 +400,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest, MuscleGroup.arms],
           canAddWeight: true,
+          equipmentType: EquipmentType.other,
         );
 
         final json = exercise.toJson();

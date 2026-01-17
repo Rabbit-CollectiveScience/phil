@@ -5,6 +5,7 @@ import 'package:phil/l2_domain/models/exercises/free_weight_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/machine_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/bodyweight_exercise.dart';
 import 'package:phil/l2_domain/models/common/muscle_group.dart';
+import 'package:phil/l2_domain/models/common/equipment_type.dart';
 
 void main() {
   group('ExerciseSearcher', () {
@@ -21,6 +22,7 @@ void main() {
               'Lie on a bench and press a barbell upward from chest level.',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.plate,
         ),
         MachineExercise(
           id: 'ex2',
@@ -29,6 +31,7 @@ void main() {
               'Stand in a calf raise machine with shoulders under the pads and balls of feet on the platform.',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.machine,
         ),
         MachineExercise(
           id: 'ex3',
@@ -37,6 +40,7 @@ void main() {
               'Sit in the machine and press handles overhead using your shoulders.',
           isCustom: false,
           targetMuscles: [MuscleGroup.shoulders],
+          equipmentType: EquipmentType.machine,
         ),
         BodyweightExercise(
           id: 'ex4',
@@ -46,6 +50,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.back],
           canAddWeight: true,
+          equipmentType: EquipmentType.other,
         ),
         FreeWeightExercise(
           id: 'ex5',
@@ -54,6 +59,7 @@ void main() {
               'Stand holding dumbbells at your sides and raise them to shoulder height.',
           isCustom: false,
           targetMuscles: [MuscleGroup.shoulders],
+          equipmentType: EquipmentType.dumbbell,
         ),
       ];
     });

@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/models/exercises/isometric_exercise.dart';
 import 'package:phil/l2_domain/models/common/muscle_group.dart';
+import 'package:phil/l2_domain/models/common/equipment_type.dart';
 
 void main() {
   group('IsometricExercise', () {
@@ -13,6 +14,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.id, '1');
@@ -30,6 +32,7 @@ void main() {
           isCustom: true,
           targetMuscles: [MuscleGroup.shoulders],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.isCustom, true);
@@ -43,6 +46,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.core, MuscleGroup.shoulders],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.targetMuscles.length, 2);
@@ -58,6 +62,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         final json = exercise.toJson();
@@ -102,6 +107,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         final updated = exercise.copyWith(
@@ -124,6 +130,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.back, MuscleGroup.arms],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = IsometricExercise(
@@ -133,6 +140,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.back, MuscleGroup.arms],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1, exercise2);
@@ -146,6 +154,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = IsometricExercise(
@@ -155,6 +164,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.core, MuscleGroup.shoulders],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1, isNot(exercise2));
@@ -170,6 +180,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         final json = exercise.toJson();

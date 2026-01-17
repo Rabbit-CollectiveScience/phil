@@ -15,6 +15,7 @@ import 'package:phil/l2_domain/models/common/weight.dart';
 import 'package:phil/l2_domain/models/exercises/bodyweight_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/free_weight_exercise.dart';
 import 'package:phil/l2_domain/models/common/muscle_group.dart';
+import 'package:phil/l2_domain/models/common/equipment_type.dart';
 
 void main() {
   late WorkoutSetRepository workoutSetRepository;
@@ -53,6 +54,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 
@@ -88,6 +90,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 
@@ -123,6 +126,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 
@@ -155,6 +159,7 @@ void main() {
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
         canAddWeight: true,
+        equipmentType: EquipmentType.other,
       );
       await exerciseRepository.save(exercise);
 
@@ -185,6 +190,7 @@ void main() {
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
         canAddWeight: true,
+        equipmentType: EquipmentType.other,
       );
       await exerciseRepository.save(exercise);
 
@@ -228,6 +234,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 
@@ -263,6 +270,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 
@@ -304,6 +312,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 
@@ -355,6 +364,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 
@@ -389,6 +399,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       final squatExercise = FreeWeightExercise(
         id: 'squat',
@@ -396,6 +407,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.legs],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(benchExercise);
       await exerciseRepository.save(squatExercise);
@@ -442,6 +454,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 
@@ -488,6 +501,7 @@ void main() {
         description: 'Test',
         isCustom: false,
         targetMuscles: [MuscleGroup.chest],
+        equipmentType: EquipmentType.plate,
       );
       await exerciseRepository.save(exercise);
 

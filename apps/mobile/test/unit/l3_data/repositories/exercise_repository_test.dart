@@ -8,6 +8,7 @@ import 'package:phil/l2_domain/models/exercises/isometric_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/distance_cardio_exercise.dart';
 import 'package:phil/l2_domain/models/exercises/duration_cardio_exercise.dart';
 import 'package:phil/l2_domain/models/common/muscle_group.dart';
+import 'package:phil/l2_domain/models/common/equipment_type.dart';
 
 void main() {
   group('ExerciseRepository', () {
@@ -28,6 +29,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         // await repository.save(exercise);
@@ -41,6 +43,7 @@ void main() {
           description: 'Back squat',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.plate,
         );
 
         // await repository.save(exercise);
@@ -54,6 +57,7 @@ void main() {
           description: 'Machine leg press',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.machine,
         );
 
         // await repository.save(exercise);
@@ -67,6 +71,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.core],
           isBodyweightBased: true,
+          equipmentType: EquipmentType.other,
         );
 
         // await repository.save(exercise);
@@ -78,6 +83,7 @@ void main() {
           name: 'Running',
           description: 'Outdoor running',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         // await repository.save(exercise);
@@ -89,6 +95,7 @@ void main() {
           name: 'Jumping Jacks',
           description: 'Basic cardio',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         // await repository.save(exercise);
@@ -102,6 +109,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = BodyweightExercise(
@@ -111,6 +119,7 @@ void main() {
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
           canAddWeight: true,
+          equipmentType: EquipmentType.other,
         );
 
         // await repository.save(exercise1);
@@ -126,6 +135,7 @@ void main() {
           isCustom: true,
           targetMuscles: [MuscleGroup.core],
           canAddWeight: false,
+          equipmentType: EquipmentType.other,
         );
 
         // await repository.save(exercise);

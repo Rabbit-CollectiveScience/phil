@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/models/exercises/distance_cardio_exercise.dart';
+import 'package:phil/l2_domain/models/common/equipment_type.dart';
 
 void main() {
   group('DistanceCardioExercise', () {
@@ -10,6 +11,7 @@ void main() {
           name: 'Running',
           description: 'Outdoor running',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.id, '1');
@@ -24,6 +26,7 @@ void main() {
           name: 'Custom Cardio',
           description: 'My custom cardio',
           isCustom: true,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.isCustom, true);
@@ -35,6 +38,7 @@ void main() {
           name: 'Cycling',
           description: '',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.description, '');
@@ -48,6 +52,7 @@ void main() {
           name: 'Swimming',
           description: 'Pool swimming',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         final json = exercise.toJson();
@@ -65,6 +70,7 @@ void main() {
           name: 'Custom',
           description: 'Custom description',
           isCustom: true,
+          equipmentType: EquipmentType.other,
         );
 
         final json = exercise.toJson();
@@ -113,6 +119,7 @@ void main() {
           name: 'Running',
           description: 'Outdoor running',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         final updated = exercise.copyWith(
@@ -131,6 +138,7 @@ void main() {
           name: 'Cycling',
           description: 'Road cycling',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         final updated = exercise.copyWith();
@@ -148,6 +156,7 @@ void main() {
           name: 'Running',
           description: 'Outdoor running',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = DistanceCardioExercise(
@@ -155,6 +164,7 @@ void main() {
           name: 'Running',
           description: 'Outdoor running',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1, exercise2);
@@ -166,6 +176,7 @@ void main() {
           name: 'Running',
           description: 'Outdoor running',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = DistanceCardioExercise(
@@ -173,6 +184,7 @@ void main() {
           name: 'Running',
           description: 'Outdoor running',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1, isNot(exercise2));
@@ -184,6 +196,7 @@ void main() {
           name: 'Running',
           description: 'Outdoor',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = DistanceCardioExercise(
@@ -191,6 +204,7 @@ void main() {
           name: 'Cycling',
           description: 'Outdoor',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1, isNot(exercise2));
@@ -204,6 +218,7 @@ void main() {
           name: 'Swimming',
           description: 'Pool',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = DistanceCardioExercise(
@@ -211,6 +226,7 @@ void main() {
           name: 'Swimming',
           description: 'Pool',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1.hashCode, exercise2.hashCode);
@@ -222,6 +238,7 @@ void main() {
           name: 'Running',
           description: 'Outdoor',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = DistanceCardioExercise(
@@ -229,6 +246,7 @@ void main() {
           name: 'Cycling',
           description: 'Outdoor',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1.hashCode, isNot(exercise2.hashCode));
@@ -242,6 +260,7 @@ void main() {
           name: 'Rowing',
           description: 'Indoor rowing machine',
           isCustom: false,
+          equipmentType: EquipmentType.other,
         );
 
         final json = exercise.toJson();

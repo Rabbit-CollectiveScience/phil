@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phil/l2_domain/models/exercises/free_weight_exercise.dart';
 import 'package:phil/l2_domain/models/common/muscle_group.dart';
+import 'package:phil/l2_domain/models/common/equipment_type.dart';
 
 void main() {
   group('FreeWeightExercise', () {
@@ -16,6 +17,7 @@ void main() {
             MuscleGroup.shoulders,
             MuscleGroup.arms,
           ],
+          equipmentType: EquipmentType.plate,
         );
 
         expect(exercise.id, '1');
@@ -36,6 +38,7 @@ void main() {
           description: 'My custom exercise',
           isCustom: true,
           targetMuscles: [MuscleGroup.back],
+          equipmentType: EquipmentType.dumbbell,
         );
 
         expect(exercise.isCustom, true);
@@ -48,6 +51,7 @@ void main() {
           description: 'Arm isolation',
           isCustom: false,
           targetMuscles: [MuscleGroup.arms],
+          equipmentType: EquipmentType.dumbbell,
         );
 
         expect(exercise.targetMuscles.length, 1);
@@ -60,6 +64,7 @@ void main() {
           description: '',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise.description, '');
@@ -74,6 +79,7 @@ void main() {
           description: 'Shoulder exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.shoulders, MuscleGroup.arms],
+          equipmentType: EquipmentType.dumbbell,
         );
 
         final json = exercise.toJson();
@@ -93,6 +99,7 @@ void main() {
           description: 'Custom description',
           isCustom: true,
           targetMuscles: [MuscleGroup.back],
+          equipmentType: EquipmentType.other,
         );
 
         final json = exercise.toJson();
@@ -130,6 +137,7 @@ void main() {
           description: 'Leg exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.legs],
+          equipmentType: EquipmentType.plate,
         );
 
         final updated = exercise.copyWith(
@@ -151,6 +159,7 @@ void main() {
           description: 'Compound back exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.back, MuscleGroup.legs],
+          equipmentType: EquipmentType.plate,
         );
 
         final exercise2 = FreeWeightExercise(
@@ -159,6 +168,7 @@ void main() {
           description: 'Compound back exercise',
           isCustom: false,
           targetMuscles: [MuscleGroup.back, MuscleGroup.legs],
+          equipmentType: EquipmentType.plate,
         );
 
         expect(exercise1, exercise2);
@@ -171,6 +181,7 @@ void main() {
           description: 'Description',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.other,
         );
 
         final exercise2 = FreeWeightExercise(
@@ -179,6 +190,7 @@ void main() {
           description: 'Description',
           isCustom: false,
           targetMuscles: [MuscleGroup.chest],
+          equipmentType: EquipmentType.other,
         );
 
         expect(exercise1, isNot(exercise2));
@@ -197,6 +209,7 @@ void main() {
             MuscleGroup.arms,
             MuscleGroup.core,
           ],
+          equipmentType: EquipmentType.plate,
         );
 
         final json = exercise.toJson();
