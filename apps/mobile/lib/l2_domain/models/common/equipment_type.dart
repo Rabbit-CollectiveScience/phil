@@ -18,6 +18,10 @@ extension EquipmentWeights on EquipmentType {
     switch (this) {
       case EquipmentType.dumbbell:
         return [
+          0.5,
+          1,
+          1.5,
+          2,
           2.5,
           5,
           7.5,
@@ -198,6 +202,9 @@ extension EquipmentWeights on EquipmentType {
     switch (this) {
       case EquipmentType.dumbbell:
         return [
+          1,
+          2,
+          3,
           5,
           10,
           15,
