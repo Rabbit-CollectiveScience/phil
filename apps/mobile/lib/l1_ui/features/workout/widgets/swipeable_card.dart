@@ -939,18 +939,7 @@ class SwipeableCardState extends State<SwipeableCard>
         return Container(
           decoration: isActive
               ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: AppColors.limeGreen,
-                    width: 2,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.limeGreen.withOpacity(0.3),
-                      blurRadius: 8,
-                      spreadRadius: 2,
-                    ),
-                  ],
+                  color: AppColors.limeGreen.withOpacity(0.20),
                 )
               : null,
           child: TextField(
